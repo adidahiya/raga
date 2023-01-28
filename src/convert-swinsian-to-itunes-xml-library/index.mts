@@ -1,10 +1,10 @@
 import { writeFileSync } from "node:fs";
 
 import { forEachTrackInLibrary } from "./visitDefinitions.mjs";
-import { convertSwinsianTrackToMusicAppTrack, SwinsianTrackDefinition } from "../tracks.mjs";
+import { convertSwinsianTrackToMusicAppTrack, SwinsianTrackDefinition } from "../models/tracks.mjs";
 import { loadPlistFile, buildPlistOutput } from "./plist.mjs";
 import { OUTPUT_LIBRARY_PATH, SWINSIAN_LIBRARY_PATH } from "../consts.mjs";
-import { reEncodeHtmlEntities } from "../xmlUtils.mjs";
+import { reEncodeHtmlEntities } from "../utils/xmlUtils.mjs";
 
 export default function () {
     const swinsianLibrary = loadPlistFile(SWINSIAN_LIBRARY_PATH);

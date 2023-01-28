@@ -2,27 +2,21 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/dedent': ^0.7.0
-  '@types/lodash-es': ^4.17.6
   '@types/node': ^18.11.18
   '@types/plist': ^3.0.2
   dedent: ^0.7.0
-  fast-xml-parser: ^4.0.14
   html-entities: ^2.3.3
-  lodash-es: ^4.17.21
   plist: ^3.0.6
   prettier: ^2.8.3
   typescript: ^4.9.4
 
 dependencies:
   dedent: 0.7.0
-  fast-xml-parser: 4.0.14
   html-entities: 2.3.3
-  lodash-es: 4.17.21
   plist: 3.0.6
 
 devDependencies:
   '@types/dedent': 0.7.0
-  '@types/lodash-es': 4.17.6
   '@types/node': 18.11.18
   '@types/plist': 3.0.2
   prettier: 2.8.3
@@ -32,16 +26,6 @@ packages:
 
   /@types/dedent/0.7.0:
     resolution: {integrity: sha512-EGlKlgMhnLt/cM4DbUSafFdrkeJoC9Mvnj0PUCU7tFmTjMjNRT957kXCx0wYm3JuEq4o4ZsS5vG+NlkM2DMd2A==}
-    dev: true
-
-  /@types/lodash-es/4.17.6:
-    resolution: {integrity: sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==}
-    dependencies:
-      '@types/lodash': 4.14.191
-    dev: true
-
-  /@types/lodash/4.14.191:
-    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: true
 
   /@types/node/18.11.18:
@@ -63,19 +47,8 @@ packages:
     resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
     dev: false
 
-  /fast-xml-parser/4.0.14:
-    resolution: {integrity: sha512-uKe7uxZ9DgNOmHfUmBdhkTBZcMMVxvQ3vELTxUpmotAqRxkpMayEiiQ4AQWTGAVyfzT4Dv79jaszLECWCYbd4w==}
-    hasBin: true
-    dependencies:
-      strnum: 1.0.5
-    dev: false
-
   /html-entities/2.3.3:
     resolution: {integrity: sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==}
-    dev: false
-
-  /lodash-es/4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
   /plist/3.0.6:
@@ -91,10 +64,6 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
-
-  /strnum/1.0.5:
-    resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
-    dev: false
 
   /typescript/4.9.4:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
