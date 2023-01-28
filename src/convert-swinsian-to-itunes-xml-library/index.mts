@@ -3,11 +3,12 @@ import { writeFileSync } from "node:fs";
 import { forEachTrackInLibrary } from "./visitDefinitions.mjs";
 import { convertSwinsianTrackToMusicAppTrack, SwinsianTrackDefinition } from "../models/tracks.mjs";
 import { loadPlistFile, buildPlistOutput } from "./plist.mjs";
-import { OUTPUT_LIBRARY_PATH, SWINSIAN_LIBRARY_PATH } from "../consts.mjs";
 import { reEncodeHtmlEntities } from "../utils/xmlUtils.mjs";
 
-export default function () {
-    const swinsianLibrary = loadPlistFile(SWINSIAN_LIBRARY_PATH);
+export * from "./consts.mjs";
+
+export default function (inputLibraryPath: string, outputLibraryPath: string) {
+    const swinsianLibrary = loadPlistFile(inputLibraryPath);
 
     forEachTrackInLibrary(swinsianLibrary, (track) => {
         const newTrackDefinition = convertSwinsianTrackToMusicAppTrack(
@@ -20,6 +21,6 @@ export default function () {
     let outputPlist = buildPlistOutput(swinsianLibrary);
     outputPlist = reEncodeHtmlEntities(outputPlist);
 
-    console.info(`Writing modified library to ${OUTPUT_LIBRARY_PATH}`);
-    writeFileSync(OUTPUT_LIBRARY_PATH, outputPlist);
+    console.info(`Writing modified library to ${outputLibraryPath}`);
+    writeFileSync(outputLibraryPath, outputPlist);
 }

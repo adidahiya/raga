@@ -4,17 +4,19 @@
     "scripts": {
         "all": "npm run build && npm run execute",
         "build": "tsc -p src",
-        "execute": "node lib/cli.mjs"
+        "run-cli": "node lib/cli.mjs"
     },
     "dependencies": {
         "dedent": "^0.7.0",
         "html-entities": "^2.3.3",
-        "plist": "^3.0.6"
+        "plist": "^3.0.6",
+        "prompts": "^2.4.2"
     },
     "devDependencies": {
         "@types/dedent": "^0.7.0",
         "@types/node": "^18.11.18",
         "@types/plist": "^3.0.2",
+        "@types/prompts": "^2.4.2",
         "prettier": "^2.8.3",
         "typescript": "^4.9.4"
     }
