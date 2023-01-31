@@ -27,5 +27,9 @@
     },
     "engines": {
         "node": ">=19"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:adidahiya/music-library-scripts.git"
     }
 }
