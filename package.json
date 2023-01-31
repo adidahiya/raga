@@ -8,6 +8,7 @@
     "scripts": {
         "all": "npm run build && npm run execute",
         "build": "tsc -p src",
+        "publish": "npm publish --access public",
         "run-cli": "node lib/cli.mjs"
     },
     "dependencies": {
