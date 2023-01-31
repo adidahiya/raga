@@ -63,6 +63,11 @@ you can just hit the refresh button to load the library when you run this proces
 
 ![refresh](./docs/assets/rekordbox-refresh-itunes-xml.png)
 
+### Automator workflow
+
+There's an automator workflow in this repo which does most of the above steps for you. Here's an overview of its steps:
+
+![workflow-overview](./automator/export-swinsian-library.workflow/Contents/QuickLook/Preview.png)
 
 ## Development
 
