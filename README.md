@@ -1,5 +1,7 @@
 # adi's music library scripts
 
+[![npm](https://img.shields.io/npm/v/@adahiya/music-library-scripts.svg?label=@adahiya/music-library-scripts)](https://www.npmjs.com/package/@adahiya/music-library-scripts)
+
 Requirements: Node.js v19+
 
 ## Getting started

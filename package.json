@@ -1,5 +1,6 @@
 {
     "name": "@adahiya/music-library-scripts",
+    "version": "0.1.0",
     "type": "module",
     "bin": {
         "music-library-scripts": "bin/cli.sh"

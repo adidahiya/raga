@@ -1,1 +1,8 @@
+.editorconfig
 .npmrc
+.nvmrc
+.prettierrc
+.vscode
+automator
+data
+docs
