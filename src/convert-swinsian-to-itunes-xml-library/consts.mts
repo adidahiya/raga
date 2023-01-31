@@ -1,7 +1,7 @@
 import { join } from "node:path";
+import { homedir } from "node:os";
 
-// user-configurable path
-export const DEFAULT_SWINSIAN_EXPORT_FOLDER = "/Users/adi/Music/Swinsian export/Latest";
+export const DEFAULT_SWINSIAN_EXPORT_FOLDER = join(homedir(), "Music", "Swinsian export", "Latest");
 
 export const getSwinsianLibraryPath = (swinsianExportFolder = DEFAULT_SWINSIAN_EXPORT_FOLDER) =>
     join(swinsianExportFolder, "SwinsianLibrary.xml");

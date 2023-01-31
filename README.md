@@ -1,26 +1,47 @@
 # adi's music library scripts
 
+Requirements: Node.js v19+
+
+## Getting started
+
+Before you run the scripts, you'll need to make sure you have Node.js installed:
+
+-   Install [nvm](https://github.com/nvm-sh/nvm)
+-   In a terminal, run `nvm install 19 && nvm use 19`
+
+Next, you can install these scripts as a global NPM library:
+
+```sh
+npm install --global @adahiya/music-library-scripts
+```
+
 ## `convert-swinsian-to-rekordbox-itunes-xml-library`
 
-Converting a Swinsian library to Rekordbox iTunes XML format.
+Converts a Swinsian library to Rekordbox iTunes XML format.
 
 ### 1. Export your Swinsian library to an XML file
 
 ![swinsian-export-1](./docs/assets/swinsian-export-library.png)
 ![swinsian-export-2](./docs/assets/swinsian-export-library-location.png)
 
-### 2. Run the script to generate a `ModifiedLibrary.xml` file
+### 2. Run the Node.js script to generate a `ModifiedLibrary.xml` file
 
-Run the CLI, either:
+If you have your global `node_modules` configured on your shell's `$PATH` correctly, you can simply run the binary after installing the package:
 
--   build from source (`pnpm build`) and run `pnpm run-cli`
--   install as an NPM package and run its binary (`npm run music-library-scripts` or `node node_modules/music-library-scripts/bin/cli.mjs`)
+```
+music-library-scripts
+```
+
+If not, you can still run it via `npm`:
+
+```
+npm exec --global music-library-scripts
+```
 
 It will prompt you for a path to the exported `SwinsianLibrary.xml` file, and output something like this to the console:
 
 ```
-> music-library-scripts@ run-cli /Users/adi/dev/repos/music-library-scripts
-> node lib/cli.mjs
+> npm exec --global music-library-scripts
 
 ✔ Which script would you like to run? › Convert Swinsian library to Music.app/iTunes XML format
 ✔ Where is your exported SwinsianLibrary.xml located? … /Users/adi/Music/Swinsian export/Latest
@@ -41,3 +62,11 @@ After the first time you configure Rekordbox to look for `ModifiedLibrary.xml` i
 you can just hit the refresh button to load the library when you run this process again:
 
 ![refresh](./docs/assets/rekordbox-refresh-itunes-xml.png)
+
+
+## Development
+
+Tasks
+
+-   Build from source: `pnpm build`
+-   Run CLI: `pnpm run-cli`

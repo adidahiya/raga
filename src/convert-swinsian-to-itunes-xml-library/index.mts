@@ -1,4 +1,4 @@
-import { writeFileSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
 
 import { forEachTrackInLibrary } from "./visitDefinitions.mjs";
 import { convertSwinsianTrackToMusicAppTrack, SwinsianTrackDefinition } from "../models/tracks.mjs";
@@ -8,6 +8,17 @@ import { reEncodeHtmlEntities } from "../utils/xmlUtils.mjs";
 export * from "./consts.mjs";
 
 export default function (inputLibraryPath: string, outputLibraryPath: string) {
+    if (!existsSync(inputLibraryPath)) {
+        throw new Error(
+            `[music-library-scripts] No file found at ${inputLibraryPath}, please make sure it exists.`,
+        );
+    }
+    if (!existsSync(outputLibraryPath)) {
+        throw new Error(
+            `[music-library-scripts] No output folder found at ${outputLibraryPath}, please make sure it exists.`,
+        );
+    }
+
     const swinsianLibrary = loadPlistFile(inputLibraryPath);
 
     forEachTrackInLibrary(swinsianLibrary, (track) => {
