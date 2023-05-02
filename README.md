@@ -73,6 +73,11 @@ There's an automator workflow in this repo which does most of the above steps fo
 
 ## Development
 
+Requirements:
+
+-   Node.js v19+ (see version specified in `.nvmrc`)
+-   PNPM v8+
+
 Tasks
 
 -   Build from source: `pnpm build`
