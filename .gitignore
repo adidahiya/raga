@@ -1,7 +1,10 @@
 node_modules/
 /data/
 /lib/
+/lib-cjs/
 .cache/
 .DS_Store
 .*.un~
 .*.swp
+*.blob
+music-library-scripts-standalone

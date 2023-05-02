@@ -1,14 +1,10 @@
-import dedent from "dedent";
-import { parseArgs } from "node:util";
-import prompts from "prompts";
-
-import convertSwinsianToItunesXmlLibrary, {
-    DEFAULT_SWINSIAN_EXPORT_FOLDER,
-    getSwinsianLibraryPath,
-    getOutputLibraryPath,
-} from "./convert-swinsian-to-itunes-xml-library/index.mjs";
-
-const args = parseArgs({
+ ÚC"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const dedent_1 = require("dedent");
+const node_util_1 = require("node:util");
+const prompts_1 = require("prompts");
+const index_mjs_1 = require("./convert-swinsian-to-itunes-xml-library/index.mjs");
+const args = (0, node_util_1.parseArgs)({
     options: {
         "non-interactive": {
             type: "boolean",
@@ -19,9 +15,8 @@ const args = parseArgs({
         },
     },
 });
-
 if (args.values.help) {
-    console.info(dedent`
+    console.info((0, dedent_1.default) `
         music-library-scripts
 
         Description:
@@ -31,19 +26,12 @@ if (args.values.help) {
             --non-interactive: skip interactive prompts and just run the default script.
     `);
 }
-
-const enum ScriptId {
-    ConvertSwinsianLibrary,
-}
-
-let whichScript = ScriptId.ConvertSwinsianLibrary;
-let libraryLocation = DEFAULT_SWINSIAN_EXPORT_FOLDER;
-
+let whichScript = 0 /* ScriptId.ConvertSwinsianLibrary */;
+let libraryLocation = index_mjs_1.DEFAULT_SWINSIAN_EXPORT_FOLDER;
 (() => main())();
-
 async function main() {
     if (!args.values["non-interactive"]) {
-        const answers = await prompts([
+        const answers = await (0, prompts_1.default)([
             {
                 type: "select",
                 name: "whichScript",
@@ -51,7 +39,7 @@ async function main() {
                 choices: [
                     {
                         title: "Convert Swinsian library to Music.app/iTunes XML format",
-                        value: ScriptId.ConvertSwinsianLibrary,
+                        value: 0 /* ScriptId.ConvertSwinsianLibrary */,
                     },
                 ],
                 initial: 0,
@@ -60,17 +48,13 @@ async function main() {
                 type: "text",
                 name: "libraryLocation",
                 message: "Where is your exported SwinsianLibrary.xml located?",
-                initial: DEFAULT_SWINSIAN_EXPORT_FOLDER,
+                initial: index_mjs_1.DEFAULT_SWINSIAN_EXPORT_FOLDER,
             },
         ]);
         whichScript = answers.whichScript;
         libraryLocation = answers.libraryLocation;
     }
-
-    if (whichScript === ScriptId.ConvertSwinsianLibrary) {
-        convertSwinsianToItunesXmlLibrary(
-            getSwinsianLibraryPath(libraryLocation),
-            getOutputLibraryPath(libraryLocation),
-        );
+    if (whichScript === 0 /* ScriptId.ConvertSwinsianLibrary */) {
+        (0, index_mjs_1.default)((0, index_mjs_1.getSwinsianLibraryPath)(libraryLocation), (0, index_mjs_1.getOutputLibraryPath)(libraryLocation));
     }
 }

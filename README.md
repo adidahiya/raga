@@ -1,4 +1,4 @@
-# adi's music library scripts
+ adi's music library scripts
 
 [![npm](https://img.shields.io/npm/v/@adahiya/music-library-scripts.svg?label=@adahiya/music-library-scripts)](https://www.npmjs.com/package/@adahiya/music-library-scripts)
 
@@ -78,7 +78,19 @@ Requirements:
 -   Node.js v20+ (see version specified in `.nvmrc`)
 -   PNPM v8+
 
-Tasks
+### Tasks
 
 -   Build from source: `pnpm build`
 -   Run CLI: `pnpm run-cli`
+
+### Building a single-executable binary
+
+[See documentation here](https://nodejs.org/api/single-executable-applications.html).
+
+Run script: `scripts/build-sea.sh`
+
+Notes:
+
+-   Turns out this doesn't work for my use-case, since Node.js native SEA only supports
+    single embedded scripts without any dependencies. It's probably better to try a
+    solution like [pkg](https://github.com/vercel/pkg).

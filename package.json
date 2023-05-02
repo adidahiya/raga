@@ -8,6 +8,7 @@
     "scripts": {
         "all": "npm run build && npm run execute",
         "build": "tsc -p src",
+        "build-cjs": "tsc -p src/tsconfig.cjs.json",
         "publish": "npm publish --access public",
         "run-cli": "node lib/cli.mjs"
     },
@@ -15,7 +16,8 @@
         "dedent": "^0.7.0",
         "html-entities": "^2.3.3",
         "plist": "^3.0.6",
-        "prompts": "^2.4.2"
+        "prompts": "^2.4.2",
+        "tslib": "^2.5.0"
     },
     "devDependencies": {
         "@types/dedent": "^0.7.0",
