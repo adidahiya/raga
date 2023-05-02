@@ -2,14 +2,14 @@
 
 [![npm](https://img.shields.io/npm/v/@adahiya/music-library-scripts.svg?label=@adahiya/music-library-scripts)](https://www.npmjs.com/package/@adahiya/music-library-scripts)
 
-Requirements: Node.js v19+
+Requirements: Node.js v18.16+ (see version specified in `.nvmrc`)
 
 ## Getting started
 
 Before you run the scripts, you'll need to make sure you have Node.js installed:
 
 -   Install [nvm](https://github.com/nvm-sh/nvm)
--   In a terminal, run `nvm install 19 && nvm use 19`
+-   In a terminal, run `nvm install 18 && nvm use 18`
 
 Next, you can install these scripts as a global NPM library:
 
@@ -75,7 +75,7 @@ There's an automator workflow in this repo which does most of the above steps fo
 
 Requirements:
 
--   Node.js v19+ (see version specified in `.nvmrc`)
+-   Node.js v18.16+ (see version specified in `.nvmrc`)
 -   PNPM v8+
 
 Tasks
