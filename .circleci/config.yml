@@ -61,14 +61,14 @@ jobs:
       - attach_workspace: { at: "." }
       - run: yarn lerna run check
 
-  dist:
-    docker: *docker-node-image
-    steps:
-      - checkout
-      - run: sudo apt-get install -y dpkg fakeroot
-      - restore_cache: *restore-node-modules-cache
-      - attach_workspace: { at: "." }
-      - run: yarn lerna run dist
+  # dist:
+  #   docker: *docker-node-image
+  #   steps:
+  #     - checkout
+  #     - run: sudo apt-get install -y dpkg fakeroot
+  #     - restore_cache: *restore-node-modules-cache
+  #     - attach_workspace: { at: "." }
+  #     - run: yarn lerna run dist
 
 workflows:
   build:
@@ -78,5 +78,5 @@ workflows:
           requires: [checkout-code]
       - check:
           requires: [checkout-code]
-      - dist:
-          requires: [checkout-code]
+      # - dist:
+      #     requires: [checkout-code]
