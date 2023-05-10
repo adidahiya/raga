@@ -65,3 +65,5 @@ workflows:
           requires: [checkout-code]
       - check:
           requires: [checkout-code]
+      - dist:
+          requires: [checkout-code]
