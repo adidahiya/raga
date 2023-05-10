@@ -4,26 +4,38 @@ aliases:
   - &docker-node-image
     - image: cimg/node:18.16
 
-  - &restore-node-modules-cache
-    name: Restore node_modules cache
-    key: yarn-packages-{{ checksum "yarn.lock" }}
-
   - &save-node-modules-cache
     name: Save node_modules cache
     paths:
         - node_modules
     key: yarn-packages-{{ checksum "yarn.lock" }}
 
+  - &restore-node-modules-cache
+    name: Restore node_modules cache
+    key: yarn-packages-{{ checksum "yarn.lock" }}
+
+  - &save-yarn-cache
+    name: Save yarnpkg cache
+    paths:
+      - .yarn/cache
+    key: yarn-cache-v1
+
+  - &restore-yarn-cache
+    name: Restore yarnpkg cache
+    key: yarn-cache-v1
+
 jobs:
   checkout-code:
     docker: *docker-node-image
     steps:
       - checkout
+      - restore_cache: *restore-yarn-cache
       - restore_cache: *restore-node-modules-cache
       - run: sudo corepack enable
       - run: corepack prepare yarn@3.5.1 --activate
       - run: yarn
       - save_cache: *save-node-modules-cache
+      - save_cache: *save-yarn-cache
       - persist_to_workspace:
           root: "."
           paths: [packages/*/node_modules]
@@ -53,6 +65,7 @@ jobs:
     docker: *docker-node-image
     steps:
       - checkout
+      - run: sudo apt-get install -y dpkg fakeroot
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: yarn lerna run dist
