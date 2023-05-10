@@ -8,9 +8,9 @@ aliases:
     name: Restore node_modules cache
     key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
 
-  - &restore-pnpm-global-store
-    name: Restore pnpm cache
-    key: pnpm-cache-v1
+  # - &restore-pnpm-global-store
+  #   name: Restore pnpm cache
+  #   key: pnpm-cache-v1
 
   - &save-node-modules-cache
     name: Save node_modules cache
@@ -18,27 +18,23 @@ aliases:
         - node_modules
     key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
 
-  - &save-pnpm-global-store
-    name: Save pnpm cache
-    paths:
-        - ~/.local/share/pnpm/store
-    key: pnpm-cache-v1
+  # - &save-pnpm-global-store
+  #   name: Save pnpm cache
+  #   paths:
+  #       - ~/.local/share/pnpm/store
+  #   key: pnpm-cache-v1
 
 jobs:
   checkout-code:
     docker: *docker-node-image
     steps:
       - checkout
-      - run:
-          name: Install pnpm package manager
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest-8 --activate
-      - restore_cache: *restore-pnpm-global-store
+      # - restore_cache: *restore-pnpm-global-store
       - restore_cache: *restore-node-modules-cache
+      - run: corepack enable
       - run: pnpm install
       - save_cache: *save-node-modules-cache
-      - save_cache: *save-pnpm-global-store
+      # - save_cache: *save-pnpm-global-store
       - persist_to_workspace:
           root: "."
           paths: [packages/*/node_modules]
