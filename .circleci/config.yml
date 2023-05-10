@@ -31,8 +31,7 @@ jobs:
       - checkout
       # - restore_cache: *restore-pnpm-global-store
       - restore_cache: *restore-node-modules-cache
-      - run: sudo chown +x /usr/local/bin/pnpm
-      - run: corepack enable
+      - run: sudo corepack enable
       - run: pnpm install
       - save_cache: *save-node-modules-cache
       # - save_cache: *save-pnpm-global-store
