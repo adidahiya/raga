@@ -1,29 +1,16 @@
 {
-    "name": "@adahiya/music-library-scripts",
-    "version": "0.1.0",
-    "type": "module",
-    "bin": {
-        "music-library-scripts": "bin/cli.sh"
-    },
+    "name": "root",
+    "private": true,
+    "packageManager": "pnpm@8.2.0",
+    "workspaces": [
+        "packages/*"
+    ],
     "scripts": {
-        "all": "npm run build && npm run execute",
-        "build": "tsc -p src",
-        "publish": "npm publish --access public",
-        "run-cli": "node lib/cli.mjs"
-    },
-    "dependencies": {
-        "dedent": "^0.7.0",
-        "html-entities": "^2.3.3",
-        "plist": "^3.0.6",
-        "prompts": "^2.4.2"
+        "build": "lerna run build"
     },
     "devDependencies": {
-        "@types/dedent": "^0.7.0",
-        "@types/node": "^18.16.3",
-        "@types/plist": "^3.0.2",
-        "@types/prompts": "^2.4.4",
-        "prettier": "^2.8.8",
-        "typescript": "^5.0.4"
+        "lerna": "^6.6.2",
+        "prettier": "^2.8.8"
     },
     "engines": {
         "node": ">=18.16"

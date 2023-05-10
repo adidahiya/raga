@@ -1,0 +1,33 @@
+{
+    "name": "@adahiya/music-library-scripts",
+    "version": "0.1.0",
+    "type": "module",
+    "bin": {
+        "music-library-scripts": "bin/cli.sh"
+    },
+    "scripts": {
+        "build": "tsc -p src",
+        "publish": "npm publish --access public",
+        "run-cli": "node lib/cli.mjs"
+    },
+    "dependencies": {
+        "dedent": "^0.7.0",
+        "html-entities": "^2.3.3",
+        "plist": "^3.0.6",
+        "prompts": "^2.4.2"
+    },
+    "devDependencies": {
+        "@types/dedent": "^0.7.0",
+        "@types/node": "^18.16.6",
+        "@types/plist": "^3.0.2",
+        "@types/prompts": "^2.4.4",
+        "typescript": "^5.0.4"
+    },
+    "engines": {
+        "node": ">=18.16"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:adidahiya/music-library-scripts.git"
+    }
+}
