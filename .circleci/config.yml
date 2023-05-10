@@ -43,18 +43,18 @@ jobs:
           root: "."
           paths: [packages/*/node_modules]
 
-    build:
-      docker: *docker-node-image
-      steps:
-        - checkout
-        - restore_cache: *restore-node-modules-cache
-        - attach_workspace: { at: "." }
-        - run: yarn compile
-        - persist_to_workspace:
-            root: "."
-            paths:
-              - packages/*/lib
-              - packages/*/dist
+  build:
+    docker: *docker-node-image
+    steps:
+      - checkout
+      - restore_cache: *restore-node-modules-cache
+      - attach_workspace: { at: "." }
+      - run: yarn compile
+      - persist_to_workspace:
+          root: "."
+          paths:
+            - packages/*/lib
+            - packages/*/dist
 
 workflows:
   build:
