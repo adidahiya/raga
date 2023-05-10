@@ -1,7 +1,6 @@
 {
-    "version": "4.9.4",
+    "version": "5.0.4",
     "compilerOptions": {
-        "outDir": "../lib",
         "declaration": false,
         "experimentalDecorators": true,
         "importHelpers": true,

@@ -73,5 +73,5 @@ There's an automator workflow in this repo which does most of the above steps fo
 
 ## Development tasks
 
--   Build from source: `pnpm build`
--   Run CLI: `pnpm run-cli`
+-   Build from source: `yarn build`
+-   Run CLI: `yarn run-cli`

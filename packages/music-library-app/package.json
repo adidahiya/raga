@@ -1,0 +1,39 @@
+{
+    "name": "@adahiya/music-library-app",
+    "productName": "music-library-app",
+    "version": "1.0.0",
+    "description": "UI for running music library management",
+    "main": ".vite/build/main.js",
+    "scripts": {
+        "dev": "electron-forge start",
+        "package": "electron-forge package",
+        "dist": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "echo \"No linting configured\"",
+        "check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "electron-squirrel-startup": "^1.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^6.1.1",
+        "@electron-forge/maker-deb": "^6.1.1",
+        "@electron-forge/maker-rpm": "^6.1.1",
+        "@electron-forge/maker-squirrel": "^6.1.1",
+        "@electron-forge/maker-zip": "^6.1.1",
+        "@electron-forge/plugin-vite": "^6.1.1",
+        "@types/node": "^18.16.6",
+        "@types/react": "^18.2.6",
+        "@types/react-dom": "^18.2.4",
+        "electron": "24.2.0",
+        "typescript": "^5.0.4"
+    },
+    "keywords": [],
+    "author": {
+        "name": "Adi Dahiya",
+        "email": "adi.dahiya14@gmail.com"
+    },
+    "license": "MIT"
+}
