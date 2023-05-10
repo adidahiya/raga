@@ -45,7 +45,7 @@ jobs:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
-      - run: yarn compile
+      - run: yarn build
       - persist_to_workspace:
           root: "."
           paths:
