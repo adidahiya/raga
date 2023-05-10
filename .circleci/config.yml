@@ -60,5 +60,5 @@ workflows:
   build:
     jobs:
       - checkout-code
-      - build
+      - build:
           requires: [checkout-code]
