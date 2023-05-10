@@ -1,6 +1,6 @@
 node_modules/
-/data/
-/lib/
+data/
+lib/
 .cache/
 .DS_Store
 .*.un~

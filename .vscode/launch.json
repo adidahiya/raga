@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Launch CLI",
-            "program": "${workspaceFolder}/lib/cli.mjs",
+            "program": "${workspaceFolder}/packages/music-library-scripts/lib/cli.mjs",
             "request": "launch",
             "skipFiles": ["<node_internals>/**"],
             "type": "node"
