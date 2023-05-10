@@ -21,6 +21,7 @@ jobs:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - run: sudo corepack enable
+      - run: corepack prepare yarn@3.5.1 --activate
       - run: yarn
       - save_cache: *save-node-modules-cache
       - persist_to_workspace:
