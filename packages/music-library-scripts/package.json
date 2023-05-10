@@ -2,11 +2,9 @@
     "name": "@adahiya/music-library-scripts",
     "version": "0.1.0",
     "type": "module",
-    "bin": {
-        "music-library-scripts": "bin/cli.sh"
-    },
+    "bin": "bin/cli.sh",
     "scripts": {
-        "build": "tsc -p src",
+        "build": "tsc",
         "publish": "npm publish --access public",
         "run-cli": "node lib/cli.mjs"
     },

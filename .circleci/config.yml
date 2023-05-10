@@ -4,37 +4,38 @@ aliases:
   - &docker-node-image
     - image: cimg/node:18.16
 
-  - &restore-node-modules-cache
-    name: Restore node_modules cache
-    key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
-
-  # - &restore-pnpm-global-store
-  #   name: Restore pnpm cache
-  #   key: pnpm-cache-v1
-
   - &save-node-modules-cache
     name: Save node_modules cache
     paths:
         - node_modules
-    key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+    key: yarn-packages-{{ checksum "yarn.lock" }}
 
-  # - &save-pnpm-global-store
-  #   name: Save pnpm cache
-  #   paths:
-  #       - ~/.local/share/pnpm/store
-  #   key: pnpm-cache-v1
+  - &restore-node-modules-cache
+    name: Restore node_modules cache
+    key: yarn-packages-{{ checksum "yarn.lock" }}
+
+  - &save-yarn-cache
+    name: Save yarnpkg cache
+    paths:
+      - .yarn/cache
+    key: yarn-cache-v1
+
+  - &restore-yarn-cache
+    name: Restore yarnpkg cache
+    key: yarn-cache-v1
 
 jobs:
   checkout-code:
     docker: *docker-node-image
     steps:
       - checkout
-      # - restore_cache: *restore-pnpm-global-store
+      - restore_cache: *restore-yarn-cache
       - restore_cache: *restore-node-modules-cache
       - run: sudo corepack enable
-      - run: pnpm install
+      - run: corepack prepare yarn@3.5.1 --activate
+      - run: yarn
       - save_cache: *save-node-modules-cache
-      # - save_cache: *save-pnpm-global-store
+      - save_cache: *save-yarn-cache
       - persist_to_workspace:
           root: "."
           paths: [packages/*/node_modules]
@@ -45,12 +46,29 @@ jobs:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
-      - run: yarn build
+      - run: yarn lerna run build
       - persist_to_workspace:
           root: "."
           paths:
             - packages/*/lib
             - packages/*/dist
+
+  check:
+    docker: *docker-node-image
+    steps:
+      - checkout
+      - restore_cache: *restore-node-modules-cache
+      - attach_workspace: { at: "." }
+      - run: yarn lerna run check
+
+  # dist:
+  #   docker: *docker-node-image
+  #   steps:
+  #     - checkout
+  #     - run: sudo apt-get install -y dpkg fakeroot
+  #     - restore_cache: *restore-node-modules-cache
+  #     - attach_workspace: { at: "." }
+  #     - run: yarn lerna run dist
 
 workflows:
   build:
@@ -58,3 +76,7 @@ workflows:
       - checkout-code
       - build:
           requires: [checkout-code]
+      - check:
+          requires: [checkout-code]
+      # - dist:
+      #     requires: [checkout-code]

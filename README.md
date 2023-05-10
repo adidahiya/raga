@@ -13,5 +13,4 @@ Getting started:
 
 Tasks
 
--   Build from source: `pnpm build`
--   Run CLI: `pnpm run-cli`
+-   TODO
