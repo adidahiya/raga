@@ -7,3 +7,4 @@ lib/
 .*.swp
 .yarn/cache
 .yarn/install-state.gz
+**/bin/standalone
