@@ -4,9 +4,10 @@
     "type": "module",
     "bin": "bin/cli.sh",
     "scripts": {
-        "build": "yarn build:arm && yarn build:x86",
-        "build:arm": "deno compile --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write --target aarch64-apple-darwin --output bin/standalone/darwin-arm src/main.mts",
-        "build:x86": "deno compile --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write --target x86_64-apple-darwin --output bin/standalone/darwin-x86 src/main.mts",
+        "build": "tsc",
+        "dist": "yarn dist:arm && yarn dist:x86",
+        "dist:arm": "deno compile --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write --target aarch64-apple-darwin --output bin/standalone/darwin-arm src/main.mts",
+        "dist:x86": "deno compile --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write --target x86_64-apple-darwin --output bin/standalone/darwin-x86 src/main.mts",
         "clean": "rm -rf lib/ bin/standalone/",
         "publish": "npm publish --access public",
         "run-deno": "deno run --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write src/main.mts",

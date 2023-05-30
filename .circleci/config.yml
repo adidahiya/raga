@@ -29,12 +29,6 @@ jobs:
     docker: *docker-node-image
     steps:
       - checkout
-      - run:
-          name: Install Deno
-          command: |
-            curl -fsSL https://deno.land/x/install/install.sh | sh
-            export DENO_INSTALL="/home/circleci/.deno"
-            export PATH="$DENO_INSTALL/bin:$PATH"
       - restore_cache: *restore-yarn-cache
       - restore_cache: *restore-node-modules-cache
       - run: sudo corepack enable
