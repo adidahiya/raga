@@ -2,60 +2,20 @@
 
 [![npm](https://img.shields.io/npm/v/@adahiya/music-library-tools-cli.svg?label=@adahiya/music-library-tools-cli)](https://www.npmjs.com/package/@adahiya/music-library-tools-cli)
 
-Requirements: Node.js v18.16+ (see version specified in `.nvmrc`)
-
-## Getting started
-
-### Node.js CLI
-
-To run the Node.js CLI, you'll need to make sure you have the Node.js runtime installed:
-
--   Install [nvm](https://github.com/nvm-sh/nvm)
--   In a terminal, run `nvm install 18 && nvm use 18`
-
-Next, you can install these scripts as a global NPM library:
-
-```sh
-npm install --global @adahiya/music-library-tools-cli
-```
-
-### Deno CLI
-
-> Experimental: for developers only
-
-To run the [Deno](https://deno.com/runtime) CLI, make sure you have Deno v1.34+ installed.
-
-The `yarn run-deno` build task in this project runs the Deno ClI.
-
-
-## `convert-swinsian-to-rekordbox-itunes-xml-library`
-
-Converts a Swinsian library to Rekordbox iTunes XML format.
+## Usage guide: convert a Swinsian library to Rekordbox iTunes XML format
 
 ### 1. Export your Swinsian library to an XML file
 
 ![swinsian-export-1](./docs/assets/swinsian-export-library.png)
 ![swinsian-export-2](./docs/assets/swinsian-export-library-location.png)
 
-### 2. Run the Node.js script to generate a `ModifiedLibrary.xml` file
+### 2. Run the `music-library-tools-cli` application
 
-If you have your global `node_modules` configured on your shell's `$PATH` correctly, you can simply run the binary after installing the package:
+Download the latest release from the [Releases page](https://github.com/adidahiya/music-library-scripts/releases).
 
-```
-music-library-tools-cli
-```
-
-If not, you can still run it via `npm`:
+Run the application binary for your platform (ARM or x86) and follow the terminal prompts.
 
 ```
-npm exec --global music-library-tools-cli
-```
-
-It will prompt you for a path to the exported `SwinsianLibrary.xml` file, and output something like this to the console:
-
-```
-> npm exec --global music-library-tools-cli
-
 ✔ Which script would you like to run? › Convert Swinsian library to Music.app/iTunes XML format
 ✔ Where is your exported SwinsianLibrary.xml located? … /Users/adi/Music/Swinsian export/Latest
 Loading library at /Users/adi/Music/Swinsian export/Latest/SwinsianLibrary.xml
@@ -76,9 +36,9 @@ you can just hit the refresh button to load the library when you run this proces
 
 ![refresh](./docs/assets/rekordbox-refresh-itunes-xml.png)
 
-### Automator workflow
+## Experimental: automator workflow
 
-There's an automator workflow in this repo which does most of the above steps for you. Here's an overview of its steps:
+There's an experimental automator workflow in this repo which does most of the above steps for you. Here's an overview of its steps:
 
 ![workflow-overview](./automator/export-swinsian-library.workflow/Contents/QuickLook/Preview.png)
 
