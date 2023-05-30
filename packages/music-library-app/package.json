@@ -1,7 +1,7 @@
 {
     "name": "@adahiya/music-library-app",
     "productName": "music-library-app",
-    "version": "1.0.0",
+    "version": "0.0.0",
     "description": "UI for running music library management",
     "main": ".vite/build/main.js",
     "scripts": {
