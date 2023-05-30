@@ -6,7 +6,9 @@ Requirements: Node.js v18.16+ (see version specified in `.nvmrc`)
 
 ## Getting started
 
-Before you run the scripts, you'll need to make sure you have Node.js installed:
+### Node.js CLI
+
+To run the Node.js CLI, you'll need to make sure you have the Node.js runtime installed:
 
 -   Install [nvm](https://github.com/nvm-sh/nvm)
 -   In a terminal, run `nvm install 18 && nvm use 18`
@@ -16,6 +18,15 @@ Next, you can install these scripts as a global NPM library:
 ```sh
 npm install --global @adahiya/music-library-tools-cli
 ```
+
+### Deno CLI
+
+> Experimental: for developers only
+
+To run the [Deno](https://deno.com/runtime) CLI, make sure you have Deno v1.34+ installed.
+
+The `yarn run-deno` build task in this project runs the Deno ClI.
+
 
 ## `convert-swinsian-to-rekordbox-itunes-xml-library`
 

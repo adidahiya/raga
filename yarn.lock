@@ -35,6 +35,7 @@ __metadata:
     "@types/node": ^18.16.6
     "@types/prompts": ^2.4.4
     dedent: ^0.7.0
+    minimist: ^1.2.8
     prompts: ^2.4.2
     typescript: ^5.0.4
   bin:
@@ -42,7 +43,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adahiya/music-library-tools-lib@workspace:^, @adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib":
+"@adahiya/music-library-tools-deno@workspace:packages/music-library-tools-deno":
+  version: 0.0.0-use.local
+  resolution: "@adahiya/music-library-tools-deno@workspace:packages/music-library-tools-deno"
+  dependencies:
+    "@adahiya/music-library-tools-lib": ^0.1.0
+  languageName: unknown
+  linkType: soft
+
+"@adahiya/music-library-tools-lib@^0.1.0, @adahiya/music-library-tools-lib@workspace:^, @adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib":
   version: 0.0.0-use.local
   resolution: "@adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib"
   dependencies:
@@ -5600,7 +5609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.5, minimist@npm:^1.2.6":
+"minimist@npm:^1.2.0, minimist@npm:^1.2.5, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 75a6d645fb122dad29c06a7597bddea977258957ed88d7a6df59b5cd3fe4a527e253e9bbf2e783e4b73657f9098b96a5fe96ab8a113655d4109108577ecf85b0

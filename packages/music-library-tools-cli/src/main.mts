@@ -1,5 +1,6 @@
 import dedent from "dedent";
-import { parseArgs } from "node:util";
+import { argv } from "node:process";
+import parseArgs from "minimist";
 import prompts from "prompts";
 
 import {
@@ -9,19 +10,14 @@ import {
     getOutputLibraryPath,
 } from "@adahiya/music-library-tools-lib";
 
-const args = parseArgs({
-    options: {
-        "non-interactive": {
-            type: "boolean",
-            short: "i",
-        },
-        help: {
-            type: "boolean",
-        },
+const args = parseArgs(argv.slice(1), {
+    boolean: ["help", "non-interactive"],
+    alias: {
+        i: "non-interactive",
     },
 });
 
-if (args.values.help) {
+if (args.help) {
     console.info(dedent`
         music-library-scripts
 
@@ -40,7 +36,7 @@ const enum ScriptId {
 let whichScript = ScriptId.ConvertSwinsianLibrary;
 let libraryLocation = DEFAULT_SWINSIAN_EXPORT_FOLDER;
 
-if (!args.values["non-interactive"]) {
+if (!args["non-interactive"]) {
     const answers = await prompts([
         {
             type: "select",

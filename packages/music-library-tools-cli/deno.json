@@ -1,0 +1,10 @@
+{
+    "imports": {
+        "@adahiya/music-library-tools-lib": "../../node_modules/@adahiya/music-library-tools-lib/lib/index.mjs",
+        "dedent": "npm:dedent@^0.7.0",
+        "html-entities": "npm:html-entities@^2.3.3",
+        "minimist": "npm:minimist@^1.2.8",
+        "plist": "npm:plist@^3.0.6",
+        "prompts": "npm:prompts@^2.4.2"
+    }
+}

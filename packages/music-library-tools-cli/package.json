@@ -6,11 +6,13 @@
     "scripts": {
         "build": "tsc",
         "publish": "npm publish --access public",
-        "run-cli": "node lib/main.mjs"
+        "run-deno": "deno run --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write src/main.mts",
+        "run-node": "node lib/main.mjs"
     },
     "dependencies": {
         "@adahiya/music-library-tools-lib": "workspace:^",
         "dedent": "^0.7.0",
+        "minimist": "^1.2.8",
         "prompts": "^2.4.2"
     },
     "devDependencies": {
