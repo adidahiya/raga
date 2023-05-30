@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc",
         "publish": "npm publish --access public",
-        "run-cli": "node lib/cli.mjs"
+        "run-cli": "node lib/main.mjs"
     },
     "dependencies": {
         "@adahiya/music-library-tools-lib": "workspace:^",

@@ -6,8 +6,7 @@
     "types": "lib/index.d.mts",
     "scripts": {
         "build": "tsc",
-        "publish": "npm publish --access public",
-        "run-cli": "node lib/cli.mjs"
+        "publish": "npm publish --access public"
     },
     "dependencies": {
         "dedent": "^0.7.0",
