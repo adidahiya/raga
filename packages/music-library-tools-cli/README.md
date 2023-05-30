@@ -1,6 +1,6 @@
-# @adahiya/music-library-scripts CLI
+# @adahiya/music-library-tools-cli
 
-[![npm](https://img.shields.io/npm/v/@adahiya/music-library-scripts.svg?label=@adahiya/music-library-scripts)](https://www.npmjs.com/package/@adahiya/music-library-scripts)
+[![npm](https://img.shields.io/npm/v/@adahiya/music-library-tools-cli.svg?label=@adahiya/music-library-tools-cli)](https://www.npmjs.com/package/@adahiya/music-library-tools-cli)
 
 Requirements: Node.js v18.16+ (see version specified in `.nvmrc`)
 
@@ -14,7 +14,7 @@ Before you run the scripts, you'll need to make sure you have Node.js installed:
 Next, you can install these scripts as a global NPM library:
 
 ```sh
-npm install --global @adahiya/music-library-scripts
+npm install --global @adahiya/music-library-tools-cli
 ```
 
 ## `convert-swinsian-to-rekordbox-itunes-xml-library`
@@ -31,19 +31,19 @@ Converts a Swinsian library to Rekordbox iTunes XML format.
 If you have your global `node_modules` configured on your shell's `$PATH` correctly, you can simply run the binary after installing the package:
 
 ```
-music-library-scripts
+music-library-tools-cli
 ```
 
 If not, you can still run it via `npm`:
 
 ```
-npm exec --global music-library-scripts
+npm exec --global music-library-tools-cli
 ```
 
 It will prompt you for a path to the exported `SwinsianLibrary.xml` file, and output something like this to the console:
 
 ```
-> npm exec --global music-library-scripts
+> npm exec --global music-library-tools-cli
 
 ✔ Which script would you like to run? › Convert Swinsian library to Music.app/iTunes XML format
 ✔ Where is your exported SwinsianLibrary.xml located? … /Users/adi/Music/Swinsian export/Latest

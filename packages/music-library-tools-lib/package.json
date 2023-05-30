@@ -1,8 +1,9 @@
 {
-    "name": "@adahiya/music-library-scripts",
+    "name": "@adahiya/music-library-tools-lib",
     "version": "0.1.0",
     "type": "module",
-    "bin": "bin/cli.sh",
+    "main": "lib/index.mjs",
+    "types": "lib/index.d.mts",
     "scripts": {
         "build": "tsc",
         "publish": "npm publish --access public",

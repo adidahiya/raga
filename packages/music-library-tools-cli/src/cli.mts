@@ -2,11 +2,12 @@ import dedent from "dedent";
 import { parseArgs } from "node:util";
 import prompts from "prompts";
 
-import convertSwinsianToItunesXmlLibrary, {
+import {
+    convertSwinsianToItunesXmlLibrary,
     DEFAULT_SWINSIAN_EXPORT_FOLDER,
     getSwinsianLibraryPath,
     getOutputLibraryPath,
-} from "./convert-swinsian-to-itunes-xml-library/index.mjs";
+} from "@adahiya/music-library-tools-lib";
 
 const args = parseArgs({
     options: {

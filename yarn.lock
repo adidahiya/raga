@@ -26,9 +26,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adahiya/music-library-scripts@workspace:packages/music-library-scripts":
+"@adahiya/music-library-tools-cli@workspace:packages/music-library-tools-cli":
   version: 0.0.0-use.local
-  resolution: "@adahiya/music-library-scripts@workspace:packages/music-library-scripts"
+  resolution: "@adahiya/music-library-tools-cli@workspace:packages/music-library-tools-cli"
+  dependencies:
+    "@adahiya/music-library-tools-lib": "workspace:^"
+    "@types/dedent": ^0.7.0
+    "@types/node": ^18.16.6
+    "@types/prompts": ^2.4.4
+    dedent: ^0.7.0
+    prompts: ^2.4.2
+    typescript: ^5.0.4
+  bin:
+    music-library-tools-cli: bin/cli.sh
+  languageName: unknown
+  linkType: soft
+
+"@adahiya/music-library-tools-lib@workspace:^, @adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib":
+  version: 0.0.0-use.local
+  resolution: "@adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib"
   dependencies:
     "@types/dedent": ^0.7.0
     "@types/node": ^18.16.6
@@ -39,8 +55,6 @@ __metadata:
     plist: ^3.0.6
     prompts: ^2.4.2
     typescript: ^5.0.4
-  bin:
-    music-library-scripts: bin/cli.sh
   languageName: unknown
   linkType: soft
 
