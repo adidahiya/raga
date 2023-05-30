@@ -43,15 +43,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adahiya/music-library-tools-deno@workspace:packages/music-library-tools-deno":
-  version: 0.0.0-use.local
-  resolution: "@adahiya/music-library-tools-deno@workspace:packages/music-library-tools-deno"
-  dependencies:
-    "@adahiya/music-library-tools-lib": ^0.1.0
-  languageName: unknown
-  linkType: soft
-
-"@adahiya/music-library-tools-lib@^0.1.0, @adahiya/music-library-tools-lib@workspace:^, @adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib":
+"@adahiya/music-library-tools-lib@workspace:^, @adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib":
   version: 0.0.0-use.local
   resolution: "@adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib"
   dependencies:
