@@ -32,7 +32,7 @@ jobs:
       - restore_cache: *restore-yarn-cache
       - restore_cache: *restore-node-modules-cache
       - run: sudo corepack enable
-      - run: corepack prepare yarn@3.5.1 --activate
+      - run: corepack prepare yarn@4.0.0 --activate
       - run: yarn
       - save_cache: *save-node-modules-cache
       - save_cache: *save-yarn-cache
