@@ -2,7 +2,7 @@ version: 2.1
 
 aliases:
   - &docker-node-image
-    - image: cimg/node:18.16
+    - image: cimg/node:18.18
 
   - &save-node-modules-cache
     name: Save node_modules cache

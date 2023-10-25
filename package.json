@@ -6,11 +6,11 @@
         "packages/*"
     ],
     "devDependencies": {
-        "lerna": "^7.0.2",
-        "prettier": "^2.8.8"
+        "lerna": "^7.4.1",
+        "prettier": "^3.0.3"
     },
     "engines": {
-        "node": ">=18.16"
+        "node": ">=18.18"
     },
     "repository": {
         "type": "git",
