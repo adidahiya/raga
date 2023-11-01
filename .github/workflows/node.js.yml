@@ -1,0 +1,38 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  # TODO: consider splitting into separate jobs once Yarn has better a better caching strategy for this environment
+  # see https://yarnpkg.com/features/caching#github-actions
+  build-check-dist:
+    runs-on: ubuntu-latest
+    env:
+      DENO_INSTALL_PATH: /home/runner/.deno
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "yarn"
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn build
+      - run: yarn check
+      - name: Install Deno
+        run: curl -fsSL https://deno.land/install.sh | sh
+      - name: Install @electron-forge/maker-deb Linux dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y dpkg fakeroot
+      - name: Build CLI and App distributions
+        run: |
+          export PATH="$DENO_INSTALL_PATH/bin:$PATH"
+          yarn dist
