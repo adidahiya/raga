@@ -26,8 +26,6 @@ jobs:
       - run: yarn install --immutable
       - run: yarn build
       - run: yarn check
-      - name: Debugging with ssh
-        uses: lhotari/action-upterm@v1
       - name: Install Deno
         run: curl -fsSL https://deno.land/install.sh | sh
       - name: Install @electron-forge/maker-deb Linux dependencies
