@@ -6,7 +6,7 @@
     "types": "lib/index.d.mts",
     "scripts": {
         "build": "tsc",
-        "publish": "npm publish --access public"
+        "publish-npm": "npm publish --access public"
     },
     "dependencies": {
         "dedent": "^1.5.1",
@@ -30,7 +30,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git@github.com:adidahiya/music-library-scripts.git"
+        "url": "git+ssh://git@github.com/adidahiya/music-library-scripts.git"
     },
     "license": "MIT"
 }
