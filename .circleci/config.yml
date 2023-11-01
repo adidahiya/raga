@@ -65,7 +65,6 @@ jobs:
   dist:
     docker: *docker-node-image
     environment:
-      DENO_INSTALL_PATH: /home/circleci/.deno
     steps:
       - checkout
       - run:
@@ -80,9 +79,12 @@ jobs:
           name: Install Deno & add to PATH
           command: |
             curl -fsSL https://deno.land/install.sh | sh
-            echo 'export PATH=$DENO_INSTALL_PATH:"$PATH"' >> "$BASH_ENV"
+            echo 'export PATH=/home/circleci/.deno:"$PATH"' >> "$BASH_ENV"
+      - run:
+          name: Build CLI and App distributions
+          command: |
             source "$BASH_ENV"
-      - run: yarn dist
+            yarn dist
 
 workflows:
   build-check:
