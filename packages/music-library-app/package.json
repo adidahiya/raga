@@ -5,9 +5,9 @@
     "description": "UI for running music library management",
     "main": ".vite/build/main.js",
     "scripts": {
-        "build": "electron-forge make",
+        "build": "electron-forge package",
         "dev": "electron-forge start",
-        "dist": "electron-forge package",
+        "dist": "electron-forge make",
         "publish": "electron-forge publish",
         "lint": "echo \"No linting configured\"",
         "check": "tsc --noEmit"

@@ -60,9 +60,6 @@ jobs:
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
-      - run:
-          name: Install electron-forge make dependencies
-          command: sudo apt-get install -y dpkg fakeroot
       - run: yarn check
 
   dist:
@@ -72,6 +69,11 @@ jobs:
       - run:
           name: Install deno
           command: curl -fsSL https://deno.land/install.sh | sh
+      - run:
+          name: Install @electron-forge/maker-deb Linux dependencies
+          command: |
+            sudo apt-get update -y
+            sudo apt-get install -y dpkg fakeroot
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
