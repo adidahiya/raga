@@ -64,14 +64,10 @@ jobs:
 
   dist:
     docker: *docker-node-image
+    environment:
+      DENO_INSTALL_PATH: /home/circleci/.deno
     steps:
       - checkout
-      - run:
-          name: Install deno
-          command: |
-            curl -fsSL https://deno.land/install.sh | sh
-            export DENO_INSTALL="/home/circleci/.deno"
-            export PATH="$DENO_INSTALL/bin:$PATH"
       - run:
           name: Install @electron-forge/maker-deb Linux dependencies
           command: |
@@ -80,6 +76,12 @@ jobs:
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
+      - run:
+          name: Install Deno & add to PATH
+          command: |
+            curl -fsSL https://deno.land/install.sh | sh
+            echo 'export PATH=$DENO_INSTALL_PATH:"$PATH"' >> "$BASH_ENV"
+            source "$BASH_ENV"
       - run: yarn dist
 
 workflows:
