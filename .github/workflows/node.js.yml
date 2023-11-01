@@ -10,6 +10,8 @@ on:
     branches: ["main"]
 
 jobs:
+  # TODO: consider splitting into separate jobs once Yarn has better a better caching strategy for this environment
+  # see https://yarnpkg.com/features/caching#github-actions
   build-check-dist:
     runs-on: ubuntu-latest
     steps:
@@ -22,19 +24,16 @@ jobs:
       - run: yarn install --immutable
       - run: yarn build
       - run: yarn check
-      - run:
-          name: Install Deno & set $BASH_ENV
-          command: |
-            curl -fsSL https://deno.land/install.sh | sh
-            echo 'export DENO_INSTALL="/home/circleci/.deno"' >> "$BASH_ENV"
-            echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> "$BASH_ENV"
-      - run:
-          name: Install @electron-forge/maker-deb Linux dependencies
-          command: |
-            sudo apt-get update -y
-            sudo apt-get install -y dpkg fakeroot
-      - run:
-          name: Build CLI and App distributions
-          command: |
-            source "$BASH_ENV"
-            yarn dist
+      - name: Install Deno & set $BASH_ENV
+        run: |
+          curl -fsSL https://deno.land/install.sh | sh
+          echo 'export DENO_INSTALL="/home/circleci/.deno"' >> "$BASH_ENV"
+          echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> "$BASH_ENV"
+      - name: Install @electron-forge/maker-deb Linux dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y dpkg fakeroot
+      - name: Build CLI and App distributions
+        run: |
+          source "$BASH_ENV"
+          yarn dist
