@@ -21,7 +21,7 @@
     },
     "devDependencies": {
         "@types/dedent": "^0.7.1",
-        "@types/node": "^20.8.8",
+        "@types/node": "^20.8.10",
         "@types/prompts": "^2.4.7",
         "typescript": "^5.2.2"
     },
