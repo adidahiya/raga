@@ -1,6 +1,6 @@
 {
     "imports": {
-        "@adahiya/music-library-tools-lib": "../../node_modules/@adahiya/music-library-tools-lib/lib/index.mjs",
+        "@adahiya/music-library-tools-lib": "../../node_modules/@adahiya/music-library-tools-lib/lib/cjs/index.js",
         "dedent": "npm:dedent@^0.7.0",
         "html-entities": "npm:html-entities@^2.3.3",
         "minimist": "npm:minimist@^1.2.8",
