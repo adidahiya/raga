@@ -68,7 +68,10 @@ jobs:
       - checkout
       - run:
           name: Install deno
-          command: curl -fsSL https://deno.land/install.sh | sh
+          command: |
+            curl -fsSL https://deno.land/install.sh | sh
+            export DENO_INSTALL="/home/circleci/.deno"
+            export PATH="$DENO_INSTALL/bin:$PATH"
       - run:
           name: Install @electron-forge/maker-deb Linux dependencies
           command: |
