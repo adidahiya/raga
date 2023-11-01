@@ -1,3 +1,3 @@
 export default function () {
-    return <div>Hello world</div>;
+    return <div>Music Library App</div>;
 }
