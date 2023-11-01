@@ -45,6 +45,7 @@ jobs:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
+      - run: sudo corepack enable
       - run: yarn lerna run build
       - persist_to_workspace:
           root: "."
@@ -58,6 +59,7 @@ jobs:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
+      - run: sudo corepack enable
       - run: yarn lerna run check
 
   # dist:
