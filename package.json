@@ -7,8 +7,8 @@
     ],
     "scripts": {
         "build": "yarn lerna run build",
-        "check": "yarn lerna run check",
-        "dist": "yarn lerna run dist"
+        "dist": "yarn lerna run dist",
+        "lint": "yarn lerna run lint"
     },
     "devDependencies": {
         "@yarnpkg/types": "^4.0.0",

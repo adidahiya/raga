@@ -8,10 +8,10 @@
     "scripts": {
         "build": "electron-forge package",
         "dev": "electron-forge start",
+        "clean": "rm -rf .vite/* out/*",
         "dist": "electron-forge make",
-        "publish": "electron-forge publish",
         "lint": "echo \"No linting configured\"",
-        "check": "tsc --noEmit"
+        "publish-electron": "electron-forge publish"
     },
     "dependencies": {
         "@adahiya/music-library-tools-lib": "workspace:^",
