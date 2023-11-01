@@ -35,10 +35,9 @@ jobs:
       - run: yarn build
       - uses: actions/upload-artifact@v3
         with:
-          name: lib-and-out
+          name: lib
           path: |
             packages/*/lib
-            packages/*/out
 
   check:
     needs: install
@@ -66,5 +65,5 @@ jobs:
       - run: yarn install --immutable
       - uses: actions/download-artifact@v3
         with:
-          name: lib-and-out
+          name: lib
       - run: yarn dist
