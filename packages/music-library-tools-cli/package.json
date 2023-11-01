@@ -2,9 +2,7 @@
     "name": "@adahiya/music-library-tools-cli",
     "version": "0.2.0",
     "type": "module",
-    "bin": {
-        "music-library-tools-cli": "bin/cli.sh"
-    },
+    "bin": "bin/cli.sh",
     "scripts": {
         "build": "tsc",
         "dist": "yarn dist:arm && yarn dist:x86",

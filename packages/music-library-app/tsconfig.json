@@ -1,6 +1,6 @@
 {
     "extends": "../../config/tsconfig.base.json",
-    "include": ["src/*.ts"],
+    "include": ["src"],
     "compilerOptions": {
         "jsx": "react-jsx",
         "sourceMap": false
