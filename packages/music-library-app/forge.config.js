@@ -1,22 +1,21 @@
 module.exports = {
-    packagerConfig: {},
+    packagerConfig: {
+        executableName: "music-library-app",
+    },
     rebuildConfig: {},
     makers: [
-        {
-            name: "@electron-forge/maker-squirrel",
-            config: {},
-        },
         {
             name: "@electron-forge/maker-zip",
             platforms: ["darwin"],
         },
         {
             name: "@electron-forge/maker-deb",
-            config: {},
-        },
-        {
-            name: "@electron-forge/maker-rpm",
-            config: {},
+            config: {
+                options: {
+                    genericName: "Music Library App",
+                    bin: "music-library-app",
+                },
+            },
         },
     ],
     plugins: [
