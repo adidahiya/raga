@@ -30,5 +30,3 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "./index.css";
 import "./ui/main";
-
-console.log('👋 This message is being logged by "renderer.js", included via Vite');

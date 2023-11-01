@@ -1,5 +1,7 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, utilityProcess, ipcMain } from "electron";
 import path from "node:path";
+import { ClientEventChannel, isServerEventChannel } from "./events";
+import { DEBUG } from "./common/constants";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -13,9 +15,10 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 const createWindow = () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1200,
+        height: 800,
         webPreferences: {
+            contextIsolation: true,
             preload: path.join(__dirname, "preload.js"),
         },
     });
@@ -29,7 +32,44 @@ const createWindow = () => {
         );
     }
 
-    // Open the DevTools.
+    // Note that server.ts must be configured as an electron-forge Vite entry point to get transpiled adjacent to this module
+    const serverProcess = utilityProcess.fork(path.resolve(__dirname, "./server.js"), [], {
+        serviceName: "server",
+        stdio: "inherit",
+    });
+
+    for (const channel of Object.values(ClientEventChannel)) {
+        ipcMain.on(channel, (_mainEvent, ...args) => {
+            const messageToForward = {
+                channel,
+                data: { args },
+            };
+
+            if (DEBUG) {
+                console.log(
+                    `[main] received "${channel}" event from renderer, forwarding to utility process`,
+                    messageToForward,
+                );
+            }
+
+            serverProcess.postMessage(messageToForward);
+        });
+    }
+
+    serverProcess.on("message", ({ channel, data }) => {
+        if (!isServerEventChannel(channel)) {
+            return;
+        }
+
+        if (DEBUG) {
+            console.log(
+                `[main] received "${channel}" message from server, forwarding to renderer process`,
+            );
+        }
+
+        mainWindow.webContents.send(channel, data);
+    });
+
     mainWindow.webContents.openDevTools();
 };
 
@@ -54,6 +94,3 @@ app.on("activate", () => {
         createWindow();
     }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.

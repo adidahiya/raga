@@ -1,0 +1,26 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 51px);
+
+    :global(.#{bp.$ns}-non-ideal-state) {
+        flex-grow: 1;
+    }
+}
+
+.tableScrollContainer {
+    overflow-y: scroll;
+    max-height: 80vh;
+}
+
+.table {
+    width: 100%;
+}
+
+.libraryLoaded {
+    .loadLibraryButton {
+        float: right;
+    }
+}

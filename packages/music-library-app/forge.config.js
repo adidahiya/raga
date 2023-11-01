@@ -34,6 +34,10 @@ module.exports = {
                         entry: "src/preload.ts",
                         config: "vite.preload.config.mjs",
                     },
+                    {
+                        entry: "src/server.ts",
+                        config: "vite.main.config.mjs",
+                    },
                 ],
                 renderer: [
                     {
