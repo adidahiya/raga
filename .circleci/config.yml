@@ -46,7 +46,7 @@ jobs:
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
-      - run: yarn lerna run build
+      - run: yarn build
       - persist_to_workspace:
           root: "."
           paths:
@@ -60,16 +60,20 @@ jobs:
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
-      - run: yarn lerna run check
+      - run: yarn check
 
-  # dist:
-  #   docker: *docker-node-image
-  #   steps:
-  #     - checkout
-  #     - run: sudo apt-get install -y dpkg fakeroot
-  #     - restore_cache: *restore-node-modules-cache
-  #     - attach_workspace: { at: "." }
-  #     - run: yarn lerna run dist
+  dist:
+    docker: *docker-node-image
+    steps:
+      - checkout
+      - run:
+          name: Install deno
+          command: |
+            curl -fsSL https://deno.land/install.sh | sh
+      - restore_cache: *restore-node-modules-cache
+      - attach_workspace: { at: "." }
+      - run: sudo corepack enable
+      - run: yarn dist
 
 workflows:
   build-check:
@@ -79,5 +83,5 @@ workflows:
           requires: [checkout-code]
       - check:
           requires: [checkout-code]
-      # - dist:
-      #     requires: [checkout-code]
+      - dist:
+          requires: [build]

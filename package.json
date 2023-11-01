@@ -5,6 +5,11 @@
     "workspaces": [
         "packages/*"
     ],
+    "scripts": {
+        "build": "yarn lerna run build",
+        "check": "yarn lerna run check",
+        "dist": "yarn lerna run dist"
+    },
     "devDependencies": {
         "@yarnpkg/types": "^4.0.0",
         "lerna": "^7.4.2",

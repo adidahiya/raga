@@ -4,13 +4,14 @@
 
 Requirements:
 
--   Node.js v18.16+ (see version specified in `.nvmrc`)
--   PNPM v8+
+-   Node.js v20.x (see version specified in `.nvmrc`)
+-   Yarn v4.x (see version specified in `package.json`)
+-   Deno v1.x (see [installation docs](https://docs.deno.com/runtime/manual/getting_started/installation))
 
 Getting started:
 
 -   `corepack enable`
 
-Tasks
+Dev tasks
 
--   TODO
+-   `yarn lerna run build`
