@@ -1,6 +1,6 @@
-import { PlaylistDefinition } from "../models/playlists.mjs";
-import { BasicTrackDefinition } from "../models/tracks.mjs";
-import { MusicLibraryPlist } from "../models/library.mjs";
+import { PlaylistDefinition } from "../models/playlists.js";
+import { BasicTrackDefinition } from "../models/tracks.js";
+import { MusicLibraryPlist } from "../models/library.js";
 
 type TrackDefinitionVisitor = (track: BasicTrackDefinition) => void;
 
