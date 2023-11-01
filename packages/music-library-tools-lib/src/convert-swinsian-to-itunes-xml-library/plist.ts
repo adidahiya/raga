@@ -1,7 +1,7 @@
 import plist from "plist";
 import { readFileSync } from "node:fs";
-import { collapsePropertiesIntoSingleLine } from "../utils/xmlUtils.mjs";
-import { MusicLibraryPlist } from "../models/library.mjs";
+import { collapsePropertiesIntoSingleLine } from "../utils/xmlUtils.js";
+import { MusicLibraryPlist } from "../models/library.js";
 
 export function loadPlistFile(path: string): MusicLibraryPlist {
     console.info(`Loading library at ${path}`);

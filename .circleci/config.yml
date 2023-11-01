@@ -53,14 +53,14 @@ jobs:
             - packages/*/lib
             - packages/*/dist
 
-  check:
+  lint:
     docker: *docker-node-image
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
-      - run: yarn check
+      - run: yarn lint
 
   dist:
     docker: *docker-node-image
@@ -88,12 +88,12 @@ jobs:
             yarn dist
 
 workflows:
-  build-check:
+  build-lint-dist:
     jobs:
       - checkout-code
       - build:
           requires: [checkout-code]
-      - check:
+      - lint:
           requires: [checkout-code]
       - dist:
           requires: [build]

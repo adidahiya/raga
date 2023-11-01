@@ -12,7 +12,7 @@ on:
 jobs:
   # TODO: consider splitting into separate jobs once Yarn has better a better caching strategy for this environment
   # see https://yarnpkg.com/features/caching#github-actions
-  build-check-dist:
+  build-lint-dist:
     runs-on: ubuntu-latest
     env:
       DENO_INSTALL_PATH: /home/runner/.deno
@@ -25,7 +25,7 @@ jobs:
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn build
-      - run: yarn check
+      - run: yarn lint
       - name: Install Deno
         run: curl -fsSL https://deno.land/install.sh | sh
       - name: Install @electron-forge/maker-deb Linux dependencies

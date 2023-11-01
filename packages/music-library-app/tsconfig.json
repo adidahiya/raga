@@ -1,10 +1,11 @@
 {
     "extends": "../../config/tsconfig.base.json",
-    "include": ["src/*.ts"],
+    "include": ["src"],
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
         "jsx": "react-jsx",
-        "outDir": "./lib"
+        "lib": ["dom", "es5", "es2015", "es2016", "es2017", "es2018", "es2019", "es2020"],
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "sourceMap": false
     }
 }

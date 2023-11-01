@@ -1,5 +1,5 @@
-import { BasicTrackDefinition } from "../models/tracks.mjs";
-import { PlaylistDefinition } from "../models/playlists.mjs";
+import { BasicTrackDefinition } from "./tracks.js";
+import { PlaylistDefinition } from "./playlists.js";
 
 export interface MusicLibraryPlist {
     "Application Version": string;

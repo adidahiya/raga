@@ -8,17 +8,22 @@
     "scripts": {
         "build": "electron-forge package",
         "dev": "electron-forge start",
+        "clean": "rm -rf .vite/* out/*",
         "dist": "electron-forge make",
-        "publish": "electron-forge publish",
         "lint": "echo \"No linting configured\"",
-        "check": "tsc --noEmit"
+        "publish-electron": "electron-forge publish"
     },
     "dependencies": {
+        "@adahiya/music-library-tools-lib": "workspace:^",
+        "@blueprintjs/core": "^5.6.0",
+        "@blueprintjs/icons": "^5.3.0",
+        "classnames": "^2.3.2",
         "electron-squirrel-startup": "^1.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
+        "@blueprintjs/node-build-scripts": "^8.1.0",
         "@electron-forge/cli": "^6.4.2",
         "@electron-forge/maker-deb": "^6.4.2",
         "@electron-forge/maker-rpm": "^6.4.2",
@@ -29,6 +34,7 @@
         "@types/react": "^18.2.33",
         "@types/react-dom": "^18.2.14",
         "electron": "^27.0.2",
+        "sass": "^1.69.5",
         "typescript": "^5.2.2"
     },
     "keywords": [],
