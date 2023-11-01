@@ -10,19 +10,7 @@ on:
     branches: ["main"]
 
 jobs:
-  install:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: "yarn"
-      - run: corepack enable
-      - run: yarn install --immutable
-
-  build:
-    needs: install
+  build-check-dist:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,37 +21,5 @@ jobs:
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn build
-      - uses: actions/upload-artifact@v3
-        with:
-          name: lib
-          path: |
-            packages/*/lib
-
-  check:
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: "yarn"
-      - run: corepack enable
-      - run: yarn install --immutable
       - run: yarn check
-
-  dist:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: "yarn"
-      - run: corepack enable
-      - run: yarn install --immutable
-      - uses: actions/download-artifact@v3
-        with:
-          name: lib
       - run: yarn dist
