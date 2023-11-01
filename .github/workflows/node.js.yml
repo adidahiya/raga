@@ -24,6 +24,8 @@ jobs:
       - run: yarn install --immutable
       - run: yarn build
       - run: yarn check
+      - name: Debugging with ssh
+        uses: lhotari/action-upterm@v1
       - name: Install Deno & set $BASH_ENV
         run: |
           curl -fsSL https://deno.land/install.sh | sh
