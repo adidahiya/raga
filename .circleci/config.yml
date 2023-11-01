@@ -76,10 +76,11 @@ jobs:
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
       - run:
-          name: Install Deno & add to PATH
+          name: Install Deno & set $BASH_ENV
           command: |
             curl -fsSL https://deno.land/install.sh | sh
-            echo 'export PATH=/home/circleci/.deno:"$PATH"' >> "$BASH_ENV"
+            echo 'export DENO_INSTALL="/home/circleci/.deno"' >> "$BASH_ENV"
+            echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> "$BASH_ENV"
       - run:
           name: Build CLI and App distributions
           command: |
