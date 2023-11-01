@@ -24,8 +24,13 @@
     "engines": {
         "node": ">=18.16"
     },
+    "author": {
+        "name": "Adi Dahiya",
+        "email": "adi.dahiya14@gmail.com"
+    },
     "repository": {
         "type": "git",
         "url": "git@github.com:adidahiya/music-library-scripts.git"
-    }
+    },
+    "license": "MIT"
 }
