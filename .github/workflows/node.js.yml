@@ -34,5 +34,5 @@ jobs:
           sudo apt-get install -y dpkg fakeroot
       - name: Build CLI and App distributions
         run: |
-          export PATH="$DENO_INSTALL/bin:$PATH"
+          export PATH="$DENO_INSTALL_PATH/bin:$PATH"
           yarn dist
