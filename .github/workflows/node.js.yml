@@ -14,6 +14,8 @@ jobs:
   # see https://yarnpkg.com/features/caching#github-actions
   build-check-dist:
     runs-on: ubuntu-latest
+    env:
+      DENO_INSTALL_PATH: /home/runner/.deno
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -26,16 +28,13 @@ jobs:
       - run: yarn check
       - name: Debugging with ssh
         uses: lhotari/action-upterm@v1
-      - name: Install Deno & set $BASH_ENV
-        run: |
-          curl -fsSL https://deno.land/install.sh | sh
-          echo 'export DENO_INSTALL="/home/circleci/.deno"' >> "$BASH_ENV"
-          echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> "$BASH_ENV"
+      - name: Install Deno
+        run: curl -fsSL https://deno.land/install.sh | sh
       - name: Install @electron-forge/maker-deb Linux dependencies
         run: |
           sudo apt-get update -y
           sudo apt-get install -y dpkg fakeroot
       - name: Build CLI and App distributions
         run: |
-          source "$BASH_ENV"
+          export PATH="$DENO_INSTALL/bin:$PATH"
           yarn dist
