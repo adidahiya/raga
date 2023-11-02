@@ -84,14 +84,29 @@ function Library(props: { library: MusicLibraryPlist }) {
         }
     }, []);
 
+    const masterPlaylist = getMasterPlaylist(props.library);
+
     return (
         <div>
             <div className={styles.libraryHeader} ref={headerRef}>
                 <H5>Stats</H5>
                 <p>Date created: {format(props.library.Date, "Pp")}</p>
-                <p># playlists: {props.library.Playlists.length}</p>
+                {masterPlaylist && (
+                    <p># tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}</p>
+                )}
+                <p># playlists: {formatStatNumber(props.library.Playlists.length)}</p>
             </div>
             <LibraryTable headerHeight={headerHeight} library={props.library} />
         </div>
     );
+}
+
+function getMasterPlaylist(library: MusicLibraryPlist) {
+    return library.Playlists.find((playlist) => playlist.Master);
+}
+
+function formatStatNumber(n: number) {
+    return new Intl.NumberFormat("en-US", {
+        style: "decimal",
+    }).format(n);
 }
