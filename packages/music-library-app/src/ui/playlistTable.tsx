@@ -1,5 +1,5 @@
 import { MusicLibraryPlist, PlaylistDefinition } from "@adahiya/music-library-tools-lib";
-import { Button, Classes, HTMLTable, Icon } from "@blueprintjs/core";
+import { Classes, HTMLTable, Icon } from "@blueprintjs/core";
 import {
     createColumnHelper,
     ExpandedState,
@@ -9,7 +9,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 
-import styles from "./libraryTable.module.scss";
+import styles from "./playlistTable.module.scss";
 import { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
 

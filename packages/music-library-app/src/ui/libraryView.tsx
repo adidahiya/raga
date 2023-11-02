@@ -8,7 +8,7 @@ import type { ContextBridgeApi } from "../contextBridgeApi";
 import { AUTO_LOAD_LIBRARY, DEBUG } from "../common/constants";
 import type { LoadedSwinsianLibraryEventPayload } from "../events";
 
-import LibraryTable from "./libraryTable";
+import PlaylistTable from "./playlistTable";
 import styles from "./libraryView.module.scss";
 
 declare global {
@@ -96,7 +96,7 @@ function Library(props: { library: MusicLibraryPlist }) {
                 )}
                 <p># playlists: {formatStatNumber(props.library.Playlists.length)}</p>
             </div>
-            <LibraryTable headerHeight={headerHeight} library={props.library} />
+            <PlaylistTable headerHeight={headerHeight} library={props.library} />
         </div>
     );
 }
