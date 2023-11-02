@@ -1,0 +1,11 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    :global(.#{bp.$ns}-non-ideal-state) {
+        flex-grow: 1;
+    }
+}

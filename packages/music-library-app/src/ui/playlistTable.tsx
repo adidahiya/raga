@@ -16,6 +16,12 @@ import classNames from "classnames";
 export interface LibraryTableProps {
     headerHeight: number;
     library: MusicLibraryPlist;
+    /** @default false */
+    showItemCounts?: boolean;
+    /** @default false */
+    showHeader?: boolean;
+    /** @default false */
+    showFooter?: boolean;
 }
 
 interface PlaylistRow {
@@ -23,7 +29,7 @@ interface PlaylistRow {
     children: PlaylistRow[];
 }
 
-export default function (props: LibraryTableProps) {
+export default function PlaylistTable(props: LibraryTableProps) {
     // TODO: cleanup
     // const playlistsByPersistentId = useMemo<Record<string, PlaylistDefinition>>(
     //     () =>
@@ -111,15 +117,20 @@ export default function (props: LibraryTableProps) {
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span># tracks</span>,
             footer: (info) => info.column.id,
+            enableHiding: true,
         }),
     ];
 
     const [expanded, setExpanded] = useState<ExpandedState>({});
+    const [columnVisibility, setColumnVisibility] = useState({
+        numberOfTracks: props.showItemCounts ?? false,
+    });
 
     const table = useReactTable({
         data: playlistRows,
         columns,
         state: {
+            columnVisibility,
             expanded,
         },
         onExpandedChange: setExpanded,
@@ -154,11 +165,13 @@ export default function (props: LibraryTableProps) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
-                <HTMLTable compact={true}>
-                    <thead>{headerRows}</thead>
-                </HTMLTable>
-            </div>
+            {props.showHeader && (
+                <div className={styles.header}>
+                    <HTMLTable compact={true}>
+                        <thead>{headerRows}</thead>
+                    </HTMLTable>
+                </div>
+            )}
             <div
                 className={styles.body}
                 style={{ maxHeight: `calc(100vh - ${props.headerHeight + 50 + 75}px)` }}
@@ -188,27 +201,30 @@ export default function (props: LibraryTableProps) {
                     </tbody>
                 </HTMLTable>
             </div>
-            <div className={styles.footer}>
-                <HTMLTable className={styles.footer} compact={true}>
-                    <thead>{headerRows}</thead>
-                    <tfoot>
-                        {table.getFooterGroups().map((footerGroup) => (
-                            <tr key={footerGroup.id}>
-                                {footerGroup.headers.map((header) => (
-                                    <th key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                  header.column.columnDef.footer,
-                                                  header.getContext(),
-                                              )}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </tfoot>
-                </HTMLTable>
-            </div>
+            {props.showFooter && (
+                <div className={styles.footer}>
+                    <HTMLTable className={styles.footer} compact={true}>
+                        <thead>{headerRows}</thead>
+                        <tfoot>
+                            {table.getFooterGroups().map((footerGroup) => (
+                                <tr key={footerGroup.id}>
+                                    {footerGroup.headers.map((header) => (
+                                        <th key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                      header.column.columnDef.footer,
+                                                      header.getContext(),
+                                                  )}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tfoot>
+                    </HTMLTable>
+                </div>
+            )}
         </div>
     );
 }
+PlaylistTable.displayName = "PlaylistTable";

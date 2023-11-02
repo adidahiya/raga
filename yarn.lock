@@ -36,6 +36,7 @@ __metadata:
     electron-squirrel-startup: "npm:^1.0.0"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-resizable-panels: "npm:^0.0.55"
     sass: "npm:^1.69.5"
     typescript: "npm:^5.2.2"
   languageName: unknown
@@ -8498,6 +8499,16 @@ __metadata:
     react: ^16.8.0 || ^17 || ^18
     react-dom: ^16.8.0 || ^17 || ^18
   checksum: 2afc495479ae4b9e67f9a1642debd7121947fe71a00c5b326301adb8288a18dca53ebd836fe9c3b7a4e2feb838df0abe8e044eb278e89b1c5d50978b0b93d0ac
+  languageName: node
+  linkType: hard
+
+"react-resizable-panels@npm:^0.0.55":
+  version: 0.0.55
+  resolution: "react-resizable-panels@npm:0.0.55"
+  peerDependencies:
+    react: ^16.14.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
+  checksum: 9b83287d2c962ff87cddae85b5233aaf61c0ff3ac30e29fcc51ac1a0ae5ea45fe78092ecf79b2e4a9dd898ca95c43dd698295b72e737d9275daac85c1ae59339
   languageName: node
   linkType: hard
 

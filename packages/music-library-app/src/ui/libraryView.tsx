@@ -1,8 +1,9 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
-import { Button, Card, Divider, H5, NonIdealState } from "@blueprintjs/core";
+import { Button, Card, H5, NonIdealState } from "@blueprintjs/core";
 import { format } from "date-fns";
 import type { IpcRendererEvent } from "electron";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { PanelGroup, Panel } from "react-resizable-panels";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
 import { AUTO_LOAD_LIBRARY, DEBUG } from "../common/constants";
@@ -10,6 +11,8 @@ import type { LoadedSwinsianLibraryEventPayload } from "../events";
 
 import PlaylistTable from "./playlistTable";
 import styles from "./libraryView.module.scss";
+import TrackTable from "./trackTable";
+import ResizeHandle from "./resizeHandle";
 
 declare global {
     interface Window {
@@ -19,7 +22,7 @@ declare global {
 
 type LibraryState = "none" | "loading" | "loaded" | "error";
 
-export default function () {
+export default function LibraryView() {
     const [libraryState, setLibraryState] = useState<LibraryState>("none");
     const [library, setLibrary] = useState<MusicLibraryPlist | undefined>(undefined);
 
@@ -96,10 +99,19 @@ function Library(props: { library: MusicLibraryPlist }) {
                 )}
                 <p># playlists: {formatStatNumber(props.library.Playlists.length)}</p>
             </div>
-            <PlaylistTable headerHeight={headerHeight} library={props.library} />
+            <PanelGroup direction="horizontal">
+                <Panel defaultSize={20} minSize={20}>
+                    <PlaylistTable headerHeight={headerHeight} library={props.library} />
+                </Panel>
+                <ResizeHandle />
+                <Panel minSize={30}>
+                    <TrackTable />
+                </Panel>
+            </PanelGroup>
         </div>
     );
 }
+LibraryView.displayName = "LibraryView";
 
 function getMasterPlaylist(library: MusicLibraryPlist) {
     return library.Playlists.find((playlist) => playlist.Master);
