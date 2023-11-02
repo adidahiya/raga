@@ -3,6 +3,7 @@ export interface PlaylistDefinition {
     Description?: string;
     Master?: boolean;
     Name: string;
+    "Parent Persistent ID"?: string;
     "Playlist ID": string;
     "Playlist Items": Array<{ "Track ID": number }>;
     "Playlist Persistent ID": string;

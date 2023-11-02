@@ -1,29 +1,114 @@
 import { MusicLibraryPlist, PlaylistDefinition } from "@adahiya/music-library-tools-lib";
-import { HTMLTable } from "@blueprintjs/core";
+import { Button, HTMLTable } from "@blueprintjs/core";
 import {
     createColumnHelper,
+    ExpandedState,
     flexRender,
     getCoreRowModel,
+    getExpandedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 
 import styles from "./libraryTable.module.scss";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 export interface LibraryTableProps {
     headerHeight: number;
     library: MusicLibraryPlist;
 }
 
+interface PlaylistRow {
+    def: PlaylistDefinition;
+    children: PlaylistRow[];
+}
+
 export default function (props: LibraryTableProps) {
-    const columnHelper = createColumnHelper<PlaylistDefinition>();
+    // TODO: cleanup
+    // const playlistsByPersistentId = useMemo<Record<string, PlaylistDefinition>>(
+    //     () =>
+    //         props.library.Playlists.reduce<Record<string, PlaylistDefinition>>((acc, playlist) => {
+    //             acc[playlist["Playlist Persistent ID"]] = playlist;
+    //             return acc;
+    //         }, {}),
+    //     [props.library.Playlists],
+    // );
+
+    const folderChildrenByParentId = useMemo<Record<string, PlaylistDefinition[]>>(
+        () =>
+            props.library.Playlists.reduce<Record<string, PlaylistDefinition[]>>(
+                (acc, playlist) => {
+                    const parentId = playlist["Parent Persistent ID"];
+                    if (parentId !== undefined) {
+                        if (acc[parentId] !== undefined) {
+                            acc[parentId].push(playlist);
+                        } else {
+                            acc[parentId] = [playlist];
+                        }
+                    }
+                    return acc;
+                },
+                {},
+            ),
+        [props.library.Playlists],
+    );
+
+    const playlistIsFolderWithChildren = useCallback(
+        (playlistId: string) => folderChildrenByParentId[playlistId] !== undefined,
+        [folderChildrenByParentId],
+    );
+
+    const recursivelyGetFolderChildern: (playlistId: string) => PlaylistRow[] = useCallback(
+        (playlistId: string) =>
+            playlistIsFolderWithChildren(playlistId)
+                ? folderChildrenByParentId[playlistId].map((def) => ({
+                      def,
+                      children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
+                  }))
+                : [],
+        [folderChildrenByParentId],
+    );
+
+    const playlistRows = useMemo<PlaylistRow[]>(
+        () =>
+            props.library.Playlists.filter(
+                (p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined,
+            ).map((def) => ({
+                def,
+                children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
+            })),
+        [props.library.Playlists],
+    );
+
+    const columnHelper = createColumnHelper<PlaylistRow>();
 
     const columns = [
-        columnHelper.accessor("Name", {
-            cell: (info) => info.getValue(),
+        columnHelper.accessor((row) => row.def.Name, {
+            id: "name",
+            cell: (info) => (
+                <span
+                    style={{
+                        // Since rows are flattened by default, we can use the row.depth property
+                        // and paddingLeft to visually indicate the depth of the row
+                        paddingLeft: `${info.row.depth * 2}rem`,
+                    }}
+                >
+                    {info.row.getCanExpand() ? (
+                        <Button
+                            className={styles.expandButton}
+                            minimal={true}
+                            onClick={info.row.getToggleExpandedHandler()}
+                            icon={info.row.getIsExpanded() ? "chevron-down" : "chevron-right"}
+                            small={true}
+                        />
+                    ) : (
+                        " "
+                    )}{" "}
+                    {info.getValue()}
+                </span>
+            ),
             footer: (info) => info.column.id,
         }),
-        columnHelper.accessor((row) => row["Playlist Items"].length, {
+        columnHelper.accessor((row) => row.def["Playlist Items"].length, {
             id: "numberOfTracks",
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span># tracks</span>,
@@ -31,10 +116,18 @@ export default function (props: LibraryTableProps) {
         }),
     ];
 
+    const [expanded, setExpanded] = useState<ExpandedState>({});
+
     const table = useReactTable({
-        data: props.library.Playlists,
+        data: playlistRows,
         columns,
+        state: {
+            expanded,
+        },
+        onExpandedChange: setExpanded,
+        getSubRows: (row) => row.children,
         getCoreRowModel: getCoreRowModel(),
+        getExpandedRowModel: getExpandedRowModel(),
     });
 
     const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
