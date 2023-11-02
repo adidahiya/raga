@@ -1,12 +1,14 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
-import { Button, Card, Divider, H5, HTMLTable, NonIdealState } from "@blueprintjs/core";
+import { Button, Card, Divider, H5, NonIdealState } from "@blueprintjs/core";
 import { format } from "date-fns";
 import type { IpcRendererEvent } from "electron";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
 import { AUTO_LOAD_LIBRARY, DEBUG } from "../common/constants";
 import type { LoadedSwinsianLibraryEventPayload } from "../events";
+
+import LibraryTable from "./libraryTable";
 import styles from "./libraryView.module.scss";
 
 declare global {
@@ -73,37 +75,23 @@ export default function () {
 }
 
 function Library(props: { library: MusicLibraryPlist }) {
+    const [headerHeight, setHeaderHeight] = useState<number>(0);
+    const headerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (headerRef.current != null) {
+            setHeaderHeight(headerRef.current.clientHeight);
+        }
+    }, []);
+
     return (
         <div>
-            <div className={styles.libraryHeader}>
+            <div className={styles.libraryHeader} ref={headerRef}>
                 <H5>Stats</H5>
                 <p>Date created: {format(props.library.Date, "Pp")}</p>
                 <p># playlists: {props.library.Playlists.length}</p>
             </div>
-            <Divider />
-            <div className={styles.tableScrollContainer}>
-                <HTMLTable
-                    className={styles.table}
-                    compact={true}
-                    interactive={true}
-                    striped={true}
-                >
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th># tracks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {props.library.Playlists.map((playlist) => (
-                            <tr key={playlist["Playlist ID"]}>
-                                <td>{playlist.Name}</td>
-                                <td>{playlist["Playlist Items"].length}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </HTMLTable>
-            </div>
+            <LibraryTable headerHeight={headerHeight} library={props.library} />
         </div>
     );
 }

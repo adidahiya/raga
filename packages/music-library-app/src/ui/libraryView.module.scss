@@ -4,7 +4,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 51px);
+    height: calc(100vh - 50px);
     padding: 0;
 
     :global(.#{bp.$ns}-non-ideal-state) {
@@ -14,15 +14,6 @@
 
 .libraryHeader {
     padding: bp.$pt-grid-size * 2;
-}
-
-.tableScrollContainer {
-    overflow-y: scroll;
-    max-height: 80vh;
-}
-
-.table {
-    width: 100%;
 }
 
 .libraryLoaded {

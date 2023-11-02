@@ -26,6 +26,7 @@ __metadata:
     "@electron-forge/maker-squirrel": "npm:^6.4.2"
     "@electron-forge/maker-zip": "npm:^6.4.2"
     "@electron-forge/plugin-vite": "npm:^6.4.2"
+    "@tanstack/react-table": "npm:^8.10.7"
     "@types/node": "npm:^20.8.10"
     "@types/react": "npm:^18.2.33"
     "@types/react-dom": "npm:^18.2.14"
@@ -1387,6 +1388,25 @@ __metadata:
   dependencies:
     defer-to-connect: "npm:^2.0.0"
   checksum: c29df3bcec6fc3bdec2b17981d89d9c9fc9bd7d0c9bcfe92821dc533f4440bc890ccde79971838b4ceed1921d456973c4180d7175ee1d0023ad0562240a58d95
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-table@npm:^8.10.7":
+  version: 8.10.7
+  resolution: "@tanstack/react-table@npm:8.10.7"
+  dependencies:
+    "@tanstack/table-core": "npm:8.10.7"
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: ed4eaa648854ce95264c66fd7cc0effafee35d4c34fc2d04b047be0bd48b70695e3e69b2798a4d8b4797de36bf3c0aa24973255d434d7fd4f95856760eb16031
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.10.7":
+  version: 8.10.7
+  resolution: "@tanstack/table-core@npm:8.10.7"
+  checksum: aa4150e03e4efe3d7a52485debbd7dc297e487a1ba0d1e1171ae84907cde8ea7e88794f812226542266ead8b7a2017c433323426eb50a1d5bc57a8b493fd5af2
   languageName: node
   linkType: hard
 
