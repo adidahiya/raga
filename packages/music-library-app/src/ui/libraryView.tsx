@@ -1,5 +1,6 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 import { Button, Card, Divider, H5, HTMLTable, NonIdealState } from "@blueprintjs/core";
+import { format } from "date-fns";
 import type { IpcRendererEvent } from "electron";
 import { useCallback, useEffect, useState } from "react";
 
@@ -74,12 +75,19 @@ export default function () {
 function Library(props: { library: MusicLibraryPlist }) {
     return (
         <div>
-            <H5>Stats</H5>
-            <p>Date created: {props.library.Date.toString()}</p>
-            <p># playlists: {props.library.Playlists.length}</p>
+            <div className={styles.libraryHeader}>
+                <H5>Stats</H5>
+                <p>Date created: {format(props.library.Date, "Pp")}</p>
+                <p># playlists: {props.library.Playlists.length}</p>
+            </div>
             <Divider />
             <div className={styles.tableScrollContainer}>
-                <HTMLTable className={styles.table}>
+                <HTMLTable
+                    className={styles.table}
+                    compact={true}
+                    interactive={true}
+                    striped={true}
+                >
                     <thead>
                         <tr>
                             <th>Name</th>

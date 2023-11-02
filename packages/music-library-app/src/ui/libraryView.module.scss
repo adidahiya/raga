@@ -1,13 +1,19 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+@import "../common/variables";
 
 .container {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 51px);
+    padding: 0;
 
     :global(.#{bp.$ns}-non-ideal-state) {
         flex-grow: 1;
     }
+}
+
+.libraryHeader {
+    padding: bp.$pt-grid-size * 2;
 }
 
 .tableScrollContainer {
@@ -22,5 +28,6 @@
 .libraryLoaded {
     .loadLibraryButton {
         float: right;
+        margin: $double-grid-size;
     }
 }
