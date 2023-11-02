@@ -1,5 +1,5 @@
 import { MusicLibraryPlist, PlaylistDefinition } from "@adahiya/music-library-tools-lib";
-import { Button, HTMLTable } from "@blueprintjs/core";
+import { Button, Classes, HTMLTable, Icon } from "@blueprintjs/core";
 import {
     createColumnHelper,
     ExpandedState,
@@ -11,6 +11,7 @@ import {
 
 import styles from "./libraryTable.module.scss";
 import { useCallback, useMemo, useState } from "react";
+import classNames from "classnames";
 
 export interface LibraryTableProps {
     headerHeight: number;
@@ -93,12 +94,9 @@ export default function (props: LibraryTableProps) {
                     }}
                 >
                     {info.row.getCanExpand() ? (
-                        <Button
-                            className={styles.expandButton}
-                            minimal={true}
-                            onClick={info.row.getToggleExpandedHandler()}
+                        <Icon
+                            className={Classes.TEXT_MUTED}
                             icon={info.row.getIsExpanded() ? "chevron-down" : "chevron-right"}
-                            small={true}
                         />
                     ) : (
                         " "
@@ -128,6 +126,8 @@ export default function (props: LibraryTableProps) {
         getSubRows: (row) => row.children,
         getCoreRowModel: getCoreRowModel(),
         getExpandedRowModel: getExpandedRowModel(),
+        enableRowSelection: true,
+        enableMultiRowSelection: false,
     });
 
     const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
@@ -167,7 +167,17 @@ export default function (props: LibraryTableProps) {
                     <thead>{headerRows}</thead>
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id}>
+                            <tr
+                                key={row.id}
+                                className={classNames({
+                                    [styles.selected]: row.getIsSelected(),
+                                })}
+                                onClick={
+                                    row.getCanExpand()
+                                        ? row.getToggleExpandedHandler()
+                                        : row.getToggleSelectedHandler()
+                                }
+                            >
                                 {row.getVisibleCells().map((cell) => (
                                     <td key={cell.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

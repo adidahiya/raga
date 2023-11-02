@@ -20,9 +20,8 @@
 .body {
     overflow-y: scroll;
     border-top: solid 1px bp.$pt-dark-divider-white;
-}
 
-button:global(.#{bp.$ns}-button).expandButton {
-    min-height: 16px;
-    min-width: 20px;
+    tr.selected {
+        background-color: bp.$blue1;
+    }
 }
