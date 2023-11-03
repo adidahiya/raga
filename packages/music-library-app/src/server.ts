@@ -17,6 +17,10 @@ import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 
 let library: MusicLibraryPlist | undefined;
 
+if (DEBUG) {
+    console.log("[server] starting utility process");
+}
+
 function handleLoadSwinsianLibrary(_event: MessageEvent) {
     if (library === undefined) {
         library = loadSwinsianLibrary(getSwinsianLibraryPath(DEFAULT_SWINSIAN_EXPORT_FOLDER));
@@ -47,7 +51,7 @@ function setupEventListeners() {
 
 process.on("loaded", () => {
     if (DEBUG) {
-        console.log("[server] loaded utility process");
+        console.log("[server] setting up IPC event listeners");
     }
     setupEventListeners();
 });

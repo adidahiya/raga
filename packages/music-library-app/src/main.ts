@@ -3,8 +3,10 @@ import path from "node:path";
 import { ClientEventChannel, isServerEventChannel } from "./events";
 import { DEBUG } from "./common/constants";
 
+import squirrelStartup from "electron-squirrel-startup";
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) {
+if (squirrelStartup) {
     app.quit();
 }
 

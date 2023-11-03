@@ -4,6 +4,7 @@
     "version": "0.2.0",
     "private": true,
     "description": "UI for running music library management",
+    "type": "module",
     "main": ".vite/build/main.js",
     "scripts": {
         "build": "electron-forge package",
@@ -18,6 +19,7 @@
         "@blueprintjs/core": "^5.6.0",
         "@blueprintjs/icons": "^5.3.0",
         "@tanstack/react-table": "^8.10.7",
+        "@types/electron-squirrel-startup": "^1.0.1",
         "classnames": "^2.3.2",
         "date-fns": "^2.30.0",
         "electron-squirrel-startup": "^1.0.0",
@@ -36,7 +38,7 @@
         "@types/node": "^20.8.10",
         "@types/react": "^18.2.33",
         "@types/react-dom": "^18.2.14",
-        "electron": "^27.0.2",
+        "electron": "^28.0.0-beta.2",
         "sass": "^1.69.5",
         "typescript": "^5.2.2"
     },

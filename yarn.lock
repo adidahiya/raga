@@ -27,12 +27,13 @@ __metadata:
     "@electron-forge/maker-zip": "npm:^6.4.2"
     "@electron-forge/plugin-vite": "npm:^6.4.2"
     "@tanstack/react-table": "npm:^8.10.7"
+    "@types/electron-squirrel-startup": "npm:^1.0.1"
     "@types/node": "npm:^20.8.10"
     "@types/react": "npm:^18.2.33"
     "@types/react-dom": "npm:^18.2.14"
     classnames: "npm:^2.3.2"
     date-fns: "npm:^2.30.0"
-    electron: "npm:^27.0.2"
+    electron: "npm:^28.0.0-beta.2"
     electron-squirrel-startup: "npm:^1.0.0"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
@@ -1451,6 +1452,13 @@ __metadata:
   version: 0.7.1
   resolution: "@types/dedent@npm:0.7.1"
   checksum: 13b4ce00e619bd5544d3e2a0f757586d4313b6b44702faa39b53c62eca0184971d75d8d8d4cb76fdcb7d9522905748a1cbd4f69e8194a50932268a832bf19425
+  languageName: node
+  linkType: hard
+
+"@types/electron-squirrel-startup@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@types/electron-squirrel-startup@npm:1.0.1"
+  checksum: 7546c4e2f3a6348e4a3d3d717f610635082451db647c39afdf734e9a45744719f288b0a85fc0e570f4458fd07fc65e0bd41bfaf3fe549ebadd2232a8837df402
   languageName: node
   linkType: hard
 
@@ -3543,16 +3551,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^27.0.2":
-  version: 27.0.2
-  resolution: "electron@npm:27.0.2"
+"electron@npm:^28.0.0-beta.2":
+  version: 28.0.0-beta.2
+  resolution: "electron@npm:28.0.0-beta.2"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^18.11.18"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: de597920b1888b25995570566403e8caa89f55d5fc4396ead6bd7f43b6da1fec362ad525b4bd772a03ef672e607fcd98ed463bffe301c7cca59eddcf7093eb0f
+  checksum: 399f356d691b6d1d53ef9c8792856dc6da10fbb0111c738b3ded09f80fcdd0026d44e95d43ce4783b3b7dfbdb8ab56fc0ea71a477bac4bb2b270719dedba9d01
   languageName: node
   linkType: hard
 
