@@ -32,6 +32,10 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+
+        &:not(:last-child) {
+            border-right: solid 1px bp.$pt-dark-divider-white;
+        }
     }
 }
 

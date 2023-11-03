@@ -103,6 +103,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                     {info.getValue()}
                 </span>
             ),
+            header: () => <span>Playlists</span>,
             footer: (info) => info.column.id,
         }),
         columnHelper.accessor((row) => row.def["Playlist Items"].length, {
@@ -176,9 +177,10 @@ export default function PlaylistTable(props: LibraryTableProps) {
             )}
             <div
                 className={styles.body}
-                style={{ maxHeight: `calc(100vh - ${props.headerHeight + 50 + 75}px)` }}
+                // HACKHACK: magic number
+                style={{ maxHeight: `calc(100vh - ${props.headerHeight + 82}px)` }}
             >
-                <HTMLTable compact={true} interactive={true} striped={true}>
+                <HTMLTable compact={true} interactive={true}>
                     <thead>{headerRows}</thead>
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
@@ -214,6 +216,11 @@ export default function PlaylistTable(props: LibraryTableProps) {
     );
 }
 PlaylistTable.displayName = "PlaylistTable";
+PlaylistTable.defaultProps = {
+    showHeader: true,
+    showItemCounts: false,
+    showFooter: false,
+};
 
 function PlaylistTableRow(row: Row<PlaylistRow>) {
     const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();

@@ -89,7 +89,8 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             </div>
             <div
                 className={styles.body}
-                style={{ maxHeight: `calc(100vh - ${headerHeight + 50 + 75}px)` }}
+                // HACKHACK: magic number
+                style={{ maxHeight: `calc(100vh - ${headerHeight + 82}px)` }}
             >
                 <HTMLTable compact={true} interactive={true} striped={true}>
                     <thead>{headerRows}</thead>
