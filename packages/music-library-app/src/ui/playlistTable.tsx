@@ -10,7 +10,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, MouseEvent } from "react";
 
 import styles from "./playlistTable.module.scss";
 import { useAppStore } from "./store";
@@ -141,6 +141,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
         enableMultiRowSelection: false,
     });
 
+    // TODO: adjustable column widths
     const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
         columns.reduce(
             (acc, column) => {
@@ -215,16 +216,20 @@ PlaylistTable.displayName = "PlaylistTable";
 
 function PlaylistTableRow(row: Row<PlaylistRow>) {
     const { setSelectedPlaylistId } = useAppStore();
+
     // TODO: consider rewriting in FP style (perhaps with Rambda?)
-    const handleClick = useCallback(() => {
-        if (row.getCanExpand()) {
-            row.getToggleExpandedHandler();
-        } else {
-            row.getToggleSelectedHandler();
-            // HACKHACK: need a better (type safe) way to get this without using the tanstack row model
-            setSelectedPlaylistId(row.getValue<string>("persistentId"));
-        }
-    }, [row, setSelectedPlaylistId]);
+    const handleClick = useCallback(
+        (event: MouseEvent) => {
+            if (row.getCanExpand()) {
+                row.getToggleExpandedHandler()();
+            } else {
+                row.getToggleSelectedHandler()(event);
+                // HACKHACK: need a better (type safe) way to get this without using the tanstack row model
+                setSelectedPlaylistId(row.getValue<string>("persistentId"));
+            }
+        },
+        [row, setSelectedPlaylistId],
+    );
 
     return (
         <tr

@@ -9,3 +9,27 @@
         flex-grow: 1;
     }
 }
+
+.header, .body, .footer {
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+}
+
+.body, .footer {
+    thead {
+        display: none;
+    }
+}
+
+.body {
+    overflow-y: scroll;
+    border-top: solid 1px bp.$pt-dark-divider-white;
+
+    td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
