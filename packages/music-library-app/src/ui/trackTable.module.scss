@@ -4,8 +4,58 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    border-top: solid 1px bp.$pt-dark-divider-white;
 
     :global(.#{bp.$ns}-non-ideal-state) {
         flex-grow: 1;
     }
+}
+
+.header, .body, .footer {
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+}
+
+.body, .footer {
+    thead {
+        display: none;
+    }
+}
+
+.body {
+    overflow-y: scroll;
+    border-top: solid 1px bp.$pt-dark-divider-white;
+
+    td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        &:not(:last-child) {
+            border-right: solid 1px bp.$pt-dark-divider-white;
+        }
+    }
+}
+
+.header th {
+  position: relative;
+}
+
+:global(.resizer) {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: bp.$pt-dark-divider-white;
+    opacity: 0.8;
+    cursor: col-resize;
+    user-select: none;
+    touch-action: none;
+
+  &:global(.isResizing) {
+    opacity: 1;
+  }
 }

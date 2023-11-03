@@ -10,10 +10,11 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, MouseEvent } from "react";
+
+import { appStore } from "./store/appStore";
 
 import styles from "./playlistTable.module.scss";
-import { useAppStore } from "./store";
 
 export interface LibraryTableProps {
     headerHeight: number;
@@ -102,6 +103,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                     {info.getValue()}
                 </span>
             ),
+            header: () => <span>Playlists</span>,
             footer: (info) => info.column.id,
         }),
         columnHelper.accessor((row) => row.def["Playlist Items"].length, {
@@ -141,6 +143,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
         enableMultiRowSelection: false,
     });
 
+    // TODO: adjustable column widths
     const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
         columns.reduce(
             (acc, column) => {
@@ -174,13 +177,14 @@ export default function PlaylistTable(props: LibraryTableProps) {
             )}
             <div
                 className={styles.body}
-                style={{ maxHeight: `calc(100vh - ${props.headerHeight + 50 + 75}px)` }}
+                // HACKHACK: magic number
+                style={{ maxHeight: `calc(100vh - ${props.headerHeight + 82}px)` }}
             >
-                <HTMLTable compact={true} interactive={true} striped={true}>
+                <HTMLTable compact={true} interactive={true}>
                     <thead>{headerRows}</thead>
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
-                            <PlaylistTableRow {...row} />
+                            <PlaylistTableRow key={row.id} {...row} />
                         ))}
                     </tbody>
                 </HTMLTable>
@@ -212,23 +216,31 @@ export default function PlaylistTable(props: LibraryTableProps) {
     );
 }
 PlaylistTable.displayName = "PlaylistTable";
+PlaylistTable.defaultProps = {
+    showHeader: true,
+    showItemCounts: false,
+    showFooter: false,
+};
 
 function PlaylistTableRow(row: Row<PlaylistRow>) {
-    const { setSelectedPlaylistId } = useAppStore();
+    const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
+
     // TODO: consider rewriting in FP style (perhaps with Rambda?)
-    const handleClick = useCallback(() => {
-        if (row.getCanExpand()) {
-            row.getToggleExpandedHandler();
-        } else {
-            row.getToggleSelectedHandler();
-            // HACKHACK: need a better (type safe) way to get this without using the tanstack row model
-            setSelectedPlaylistId(row.getValue<string>("persistentId"));
-        }
-    }, [row, setSelectedPlaylistId]);
+    const handleClick = useCallback(
+        (event: MouseEvent) => {
+            if (row.getCanExpand()) {
+                row.getToggleExpandedHandler()();
+            } else {
+                row.getToggleSelectedHandler()(event);
+                // HACKHACK: need a better (type safe) way to get this without using the tanstack row model
+                setSelectedPlaylistId(row.getValue<string>("persistentId"));
+            }
+        },
+        [row, setSelectedPlaylistId],
+    );
 
     return (
         <tr
-            key={row.id}
             className={classNames({
                 [styles.selected]: row.getIsSelected(),
             })}

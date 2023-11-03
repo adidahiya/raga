@@ -1,6 +1,7 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 .container {
+    border-top: solid 1px bp.$pt-dark-divider-white;
     width: 100%;
 }
 
