@@ -10,9 +10,11 @@ import { AUTO_LOAD_LIBRARY, DEBUG } from "../common/constants";
 import type { LoadedSwinsianLibraryEventPayload } from "../events";
 
 import PlaylistTable from "./playlistTable";
-import styles from "./libraryView.module.scss";
 import TrackTable from "./trackTable";
 import ResizeHandle from "./resizeHandle";
+import { useAppStore } from "./store";
+
+import styles from "./libraryView.module.scss";
 
 declare global {
     interface Window {
@@ -24,7 +26,7 @@ type LibraryState = "none" | "loading" | "loaded" | "error";
 
 export default function LibraryView() {
     const [libraryState, setLibraryState] = useState<LibraryState>("none");
-    const [library, setLibrary] = useState<MusicLibraryPlist | undefined>(undefined);
+    const { libraryPlist, setLibraryPlist } = useAppStore();
 
     const loadLibrary = useCallback(() => {
         window.api.send("loadSwinsianLibrary");
@@ -45,7 +47,7 @@ export default function LibraryView() {
 
                 if (data.library != null) {
                     setLibraryState("loaded");
-                    setLibrary(data.library);
+                    setLibraryPlist(data.library);
                 }
             },
         );
@@ -70,7 +72,7 @@ export default function LibraryView() {
             ) : (
                 <div className={styles.libraryLoaded}>
                     {loadLibraryButton}
-                    <Library library={library!} />
+                    <Library library={libraryPlist!} />
                 </div>
             )}
         </Card>
@@ -80,6 +82,7 @@ export default function LibraryView() {
 function Library(props: { library: MusicLibraryPlist }) {
     const [headerHeight, setHeaderHeight] = useState<number>(0);
     const headerRef = useRef<HTMLDivElement>(null);
+    const { selectedPlaylistId } = useAppStore();
 
     useEffect(() => {
         if (headerRef.current != null) {
@@ -105,7 +108,15 @@ function Library(props: { library: MusicLibraryPlist }) {
                 </Panel>
                 <ResizeHandle />
                 <Panel minSize={30}>
-                    <TrackTable />
+                    {selectedPlaylistId === undefined ? (
+                        <NonIdealState
+                            title="Playlist tracks"
+                            description="Select a playlist to view tracks"
+                            icon="list-detail-view"
+                        />
+                    ) : (
+                        <TrackTable playlistId={selectedPlaylistId} />
+                    )}
                 </Panel>
             </PanelGroup>
         </div>

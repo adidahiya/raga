@@ -6,12 +6,14 @@ import {
     flexRender,
     getCoreRowModel,
     getExpandedRowModel,
+    Row,
     useReactTable,
 } from "@tanstack/react-table";
+import classNames from "classnames";
+import { useCallback, useMemo, useState } from "react";
 
 import styles from "./playlistTable.module.scss";
-import { useCallback, useMemo, useState } from "react";
-import classNames from "classnames";
+import { useAppStore } from "./store";
 
 export interface LibraryTableProps {
     headerHeight: number;
@@ -30,16 +32,6 @@ interface PlaylistRow {
 }
 
 export default function PlaylistTable(props: LibraryTableProps) {
-    // TODO: cleanup
-    // const playlistsByPersistentId = useMemo<Record<string, PlaylistDefinition>>(
-    //     () =>
-    //         props.library.Playlists.reduce<Record<string, PlaylistDefinition>>((acc, playlist) => {
-    //             acc[playlist["Playlist Persistent ID"]] = playlist;
-    //             return acc;
-    //         }, {}),
-    //     [props.library.Playlists],
-    // );
-
     const folderChildrenByParentId = useMemo<Record<string, PlaylistDefinition[]>>(
         () =>
             props.library.Playlists.reduce<Record<string, PlaylistDefinition[]>>(
@@ -119,11 +111,19 @@ export default function PlaylistTable(props: LibraryTableProps) {
             footer: (info) => info.column.id,
             enableHiding: true,
         }),
+        columnHelper.accessor((row) => row.def["Playlist Persistent ID"], {
+            id: "persistentId",
+            cell: (info) => <i>{info.getValue()}</i>,
+            header: () => <span>Persistent ID</span>,
+            footer: (info) => info.column.id,
+            enableHiding: true,
+        }),
     ];
 
     const [expanded, setExpanded] = useState<ExpandedState>({});
     const [columnVisibility, setColumnVisibility] = useState({
         numberOfTracks: props.showItemCounts ?? false,
+        persistentId: false,
     });
 
     const table = useReactTable({
@@ -180,23 +180,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                     <thead>{headerRows}</thead>
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
-                            <tr
-                                key={row.id}
-                                className={classNames({
-                                    [styles.selected]: row.getIsSelected(),
-                                })}
-                                onClick={
-                                    row.getCanExpand()
-                                        ? row.getToggleExpandedHandler()
-                                        : row.getToggleSelectedHandler()
-                                }
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </td>
-                                ))}
-                            </tr>
+                            <PlaylistTableRow {...row} />
                         ))}
                     </tbody>
                 </HTMLTable>
@@ -228,3 +212,32 @@ export default function PlaylistTable(props: LibraryTableProps) {
     );
 }
 PlaylistTable.displayName = "PlaylistTable";
+
+function PlaylistTableRow(row: Row<PlaylistRow>) {
+    const { setSelectedPlaylistId } = useAppStore();
+    // TODO: consider rewriting in FP style (perhaps with Rambda?)
+    const handleClick = useCallback(() => {
+        if (row.getCanExpand()) {
+            row.getToggleExpandedHandler();
+        } else {
+            row.getToggleSelectedHandler();
+            // HACKHACK: need a better (type safe) way to get this without using the tanstack row model
+            setSelectedPlaylistId(row.getValue<string>("persistentId"));
+        }
+    }, [row, setSelectedPlaylistId]);
+
+    return (
+        <tr
+            key={row.id}
+            className={classNames({
+                [styles.selected]: row.getIsSelected(),
+            })}
+            onClick={handleClick}
+        >
+            {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+            ))}
+        </tr>
+    );
+}
+PlaylistTableRow.displayName = "PlaylistTableRow";

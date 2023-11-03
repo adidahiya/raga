@@ -24,4 +24,10 @@
     tr.selected {
         background-color: bp.$blue1;
     }
+
+    td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
