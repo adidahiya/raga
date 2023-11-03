@@ -1,0 +1,14 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
+    th, td {
+        padding: 2px 6px;
+    }
+}
+
+// darker dark theme
+.#{bp.$ns}-dark {
+    .#{bp.$ns}-card {
+        background-color: bp.$dark-gray2;
+    }
+}

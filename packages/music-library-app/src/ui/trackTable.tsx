@@ -1,4 +1,5 @@
 import { PlaylistDefinition, TrackDefinition } from "@adahiya/music-library-tools-lib";
+import { Classes, HTMLTable } from "@blueprintjs/core";
 import {
     Row,
     createColumnHelper,
@@ -6,11 +7,12 @@ import {
     getCoreRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import classNames from "classnames";
+import { useMemo } from "react";
+
 import { appStore } from "./store/appStore";
 
 import styles from "./trackTable.module.scss";
-import { HTMLTable } from "@blueprintjs/core";
 
 export interface TrackTableProps {
     // TODO: move this state to app store
@@ -34,7 +36,11 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
     const columns = [
         columnHelper.display({
             id: "index",
-            cell: (info) => <span>{info.row.index + 1}</span>,
+            cell: (info) => (
+                <span className={classNames(Classes.TEXT_SMALL, Classes.TEXT_MUTED)}>
+                    {info.row.index + 1}
+                </span>
+            ),
             header: () => <span>#</span>,
             footer: (info) => info.column.id,
             maxSize: 60,
@@ -90,7 +96,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             <div
                 className={styles.body}
                 // HACKHACK: magic number
-                style={{ maxHeight: `calc(100vh - ${headerHeight + 82}px)` }}
+                style={{ maxHeight: `calc(100vh - ${headerHeight + 74}px)` }}
             >
                 <HTMLTable compact={true} interactive={true} striped={true}>
                     <thead>{headerRows}</thead>

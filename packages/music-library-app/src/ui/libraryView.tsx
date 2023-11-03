@@ -7,6 +7,7 @@ import { PanelGroup, Panel } from "react-resizable-panels";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
 import { AUTO_LOAD_LIBRARY, DEBUG } from "../common/constants";
+import { formatStatNumber } from "../common/format";
 import type { LoadedSwinsianLibraryEventPayload } from "../events";
 
 import PlaylistTable from "./playlistTable";
@@ -28,6 +29,7 @@ export default function LibraryView() {
     const [libraryState, setLibraryState] = useState<LibraryState>("none");
     const libraryPlist = appStore.use.libraryPlist();
     const setLibraryPlist = appStore.use.setLibraryPlist();
+    const [libraryFilepath, setLibraryFilepath] = useState<string | undefined>(undefined);
 
     const loadLibrary = useCallback(() => {
         window.api.send("loadSwinsianLibrary");
@@ -49,6 +51,7 @@ export default function LibraryView() {
                 if (data.library != null) {
                     setLibraryState("loaded");
                     setLibraryPlist(data.library);
+                    setLibraryFilepath(data.filepath);
                 }
             },
         );
@@ -73,14 +76,19 @@ export default function LibraryView() {
             ) : (
                 <div className={styles.libraryLoaded}>
                     {loadLibraryButton}
-                    <Library library={libraryPlist!} />
+                    <Library filepath={libraryFilepath} library={libraryPlist!} />
                 </div>
             )}
         </Card>
     );
 }
 
-function Library(props: { library: MusicLibraryPlist }) {
+interface LibraryProps {
+    library: MusicLibraryPlist;
+    filepath: string | undefined;
+}
+
+function Library(props: LibraryProps) {
     const [headerHeight, setHeaderHeight] = useState<number>(0);
     const headerRef = useRef<HTMLDivElement>(null);
     const selectedPlaylistId = appStore.use.selectedPlaylistId();
@@ -98,10 +106,10 @@ function Library(props: { library: MusicLibraryPlist }) {
             <div className={styles.libraryHeader} ref={headerRef}>
                 <H5>Stats</H5>
                 <p>Date created: {format(props.library.Date, "Pp")}</p>
+                {props.filepath && <p>Location: {props.filepath}</p>}
                 {masterPlaylist && (
                     <p># tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}</p>
                 )}
-                <p># playlists: {formatStatNumber(props.library.Playlists.length)}</p>
             </div>
             <PanelGroup direction="horizontal">
                 <Panel defaultSize={20} minSize={20}>
@@ -127,10 +135,4 @@ LibraryView.displayName = "LibraryView";
 
 function getMasterPlaylist(library: MusicLibraryPlist) {
     return library.Playlists.find((playlist) => playlist.Master);
-}
-
-function formatStatNumber(n: number) {
-    return new Intl.NumberFormat("en-US", {
-        style: "decimal",
-    }).format(n);
 }

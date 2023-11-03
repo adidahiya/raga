@@ -22,5 +22,9 @@ export function isServerEventChannel(channel: string): channel is ServerEventCha
 
 // Event payloads
 export interface LoadedSwinsianLibraryEventPayload {
+    /** Library XML plist */
     library: MusicLibraryPlist;
+
+    /** Location of library XML on disk */
+    filepath: string;
 }

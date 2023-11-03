@@ -4,6 +4,7 @@
 //     getSwinsianLibraryPath,
 //     loadSwinsianLibrary,
 // } from "@adahiya/music-library-tools-lib";
+import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 const {
     DEFAULT_SWINSIAN_EXPORT_FOLDER,
     getSwinsianLibraryPath,
@@ -11,22 +12,29 @@ const {
 } = require("@adahiya/music-library-tools-lib");
 
 import type { MessageEvent } from "electron";
-import { ClientEventChannel, ServerEventChannel } from "./events";
+import {
+    ClientEventChannel,
+    LoadedSwinsianLibraryEventPayload,
+    ServerEventChannel,
+} from "./events";
 import { DEBUG } from "./common/constants";
-import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 
 let library: MusicLibraryPlist | undefined;
 
 function handleLoadSwinsianLibrary(_event: MessageEvent) {
+    const filepath = getSwinsianLibraryPath(DEFAULT_SWINSIAN_EXPORT_FOLDER);
+
     if (library === undefined) {
-        library = loadSwinsianLibrary(getSwinsianLibraryPath(DEFAULT_SWINSIAN_EXPORT_FOLDER));
+        // HACKHACK: type cast
+        library = loadSwinsianLibrary(filepath) as MusicLibraryPlist;
     }
 
     const channel = ServerEventChannel.LOADED_SWINSIAN_LIBRARY;
-    const response = {
-        channel,
-        data: { library },
+    const data: LoadedSwinsianLibraryEventPayload = {
+        library,
+        filepath,
     };
+    const response = { channel, data };
     if (DEBUG) {
         console.log(`[server] sending "${channel}" message`, response);
     }

@@ -1,5 +1,5 @@
 import { MusicLibraryPlist, PlaylistDefinition } from "@adahiya/music-library-tools-lib";
-import { Classes, HTMLTable, Icon } from "@blueprintjs/core";
+import { Classes, HTMLTable, Icon, IconSize } from "@blueprintjs/core";
 import {
     createColumnHelper,
     ExpandedState,
@@ -15,6 +15,7 @@ import { useCallback, useMemo, useState, MouseEvent } from "react";
 import { appStore } from "./store/appStore";
 
 import styles from "./playlistTable.module.scss";
+import { formatStatNumber } from "../common/format";
 
 export interface LibraryTableProps {
     headerHeight: number;
@@ -79,8 +80,10 @@ export default function PlaylistTable(props: LibraryTableProps) {
         [props.library.Playlists],
     );
 
+    const numPlaylistsStat = formatStatNumber(props.library.Playlists.length);
     const columnHelper = createColumnHelper<PlaylistRow>();
 
+    const iconRightPadding = 4;
     const columns = [
         columnHelper.accessor((row) => row.def.Name, {
             id: "name",
@@ -89,21 +92,30 @@ export default function PlaylistTable(props: LibraryTableProps) {
                     style={{
                         // Since rows are flattened by default, we can use the row.depth property
                         // and paddingLeft to visually indicate the depth of the row
-                        paddingLeft: `${info.row.depth * 2}rem`,
+                        paddingLeft:
+                            info.row.depth === 0
+                                ? 0
+                                : info.row.depth * IconSize.STANDARD + iconRightPadding,
                     }}
                 >
-                    {info.row.getCanExpand() ? (
+                    {info.row.getCanExpand() && (
                         <Icon
                             className={Classes.TEXT_MUTED}
+                            style={{ paddingRight: iconRightPadding }}
                             icon={info.row.getIsExpanded() ? "chevron-down" : "chevron-right"}
                         />
-                    ) : (
-                        " "
-                    )}{" "}
+                    )}
                     {info.getValue()}
                 </span>
             ),
-            header: () => <span>Playlists</span>,
+            header: () => (
+                <span>
+                    Playlists{" "}
+                    <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+                        ({numPlaylistsStat})
+                    </span>
+                </span>
+            ),
             footer: (info) => info.column.id,
         }),
         columnHelper.accessor((row) => row.def["Playlist Items"].length, {
@@ -178,7 +190,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
             <div
                 className={styles.body}
                 // HACKHACK: magic number
-                style={{ maxHeight: `calc(100vh - ${props.headerHeight + 82}px)` }}
+                style={{ maxHeight: `calc(100vh - ${props.headerHeight + 74}px)` }}
             >
                 <HTMLTable compact={true} interactive={true}>
                     <thead>{headerRows}</thead>
