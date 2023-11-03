@@ -37,6 +37,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             cell: (info) => <span>{info.row.index + 1}</span>,
             header: () => <span>#</span>,
             footer: (info) => info.column.id,
+            maxSize: 60,
         }),
         columnHelper.accessor("Name", {
             id: "name",
@@ -56,29 +57,24 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         data: trackDefs,
         columns,
         state: {},
+        columnResizeMode: "onChange",
         getCoreRowModel: getCoreRowModel(),
         enableRowSelection: true,
         enableMultiRowSelection: false,
     });
 
-    // TODO: adjustable column widths
-    const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-        columns.reduce(
-            (acc, column) => {
-                acc[column.id!] = 100;
-                return acc;
-            },
-            {} as Record<string, number>,
-        ),
-    );
-
     const headerRows = table.getHeaderGroups().map((headerGroup) => (
         <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-                <th key={header.id} style={{ width: columnWidths[header.column.columnDef.id!] }}>
+                <th key={header.id} colSpan={header.colSpan} style={{ width: header.getSize() }}>
                     {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
+                    <div
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${header.column.getIsResizing() ? "isResizing" : ""}`}
+                    />
                 </th>
             ))}
         </tr>
@@ -113,7 +109,9 @@ function TrackTableRow(row: Row<TrackDefinition>) {
     return (
         <tr>
             {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                <td key={cell.id} style={{ width: cell.column.getSize() }}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
             ))}
         </tr>
     );
