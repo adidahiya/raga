@@ -12,7 +12,7 @@ import type { LoadedSwinsianLibraryEventPayload } from "../events";
 import PlaylistTable from "./playlistTable";
 import TrackTable from "./trackTable";
 import ResizeHandle from "./resizeHandle";
-import { useAppStore } from "./store";
+import { appStore } from "./store/appStore";
 
 import styles from "./libraryView.module.scss";
 
@@ -26,7 +26,8 @@ type LibraryState = "none" | "loading" | "loaded" | "error";
 
 export default function LibraryView() {
     const [libraryState, setLibraryState] = useState<LibraryState>("none");
-    const { libraryPlist, setLibraryPlist } = useAppStore();
+    const libraryPlist = appStore.use.libraryPlist();
+    const setLibraryPlist = appStore.use.setLibraryPlist();
 
     const loadLibrary = useCallback(() => {
         window.api.send("loadSwinsianLibrary");
@@ -82,7 +83,7 @@ export default function LibraryView() {
 function Library(props: { library: MusicLibraryPlist }) {
     const [headerHeight, setHeaderHeight] = useState<number>(0);
     const headerRef = useRef<HTMLDivElement>(null);
-    const { selectedPlaylistId } = useAppStore();
+    const selectedPlaylistId = appStore.use.selectedPlaylistId();
 
     useEffect(() => {
         if (headerRef.current != null) {
@@ -115,7 +116,7 @@ function Library(props: { library: MusicLibraryPlist }) {
                             icon="list-detail-view"
                         />
                     ) : (
-                        <TrackTable playlistId={selectedPlaylistId} />
+                        <TrackTable headerHeight={headerHeight} playlistId={selectedPlaylistId} />
                     )}
                 </Panel>
             </PanelGroup>

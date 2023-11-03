@@ -7,7 +7,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { useAppStore } from "./store";
+import { appStore } from "./store/appStore";
 
 import styles from "./trackTable.module.scss";
 import { HTMLTable } from "@blueprintjs/core";
@@ -32,13 +32,19 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
     const trackDefs = usePlaylistTrackDefs(selectedPlaylist);
     const columnHelper = createColumnHelper<TrackDefinition>();
     const columns = [
-        columnHelper.accessor((def) => def.Name, {
+        columnHelper.display({
+            id: "index",
+            cell: (info) => <span>{info.row.index + 1}</span>,
+            header: () => <span>#</span>,
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.accessor("Name", {
             id: "name",
             cell: (info) => <span>{info.getValue()}</span>,
             header: () => <span>Name</span>,
             footer: (info) => info.column.id,
         }),
-        columnHelper.accessor((def) => def.Artist, {
+        columnHelper.accessor("Artist", {
             id: "artist",
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span>Artist</span>,
@@ -93,7 +99,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
                     <thead>{headerRows}</thead>
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
-                            <TrackTableRow {...row} />
+                            <TrackTableRow key={row.id} {...row} />
                         ))}
                     </tbody>
                 </HTMLTable>
@@ -105,7 +111,7 @@ TrackTable.displayName = "TrackTable";
 
 function TrackTableRow(row: Row<TrackDefinition>) {
     return (
-        <tr key={row.id}>
+        <tr>
             {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
             ))}
@@ -115,7 +121,7 @@ function TrackTableRow(row: Row<TrackDefinition>) {
 TrackTableRow.displayName = "TrackTableRow";
 
 function usePlaylistTrackDefs(playlist: PlaylistDefinition): TrackDefinition[] {
-    const { libraryPlist } = useAppStore();
+    const libraryPlist = appStore.use.libraryPlist();
 
     if (libraryPlist === undefined) {
         // TODO: implement invariant
@@ -127,12 +133,15 @@ function usePlaylistTrackDefs(playlist: PlaylistDefinition): TrackDefinition[] {
         [playlist],
     );
 
-    return trackIds.map((trackId) => libraryPlist.Tracks[trackId] as TrackDefinition);
+    return useMemo(
+        () => trackIds.map((trackId) => libraryPlist.Tracks[trackId] as TrackDefinition),
+        [trackIds, libraryPlist],
+    );
 }
 
 // TODO: move to derived state in app store
 function usePlaylists() {
-    const { libraryPlist } = useAppStore();
+    const libraryPlist = appStore.use.libraryPlist();
 
     if (libraryPlist === undefined) {
         // TODO: implement invariant

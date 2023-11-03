@@ -12,8 +12,9 @@ import {
 import classNames from "classnames";
 import { useCallback, useMemo, useState, MouseEvent } from "react";
 
+import { appStore } from "./store/appStore";
+
 import styles from "./playlistTable.module.scss";
-import { useAppStore } from "./store";
 
 export interface LibraryTableProps {
     headerHeight: number;
@@ -181,7 +182,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                     <thead>{headerRows}</thead>
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
-                            <PlaylistTableRow {...row} />
+                            <PlaylistTableRow key={row.id} {...row} />
                         ))}
                     </tbody>
                 </HTMLTable>
@@ -215,7 +216,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
 PlaylistTable.displayName = "PlaylistTable";
 
 function PlaylistTableRow(row: Row<PlaylistRow>) {
-    const { setSelectedPlaylistId } = useAppStore();
+    const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
 
     // TODO: consider rewriting in FP style (perhaps with Rambda?)
     const handleClick = useCallback(
@@ -233,7 +234,6 @@ function PlaylistTableRow(row: Row<PlaylistRow>) {
 
     return (
         <tr
-            key={row.id}
             className={classNames({
                 [styles.selected]: row.getIsSelected(),
             })}
