@@ -1,0 +1,7 @@
+.vite
+.yarn
+automator
+bin
+lib
+node_modules
+out

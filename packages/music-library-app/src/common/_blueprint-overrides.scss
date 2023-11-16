@@ -1,7 +1,8 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
-    th, td {
+    th,
+    td {
         padding: 2px 6px;
     }
 }

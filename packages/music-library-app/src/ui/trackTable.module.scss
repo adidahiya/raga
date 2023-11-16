@@ -11,14 +11,17 @@
     }
 }
 
-.header, .body, .footer {
+.header,
+.body,
+.footer {
     table {
         table-layout: fixed;
         width: 100%;
     }
 }
 
-.body, .footer {
+.body,
+.footer {
     thead {
         display: none;
     }
@@ -40,7 +43,7 @@
 }
 
 .header th {
-  position: relative;
+    position: relative;
 }
 
 :global(.resizer) {
@@ -55,7 +58,7 @@
     user-select: none;
     touch-action: none;
 
-  &:global(.isResizing) {
-    opacity: 1;
-  }
+    &:global(.isResizing) {
+        opacity: 1;
+    }
 }

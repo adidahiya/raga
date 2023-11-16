@@ -8,12 +8,14 @@
     "scripts": {
         "build": "yarn lerna run build",
         "dist": "yarn lerna run dist",
+        "format": "prettier --write \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
+        "format-check": "prettier --check \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
         "lint": "yarn lerna run lint"
     },
     "devDependencies": {
         "@yarnpkg/types": "^4.0.0",
         "lerna": "^7.4.2",
-        "prettier": "^3.0.3"
+        "prettier": "^3.1.0"
     },
     "engines": {
         "node": ">=18.18"

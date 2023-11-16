@@ -53,6 +53,15 @@ jobs:
             - packages/*/lib
             - packages/*/dist
 
+  format-check:
+    docker: *docker-node-image
+    steps:
+      - checkout
+      - restore_cache: *restore-node-modules-cache
+      - attach_workspace: { at: "." }
+      - run: sudo corepack enable
+      - run: yarn format-check
+
   lint:
     docker: *docker-node-image
     steps:
@@ -92,6 +101,8 @@ workflows:
     jobs:
       - checkout-code
       - build:
+          requires: [checkout-code]
+      - format-check:
           requires: [checkout-code]
       - lint:
           requires: [checkout-code]
