@@ -6,10 +6,6 @@ import { buildPlistOutput } from "./plist.js";
 import { reEncodeHtmlEntities } from "../utils/xmlUtils.js";
 import loadSwinsianLibrary from "./loadSwinsianLibrary.js";
 
-export { loadSwinsianLibrary };
-
-export * from "./consts.js";
-
 export default function (inputLibraryPath: string, outputLibraryPath: string) {
     if (!existsSync(outputLibraryPath)) {
         throw new Error(
