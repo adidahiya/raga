@@ -1,0 +1,51 @@
+# See the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "adidahiya"
+    groups:
+      build-tooling:
+        patterns:
+          - "@typescript-eslint/*"
+          - "@yarnpkg/*"
+          - "autoprefixer"
+          - "eslint-*"
+          - "eslint"
+          - "lerna"
+          - "npm-run-all"
+          - "postcss-*"
+          - "postcss"
+          - "prettier"
+          - "sass"
+          - "styelint"
+          - "stylelint-*"
+          - "typescript"
+          - "vite"
+        exclude-patterns:
+          # Breaking regression in v2.27.0 forces us to pin to v2.26.x, see https://github.com/import-js/eslint-plugin-import/issues/2685
+          - "eslint-plugin-import"
+      electron:
+        patterns:
+          - "@electron-forge/*"
+          - "electron"
+          - "electron-*"
+      blueprint:
+        patterns:
+          - "@blueprintjs/*"
+      types:
+        patterns:
+          - "@types/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "react-test-renderer"
+          - "react-testing-library"
+          - "react-transition-group"
