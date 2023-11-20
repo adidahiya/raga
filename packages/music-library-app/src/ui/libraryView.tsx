@@ -16,6 +16,7 @@ import ResizeHandle from "./resizeHandle";
 import { appStore } from "./store/appStore";
 
 import styles from "./libraryView.module.scss";
+import classNames from "classnames";
 
 declare global {
     interface Window {
@@ -102,7 +103,7 @@ function Library(props: LibraryProps) {
     const masterPlaylist = getMasterPlaylist(props.library);
 
     return (
-        <div>
+        <div className={classNames("flex-column", styles.library)}>
             <div className={styles.libraryHeader} ref={headerRef}>
                 <H5>Stats</H5>
                 <p>Date created: {format(props.library.Date, "Pp")}</p>

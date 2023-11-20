@@ -12,13 +12,22 @@
     }
 }
 
-.libraryHeader {
-    padding: bp.$pt-grid-size * 2;
+.libraryLoaded {
+    height: 100%;
+    position: relative;
 }
 
-.libraryLoaded {
-    .loadLibraryButton {
-        float: right;
-        margin: $double-grid-size;
-    }
+.loadLibraryButton {
+    position: absolute;
+    right: $double-grid-size;
+    top: $double-grid-size;
+}
+
+.library {
+    width: 100%;
+    height: 100%;
+}
+
+.libraryHeader {
+    padding: bp.$pt-grid-size * 2;
 }
