@@ -113,11 +113,11 @@ function Library(props: LibraryProps) {
                 )}
             </div>
             <PanelGroup direction="horizontal">
-                <Panel defaultSize={20} minSize={20}>
+                <Panel defaultSizePercentage={20} minSizePercentage={20}>
                     <PlaylistTable headerHeight={headerHeight} library={props.library} />
                 </Panel>
                 <ResizeHandle />
-                <Panel minSize={30}>
+                <Panel minSizePercentage={30}>
                     {selectedPlaylistId === undefined ? (
                         <NonIdealState
                             title="Playlist tracks"
