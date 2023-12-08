@@ -39,10 +39,10 @@ const createWindow = () => {
     });
 
     for (const channel of Object.values(ClientEventChannel)) {
-        ipcMain.on(channel, (_mainEvent, ...args) => {
+        ipcMain.on(channel, (_mainEvent, data) => {
             const messageToForward = {
                 channel,
-                data: { args },
+                data,
             };
 
             if (DEBUG) {

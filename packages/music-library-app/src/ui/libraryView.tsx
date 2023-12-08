@@ -1,5 +1,5 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
-import { Button, Card, H5, NonIdealState } from "@blueprintjs/core";
+import { Button, ButtonGroup, Card, H5, NonIdealState } from "@blueprintjs/core";
 import { format } from "date-fns";
 import type { IpcRendererEvent } from "electron";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -37,6 +37,11 @@ export default function LibraryView() {
         setLibraryState("loading");
     }, []);
 
+    const loadLibraryFromDisk = useCallback(() => {
+        window.api.send("loadSwinsianLibrary", { reloadFromDisk: true });
+        setLibraryState("loading");
+    }, []);
+
     useEffect(() => {
         if (AUTO_LOAD_LIBRARY) {
             loadLibrary();
@@ -60,8 +65,7 @@ export default function LibraryView() {
 
     const loadLibraryButton = (
         <Button
-            className={styles.loadLibraryButton}
-            text={`${libraryState === "none" ? "Load" : "Reload"} Swinsian library`}
+            text={`${libraryState === "none" ? "Load" : "Reload"} library`}
             onClick={loadLibrary}
         />
     );
@@ -76,7 +80,10 @@ export default function LibraryView() {
                 <NonIdealState title="Error loading library" icon="error" />
             ) : (
                 <div className={styles.libraryLoaded}>
-                    {loadLibraryButton}
+                    <ButtonGroup className={styles.libraryActions}>
+                        {loadLibraryButton}
+                        <Button text="Reload from disk" onClick={loadLibraryFromDisk} />
+                    </ButtonGroup>
                     <Library filepath={libraryFilepath} library={libraryPlist!} />
                 </div>
             )}

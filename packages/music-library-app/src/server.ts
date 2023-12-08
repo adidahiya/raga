@@ -21,10 +21,10 @@ import { DEBUG } from "./common/constants";
 
 let library: MusicLibraryPlist | undefined;
 
-function handleLoadSwinsianLibrary(_event: MessageEvent) {
+function handleLoadSwinsianLibrary(options: any) {
     const filepath = getSwinsianLibraryPath(DEFAULT_SWINSIAN_EXPORT_FOLDER);
 
-    if (library === undefined) {
+    if (library === undefined || options.reloadFromDisk) {
         // HACKHACK: type cast
         library = loadSwinsianLibrary(filepath) as MusicLibraryPlist;
     }
@@ -42,12 +42,12 @@ function handleLoadSwinsianLibrary(_event: MessageEvent) {
 }
 
 function setupEventListeners() {
-    process.parentPort.on("message", (event: MessageEvent) => {
+    process.parentPort.on("message", ({ data: event }: MessageEvent) => {
         if (DEBUG) {
-            console.log(`[server] received "${event.data.channel}" event`, event);
+            console.log(`[server] received "${event.channel}" event`, event);
         }
 
-        if (event.data.channel === ClientEventChannel.LOAD_SWINSIAN_LIBRARY) {
+        if (event.channel === ClientEventChannel.LOAD_SWINSIAN_LIBRARY) {
             handleLoadSwinsianLibrary(event);
         }
     });
