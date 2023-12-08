@@ -8,11 +8,12 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { appStore } from "./store/appStore";
 
 import styles from "./trackTable.module.scss";
+import { DEBUG } from "../common/constants";
 
 export interface TrackTableProps {
     // TODO: move this state to app store
@@ -43,7 +44,14 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             ),
             header: () => <span>#</span>,
             footer: (info) => info.column.id,
-            maxSize: 60,
+            size: 60,
+        }),
+        columnHelper.accessor("BPM", {
+            id: "bpm",
+            cell: (info) => <span className={styles.bpmCell}>{info.getValue()}</span>,
+            header: () => <span>BPM</span>,
+            footer: (info) => info.column.id,
+            size: 60,
         }),
         columnHelper.accessor("Name", {
             id: "name",
@@ -58,6 +66,12 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             footer: (info) => info.column.id,
         }),
     ];
+
+    useEffect(() => {
+        if (DEBUG) {
+            console.info("Visible track list updated", trackDefs);
+        }
+    }, [trackDefs]);
 
     const table = useReactTable({
         data: trackDefs,
