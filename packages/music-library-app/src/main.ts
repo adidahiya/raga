@@ -1,4 +1,4 @@
-import { app, BrowserWindow, utilityProcess, ipcMain } from "electron";
+import { app, BrowserWindow, utilityProcess, ipcMain, protocol } from "electron";
 import path from "node:path";
 import { ClientEventChannel, isServerEventChannel } from "./events";
 import { DEBUG } from "./common/constants";
@@ -20,6 +20,7 @@ const createWindow = () => {
         webPreferences: {
             contextIsolation: true,
             preload: path.join(__dirname, "preload.js"),
+            webSecurity: false,
         },
     });
 

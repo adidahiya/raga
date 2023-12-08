@@ -1,6 +1,7 @@
 import { PlaylistDefinition, TrackDefinition } from "@adahiya/music-library-tools-lib";
-import { Classes, HTMLTable } from "@blueprintjs/core";
+import { Button, Classes, HTMLTable } from "@blueprintjs/core";
 import {
+    CellContext,
     Row,
     createColumnHelper,
     flexRender,
@@ -8,12 +9,14 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { appStore } from "./store/appStore";
 
 import styles from "./trackTable.module.scss";
 import { DEBUG } from "../common/constants";
+import { loadAudioBuffer } from "../audio/buffer";
+import { analyzeBPM } from "../audio/bpm";
 
 export interface TrackTableProps {
     // TODO: move this state to app store
@@ -48,7 +51,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         }),
         columnHelper.accessor("BPM", {
             id: "bpm",
-            cell: (info) => <span className={styles.bpmCell}>{info.getValue()}</span>,
+            cell: TrackBPMCell,
             header: () => <span>BPM</span>,
             footer: (info) => info.column.id,
             size: 60,
@@ -138,6 +141,27 @@ function TrackTableRow(row: Row<TrackDefinition>) {
     );
 }
 TrackTableRow.displayName = "TrackTableRow";
+
+function TrackBPMCell(info: CellContext<TrackDefinition, number>) {
+    const setBPMInLibrary = appStore.use.setTrackBPM();
+    const [bpmValue, setBPM] = useState<number | undefined>(info.getValue());
+
+    const handleAnalyzeBPM = useCallback(async () => {
+        const fileLocation = info.row.original.Location;
+        const trackAudio = await loadAudioBuffer(fileLocation);
+        const bpm = Math.round(await analyzeBPM(trackAudio));
+        setBPM(bpm);
+        setBPMInLibrary(info.row.original["Track ID"], bpm);
+    }, []);
+
+    const content = Number.isInteger(bpmValue) ? (
+        bpmValue
+    ) : (
+        <Button outlined={true} small={true} text="Analyze" onClick={handleAnalyzeBPM} />
+    );
+
+    return <span className={styles.bpmCell}>{content}</span>;
+}
 
 function usePlaylistTrackDefs(playlist: PlaylistDefinition): TrackDefinition[] {
     const libraryPlist = appStore.use.libraryPlist();
