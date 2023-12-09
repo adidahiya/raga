@@ -152,6 +152,11 @@ function TrackBPMCell(info: CellContext<TrackDefinition, number>) {
         const bpm = Math.round(await analyzeBPM(trackAudio));
         setBPM(bpm);
         setBPMInLibrary(info.row.original["Track ID"], bpm);
+        window.api.send("writeAudioFileTag", {
+            fileLocation,
+            tagName: "BPM",
+            value: bpm,
+        });
     }, []);
 
     const content = Number.isInteger(bpmValue) ? (

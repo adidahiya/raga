@@ -22,7 +22,7 @@
         "date-fns": "^2.30.0",
         "electron-squirrel-startup": "^1.0.0",
         "immer": "^10.0.3",
-        "mp3tag.js": "^3.7.1",
+        "node-id3": "^0.2.6",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-resizable-panels": "^0.0.63",
