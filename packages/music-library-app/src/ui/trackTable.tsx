@@ -1,6 +1,7 @@
 import { PlaylistDefinition, TrackDefinition } from "@adahiya/music-library-tools-lib";
-import { Classes, HTMLTable } from "@blueprintjs/core";
+import { Button, Classes, HTMLTable } from "@blueprintjs/core";
 import {
+    CellContext,
     Row,
     createColumnHelper,
     flexRender,
@@ -8,11 +9,14 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { appStore } from "./store/appStore";
 
 import styles from "./trackTable.module.scss";
+import { DEBUG } from "../common/constants";
+import { loadAudioBuffer } from "../audio/buffer";
+import { analyzeBPM } from "../audio/bpm";
 
 export interface TrackTableProps {
     // TODO: move this state to app store
@@ -43,7 +47,14 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             ),
             header: () => <span>#</span>,
             footer: (info) => info.column.id,
-            maxSize: 60,
+            size: 60,
+        }),
+        columnHelper.accessor("BPM", {
+            id: "bpm",
+            cell: TrackBPMCell,
+            header: () => <span>BPM</span>,
+            footer: (info) => info.column.id,
+            size: 60,
         }),
         columnHelper.accessor("Name", {
             id: "name",
@@ -58,6 +69,12 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             footer: (info) => info.column.id,
         }),
     ];
+
+    useEffect(() => {
+        if (DEBUG) {
+            console.info("Visible track list updated", trackDefs);
+        }
+    }, [trackDefs]);
 
     const table = useReactTable({
         data: trackDefs,
@@ -124,6 +141,32 @@ function TrackTableRow(row: Row<TrackDefinition>) {
     );
 }
 TrackTableRow.displayName = "TrackTableRow";
+
+function TrackBPMCell(info: CellContext<TrackDefinition, number>) {
+    const setBPMInLibrary = appStore.use.setTrackBPM();
+    const [bpmValue, setBPM] = useState<number | undefined>(info.getValue());
+
+    const handleAnalyzeBPM = useCallback(async () => {
+        const fileLocation = info.row.original.Location;
+        const trackAudio = await loadAudioBuffer(fileLocation);
+        const bpm = Math.round(await analyzeBPM(trackAudio));
+        setBPM(bpm);
+        setBPMInLibrary(info.row.original["Track ID"], bpm);
+        window.api.send("writeAudioFileTag", {
+            fileLocation,
+            tagName: "BPM",
+            value: bpm,
+        });
+    }, []);
+
+    const content = Number.isInteger(bpmValue) ? (
+        bpmValue
+    ) : (
+        <Button outlined={true} small={true} text="Analyze" onClick={handleAnalyzeBPM} />
+    );
+
+    return <span className={styles.bpmCell}>{content}</span>;
+}
 
 function usePlaylistTrackDefs(playlist: PlaylistDefinition): TrackDefinition[] {
     const libraryPlist = appStore.use.libraryPlist();

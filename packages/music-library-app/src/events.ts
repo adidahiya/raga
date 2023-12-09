@@ -3,7 +3,8 @@ import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 // Event channels
 
 export const ClientEventChannel = {
-    LOAD_SWINSIAN_LIBRARY: "loadSwinsianLibrary" as "loadSwinsianLibrary",
+    LOAD_SWINSIAN_LIBRARY: "loadSwinsianLibrary" as const,
+    WRITE_AUDIO_FILE_TAG: "writeAudioFileTag" as const,
 };
 export type ClientEventChannel = (typeof ClientEventChannel)[keyof typeof ClientEventChannel];
 

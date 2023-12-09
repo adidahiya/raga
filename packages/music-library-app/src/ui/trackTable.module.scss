@@ -46,6 +46,11 @@
     position: relative;
 }
 
+.bpmCell {
+    display: block;
+    text-align: right;
+}
+
 :global(.resizer) {
     position: absolute;
     right: 0;

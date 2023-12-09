@@ -21,9 +21,12 @@
         "classnames": "^2.3.2",
         "date-fns": "^2.30.0",
         "electron-squirrel-startup": "^1.0.0",
+        "immer": "^10.0.3",
+        "node-id3": "^0.2.6",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-resizable-panels": "^0.0.63",
+        "web-audio-beat-detector": "^8.1.57",
         "zustand": "^4.4.7"
     },
     "devDependencies": {

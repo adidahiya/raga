@@ -34,6 +34,7 @@ export function isBasicTrackDefinition(
 
 const NumericTrackProperty = {
     BIT_RATE: "Bit Rate" as const,
+    BPM: "BPM" as const,
     PLAY_COUNT: "Play Count" as const,
     RATING: "Rating" as const,
     SAMPLE_RATE: "Sample Rate" as const,
