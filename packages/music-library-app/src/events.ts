@@ -3,6 +3,8 @@ import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 // Event channels
 
 export const ClientEventChannel = {
+    AUDIO_FILES_SERVER_START: "audioFilesServerStart" as const,
+    AUDIO_FILES_SERVER_STOP: "audioFilesServerStop" as const,
     LOAD_SWINSIAN_LIBRARY: "loadSwinsianLibrary" as const,
     WRITE_AUDIO_FILE_TAG: "writeAudioFileTag" as const,
 };
@@ -13,6 +15,9 @@ export function isClientEventChannel(channel: string): channel is ClientEventCha
 }
 
 export const ServerEventChannel = {
+    AUDIO_FILES_SERVER_ERROR: "audioFilesServerError" as const,
+    AUDIO_FILES_SERVER_STARTED: "audioFilesServerStarted" as const,
+    AUDIO_FILES_SERVER_READY_FOR_RESTART: "audioFilesServerReadyForRestart" as const,
     LOADED_SWINSIAN_LIBRARY: "loadedSwinsianLibrary" as "loadedSwinsianLibrary",
 };
 export type ServerEventChannel = (typeof ServerEventChannel)[keyof typeof ServerEventChannel];

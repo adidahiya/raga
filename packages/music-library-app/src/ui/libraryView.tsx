@@ -1,5 +1,16 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
-import { Button, ButtonGroup, Card, H5, NonIdealState } from "@blueprintjs/core";
+import {
+    AnchorButton,
+    Button,
+    ButtonGroup,
+    Card,
+    FormGroup,
+    InputGroup,
+    NonIdealState,
+    Section,
+    SectionCard,
+    Tooltip,
+} from "@blueprintjs/core";
 import { format } from "date-fns";
 import type { IpcRendererEvent } from "electron";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -64,10 +75,7 @@ export default function LibraryView() {
     }, []);
 
     const loadLibraryButton = (
-        <Button
-            text={`${libraryState === "none" ? "Load" : "Reload"} library`}
-            onClick={loadLibrary}
-        />
+        <LoadLibraryButton libraryState={libraryState} loadLibrary={loadLibrary} />
     );
 
     return (
@@ -80,11 +88,12 @@ export default function LibraryView() {
                 <NonIdealState title="Error loading library" icon="error" />
             ) : (
                 <div className={styles.libraryLoaded}>
-                    <ButtonGroup className={styles.libraryActions}>
-                        {loadLibraryButton}
-                        <Button text="Reload from disk" onClick={loadLibraryFromDisk} />
-                    </ButtonGroup>
-                    <Library filepath={libraryFilepath} library={libraryPlist!} />
+                    <Library
+                        filepath={libraryFilepath}
+                        library={libraryPlist!}
+                        loadLibrary={loadLibrary}
+                        loadLibraryFromDisk={loadLibraryFromDisk}
+                    />
                 </div>
             )}
         </Card>
@@ -92,8 +101,10 @@ export default function LibraryView() {
 }
 
 interface LibraryProps {
-    library: MusicLibraryPlist;
     filepath: string | undefined;
+    library: MusicLibraryPlist;
+    loadLibrary: () => void;
+    loadLibraryFromDisk: () => void;
 }
 
 function Library(props: LibraryProps) {
@@ -112,12 +123,29 @@ function Library(props: LibraryProps) {
     return (
         <div className={classNames("flex-column", styles.library)}>
             <div className={styles.libraryHeader} ref={headerRef}>
-                <H5>Stats</H5>
-                <p>Date created: {format(props.library.Date, "Pp")}</p>
-                {props.filepath && <p>Location: {props.filepath}</p>}
-                {masterPlaylist && (
-                    <p># tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}</p>
-                )}
+                <Section className={styles.statsSection} compact={true} title="Stats">
+                    <SectionCard>
+                        <p>Date created: {format(props.library.Date, "Pp")}</p>
+                        {props.filepath && <p>Location: {props.filepath}</p>}
+                        {masterPlaylist && (
+                            <p>
+                                # tracks:{" "}
+                                {formatStatNumber(masterPlaylist["Playlist Items"].length)}
+                            </p>
+                        )}
+                    </SectionCard>
+                </Section>
+                <Section className={styles.libraryOptions} compact={true} title="Options">
+                    <SectionCard>
+                        <AudioFilesServerForm />
+                    </SectionCard>
+                </Section>
+                <div className={styles.libraryActions}>
+                    <ButtonGroup>
+                        <LoadLibraryButton libraryState="loaded" loadLibrary={props.loadLibrary} />
+                        <Button text="Reload from disk" onClick={props.loadLibraryFromDisk} />
+                    </ButtonGroup>
+                </div>
             </div>
             <PanelGroup direction="horizontal">
                 <Panel defaultSizePercentage={20} minSizePercentage={20}>
@@ -140,6 +168,81 @@ function Library(props: LibraryProps) {
     );
 }
 LibraryView.displayName = "LibraryView";
+
+function LoadLibraryButton(props: { libraryState: LibraryState; loadLibrary: () => void }) {
+    return (
+        <Button
+            text={`${props.libraryState === "none" ? "Load" : "Reload"} library`}
+            onClick={props.loadLibrary}
+        />
+    );
+}
+
+function AudioFilesServerButton() {
+    const audioFilesServerState = appStore.use.audioFilesServerState();
+    const startAudioFilesServer = appStore.use.startAudioFilesServer();
+
+    return (
+        <Tooltip
+            placement="top"
+            content={
+                audioFilesServerState === "started"
+                    ? "Restart audio files server"
+                    : audioFilesServerState === "failed"
+                      ? "Failed to start audio files server"
+                      : audioFilesServerState === "stopped"
+                        ? "Start audio files server"
+                        : "Starting audio files server..."
+            }
+        >
+            <AnchorButton
+                minimal={true}
+                icon={
+                    audioFilesServerState === "started"
+                        ? "refresh"
+                        : audioFilesServerState === "failed"
+                          ? "cross"
+                          : "play"
+                }
+                loading={audioFilesServerState === "starting"}
+                onClick={startAudioFilesServer}
+            />
+        </Tooltip>
+    );
+}
+
+function AudioFilesServerForm() {
+    const audioFilesServerState = appStore.use.audioFilesServerState();
+    const audioFilesRootFolder = appStore.use.audioFilesRootFolder();
+    const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        appStore.use.setAudioTracksRootFolder()(event.target.value);
+    }, []);
+
+    const label = `Audio files server${
+        audioFilesServerState === "started"
+            ? ": running"
+            : audioFilesServerState === "failed"
+              ? ": error"
+              : ""
+    }`;
+
+    return (
+        <FormGroup label={label}>
+            <InputGroup
+                value={audioFilesRootFolder}
+                onChange={setAudioFilesRootFolder}
+                intent={
+                    audioFilesServerState === "failed"
+                        ? "danger"
+                        : audioFilesServerState === "started"
+                          ? "success"
+                          : undefined
+                }
+                rightElement={<AudioFilesServerButton />}
+            />
+        </FormGroup>
+    );
+}
 
 function getMasterPlaylist(library: MusicLibraryPlist) {
     return library.Playlists.find((playlist) => playlist.Master);

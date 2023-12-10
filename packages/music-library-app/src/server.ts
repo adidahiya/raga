@@ -14,6 +14,7 @@ const {
 import type { MessageEvent } from "electron";
 import NodeID3 from "node-id3";
 import { fileURLToPath } from "node:url";
+import { ChildProcessWithoutNullStreams } from "node:child_process";
 
 import {
     ClientEventChannel,
@@ -21,6 +22,7 @@ import {
     ServerEventChannel,
 } from "./events";
 import { DEBUG } from "./common/constants";
+import { startAudioFilesServer } from "./audio/audioFilesServer";
 
 let library: MusicLibraryPlist | undefined;
 
@@ -74,6 +76,42 @@ function handleWriteAudioFileTag(options: {
     });
 }
 
+// TODO: convert to Node HTTP server
+let audioFilesServer: ChildProcessWithoutNullStreams | undefined;
+
+async function handleAudioFilesServerStart(options: { audioFilesRootFolder: string }) {
+    audioFilesServer = await startAudioFilesServer(options.audioFilesRootFolder);
+
+    process.parentPort.postMessage({
+        channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
+    });
+
+    audioFilesServer.on("error", (err) => {
+        process.parentPort.postMessage({
+            channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
+            data: err,
+        });
+    });
+
+    audioFilesServer.on("exit", () => {
+        process.parentPort.postMessage({
+            channel: ServerEventChannel.AUDIO_FILES_SERVER_READY_FOR_RESTART,
+        });
+    });
+}
+
+function handleAudioFilesServerStop() {
+    if (audioFilesServer === undefined) {
+        console.info("[server] Received request to stop audio files server, but it is not running");
+        return;
+    }
+
+    audioFilesServer.kill();
+    process.parentPort.postMessage({
+        channel: ServerEventChannel.AUDIO_FILES_SERVER_READY_FOR_RESTART,
+    });
+}
+
 function setupEventListeners() {
     process.parentPort.on("message", ({ data: event }: MessageEvent) => {
         if (DEBUG) {
@@ -84,6 +122,10 @@ function setupEventListeners() {
             handleLoadSwinsianLibrary(event.data);
         } else if (event.channel === ClientEventChannel.WRITE_AUDIO_FILE_TAG) {
             handleWriteAudioFileTag(event.data);
+        } else if (event.channel === ClientEventChannel.AUDIO_FILES_SERVER_START) {
+            handleAudioFilesServerStart(event.data);
+        } else if (event.channel === ClientEventChannel.AUDIO_FILES_SERVER_STOP) {
+            handleAudioFilesServerStop();
         }
     });
 }

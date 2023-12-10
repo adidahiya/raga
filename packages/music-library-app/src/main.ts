@@ -1,6 +1,6 @@
-import { app, BrowserWindow, utilityProcess, ipcMain, protocol } from "electron";
+import { app, BrowserWindow, utilityProcess, ipcMain, UtilityProcess } from "electron";
 import path from "node:path";
-import { ClientEventChannel, isServerEventChannel } from "./events";
+import { ClientEventChannel, ServerEventChannel, isServerEventChannel } from "./events";
 import { DEBUG } from "./common/constants";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -12,9 +12,11 @@ if (require("electron-squirrel-startup")) {
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
 
+let mainWindow: BrowserWindow | null = null;
+let serverProcess: UtilityProcess | null = null;
+
 const createWindow = () => {
-    // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         webPreferences: {
@@ -34,7 +36,7 @@ const createWindow = () => {
     }
 
     // Note that server.ts must be configured as an electron-forge Vite entry point to get transpiled adjacent to this module
-    const serverProcess = utilityProcess.fork(path.resolve(__dirname, "./server.js"), [], {
+    serverProcess = utilityProcess.fork(path.resolve(__dirname, "./server.js"), [], {
         serviceName: "server",
         stdio: "inherit",
     });
@@ -53,7 +55,7 @@ const createWindow = () => {
                 );
             }
 
-            serverProcess.postMessage(messageToForward);
+            serverProcess?.postMessage(messageToForward);
         });
     }
 
@@ -68,7 +70,7 @@ const createWindow = () => {
             );
         }
 
-        mainWindow.webContents.send(channel, data);
+        mainWindow?.webContents.send(channel, data);
     });
 
     mainWindow.webContents.openDevTools();
@@ -78,6 +80,10 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
+
+app.on("will-quit", () => {
+    serverProcess?.postMessage({ channel: ClientEventChannel.AUDIO_FILES_SERVER_STOP });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
