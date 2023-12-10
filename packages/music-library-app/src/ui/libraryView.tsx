@@ -1,13 +1,11 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
-import { Button, ButtonGroup, Card, NonIdealState } from "@blueprintjs/core";
+import { Card, NonIdealState } from "@blueprintjs/core";
 import classNames from "classnames";
-import type { IpcRendererEvent } from "electron";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PanelGroup, Panel } from "react-resizable-panels";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
-import { AUTO_LOAD_LIBRARY, DEBUG } from "../common/constants";
-import type { LoadedSwinsianLibraryEventPayload } from "../events";
+import { AUTO_LOAD_LIBRARY } from "../common/constants";
 
 import PlaylistTable from "./playlistTable";
 import TrackTable from "./trackTable";
@@ -17,6 +15,7 @@ import LibraryOptions from "./library/libraryOptions";
 
 import styles from "./libraryView.module.scss";
 import LibraryStats from "./library/libraryStats";
+import LibraryActions from "./library/libraryActions";
 
 declare global {
     interface Window {
@@ -24,64 +23,28 @@ declare global {
     }
 }
 
-type LibraryState = "none" | "loading" | "loaded" | "error";
-
 export default function LibraryView() {
-    const [libraryState, setLibraryState] = useState<LibraryState>("none");
+    const libraryState = appStore.use.libraryLoadingState();
     const libraryPlist = appStore.use.libraryPlist();
-    const setLibraryPlist = appStore.use.setLibraryPlist();
-    const setLibraryFilepath = appStore.use.setLibraryFilepath();
-
-    const loadLibrary = useCallback(() => {
-        window.api.send("loadSwinsianLibrary");
-        setLibraryState("loading");
-    }, []);
-
-    const loadLibraryFromDisk = useCallback(() => {
-        window.api.send("loadSwinsianLibrary", { reloadFromDisk: true });
-        setLibraryState("loading");
-    }, []);
+    const loadLibrary = appStore.use.loadSwinsianLibrary();
 
     useEffect(() => {
         if (AUTO_LOAD_LIBRARY) {
             loadLibrary();
         }
-
-        window.api.handle(
-            "loadedSwinsianLibrary",
-            (event: IpcRendererEvent, data: LoadedSwinsianLibraryEventPayload) => {
-                if (DEBUG) {
-                    console.log("[renderer] got loaded library", event, data);
-                }
-
-                if (data.library != null) {
-                    setLibraryState("loaded");
-                    setLibraryPlist(data.library);
-                    setLibraryFilepath(data.filepath);
-                }
-            },
-        );
     }, []);
-
-    const loadLibraryButton = (
-        <LoadLibraryButton libraryState={libraryState} loadLibrary={loadLibrary} />
-    );
 
     return (
         <Card className={styles.container}>
             {libraryState === "none" ? (
-                <NonIdealState title="No library loaded" icon="music" action={loadLibraryButton} />
+                <NonIdealState title="No library loaded" icon="music" />
             ) : libraryState === "loading" ? (
                 <NonIdealState title="Loading library..." icon="refresh" />
             ) : libraryState === "error" ? (
                 <NonIdealState title="Error loading library" icon="error" />
             ) : (
                 <div className={styles.libraryLoaded}>
-                    <Library
-                        library={libraryPlist!}
-                        loadLibrary={loadLibrary}
-                        loadLibraryFromDisk={loadLibraryFromDisk}
-                    />
+                    <Library library={libraryPlist!} />
                 </div>
             )}
         </Card>
@@ -90,8 +53,6 @@ export default function LibraryView() {
 
 interface LibraryProps {
     library: MusicLibraryPlist;
-    loadLibrary: () => void;
-    loadLibraryFromDisk: () => void;
 }
 
 function Library(props: LibraryProps) {
@@ -110,12 +71,7 @@ function Library(props: LibraryProps) {
             <div className={styles.libraryHeader} ref={headerRef}>
                 <LibraryStats className={styles.statsSection} />
                 <LibraryOptions className={styles.libraryOptions} />
-                <div className={styles.libraryActions}>
-                    <ButtonGroup>
-                        <LoadLibraryButton libraryState="loaded" loadLibrary={props.loadLibrary} />
-                        <Button text="Reload from disk" onClick={props.loadLibraryFromDisk} />
-                    </ButtonGroup>
-                </div>
+                <LibraryActions className={styles.libraryActions} />
             </div>
             <PanelGroup direction="horizontal">
                 <Panel defaultSizePercentage={20} minSizePercentage={20}>
@@ -138,12 +94,3 @@ function Library(props: LibraryProps) {
     );
 }
 LibraryView.displayName = "LibraryView";
-
-function LoadLibraryButton(props: { libraryState: LibraryState; loadLibrary: () => void }) {
-    return (
-        <Button
-            text={`${props.libraryState === "none" ? "Load" : "Reload"} library`}
-            onClick={props.loadLibrary}
-        />
-    );
-}

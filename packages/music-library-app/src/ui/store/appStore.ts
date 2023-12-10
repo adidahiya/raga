@@ -1,22 +1,36 @@
 import { MusicLibraryPlist, TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { IpcRendererEvent } from "electron";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools, persist } from "zustand/middleware";
 
 import { createSelectors } from "./createSelectors";
 import { DEBUG, DEFAULT_AUDIO_FILES_ROOT_FOLDER, LOCAL_STORAGE_KEY } from "../../common/constants";
-import { ClientEventChannel, ServerEventChannel } from "../../events";
+import {
+    ClientEventChannel,
+    LoadSwinsianLibraryOptions,
+    LoadedSwinsianLibraryEventPayload,
+    ServerEventChannel,
+} from "../../events";
+
+export type LibraryLoadingState = "none" | "loading" | "loaded" | "error";
+export type AudioFilesServerState = "stopped" | "starting" | "started" | "failed";
 
 export interface AppState {
     audioFilesRootFolder: string;
-    audioFilesServerState: "stopped" | "starting" | "started" | "failed";
+    audioFilesServerState: AudioFilesServerState;
+    libraryLoadingState: LibraryLoadingState;
     libraryPlist: MusicLibraryPlist | undefined;
     libraryFilepath: string | undefined;
     selectedPlaylistId: string | undefined;
-    startAudioFilesServer: () => void;
 }
 
 export interface AppAction {
+    // complex actions with side effects
+    loadSwinsianLibrary: (options?: LoadSwinsianLibraryOptions) => void;
+    startAudioFilesServer: () => void;
+
+    // simple setters
     setAudioTracksRootFolder: (audioFilesRootFolder: string) => void;
     setLibraryPlist: (libraryPlist: MusicLibraryPlist | undefined) => void;
     setLibraryFilepath: (libraryFilepath: string | undefined) => void;
@@ -56,6 +70,8 @@ export const useAppStore = create<AppState & AppAction>()(
                     audioFilesRootFolder: DEFAULT_AUDIO_FILES_ROOT_FOLDER,
                     audioFilesServerState: "stopped",
                     selectedPlaylistId: undefined,
+
+                    libraryLoadingState: "none",
                     libraryFilepath: undefined,
                     libraryPlist: undefined,
 
@@ -78,6 +94,35 @@ export const useAppStore = create<AppState & AppAction>()(
                             (state.libraryPlist.Tracks[id] as TrackDefinition).BPM = bpm;
                         });
                     },
+
+                    loadSwinsianLibrary: (options: LoadSwinsianLibraryOptions = {}) =>
+                        set((state) => {
+                            state.libraryLoadingState = "loading";
+                            window.api.send("loadSwinsianLibrary", options);
+                            window.api.handle(
+                                "loadedSwinsianLibrary",
+                                (
+                                    event: IpcRendererEvent,
+                                    data: LoadedSwinsianLibraryEventPayload,
+                                ) => {
+                                    if (DEBUG) {
+                                        console.log("[renderer] got loaded library", event, data);
+                                    }
+
+                                    if (data.library == null) {
+                                        set((state) => {
+                                            state.libraryLoadingState = "error";
+                                        });
+                                    } else {
+                                        set((state) => {
+                                            state.libraryLoadingState = "loaded";
+                                            state.libraryPlist = data.library;
+                                            state.libraryFilepath = data.filepath;
+                                        });
+                                    }
+                                },
+                            );
+                        }),
 
                     startAudioFilesServer: () =>
                         set((state) => {

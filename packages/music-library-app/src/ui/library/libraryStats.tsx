@@ -1,7 +1,7 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 import { Classes, Section, SectionCard, Props } from "@blueprintjs/core";
 import classNames from "classnames";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 import { formatStatNumber } from "../../common/format";
 import { appStore } from "../store/appStore";
@@ -11,7 +11,7 @@ export interface LibraryStatsProps extends Props {}
 export default function LibraryStats(props: LibraryStatsProps) {
     const library = appStore.use.libraryPlist();
     const libraryFilepath = appStore.use.libraryFilepath();
-    const dateCreated = library?.Date ?? new Date();
+    const dateCreated = getDateCreated(library);
     const masterPlaylist = getMasterPlaylist(library);
     const skeltonClasses = classNames({ [Classes.SKELETON]: !library });
 
@@ -26,6 +26,18 @@ export default function LibraryStats(props: LibraryStatsProps) {
             </SectionCard>
         </Section>
     );
+}
+
+function getDateCreated(library: MusicLibraryPlist | undefined) {
+    if (library === undefined) {
+        return new Date();
+    }
+
+    if (typeof library.Date === "string") {
+        return parseISO(library.Date);
+    }
+
+    return library.Date;
 }
 
 function getMasterPlaylist(library: MusicLibraryPlist | undefined) {

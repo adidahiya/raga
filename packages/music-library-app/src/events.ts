@@ -34,3 +34,7 @@ export interface LoadedSwinsianLibraryEventPayload {
     /** Location of library XML on disk */
     filepath: string;
 }
+
+export interface LoadSwinsianLibraryOptions {
+    reloadFromDisk?: boolean;
+}

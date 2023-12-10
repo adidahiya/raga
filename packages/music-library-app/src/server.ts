@@ -18,6 +18,7 @@ import { ChildProcessWithoutNullStreams } from "node:child_process";
 
 import {
     ClientEventChannel,
+    LoadSwinsianLibraryOptions,
     LoadedSwinsianLibraryEventPayload,
     ServerEventChannel,
 } from "./events";
@@ -26,10 +27,10 @@ import { startAudioFilesServer } from "./audio/audioFilesServer";
 
 let library: MusicLibraryPlist | undefined;
 
-function handleLoadSwinsianLibrary(options?: { reloadFromDisk?: boolean }) {
+function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
     const filepath = getSwinsianLibraryPath(DEFAULT_SWINSIAN_EXPORT_FOLDER);
 
-    if (library === undefined || options?.reloadFromDisk) {
+    if (library === undefined || options.reloadFromDisk) {
         // HACKHACK: type cast
         library = loadSwinsianLibrary(filepath) as MusicLibraryPlist;
     }
