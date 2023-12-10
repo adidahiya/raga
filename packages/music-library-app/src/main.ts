@@ -82,7 +82,8 @@ const createWindow = () => {
 app.on("ready", createWindow);
 
 app.on("will-quit", () => {
-    serverProcess?.postMessage({ channel: ClientEventChannel.AUDIO_FILES_SERVER_STOP });
+    // TODO: fix this, currently getting an error about the utility process being destroyed already
+    // serverProcess?.postMessage({ channel: ClientEventChannel.AUDIO_FILES_SERVER_STOP });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

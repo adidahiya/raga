@@ -1,33 +1,22 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
-import {
-    AnchorButton,
-    Button,
-    ButtonGroup,
-    Card,
-    FormGroup,
-    InputGroup,
-    NonIdealState,
-    Section,
-    SectionCard,
-    Tooltip,
-} from "@blueprintjs/core";
-import { format } from "date-fns";
+import { Button, ButtonGroup, Card, NonIdealState } from "@blueprintjs/core";
+import classNames from "classnames";
 import type { IpcRendererEvent } from "electron";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PanelGroup, Panel } from "react-resizable-panels";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
 import { AUTO_LOAD_LIBRARY, DEBUG } from "../common/constants";
-import { formatStatNumber } from "../common/format";
 import type { LoadedSwinsianLibraryEventPayload } from "../events";
 
 import PlaylistTable from "./playlistTable";
 import TrackTable from "./trackTable";
 import ResizeHandle from "./resizeHandle";
 import { appStore } from "./store/appStore";
+import LibraryOptions from "./library/libraryOptions";
 
 import styles from "./libraryView.module.scss";
-import classNames from "classnames";
+import LibraryStats from "./library/libraryStats";
 
 declare global {
     interface Window {
@@ -41,7 +30,7 @@ export default function LibraryView() {
     const [libraryState, setLibraryState] = useState<LibraryState>("none");
     const libraryPlist = appStore.use.libraryPlist();
     const setLibraryPlist = appStore.use.setLibraryPlist();
-    const [libraryFilepath, setLibraryFilepath] = useState<string | undefined>(undefined);
+    const setLibraryFilepath = appStore.use.setLibraryFilepath();
 
     const loadLibrary = useCallback(() => {
         window.api.send("loadSwinsianLibrary");
@@ -89,7 +78,6 @@ export default function LibraryView() {
             ) : (
                 <div className={styles.libraryLoaded}>
                     <Library
-                        filepath={libraryFilepath}
                         library={libraryPlist!}
                         loadLibrary={loadLibrary}
                         loadLibraryFromDisk={loadLibraryFromDisk}
@@ -101,7 +89,6 @@ export default function LibraryView() {
 }
 
 interface LibraryProps {
-    filepath: string | undefined;
     library: MusicLibraryPlist;
     loadLibrary: () => void;
     loadLibraryFromDisk: () => void;
@@ -118,28 +105,11 @@ function Library(props: LibraryProps) {
         }
     }, []);
 
-    const masterPlaylist = getMasterPlaylist(props.library);
-
     return (
         <div className={classNames("flex-column", styles.library)}>
             <div className={styles.libraryHeader} ref={headerRef}>
-                <Section className={styles.statsSection} compact={true} title="Stats">
-                    <SectionCard>
-                        <p>Date created: {format(props.library.Date, "Pp")}</p>
-                        {props.filepath && <p>Location: {props.filepath}</p>}
-                        {masterPlaylist && (
-                            <p>
-                                # tracks:{" "}
-                                {formatStatNumber(masterPlaylist["Playlist Items"].length)}
-                            </p>
-                        )}
-                    </SectionCard>
-                </Section>
-                <Section className={styles.libraryOptions} compact={true} title="Options">
-                    <SectionCard>
-                        <AudioFilesServerForm />
-                    </SectionCard>
-                </Section>
+                <LibraryStats className={styles.statsSection} />
+                <LibraryOptions className={styles.libraryOptions} />
                 <div className={styles.libraryActions}>
                     <ButtonGroup>
                         <LoadLibraryButton libraryState="loaded" loadLibrary={props.loadLibrary} />
@@ -176,74 +146,4 @@ function LoadLibraryButton(props: { libraryState: LibraryState; loadLibrary: () 
             onClick={props.loadLibrary}
         />
     );
-}
-
-function AudioFilesServerButton() {
-    const audioFilesServerState = appStore.use.audioFilesServerState();
-    const startAudioFilesServer = appStore.use.startAudioFilesServer();
-
-    return (
-        <Tooltip
-            placement="top"
-            content={
-                audioFilesServerState === "started"
-                    ? "Restart audio files server"
-                    : audioFilesServerState === "failed"
-                      ? "Failed to start audio files server"
-                      : audioFilesServerState === "stopped"
-                        ? "Start audio files server"
-                        : "Starting audio files server..."
-            }
-        >
-            <AnchorButton
-                minimal={true}
-                icon={
-                    audioFilesServerState === "started"
-                        ? "refresh"
-                        : audioFilesServerState === "failed"
-                          ? "cross"
-                          : "play"
-                }
-                loading={audioFilesServerState === "starting"}
-                onClick={startAudioFilesServer}
-            />
-        </Tooltip>
-    );
-}
-
-function AudioFilesServerForm() {
-    const audioFilesServerState = appStore.use.audioFilesServerState();
-    const audioFilesRootFolder = appStore.use.audioFilesRootFolder();
-    const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        appStore.use.setAudioTracksRootFolder()(event.target.value);
-    }, []);
-
-    const label = `Audio files server${
-        audioFilesServerState === "started"
-            ? ": running"
-            : audioFilesServerState === "failed"
-              ? ": error"
-              : ""
-    }`;
-
-    return (
-        <FormGroup label={label}>
-            <InputGroup
-                value={audioFilesRootFolder}
-                onChange={setAudioFilesRootFolder}
-                intent={
-                    audioFilesServerState === "failed"
-                        ? "danger"
-                        : audioFilesServerState === "started"
-                          ? "success"
-                          : undefined
-                }
-                rightElement={<AudioFilesServerButton />}
-            />
-        </FormGroup>
-    );
-}
-
-function getMasterPlaylist(library: MusicLibraryPlist) {
-    return library.Playlists.find((playlist) => playlist.Master);
 }
