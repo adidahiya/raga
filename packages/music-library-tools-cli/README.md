@@ -1,8 +1,10 @@
-# @adahiya/music-library-tools-cli
+# music-library-tools-cli
 
 [![npm](https://img.shields.io/npm/v/@adahiya/music-library-tools-cli.svg?label=@adahiya/music-library-tools-cli)](https://www.npmjs.com/package/@adahiya/music-library-tools-cli)
 
-## Usage guide: convert a Swinsian library to Rekordbox iTunes XML format
+## Usage guide
+
+> Convert a Swinsian library XML file to Rekordbox/iTunes compatible format
 
 ### 1. Export your Swinsian library to an XML file
 
@@ -35,12 +37,6 @@ After the first time you configure Rekordbox to look for `ModifiedLibrary.xml` i
 you can just hit the refresh button to load the library when you run this process again:
 
 ![refresh](./docs/assets/rekordbox-refresh-itunes-xml.png)
-
-## Experimental: automator workflow
-
-There's an experimental automator workflow in this repo which does most of the above steps for you. Here's an overview of its steps:
-
-![workflow-overview](./automator/export-swinsian-library.workflow/Contents/QuickLook/Preview.png)
 
 ## Development tasks
 
