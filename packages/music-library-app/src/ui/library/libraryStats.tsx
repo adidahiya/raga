@@ -21,7 +21,14 @@ export default function LibraryStats(props: LibraryStatsProps) {
                 <p className={skeltonClasses}>Date created: {format(dateCreated, "Pp")}</p>
                 <p className={skeltonClasses}>Location: {libraryFilepath}</p>
                 {masterPlaylist && (
-                    <p># tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}</p>
+                    <>
+                        <p># tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}</p>
+                    </>
+                )}
+                {library && (
+                    <>
+                        <p># playlists: {formatStatNumber(library?.Playlists.length)}</p>
+                    </>
                 )}
             </SectionCard>
         </Section>
