@@ -1,7 +1,11 @@
-export { default as convertSwinsianToItunesXmlLibrary } from "./convert-swinsian-to-itunes-xml-library/index.js";
-export { default as loadSwinsianLibrary } from "./convert-swinsian-to-itunes-xml-library/loadSwinsianLibrary.js";
 export {
-    DEFAULT_SWINSIAN_EXPORT_FOLDER,
+    default as convertSwinsianToItunesXmlLibrary,
+    loadSwinsianLibrary,
+    serializeLibraryPlist,
+} from "./convert-swinsian-to-itunes-xml-library/index.js";
+export {} from "./";
+export {
+    getDefaultSwinsianExportFolder,
     getSwinsianLibraryPath,
     getOutputLibraryPath,
 } from "./convert-swinsian-to-itunes-xml-library/consts.js";

@@ -1,20 +1,19 @@
 import plist from "plist";
 import { readFileSync } from "node:fs";
-import { collapsePropertiesIntoSingleLine } from "../utils/xmlUtils.js";
-import { MusicLibraryPlist } from "../models/library.js";
+import { collapsePropertiesIntoSingleLine } from "./xmlUtils.js";
 
-export function loadPlistFile(path: string): MusicLibraryPlist {
+export function loadPlistFile(path: string): plist.PlistObject {
     console.info(`Loading library at ${path}`);
     console.time(`loadPlistFile`);
     const plistContents = readFileSync(path, { encoding: "utf8" });
     const parsedPlist = plist.parse(plistContents) as plist.PlistObject;
     console.timeEnd(`loadPlistFile`);
-    return parsedPlist as unknown as MusicLibraryPlist;
+    return parsedPlist;
 }
 
-export function buildPlistOutput(library: MusicLibraryPlist): string {
+export function buildPlistOutput(library: object): string {
     console.time(`buildPlistOutput`);
-    let output = plist.build(library as unknown as plist.PlistObject, {
+    let output = plist.build(library as plist.PlistObject, {
         pretty: true,
         indent: "	",
     });

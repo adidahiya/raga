@@ -1,12 +1,7 @@
 // HACKHACK: regular imports are not working here, for some reason
-// import {
-//     DEFAULT_SWINSIAN_EXPORT_FOLDER,
-//     getSwinsianLibraryPath,
-//     loadSwinsianLibrary,
-// } from "@adahiya/music-library-tools-lib";
 import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 const {
-    DEFAULT_SWINSIAN_EXPORT_FOLDER,
+    getDefaultSwinsianExportFolder,
     getSwinsianLibraryPath,
     loadSwinsianLibrary,
 } = require("@adahiya/music-library-tools-lib");
@@ -28,11 +23,15 @@ import { startAudioFilesServer } from "./audio/audioFilesServer";
 let library: MusicLibraryPlist | undefined;
 
 function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
-    const filepath = getSwinsianLibraryPath(DEFAULT_SWINSIAN_EXPORT_FOLDER);
+    const filepath = getSwinsianLibraryPath(getDefaultSwinsianExportFolder());
 
     if (library === undefined || options.reloadFromDisk) {
-        // HACKHACK: type cast
-        library = loadSwinsianLibrary(filepath) as MusicLibraryPlist;
+        library = loadSwinsianLibrary(filepath);
+    }
+
+    if (library === undefined) {
+        console.error(`[server] Could not load Swinsian library from ${filepath}`);
+        return;
     }
 
     const channel = ServerEventChannel.LOADED_SWINSIAN_LIBRARY;

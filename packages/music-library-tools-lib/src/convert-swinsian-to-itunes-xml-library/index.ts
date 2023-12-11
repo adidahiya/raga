@@ -1,31 +1,19 @@
-import { existsSync, writeFileSync } from "node:fs";
-
 import { forEachTrackInLibrary } from "./visitDefinitions.js";
 import { convertSwinsianTrackToMusicAppTrack, SwinsianTrackDefinition } from "../models/tracks.js";
-import { buildPlistOutput } from "./plist.js";
-import { reEncodeHtmlEntities } from "../utils/xmlUtils.js";
-import loadSwinsianLibrary from "./loadSwinsianLibrary.js";
+import { MusicAppLibraryPlist, MusicLibraryPlist, SwinsianLibraryPlist } from "../index.js";
 
-export default function (inputLibraryPath: string, outputLibraryPath: string) {
-    if (!existsSync(outputLibraryPath)) {
-        throw new Error(
-            `[music-library-scripts] No output folder found at ${outputLibraryPath}, please make sure it exists.`,
-        );
-    }
+export { default as loadSwinsianLibrary } from "./loadSwinsianLibrary.js";
+export { default as serializeLibraryPlist } from "./serializeLibraryPlist.js";
 
-    const swinsianLibrary = loadSwinsianLibrary(inputLibraryPath);
+export default function (swinsianLibrary: SwinsianLibraryPlist): MusicLibraryPlist {
+    const musicAppLibrary = { ...swinsianLibrary } as MusicAppLibraryPlist;
 
     forEachTrackInLibrary(swinsianLibrary, (track) => {
         const newTrackDefinition = convertSwinsianTrackToMusicAppTrack(
             track as SwinsianTrackDefinition,
         );
-        swinsianLibrary.Tracks[track["Track ID"]] = newTrackDefinition;
+        musicAppLibrary.Tracks[track["Track ID"]] = newTrackDefinition;
     });
 
-    console.info(`Building modified library`);
-    let outputPlist = buildPlistOutput(swinsianLibrary);
-    outputPlist = reEncodeHtmlEntities(outputPlist);
-
-    console.info(`Writing modified library to ${outputLibraryPath}`);
-    writeFileSync(outputLibraryPath, outputPlist);
+    return musicAppLibrary;
 }
