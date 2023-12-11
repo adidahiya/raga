@@ -7,6 +7,7 @@ export const ClientEventChannel = {
     AUDIO_FILES_SERVER_STOP: "audioFilesServerStop" as const,
     LOAD_SWINSIAN_LIBRARY: "loadSwinsianLibrary" as const,
     WRITE_AUDIO_FILE_TAG: "writeAudioFileTag" as const,
+    WRITE_MODIFIED_LIBRARY: "writeModifiedLibrary" as const,
 };
 export type ClientEventChannel = (typeof ClientEventChannel)[keyof typeof ClientEventChannel];
 
@@ -38,4 +39,12 @@ export interface LoadedSwinsianLibraryEventPayload {
 
 export interface LoadSwinsianLibraryOptions {
     reloadFromDisk?: boolean;
+}
+
+export interface WriteModifiedLibraryOptions {
+    /** Modified Swinsian library */
+    library: SwinsianLibraryPlist;
+
+    /** Location of the original Swinsian library XML on disk (to be overwritten) */
+    filepath: string;
 }

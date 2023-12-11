@@ -2,6 +2,9 @@ import {
     SwinsianLibraryPlist,
     PlaylistDefinition,
     SwinsianTrackDefinition,
+    convertSwinsianToItunesXmlLibrary,
+    serializeLibraryPlist,
+    getOutputLibraryPath,
 } from "@adahiya/music-library-tools-lib";
 import type { IpcRendererEvent } from "electron";
 import { create } from "zustand";
@@ -57,6 +60,7 @@ export interface AppAction {
     startAudioFilesServer: () => void;
     analyzeTrack: (trackId: number) => Promise<void>;
     analyzePlaylist: (playlistId: string) => Promise<void>;
+    writeModiifedLibrary: () => void;
 
     // simple getters
     getPlaylistTrackIds: (playlistId: string) => number[] | undefined;
@@ -156,6 +160,20 @@ export const useAppStore = create<AppState & AppAction>()(
                             },
                         );
                     }),
+
+                writeModiifedLibrary: () => {
+                    const { library, libraryFilepath } = get();
+
+                    if (library === undefined) {
+                        console.error("[client] Unable to write modified library");
+                        return;
+                    }
+
+                    window.api.send(ClientEventChannel.WRITE_MODIFIED_LIBRARY, {
+                        library,
+                        filepath: libraryFilepath,
+                    });
+                },
 
                 startAudioFilesServer: () =>
                     set((state) => {

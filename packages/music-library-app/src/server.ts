@@ -1,9 +1,12 @@
 // HACKHACK: regular imports are not working here, for some reason
-import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
+import type { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
 const {
+    convertSwinsianToItunesXmlLibrary,
     getDefaultSwinsianExportFolder,
     getSwinsianLibraryPath,
+    getOutputLibraryPath,
     loadSwinsianLibrary,
+    serializeLibraryPlist,
 } = require("@adahiya/music-library-tools-lib");
 
 import type { MessageEvent } from "electron";
@@ -16,11 +19,13 @@ import {
     LoadSwinsianLibraryOptions,
     LoadedSwinsianLibraryEventPayload,
     ServerEventChannel,
+    WriteModifiedLibraryOptions,
 } from "./events";
 import { DEBUG } from "./common/constants";
 import { startAudioFilesServer } from "./audio/audioFilesServer";
+import { writeFileSync } from "node:fs";
 
-let library: MusicLibraryPlist | undefined;
+let library: SwinsianLibraryPlist | undefined;
 
 function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
     const filepath = getSwinsianLibraryPath(getDefaultSwinsianExportFolder());
@@ -117,20 +122,57 @@ function handleAudioFilesServerStop() {
     });
 }
 
+/**
+ * Writes the modified library to disk, both the Swinsian XML and Music.app XML formats.
+ * The former is used when running this app again, and the latter is used when continuing a music management
+ * workflow in Rekordbox.
+ */
+function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
+    options.library.Date = new Date();
+    const serializedSwinsianLibrary = serializeLibraryPlist(options.library);
+    const convertedLibrary = convertSwinsianToItunesXmlLibrary(options.library);
+    const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary);
+
+    const swinsianLibraryOutputPath = options.filepath;
+    const modifiedLibraryOutputPath = getOutputLibraryPath();
+
+    if (DEBUG) {
+        console.log(`[server] Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
+        console.log(`[server] Writing modified library to ${modifiedLibraryOutputPath}...`);
+    }
+
+    writeFileSync(swinsianLibraryOutputPath, serializedSwinsianLibrary);
+    writeFileSync(modifiedLibraryOutputPath, serializedMusicAppLibrary);
+
+    if (DEBUG) {
+        console.log(`[server] ... done!`);
+    }
+}
+
 function setupEventListeners() {
     process.parentPort.on("message", ({ data: event }: MessageEvent) => {
         if (DEBUG) {
             console.log(`[server] received "${event.channel}" event`, event);
         }
 
-        if (event.channel === ClientEventChannel.LOAD_SWINSIAN_LIBRARY) {
-            handleLoadSwinsianLibrary(event.data);
-        } else if (event.channel === ClientEventChannel.WRITE_AUDIO_FILE_TAG) {
-            handleWriteAudioFileTag(event.data);
-        } else if (event.channel === ClientEventChannel.AUDIO_FILES_SERVER_START) {
-            handleAudioFilesServerStart(event.data);
-        } else if (event.channel === ClientEventChannel.AUDIO_FILES_SERVER_STOP) {
-            handleAudioFilesServerStop();
+        switch (event.channel) {
+            case ClientEventChannel.LOAD_SWINSIAN_LIBRARY:
+                handleLoadSwinsianLibrary(event.data);
+                break;
+            case ClientEventChannel.WRITE_AUDIO_FILE_TAG:
+                handleWriteAudioFileTag(event.data);
+                break;
+            case ClientEventChannel.AUDIO_FILES_SERVER_START:
+                handleAudioFilesServerStart(event.data);
+                break;
+            case ClientEventChannel.AUDIO_FILES_SERVER_STOP:
+                handleAudioFilesServerStop();
+                break;
+            case ClientEventChannel.WRITE_MODIFIED_LIBRARY:
+                handleWriteModifiedLibrary(event.data);
+                break;
+            default:
+                break;
         }
     });
 }
