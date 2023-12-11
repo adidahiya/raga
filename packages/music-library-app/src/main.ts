@@ -1,4 +1,4 @@
-import { app, BrowserWindow, utilityProcess, ipcMain, UtilityProcess, session } from "electron";
+import { app, BrowserWindow, utilityProcess, ipcMain, UtilityProcess } from "electron";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import path from "node:path";
 import { ClientEventChannel, isServerEventChannel } from "./events";
