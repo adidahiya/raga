@@ -1,0 +1,11 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.compactTable {
+    table:global(.#{bp.$ns}-html-table) {
+        th {
+            height: 24px;
+            vertical-align: middle;
+            position: relative; // create a stacking context for the resize handle
+        }
+    }
+}

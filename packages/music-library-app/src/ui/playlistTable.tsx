@@ -14,6 +14,7 @@ import { useCallback, useMemo, useState, MouseEvent } from "react";
 
 import { appStore } from "./store/appStore";
 
+import commonStyles from "../common/commonStyles.module.scss";
 import styles from "./playlistTable.module.scss";
 import { formatStatNumber } from "../common/format";
 
@@ -181,7 +182,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
     return (
         <div className={styles.container}>
             {props.showHeader && (
-                <div className={styles.header}>
+                <div className={classNames(styles.header, commonStyles.compactTable)}>
                     <HTMLTable compact={true}>
                         <thead>{headerRows}</thead>
                     </HTMLTable>

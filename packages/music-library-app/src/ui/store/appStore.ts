@@ -196,12 +196,22 @@ export const useAppStore = create<AppState & AppAction>()(
                         }
                     }),
 
+                /** @throws */
                 analyzeTrack: async (trackId: number) => {
                     const trackDef = get().getTrackDef(trackId);
 
                     const fileLocation = trackDef?.Location;
                     if (fileLocation === undefined) {
                         console.error(`[client] Unable to analyze track ${trackId}`);
+                        return;
+                    }
+
+                    if (trackDef?.BPM !== undefined) {
+                        if (DEBUG) {
+                            console.info(
+                                `[client] skipping analysis of track ${trackId}, BPM tag exists`,
+                            );
+                        }
                         return;
                     }
 
@@ -268,7 +278,15 @@ export const useAppStore = create<AppState & AppAction>()(
                     const trackIds = playlistDef["Playlist Items"].map((item) => item["Track ID"]);
 
                     for (const trackId of trackIds) {
-                        await analyzeTrack(trackId);
+                        try {
+                            await analyzeTrack(trackId);
+                        } catch (e) {
+                            console.error(
+                                `[client] error analyzing track ${trackId} in playlist ${playlistId}`,
+                                e,
+                            );
+                            continue;
+                        }
                     }
                 },
             };

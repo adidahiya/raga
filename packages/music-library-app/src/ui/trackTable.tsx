@@ -14,9 +14,10 @@ import classNames from "classnames";
 import { useShallow } from "zustand/react/shallow";
 import { useCallback } from "react";
 
-import { DEBUG, LIBRARY_VIEW_SETTINGS } from "../common/constants";
+import { LIBRARY_VIEW_SETTINGS } from "../common/constants";
 import { appStore, useAppStore } from "./store/appStore";
 
+import commonStyles from "../common/commonStyles.module.scss";
 import styles from "./trackTable.module.scss";
 
 export interface TrackTableProps {
@@ -48,14 +49,18 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         columnHelper.accessor("BPM", {
             id: "bpm",
             cell: (info) => info.cell.getValue() ?? "-",
-            header: () => <span>BPM</span>,
+            header: BPMColumnHeader,
             size: 60,
         }),
         analyzeBPMPerTrack &&
             columnHelper.display({
                 id: "analyzeBPM",
                 cell: AnalyzeBPMCell,
-                header: AnalyzeColumnHeader,
+                header: () => (
+                    <div>
+                        <AnalyzeAllTracksInSelectedPlaylistButton />
+                    </div>
+                ),
                 size: 60,
             }),
         columnHelper.accessor("Name", {
@@ -99,7 +104,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
+            <div className={classNames(styles.header, commonStyles.compactTable)}>
                 <HTMLTable compact={true}>
                     <thead>{headerRows}</thead>
                 </HTMLTable>
@@ -136,6 +141,17 @@ function TrackTableRow(row: Row<TrackDefinition>) {
 }
 TrackTableRow.displayName = "TrackTableRow";
 
+function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number>) {
+    const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+    return (
+        <div className={styles.bpmColumnHeader}>
+            <span>BPM</span>
+            {!analyzeBPMPerTrack && <AnalyzeAllTracksInSelectedPlaylistButton />}
+        </div>
+    );
+}
+BPMColumnHeader.displayName = "BPMColumnHeader";
+
 function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
     const trackId = props.row.original["Track ID"];
     const analyzeTrack = appStore.use.analyzeTrack();
@@ -145,7 +161,7 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
     return <Button outlined={true} small={true} text="Analyze" onClick={handleAnalyzeBPM} />;
 }
 
-function AnalyzeColumnHeader(_props: HeaderContext<TrackDefinition, unknown>) {
+function AnalyzeAllTracksInSelectedPlaylistButton() {
     const audioFilesServerState = LIBRARY_VIEW_SETTINGS.USE_EXTERNAL_AUDIO_FILES_SERVER
         ? "started"
         : appStore.use.audioFilesServerState();
@@ -157,16 +173,16 @@ function AnalyzeColumnHeader(_props: HeaderContext<TrackDefinition, unknown>) {
     }, []);
 
     return (
-        <div>
-            <Button
-                disabled={audioFilesServerState !== "started"}
-                minimal={true}
-                small={true}
-                intent="primary"
-                text="Analyze all"
-                loading={analyzerState === "busy"}
-                onClick={handleAnalyzeClick}
-            />
-        </div>
+        <Button
+            className={styles.analyzeAllButton}
+            disabled={audioFilesServerState !== "started"}
+            ellipsizeText={true}
+            intent="primary"
+            loading={analyzerState === "busy"}
+            minimal={true}
+            onClick={handleAnalyzeClick}
+            small={true}
+            text="Analyze all"
+        />
     );
 }

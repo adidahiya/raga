@@ -20,6 +20,10 @@
     }
 }
 
+.header {
+    // empty for now
+}
+
 .body,
 .footer {
     thead {
@@ -42,13 +46,20 @@
     }
 }
 
-.header th {
-    position: relative;
+.bpmColumnHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .bpmCell {
     display: block;
     text-align: right;
+}
+
+.analyzeAllButton {
+    font-weight: bold;
+    margin-left: -4px;
 }
 
 :global(.resizer) {
