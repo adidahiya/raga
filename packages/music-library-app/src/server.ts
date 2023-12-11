@@ -66,15 +66,20 @@ function handleWriteAudioFileTag(options: {
             break;
     }
 
-    if (DEBUG) {
-        console.info(`[server] Writing tags for file located at ${options.fileLocation}:`, newTags);
-    }
-
-    NodeID3.update(newTags, filepath, (err: Error | undefined) => {
-        if (err != null) {
-            throw new Error(err.message);
+    const result = NodeID3.update(newTags, filepath);
+    if (result === true) {
+        if (DEBUG) {
+            console.info(
+                `[server] Wrote tags for file located at ${options.fileLocation}:`,
+                newTags,
+            );
         }
-    });
+        process.parentPort.postMessage({
+            channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+        });
+    } else {
+        throw new Error(result.message);
+    }
 }
 
 // TODO: convert to Node HTTP server

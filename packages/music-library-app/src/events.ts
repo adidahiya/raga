@@ -1,4 +1,4 @@
-import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
+import type { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
 
 // Event channels
 
@@ -19,6 +19,7 @@ export const ServerEventChannel = {
     AUDIO_FILES_SERVER_STARTED: "audioFilesServerStarted" as const,
     AUDIO_FILES_SERVER_READY_FOR_RESTART: "audioFilesServerReadyForRestart" as const,
     LOADED_SWINSIAN_LIBRARY: "loadedSwinsianLibrary" as "loadedSwinsianLibrary",
+    WRITE_AUDIO_FILE_TAG_COMPLETE: "writeAudioFileTagComplete" as const,
 };
 export type ServerEventChannel = (typeof ServerEventChannel)[keyof typeof ServerEventChannel];
 
@@ -29,7 +30,7 @@ export function isServerEventChannel(channel: string): channel is ServerEventCha
 // Event payloads
 export interface LoadedSwinsianLibraryEventPayload {
     /** Library XML plist */
-    library: MusicLibraryPlist;
+    library: SwinsianLibraryPlist;
 
     /** Location of library XML on disk */
     filepath: string;

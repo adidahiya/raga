@@ -13,3 +13,9 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
         background-color: bp.$dark-gray2;
     }
 }
+
+// smaller small button
+.#{bp.$ns}-button.#{bp.$ns}-small {
+    min-height: 20px;
+    font-size: 12px;
+}

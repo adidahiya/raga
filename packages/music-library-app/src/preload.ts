@@ -9,15 +9,27 @@ const contextBridgeApi: ContextBridgeApi = {
     versions: process.versions,
     send: (channel: string, data?: any) => {
         if (DEBUG) {
-            console.info("contextBridge sending event", channel, data);
+            console.info("[contextBridge] sending event", channel, data);
         }
         return ipcRenderer.send(channel, data);
     },
     handle: (channel: string, callback: (event: IpcRendererEvent, data?: any) => void) => {
         if (DEBUG) {
-            console.info("contextBridge attaching event handler", channel, callback);
+            console.info("[contextBridge] attaching event handler", channel, callback);
         }
         return ipcRenderer.on(channel, callback);
+    },
+    handleOnce: (channel: string, callback: (event: IpcRendererEvent, data?: any) => void) => {
+        if (DEBUG) {
+            console.info("[contextBridge] attaching one-time event handler", channel, callback);
+        }
+        return ipcRenderer.once(channel, callback);
+    },
+    removeHandler: (channel: string, callback: (event: IpcRendererEvent, data?: any) => void) => {
+        if (DEBUG) {
+            console.info("[contextBridge] removing event handler", channel, callback);
+        }
+        return ipcRenderer.removeListener(channel, callback);
     },
 };
 

@@ -1,7 +1,10 @@
+import { FocusStyleManager } from "@blueprintjs/core";
 import { createRoot } from "react-dom/client";
 
 import App from "./app";
 // import { INSTALL_REACT_DEVELOPER_TOOLS } from "../common/constants";
+
+FocusStyleManager.onlyShowFocusOnTabs();
 
 const domNode = document.getElementById("root")!;
 const root = createRoot(domNode);

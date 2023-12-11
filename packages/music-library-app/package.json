@@ -26,6 +26,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-resizable-panels": "^0.0.63",
+        "use-immer": "^0.9.0",
         "web-audio-beat-detector": "^8.1.57",
         "zustand": "^4.4.7"
     },

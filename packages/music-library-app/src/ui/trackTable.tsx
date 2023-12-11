@@ -1,7 +1,9 @@
-import { PlaylistDefinition, TrackDefinition } from "@adahiya/music-library-tools-lib";
+import { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Button, Classes, HTMLTable } from "@blueprintjs/core";
 import {
     CellContext,
+    ColumnDef,
+    HeaderContext,
     Row,
     createColumnHelper,
     flexRender,
@@ -9,14 +11,13 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { useCallback } from "react";
 
-import { appStore } from "./store/appStore";
+import { DEBUG, LIBRARY_VIEW_SETTINGS } from "../common/constants";
+import { appStore, useAppStore } from "./store/appStore";
 
 import styles from "./trackTable.module.scss";
-import { DEBUG } from "../common/constants";
-import { loadAudioBuffer } from "../audio/buffer";
-import { analyzeBPM } from "../audio/bpm";
 
 export interface TrackTableProps {
     // TODO: move this state to app store
@@ -25,17 +26,13 @@ export interface TrackTableProps {
 }
 
 export default function TrackTable({ headerHeight, playlistId }: TrackTableProps) {
-    const playlists = usePlaylists();
-    if (playlists === undefined) {
-        return null;
+    const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+    const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
+
+    if (trackDefs === undefined) {
+        return;
     }
 
-    const selectedPlaylist = playlists[playlistId];
-    if (selectedPlaylist === undefined) {
-        return null;
-    }
-
-    const trackDefs = usePlaylistTrackDefs(selectedPlaylist);
     const columnHelper = createColumnHelper<TrackDefinition>();
     const columns = [
         columnHelper.display({
@@ -46,35 +43,32 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
                 </span>
             ),
             header: () => <span>#</span>,
-            footer: (info) => info.column.id,
             size: 60,
         }),
         columnHelper.accessor("BPM", {
             id: "bpm",
-            cell: TrackBPMCell,
+            cell: (info) => info.cell.getValue() ?? "-",
             header: () => <span>BPM</span>,
-            footer: (info) => info.column.id,
             size: 60,
         }),
+        analyzeBPMPerTrack &&
+            columnHelper.display({
+                id: "analyzeBPM",
+                cell: AnalyzeBPMCell,
+                header: AnalyzeColumnHeader,
+                size: 60,
+            }),
         columnHelper.accessor("Name", {
             id: "name",
             cell: (info) => <span>{info.getValue()}</span>,
             header: () => <span>Name</span>,
-            footer: (info) => info.column.id,
         }),
         columnHelper.accessor("Artist", {
             id: "artist",
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span>Artist</span>,
-            footer: (info) => info.column.id,
         }),
-    ];
-
-    useEffect(() => {
-        if (DEBUG) {
-            console.info("Visible track list updated", trackDefs);
-        }
-    }, [trackDefs]);
+    ].filter((c) => !!c) as Array<ColumnDef<TrackDefinition, unknown>>;
 
     const table = useReactTable({
         data: trackDefs,
@@ -142,66 +136,37 @@ function TrackTableRow(row: Row<TrackDefinition>) {
 }
 TrackTableRow.displayName = "TrackTableRow";
 
-function TrackBPMCell(info: CellContext<TrackDefinition, number>) {
-    const setBPMInLibrary = appStore.use.setTrackBPM();
-    const [bpmValue, setBPM] = useState<number | undefined>(info.getValue());
-
+function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
+    const trackId = props.row.original["Track ID"];
+    const analyzeTrack = appStore.use.analyzeTrack();
     const handleAnalyzeBPM = useCallback(async () => {
-        const fileLocation = info.row.original.Location;
-        const trackAudio = await loadAudioBuffer(fileLocation);
-        const bpm = Math.round(await analyzeBPM(trackAudio));
-        setBPM(bpm);
-        setBPMInLibrary(info.row.original["Track ID"], bpm);
-        window.api.send("writeAudioFileTag", {
-            fileLocation,
-            tagName: "BPM",
-            value: bpm,
-        });
+        await analyzeTrack(trackId);
+    }, []);
+    return <Button outlined={true} small={true} text="Analyze" onClick={handleAnalyzeBPM} />;
+}
+
+function AnalyzeColumnHeader(_props: HeaderContext<TrackDefinition, unknown>) {
+    const audioFilesServerState = LIBRARY_VIEW_SETTINGS.USE_EXTERNAL_AUDIO_FILES_SERVER
+        ? "started"
+        : appStore.use.audioFilesServerState();
+    const analyzerState = appStore.use.analyzerState();
+    const analyzePlaylist = appStore.use.analyzePlaylist();
+    const selectedPlaylistId = appStore.use.selectedPlaylistId();
+    const handleAnalyzeClick = useCallback(async () => {
+        await analyzePlaylist(selectedPlaylistId!);
     }, []);
 
-    const content = Number.isInteger(bpmValue) ? (
-        bpmValue
-    ) : (
-        <Button outlined={true} small={true} text="Analyze" onClick={handleAnalyzeBPM} />
-    );
-
-    return <span className={styles.bpmCell}>{content}</span>;
-}
-
-function usePlaylistTrackDefs(playlist: PlaylistDefinition): TrackDefinition[] {
-    const libraryPlist = appStore.use.libraryPlist();
-
-    if (libraryPlist === undefined) {
-        // TODO: implement invariant
-        return [];
-    }
-
-    const trackIds = useMemo(
-        () => playlist["Playlist Items"].map((item) => item["Track ID"]),
-        [playlist],
-    );
-
-    return useMemo(
-        () => trackIds.map((trackId) => libraryPlist.Tracks[trackId] as TrackDefinition),
-        [trackIds, libraryPlist],
-    );
-}
-
-// TODO: move to derived state in app store
-function usePlaylists() {
-    const libraryPlist = appStore.use.libraryPlist();
-
-    if (libraryPlist === undefined) {
-        // TODO: implement invariant
-        return undefined;
-    }
-
-    return useMemo<Record<string, PlaylistDefinition>>(
-        () =>
-            libraryPlist.Playlists.reduce<Record<string, PlaylistDefinition>>((acc, playlist) => {
-                acc[playlist["Playlist Persistent ID"]] = playlist;
-                return acc;
-            }, {}),
-        [libraryPlist.Playlists],
+    return (
+        <div>
+            <Button
+                disabled={audioFilesServerState !== "started"}
+                minimal={true}
+                small={true}
+                intent="primary"
+                text="Analyze all"
+                loading={analyzerState === "busy"}
+                onClick={handleAnalyzeClick}
+            />
+        </div>
     );
 }
