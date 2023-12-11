@@ -72,9 +72,10 @@ export const TrackProperty = {
 };
 export type TrackProperty = (typeof TrackProperty)[keyof typeof TrackProperty];
 
-export type TrackDefinition = BasicTrackDefinition & { [P in NumericTrackProperty]: number } & {
-    [P in StringTrackProperty]: string;
-} & { [P in DateTrackProperty]: Date };
+export type TrackDefinition = BasicTrackDefinition &
+    Partial<{ [P in NumericTrackProperty]: number }> &
+    Partial<{ [P in StringTrackProperty]: string }> &
+    Partial<{ [P in DateTrackProperty]: Date }>;
 
 /**
  * Track properties which are commonly user-edited.

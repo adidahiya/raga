@@ -6,18 +6,39 @@ import {
     SectionCard,
     Props,
     Tooltip,
+    Switch,
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 
+import { LIBRARY_VIEW_SETTINGS } from "../../common/constants";
 import { appStore } from "../store/appStore";
 
 export interface LibraryOptionsProps extends Props {}
 
 export default function LibraryOptions(props: LibraryOptionsProps) {
+    const usingExternalServer = LIBRARY_VIEW_SETTINGS.USE_EXTERNAL_AUDIO_FILES_SERVER;
+    const audioFilesServerOptions = usingExternalServer ? (
+        <em>Using external audio files server</em>
+    ) : (
+        <AudioFilesServerForm />
+    );
+
+    const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+    const setAnalyzeBPMPerTrack = appStore.use.setAnalyzeBPMPerTrack();
+
+    const handleToggleAnalyzeBPMPerTrack = useCallback(() => {
+        setAnalyzeBPMPerTrack(!analyzeBPMPerTrack);
+    }, [analyzeBPMPerTrack]);
+
     return (
         <Section className={props.className} compact={true} title="Options">
+            <SectionCard>{audioFilesServerOptions}</SectionCard>
             <SectionCard>
-                <AudioFilesServerForm />
+                <Switch
+                    label="Analyze BPM per track"
+                    onChange={handleToggleAnalyzeBPMPerTrack}
+                    checked={analyzeBPMPerTrack}
+                />
             </SectionCard>
         </Section>
     );

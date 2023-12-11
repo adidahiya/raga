@@ -25,7 +25,7 @@ declare global {
 
 export default function LibraryView() {
     const libraryState = appStore.use.libraryLoadingState();
-    const libraryPlist = appStore.use.libraryPlist();
+    const libraryPlist = appStore.use.library();
     const loadLibrary = appStore.use.loadSwinsianLibrary();
 
     useEffect(() => {

@@ -9,7 +9,7 @@ import { appStore } from "../store/appStore";
 export interface LibraryStatsProps extends Props {}
 
 export default function LibraryStats(props: LibraryStatsProps) {
-    const library = appStore.use.libraryPlist();
+    const library = appStore.use.library();
     const libraryFilepath = appStore.use.libraryFilepath();
     const dateCreated = getDateCreated(library);
     const masterPlaylist = getMasterPlaylist(library);
