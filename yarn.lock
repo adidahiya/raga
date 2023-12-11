@@ -17,9 +17,9 @@ __metadata:
   resolution: "@adahiya/music-library-app@workspace:packages/music-library-app"
   dependencies:
     "@adahiya/music-library-tools-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.7.1"
-    "@blueprintjs/icons": "npm:^5.4.1"
-    "@blueprintjs/node-build-scripts": "npm:^9.0.1"
+    "@blueprintjs/core": "npm:^5.7.2"
+    "@blueprintjs/icons": "npm:^5.5.0"
+    "@blueprintjs/node-build-scripts": "npm:^9.0.2"
     "@electron-forge/cli": "npm:^7.2.0"
     "@electron-forge/maker-deb": "npm:^7.2.0"
     "@electron-forge/maker-rpm": "npm:^7.2.0"
@@ -28,7 +28,7 @@ __metadata:
     "@electron-forge/plugin-vite": "npm:^7.2.0"
     "@tanstack/react-table": "npm:^8.10.7"
     "@types/node": "npm:^20.10.4"
-    "@types/react": "npm:^18.2.42"
+    "@types/react": "npm:^18.2.43"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.17"
     classnames: "npm:^2.3.2"
@@ -45,7 +45,7 @@ __metadata:
     sass: "npm:^1.69.5"
     typescript: "npm:^5.3.3"
     use-immer: "npm:^0.9.0"
-    web-audio-beat-detector: "npm:^8.1.57"
+    web-audio-beat-detector: "npm:^8.2.1"
     zustand: "npm:^4.4.7"
   languageName: unknown
   linkType: soft
@@ -120,12 +120,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.23.5
-  resolution: "@babel/runtime@npm:7.23.5"
+"@babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.23.6, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+  version: 7.23.6
+  resolution: "@babel/runtime@npm:7.23.6"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 0f1669f639af30a0a2948ffcefa2c61935f337b0777bd94f8d7bc66bba8e7d4499e725caeb0449540d9c6d67399b733c4e719babb43ce9a0f33095aa01b42b37
+  checksum: 4c4ab16f0361c59fb23956e4d0a29935f1f8a64aa8dd37876ce38355b6f4d8f0e54237aacb89c73b1532def60539ddde2d651523c8fa887b30b19a8cf0c465b0
   languageName: node
   linkType: hard
 
@@ -138,7 +138,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.7.1":
+"@blueprintjs/core@npm:^5.7.2":
   version: 5.7.2
   resolution: "@blueprintjs/core@npm:5.7.2"
   dependencies:
@@ -164,7 +164,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.4.1, @blueprintjs/icons@npm:^5.5.0":
+"@blueprintjs/icons@npm:^5.5.0":
   version: 5.5.0
   resolution: "@blueprintjs/icons@npm:5.5.0"
   dependencies:
@@ -182,7 +182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/node-build-scripts@npm:^9.0.1":
+"@blueprintjs/node-build-scripts@npm:^9.0.2":
   version: 9.0.2
   resolution: "@blueprintjs/node-build-scripts@npm:9.0.2"
   dependencies:
@@ -1626,7 +1626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.2.42":
+"@types/react@npm:*, @types/react@npm:^18.2.43":
   version: 18.2.43
   resolution: "@types/react@npm:18.2.43"
   dependencies:
@@ -8523,7 +8523,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.1.0":
+"prettier@npm:^3.1.0, prettier@npm:^3.1.1":
   version: 3.1.1
   resolution: "prettier@npm:3.1.1"
   bin:
@@ -9251,7 +9251,7 @@ __metadata:
   dependencies:
     "@yarnpkg/types": "npm:^4.0.0"
     lerna: "npm:^8.0.0"
-    prettier: "npm:^3.1.0"
+    prettier: "npm:^3.1.1"
   languageName: unknown
   linkType: soft
 
@@ -10931,38 +10931,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-broker@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "web-audio-beat-detector-broker@npm:4.1.0"
+"web-audio-beat-detector-broker@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "web-audio-beat-detector-broker@npm:4.1.1"
   dependencies:
-    "@babel/runtime": "npm:^7.23.5"
+    "@babel/runtime": "npm:^7.23.6"
     fast-unique-numbers: "npm:^8.0.12"
     standardized-audio-context: "npm:^25.3.60"
     tslib: "npm:^2.6.2"
-    web-audio-beat-detector-worker: "npm:^5.2.45"
-  checksum: f6decea444064e1aced5a5d40708273db5ac5db495f473542a9fc307223bb6da5f7af1c7834b006d1eb72f91c6f34e852bd8385eae04e62b1404389f90c11a63
+    web-audio-beat-detector-worker: "npm:^5.2.46"
+  checksum: 35f385115277a3b9a61455e6888ab83691c693414f1be8fa01cf3eb66f971ab5735ab0240a522268658ec1453a6253b37f7caeea6d0e6b64f95f7b2d2bb90721
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-worker@npm:^5.2.45":
-  version: 5.2.45
-  resolution: "web-audio-beat-detector-worker@npm:5.2.45"
+"web-audio-beat-detector-worker@npm:^5.2.46":
+  version: 5.2.46
+  resolution: "web-audio-beat-detector-worker@npm:5.2.46"
   dependencies:
-    "@babel/runtime": "npm:^7.23.5"
+    "@babel/runtime": "npm:^7.23.6"
     tslib: "npm:^2.6.2"
-  checksum: f0177b1c7038745cb8a2510e4482f30d6502b47c97e5a45c8741bceb487ac213740d5d809ec077157f13aa1abf5e8f26806cf071385ab0ca9b0eca49e4192246
+  checksum: d176cc88960e2054561fe241c478d2f955eb2e50cec4d72426c735a0c9ec051f3ec058479e164c35992ead4a1a54af88741173deb24c3ade98722463f5aa21f0
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector@npm:^8.1.57":
-  version: 8.2.0
-  resolution: "web-audio-beat-detector@npm:8.2.0"
+"web-audio-beat-detector@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "web-audio-beat-detector@npm:8.2.1"
   dependencies:
-    "@babel/runtime": "npm:^7.23.5"
+    "@babel/runtime": "npm:^7.23.6"
     tslib: "npm:^2.6.2"
-    web-audio-beat-detector-broker: "npm:^4.1.0"
-    web-audio-beat-detector-worker: "npm:^5.2.45"
-  checksum: 4088a4e552b49fd118c9a8e6d79b67a53c3db3514a1e1790f1a9e271000b2041e4c8f5738661f0673c52a82f9f60b11e815f2fdbdc9211ba3d3ae03f87a62871
+    web-audio-beat-detector-broker: "npm:^4.1.1"
+    web-audio-beat-detector-worker: "npm:^5.2.46"
+  checksum: 1a6c11563c4898b0ec1dc66df26cd7a72c4e2f6e525a1de23a4be0391522d556a0db2cb0b92259cccd97eb0e353d4276394ba1d2c26962630d38900a59997531
   languageName: node
   linkType: hard
 
