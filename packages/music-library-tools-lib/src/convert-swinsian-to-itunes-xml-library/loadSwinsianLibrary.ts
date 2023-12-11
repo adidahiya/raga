@@ -1,12 +1,12 @@
 import { existsSync } from "node:fs";
 
-import type { MusicLibraryPlist } from "../models/library";
-import { loadPlistFile } from "./plist.js";
+import type { SwinsianLibraryPlist } from "../models/library";
+import { loadPlistFile } from "../utils/plistUtils.js";
 
-export default function (inputLibraryPath: string): MusicLibraryPlist {
+export default function loadSwinsianLibrary(inputLibraryPath: string): SwinsianLibraryPlist {
     if (!existsSync(inputLibraryPath)) {
         throw new Error(`No file found at ${inputLibraryPath}, please make sure it exists.`);
     }
 
-    return loadPlistFile(inputLibraryPath);
+    return loadPlistFile(inputLibraryPath) as unknown as SwinsianLibraryPlist;
 }

@@ -5,10 +5,13 @@ import prompts from "prompts";
 
 import {
     convertSwinsianToItunesXmlLibrary,
-    DEFAULT_SWINSIAN_EXPORT_FOLDER,
-    getSwinsianLibraryPath,
+    getDefaultSwinsianExportFolder,
     getOutputLibraryPath,
+    getSwinsianLibraryPath,
+    loadSwinsianLibrary,
+    serializeLibraryPlist,
 } from "@adahiya/music-library-tools-lib";
+import { existsSync, writeFileSync } from "node:fs";
 
 const args = parseArgs(argv.slice(1), {
     boolean: ["help", "non-interactive"],
@@ -34,7 +37,7 @@ const enum ScriptId {
 }
 
 let whichScript = ScriptId.ConvertSwinsianLibrary;
-let libraryLocation = DEFAULT_SWINSIAN_EXPORT_FOLDER;
+let libraryLocation = getDefaultSwinsianExportFolder();
 
 if (!args["non-interactive"]) {
     const answers = await prompts([
@@ -54,7 +57,7 @@ if (!args["non-interactive"]) {
             type: "text",
             name: "libraryLocation",
             message: "Where is your exported SwinsianLibrary.xml located?",
-            initial: DEFAULT_SWINSIAN_EXPORT_FOLDER,
+            initial: getDefaultSwinsianExportFolder(),
         },
     ]);
     whichScript = answers.whichScript;
@@ -62,8 +65,20 @@ if (!args["non-interactive"]) {
 }
 
 if (whichScript === ScriptId.ConvertSwinsianLibrary) {
-    convertSwinsianToItunesXmlLibrary(
-        getSwinsianLibraryPath(libraryLocation),
-        getOutputLibraryPath(libraryLocation),
-    );
+    const inputLibraryPath = getSwinsianLibraryPath(libraryLocation);
+    const outputLibraryPath = getOutputLibraryPath(libraryLocation);
+
+    if (!existsSync(outputLibraryPath)) {
+        throw new Error(
+            `[music-library-scripts] No output folder found at ${outputLibraryPath}, please make sure it exists.`,
+        );
+    }
+
+    const swinsianLibrary = loadSwinsianLibrary(inputLibraryPath);
+    console.info(`Building modified library`);
+    const modifiedLibrary = convertSwinsianToItunesXmlLibrary(swinsianLibrary);
+    const serializedLibrary = serializeLibraryPlist(modifiedLibrary);
+
+    console.info(`Writing modified library to ${outputLibraryPath}`);
+    writeFileSync(outputLibraryPath, serializedLibrary);
 }

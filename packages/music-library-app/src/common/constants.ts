@@ -9,3 +9,8 @@ export const LOCAL_STORAGE_KEY = "music-library-app";
 export const AUTO_LOAD_LIBRARY = true;
 // HACKHACK: need a better default
 export const DEFAULT_AUDIO_FILES_ROOT_FOLDER = "/Volumes/CZSSD/music/tracks";
+export const WRITE_AUDIO_FILE_TAG_TIMEOUT = 2000;
+
+export const LIBRARY_VIEW_SETTINGS = {
+    USE_EXTERNAL_AUDIO_FILES_SERVER: true,
+};

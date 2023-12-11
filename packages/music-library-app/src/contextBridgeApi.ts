@@ -8,4 +8,12 @@ export interface ContextBridgeApi {
         channel: ServerEventChannel,
         callback: (event: IpcRendererEvent, data?: any) => void,
     ) => void;
+    handleOnce: (
+        channel: ServerEventChannel,
+        callback: (event: IpcRendererEvent, data?: any) => void,
+    ) => void;
+    removeHandler: (
+        channel: ServerEventChannel,
+        callback: (event: IpcRendererEvent, data?: any) => void,
+    ) => void;
 }

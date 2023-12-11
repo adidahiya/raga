@@ -1,4 +1,8 @@
-import { BasicTrackDefinition } from "./tracks.js";
+import {
+    BasicTrackDefinition,
+    MusicAppTrackDefinition,
+    SwinsianTrackDefinition,
+} from "./tracks.js";
 import { PlaylistDefinition } from "./playlists.js";
 
 export interface MusicLibraryPlist {
@@ -12,4 +16,12 @@ export interface MusicLibraryPlist {
     Playlists: PlaylistDefinition[];
     "Show Content Ratings": boolean;
     Tracks: Record<number, BasicTrackDefinition>;
+}
+
+export interface SwinsianLibraryPlist extends MusicLibraryPlist {
+    Tracks: Record<number, SwinsianTrackDefinition>;
+}
+
+export interface MusicAppLibraryPlist extends MusicLibraryPlist {
+    Tracks: Record<number, MusicAppTrackDefinition>;
 }

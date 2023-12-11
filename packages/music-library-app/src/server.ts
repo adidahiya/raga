@@ -1,14 +1,12 @@
 // HACKHACK: regular imports are not working here, for some reason
-// import {
-//     DEFAULT_SWINSIAN_EXPORT_FOLDER,
-//     getSwinsianLibraryPath,
-//     loadSwinsianLibrary,
-// } from "@adahiya/music-library-tools-lib";
-import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
+import type { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
 const {
-    DEFAULT_SWINSIAN_EXPORT_FOLDER,
+    convertSwinsianToItunesXmlLibrary,
+    getDefaultSwinsianExportFolder,
     getSwinsianLibraryPath,
+    getOutputLibraryPath,
     loadSwinsianLibrary,
+    serializeLibraryPlist,
 } = require("@adahiya/music-library-tools-lib");
 
 import type { MessageEvent } from "electron";
@@ -21,18 +19,24 @@ import {
     LoadSwinsianLibraryOptions,
     LoadedSwinsianLibraryEventPayload,
     ServerEventChannel,
+    WriteModifiedLibraryOptions,
 } from "./events";
 import { DEBUG } from "./common/constants";
 import { startAudioFilesServer } from "./audio/audioFilesServer";
+import { writeFileSync } from "node:fs";
 
-let library: MusicLibraryPlist | undefined;
+let library: SwinsianLibraryPlist | undefined;
 
 function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
-    const filepath = getSwinsianLibraryPath(DEFAULT_SWINSIAN_EXPORT_FOLDER);
+    const filepath = getSwinsianLibraryPath(getDefaultSwinsianExportFolder());
 
     if (library === undefined || options.reloadFromDisk) {
-        // HACKHACK: type cast
-        library = loadSwinsianLibrary(filepath) as MusicLibraryPlist;
+        library = loadSwinsianLibrary(filepath);
+    }
+
+    if (library === undefined) {
+        console.error(`[server] Could not load Swinsian library from ${filepath}`);
+        return;
     }
 
     const channel = ServerEventChannel.LOADED_SWINSIAN_LIBRARY;
@@ -66,15 +70,20 @@ function handleWriteAudioFileTag(options: {
             break;
     }
 
-    if (DEBUG) {
-        console.info(`[server] Writing tags for file located at ${options.fileLocation}:`, newTags);
-    }
-
-    NodeID3.update(newTags, filepath, (err: Error | undefined) => {
-        if (err != null) {
-            throw new Error(err.message);
+    const result = NodeID3.update(newTags, filepath);
+    if (result === true) {
+        if (DEBUG) {
+            console.info(
+                `[server] Wrote tags for file located at ${options.fileLocation}:`,
+                newTags,
+            );
         }
-    });
+        process.parentPort.postMessage({
+            channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+        });
+    } else {
+        throw new Error(result.message);
+    }
 }
 
 // TODO: convert to Node HTTP server
@@ -113,20 +122,57 @@ function handleAudioFilesServerStop() {
     });
 }
 
+/**
+ * Writes the modified library to disk, both the Swinsian XML and Music.app XML formats.
+ * The former is used when running this app again, and the latter is used when continuing a music management
+ * workflow in Rekordbox.
+ */
+function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
+    options.library.Date = new Date();
+    const serializedSwinsianLibrary = serializeLibraryPlist(options.library);
+    const convertedLibrary = convertSwinsianToItunesXmlLibrary(options.library);
+    const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary);
+
+    const swinsianLibraryOutputPath = options.filepath;
+    const modifiedLibraryOutputPath = getOutputLibraryPath();
+
+    if (DEBUG) {
+        console.log(`[server] Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
+        console.log(`[server] Writing modified library to ${modifiedLibraryOutputPath}...`);
+    }
+
+    writeFileSync(swinsianLibraryOutputPath, serializedSwinsianLibrary);
+    writeFileSync(modifiedLibraryOutputPath, serializedMusicAppLibrary);
+
+    if (DEBUG) {
+        console.log(`[server] ... done!`);
+    }
+}
+
 function setupEventListeners() {
     process.parentPort.on("message", ({ data: event }: MessageEvent) => {
         if (DEBUG) {
             console.log(`[server] received "${event.channel}" event`, event);
         }
 
-        if (event.channel === ClientEventChannel.LOAD_SWINSIAN_LIBRARY) {
-            handleLoadSwinsianLibrary(event.data);
-        } else if (event.channel === ClientEventChannel.WRITE_AUDIO_FILE_TAG) {
-            handleWriteAudioFileTag(event.data);
-        } else if (event.channel === ClientEventChannel.AUDIO_FILES_SERVER_START) {
-            handleAudioFilesServerStart(event.data);
-        } else if (event.channel === ClientEventChannel.AUDIO_FILES_SERVER_STOP) {
-            handleAudioFilesServerStop();
+        switch (event.channel) {
+            case ClientEventChannel.LOAD_SWINSIAN_LIBRARY:
+                handleLoadSwinsianLibrary(event.data);
+                break;
+            case ClientEventChannel.WRITE_AUDIO_FILE_TAG:
+                handleWriteAudioFileTag(event.data);
+                break;
+            case ClientEventChannel.AUDIO_FILES_SERVER_START:
+                handleAudioFilesServerStart(event.data);
+                break;
+            case ClientEventChannel.AUDIO_FILES_SERVER_STOP:
+                handleAudioFilesServerStop();
+                break;
+            case ClientEventChannel.WRITE_MODIFIED_LIBRARY:
+                handleWriteModifiedLibrary(event.data);
+                break;
+            default:
+                break;
         }
     });
 }

@@ -7,9 +7,11 @@ export interface LibraryActionsProps extends Props {}
 export default function LibraryActions(props: LibraryActionsProps) {
     const isLibraryLoaded = appStore.use.libraryLoadingState() !== "none";
     const loadLibrary = appStore.use.loadSwinsianLibrary();
+    const writeModifiedLibrary = appStore.use.writeModiifedLibrary();
 
     const handleLoad = useCallback(() => loadLibrary(), []);
     const handleLoadFromDisk = useCallback(() => loadLibrary({ reloadFromDisk: true }), []);
+    const handleWriteModifiedLibrary = useCallback(() => writeModifiedLibrary(), []);
 
     return (
         <div className={props.className}>
@@ -19,6 +21,15 @@ export default function LibraryActions(props: LibraryActionsProps) {
                     onClick={handleLoad}
                 />
                 <Button text="Reload from disk" onClick={handleLoadFromDisk} />
+            </ButtonGroup>
+            <br />
+            <br />
+            <ButtonGroup>
+                <Button
+                    text="Write modified library to disk"
+                    intent="primary"
+                    onClick={handleWriteModifiedLibrary}
+                />
             </ButtonGroup>
         </div>
     );
