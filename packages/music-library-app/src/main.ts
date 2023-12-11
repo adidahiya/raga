@@ -1,7 +1,8 @@
-import { app, BrowserWindow, utilityProcess, ipcMain, UtilityProcess } from "electron";
+import { app, BrowserWindow, utilityProcess, ipcMain, UtilityProcess, session } from "electron";
+import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import path from "node:path";
-import { ClientEventChannel, ServerEventChannel, isServerEventChannel } from "./events";
-import { DEBUG } from "./common/constants";
+import { ClientEventChannel, isServerEventChannel } from "./events";
+import { DEBUG, INSTALL_REACT_DEVELOPER_TOOLS } from "./common/constants";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -15,12 +16,17 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 let mainWindow: BrowserWindow | null = null;
 let serverProcess: UtilityProcess | null = null;
 
-const createWindow = () => {
+const createWindow = async () => {
+    if (INSTALL_REACT_DEVELOPER_TOOLS) {
+        await installReactDevTools();
+    }
+
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         webPreferences: {
             contextIsolation: true,
+            nodeIntegration: true,
             preload: path.join(__dirname, "preload.js"),
             webSecurity: false,
         },
@@ -73,7 +79,9 @@ const createWindow = () => {
         mainWindow?.webContents.send(channel, data);
     });
 
-    mainWindow.webContents.openDevTools();
+    if (DEBUG) {
+        mainWindow.webContents.openDevTools();
+    }
 };
 
 // This method will be called when Electron has finished
@@ -95,10 +103,23 @@ app.on("window-all-closed", () => {
     }
 });
 
-app.on("activate", () => {
+app.on("activate", async () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
+        await createWindow();
     }
 });
+
+async function installReactDevTools() {
+    try {
+        await installExtension(REACT_DEVELOPER_TOOLS, {
+            loadExtensionOptions: {
+                allowFileAccess: true,
+            },
+        });
+        console.log(`[main] installed React DevTools extension`);
+    } catch (e) {
+        console.error(`[main] error installing React DevTools extension`, e);
+    }
+}
