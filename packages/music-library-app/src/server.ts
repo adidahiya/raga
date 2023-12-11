@@ -177,9 +177,7 @@ function setupEventListeners() {
     });
 }
 
-process.on("loaded", () => {
-    if (DEBUG) {
-        console.log("[server] loaded utility process");
-    }
-    setupEventListeners();
-});
+if (DEBUG) {
+    console.log("[server] loaded utility process");
+}
+setupEventListeners();
