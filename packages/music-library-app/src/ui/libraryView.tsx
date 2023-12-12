@@ -75,7 +75,7 @@ function Library(props: LibraryProps) {
             </div>
             <PanelGroup direction="horizontal">
                 <Panel defaultSizePercentage={20} minSizePercentage={20}>
-                    <PlaylistTable headerHeight={headerHeight} library={props.library} />
+                    <PlaylistTable headerHeight={headerHeight} />
                 </Panel>
                 <ResizeHandle />
                 <Panel minSizePercentage={30}>

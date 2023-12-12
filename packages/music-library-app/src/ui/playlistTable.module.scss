@@ -25,6 +25,10 @@
     overflow-y: scroll;
     border-top: solid 1px bp.$pt-dark-divider-white;
 
+    tr.selectedPath {
+        background-color: darken(bp.$blue1, 15%);
+    }
+
     tr.selected {
         background-color: bp.$blue1;
     }

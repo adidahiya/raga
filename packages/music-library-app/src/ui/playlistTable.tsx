@@ -1,4 +1,4 @@
-import { MusicLibraryPlist, PlaylistDefinition } from "@adahiya/music-library-tools-lib";
+import { PlaylistDefinition } from "@adahiya/music-library-tools-lib";
 import { Classes, HTMLTable, Icon, IconSize } from "@blueprintjs/core";
 import {
     createColumnHelper,
@@ -10,7 +10,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useCallback, useMemo, useState, MouseEvent } from "react";
+import { useCallback, useMemo, useState, MouseEvent, useEffect } from "react";
 
 import { appStore } from "./store/appStore";
 
@@ -20,7 +20,6 @@ import { formatStatNumber } from "../common/format";
 
 export interface LibraryTableProps {
     headerHeight: number;
-    library: MusicLibraryPlist;
     /** @default false */
     showItemCounts?: boolean;
     /** @default false */
@@ -35,23 +34,27 @@ interface PlaylistRow {
 }
 
 export default function PlaylistTable(props: LibraryTableProps) {
+    const library = appStore.use.library();
+    const selectedPlaylistPath = useSelectedPlaylistPath();
+
+    if (library === undefined) {
+        return;
+    }
+
     const folderChildrenByParentId = useMemo<Record<string, PlaylistDefinition[]>>(
         () =>
-            props.library.Playlists.reduce<Record<string, PlaylistDefinition[]>>(
-                (acc, playlist) => {
-                    const parentId = playlist["Parent Persistent ID"];
-                    if (parentId !== undefined) {
-                        if (acc[parentId] !== undefined) {
-                            acc[parentId].push(playlist);
-                        } else {
-                            acc[parentId] = [playlist];
-                        }
+            library.Playlists.reduce<Record<string, PlaylistDefinition[]>>((acc, playlist) => {
+                const parentId = playlist["Parent Persistent ID"];
+                if (parentId !== undefined) {
+                    if (acc[parentId] !== undefined) {
+                        acc[parentId].push(playlist);
+                    } else {
+                        acc[parentId] = [playlist];
                     }
-                    return acc;
-                },
-                {},
-            ),
-        [props.library.Playlists],
+                }
+                return acc;
+            }, {}),
+        [library.Playlists],
     );
 
     const playlistIsFolderWithChildren = useCallback(
@@ -72,16 +75,16 @@ export default function PlaylistTable(props: LibraryTableProps) {
 
     const playlistRows = useMemo<PlaylistRow[]>(
         () =>
-            props.library.Playlists.filter(
+            library.Playlists.filter(
                 (p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined,
             ).map((def) => ({
                 def,
                 children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
             })),
-        [props.library.Playlists],
+        [library.Playlists],
     );
 
-    const numPlaylistsStat = formatStatNumber(props.library.Playlists.length);
+    const numPlaylistsStat = formatStatNumber(library.Playlists.length);
     const columnHelper = createColumnHelper<PlaylistRow>();
 
     const iconRightPadding = 4;
@@ -136,7 +139,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
     ];
 
     const [expanded, setExpanded] = useState<ExpandedState>({});
-    const [columnVisibility, setColumnVisibility] = useState({
+    const [columnVisibility, _setColumnVisibility] = useState({
         numberOfTracks: props.showItemCounts ?? false,
         persistentId: false,
     });
@@ -237,16 +240,28 @@ PlaylistTable.defaultProps = {
 
 function PlaylistTableRow(row: Row<PlaylistRow>) {
     const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
+    const selectedPlaylistPath = useSelectedPlaylistPath();
+    const rowPlaylistId = row.original.def["Playlist Persistent ID"];
+    const isRowInSelectedPlaylistPath = selectedPlaylistPath.includes(rowPlaylistId);
+    const isRowSelected = row.getIsSelected();
+    const isRowExpanded = row.getIsExpanded();
+    const toggleExpanded = row.getToggleExpandedHandler();
+    const toggleSelected = row.getToggleSelectedHandler();
 
-    // TODO: consider rewriting in FP style (perhaps with Rambda?)
+    useEffect(() => {
+        // run once on initial render, if we have a selected playlist from local storage and need to show its path
+        if (isRowInSelectedPlaylistPath && !isRowExpanded) {
+            toggleExpanded();
+        }
+    });
+
     const handleClick = useCallback(
         (event: MouseEvent) => {
             if (row.getCanExpand()) {
-                row.getToggleExpandedHandler()();
+                toggleExpanded();
             } else {
-                row.getToggleSelectedHandler()(event);
-                // HACKHACK: need a better (type safe) way to get this without using the tanstack row model
-                setSelectedPlaylistId(row.getValue<string>("persistentId"));
+                toggleSelected(event);
+                setSelectedPlaylistId(rowPlaylistId);
             }
         },
         [row, setSelectedPlaylistId],
@@ -255,7 +270,8 @@ function PlaylistTableRow(row: Row<PlaylistRow>) {
     return (
         <tr
             className={classNames({
-                [styles.selected]: row.getIsSelected(),
+                [styles.selectedPath]: isRowInSelectedPlaylistPath && !isRowSelected,
+                [styles.selected]: isRowSelected,
             })}
             onClick={handleClick}
         >
@@ -266,3 +282,31 @@ function PlaylistTableRow(row: Row<PlaylistRow>) {
     );
 }
 PlaylistTableRow.displayName = "PlaylistTableRow";
+
+/** @returns a list of the persistent playlist IDs which form the tree path to the currently selected playlist */
+function useSelectedPlaylistPath() {
+    const libraryPlaylists = appStore.use.libraryPlaylists();
+    const selectedPlaylistId = appStore.use.selectedPlaylistId();
+
+    return useMemo(() => {
+        if (libraryPlaylists === undefined || selectedPlaylistId === undefined) {
+            return [];
+        }
+
+        const path = [selectedPlaylistId];
+        let currentPlaylistId = selectedPlaylistId;
+        while (true) {
+            const currentPlaylist = libraryPlaylists[currentPlaylistId];
+            if (currentPlaylist === undefined) {
+                break;
+            }
+            const parentId = currentPlaylist["Parent Persistent ID"];
+            if (parentId === undefined) {
+                break;
+            }
+            path.unshift(parentId);
+            currentPlaylistId = parentId;
+        }
+        return path;
+    }, [libraryPlaylists, selectedPlaylistId]);
+}
