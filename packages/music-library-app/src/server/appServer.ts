@@ -22,7 +22,7 @@ import {
     ServerEventChannel,
     WriteModifiedLibraryOptions,
 } from "../common/events";
-import { startAudioFilesServer } from "./audioFilesServer";
+import { AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
 
 let library: SwinsianLibraryPlist | undefined;
 
@@ -106,27 +106,22 @@ function handleWriteAudioFileTag(options: {
     }
 }
 
-// TODO: convert to Node HTTP server
-let audioFilesServer: ChildProcessWithoutNullStreams | undefined;
+let audioFilesServer: AudioFilesServer | undefined;
 
 async function handleAudioFilesServerStart(options: { audioFilesRootFolder: string }) {
-    audioFilesServer = await startAudioFilesServer(options.audioFilesRootFolder);
-
-    process.parentPort.postMessage({
-        channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
-    });
-
-    audioFilesServer.on("error", (err) => {
-        process.parentPort.postMessage({
-            channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
-            data: err,
-        });
-    });
-
-    audioFilesServer.on("exit", () => {
-        process.parentPort.postMessage({
-            channel: ServerEventChannel.AUDIO_FILES_SERVER_READY_FOR_RESTART,
-        });
+    await startAudioFilesServer({
+        ...options,
+        onReady: () => {
+            process.parentPort.postMessage({
+                channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
+            });
+        },
+        onError: (error) => {
+            process.parentPort.postMessage({
+                channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
+                data: error,
+            });
+        },
     });
 }
 
@@ -136,7 +131,7 @@ function handleAudioFilesServerStop() {
         return;
     }
 
-    audioFilesServer.kill();
+    audioFilesServer.stop();
     process.parentPort.postMessage({
         channel: ServerEventChannel.AUDIO_FILES_SERVER_READY_FOR_RESTART,
     });

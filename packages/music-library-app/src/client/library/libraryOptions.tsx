@@ -1,5 +1,6 @@
 import {
     AnchorButton,
+    ButtonGroup,
     FormGroup,
     InputGroup,
     Section,
@@ -10,19 +11,11 @@ import {
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 
-import { LIBRARY_VIEW_SETTINGS } from "../../common/constants";
 import { appStore } from "../store/appStore";
 
 export interface LibraryOptionsProps extends Props {}
 
 export default function LibraryOptions(props: LibraryOptionsProps) {
-    const usingExternalServer = LIBRARY_VIEW_SETTINGS.USE_EXTERNAL_AUDIO_FILES_SERVER;
-    const audioFilesServerOptions = usingExternalServer ? (
-        <em>Using external audio files server</em>
-    ) : (
-        <AudioFilesServerForm />
-    );
-
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
     const setAnalyzeBPMPerTrack = appStore.use.setAnalyzeBPMPerTrack();
 
@@ -32,7 +25,9 @@ export default function LibraryOptions(props: LibraryOptionsProps) {
 
     return (
         <Section className={props.className} compact={true} title="Options">
-            <SectionCard>{audioFilesServerOptions}</SectionCard>
+            <SectionCard>
+                <AudioFilesServerForm />
+            </SectionCard>
             <SectionCard>
                 <Switch
                     label="Analyze BPM per track"
@@ -71,41 +66,54 @@ function AudioFilesServerForm() {
                           ? "success"
                           : undefined
                 }
-                rightElement={<AudioFilesServerButton />}
+                rightElement={<AudioFilesServerButtons />}
             />
         </FormGroup>
     );
 }
 
-function AudioFilesServerButton() {
+function AudioFilesServerButtons() {
     const audioFilesServerState = appStore.use.audioFilesServerState();
     const startAudioFilesServer = appStore.use.startAudioFilesServer();
+    const stopAudioFilesServer = appStore.use.stopAudioFilesServer();
 
     return (
-        <Tooltip
-            placement="top"
-            content={
-                audioFilesServerState === "started"
-                    ? "Restart audio files server"
-                    : audioFilesServerState === "failed"
-                      ? "Failed to start audio files server"
-                      : audioFilesServerState === "stopped"
-                        ? "Start audio files server"
-                        : "Starting audio files server..."
-            }
-        >
-            <AnchorButton
-                minimal={true}
-                icon={
+        <ButtonGroup>
+            <Tooltip
+                placement="top"
+                compact={true}
+                content={
                     audioFilesServerState === "started"
-                        ? "refresh"
+                        ? "Restart audio files server"
                         : audioFilesServerState === "failed"
-                          ? "cross"
-                          : "play"
+                          ? "Failed to start audio files server"
+                          : audioFilesServerState === "stopped"
+                            ? "Start audio files server"
+                            : "Starting audio files server..."
                 }
-                loading={audioFilesServerState === "starting"}
-                onClick={startAudioFilesServer}
-            />
-        </Tooltip>
+            >
+                <AnchorButton
+                    minimal={true}
+                    icon={
+                        audioFilesServerState === "started"
+                            ? "refresh"
+                            : audioFilesServerState === "failed"
+                              ? "cross"
+                              : "play"
+                    }
+                    loading={audioFilesServerState === "starting"}
+                    onClick={startAudioFilesServer}
+                />
+            </Tooltip>
+            {audioFilesServerState === "started" && (
+                <Tooltip placement="top" compact={true} content="Stop audio files server">
+                    <AnchorButton
+                        minimal={true}
+                        icon="cross-circle"
+                        onClick={stopAudioFilesServer}
+                    />
+                </Tooltip>
+            )}
+        </ButtonGroup>
     );
 }

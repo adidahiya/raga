@@ -15,7 +15,6 @@ import { useShallow } from "zustand/react/shallow";
 import { useCallback, useMemo } from "react";
 
 import { isSupportedWebAudioFileFormat } from "./audio/webAudioUtils";
-import { LIBRARY_VIEW_SETTINGS } from "../common/constants";
 import { appStore, useAppStore } from "./store/appStore";
 
 import commonStyles from "./common/commonStyles.module.scss";
@@ -163,15 +162,25 @@ function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number>) {
 BPMColumnHeader.displayName = "BPMColumnHeader";
 
 function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
+    const isAudioFilesServerReady = appStore.use.audioFilesServerState() === "started";
     const trackDef = props.row.original;
     const trackId = trackDef["Track ID"];
     const analyzeTrack = appStore.use.analyzeTrack();
     const handleAnalyzeBPM = useCallback(async () => {
         await analyzeTrack(trackId);
     }, []);
-    const disabled = useMemo(() => !isSupportedWebAudioFileFormat(trackDef), [trackDef]);
+    const isUnsupportedFileFormat = useMemo(
+        () => !isSupportedWebAudioFileFormat(trackDef),
+        [trackDef],
+    );
+    const disabled = !isAudioFilesServerReady || isUnsupportedFileFormat;
     const tooltipContent = useMemo(
-        () => (disabled ? "Unsupported audio file format" : undefined),
+        () =>
+            isUnsupportedFileFormat
+                ? "Unsupported audio file format"
+                : !isAudioFilesServerReady
+                  ? "Disconnected from audio files server"
+                  : undefined,
         [disabled],
     );
     return (
@@ -194,9 +203,7 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
 }
 
 function AnalyzeAllTracksInSelectedPlaylistButton() {
-    const audioFilesServerState = LIBRARY_VIEW_SETTINGS.USE_EXTERNAL_AUDIO_FILES_SERVER
-        ? "started"
-        : appStore.use.audioFilesServerState();
+    const audioFilesServerState = appStore.use.audioFilesServerState();
     const analyzerState = appStore.use.analyzerState();
     const analyzePlaylist = appStore.use.analyzePlaylist();
     const selectedPlaylistId = appStore.use.selectedPlaylistId();

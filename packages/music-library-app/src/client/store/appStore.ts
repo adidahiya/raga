@@ -63,6 +63,7 @@ export interface AppAction {
     // complex actions with side effects
     loadSwinsianLibrary: (options?: LoadSwinsianLibraryOptions) => Promise<void>;
     startAudioFilesServer: () => void;
+    stopAudioFilesServer: () => void;
     analyzeTrack: (trackId: number) => Promise<void>;
     analyzePlaylist: (playlistId: string) => Promise<void>;
     writeModiifedLibrary: () => Promise<void>;
@@ -234,6 +235,18 @@ export const useAppStore = create<AppState & AppAction>()(
                             log.debug("[client] starting audio files server...");
                             initAudioFilesServerWithStore();
                         }
+                    }),
+
+                stopAudioFilesServer: () =>
+                    set((state) => {
+                        if (state.audioFilesServerState !== "started") {
+                            log.error("[client] audio files server is not running");
+                            return;
+                        }
+
+                        log.debug("[client] stopping audio files server...");
+                        window.api.send(ClientEventChannel.AUDIO_FILES_SERVER_STOP);
+                        state.audioFilesServerState = "stopped";
                     }),
 
                 /** @throws */
