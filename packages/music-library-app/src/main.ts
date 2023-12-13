@@ -1,6 +1,8 @@
 import { app, BrowserWindow, utilityProcess, ipcMain, UtilityProcess } from "electron";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import path from "node:path";
+import { serializeError } from "serialize-error";
+
 import { ClientEventChannel, isServerEventChannel } from "./common/events";
 import { DEBUG, INSTALL_REACT_DEVELOPER_TOOLS } from "./common/constants";
 
@@ -41,6 +43,7 @@ const createWindow = async () => {
         );
     }
 
+    console.debug(`[main] initializing server process...`);
     // Note that server.ts must be configured as an electron-forge Vite entry point to get transpiled adjacent to this module
     serverProcess = utilityProcess.fork(path.resolve(__dirname, "./server.js"), [], {
         serviceName: "server",
@@ -54,12 +57,9 @@ const createWindow = async () => {
                 data,
             };
 
-            if (DEBUG) {
-                console.log(
-                    `[main] received "${channel}" event from renderer, forwarding to utility process`,
-                    messageToForward,
-                );
-            }
+            console.debug(
+                `[main] received "${channel}" event from renderer, forwarding to utility process`,
+            );
 
             serverProcess?.postMessage(messageToForward);
         });
@@ -70,11 +70,9 @@ const createWindow = async () => {
             return;
         }
 
-        if (DEBUG) {
-            console.log(
-                `[main] received "${channel}" message from server, forwarding to renderer process`,
-            );
-        }
+        console.debug(
+            `[main] received "${channel}" message from server, forwarding to renderer process`,
+        );
 
         mainWindow?.webContents.send(channel, data);
     });
@@ -118,8 +116,8 @@ async function installReactDevTools() {
                 allowFileAccess: true,
             },
         });
-        console.log(`[main] installed React DevTools extension`);
+        console.debug(`[main] installed React DevTools extension`);
     } catch (e) {
-        console.error(`[main] error installing React DevTools extension`, e);
+        console.error(`[main] error installing React DevTools extension ${serializeError(e)}`);
     }
 }

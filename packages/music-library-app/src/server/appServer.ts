@@ -22,16 +22,13 @@ import {
     ServerEventChannel,
     WriteModifiedLibraryOptions,
 } from "../common/events";
-import { DEBUG } from "../common/constants";
 import { startAudioFilesServer } from "./audioFilesServer";
 
 let library: SwinsianLibraryPlist | undefined;
 
 export function initAppServer() {
     process.parentPort.on("message", ({ data: event }: MessageEvent) => {
-        if (DEBUG) {
-            console.log(`[server] received "${event.channel}" event`, event);
-        }
+        console.debug(`[server] received '${event.channel}' event`);
 
         switch (event.channel) {
             case ClientEventChannel.LOAD_SWINSIAN_LIBRARY:
@@ -72,9 +69,6 @@ function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
         filepath,
     };
     const response = { channel, data };
-    if (DEBUG) {
-        console.log(`[server] sending "${channel}" message`, response);
-    }
     process.parentPort.postMessage(response);
 }
 
@@ -99,12 +93,11 @@ function handleWriteAudioFileTag(options: {
 
     const result = NodeID3.update(newTags, filepath);
     if (result === true) {
-        if (DEBUG) {
-            console.info(
-                `[server] Wrote tags for file located at ${options.fileLocation}:`,
+        console.debug(
+            `[server] Wrote tags for file located at ${options.fileLocation}: ${JSON.stringify(
                 newTags,
-            );
-        }
+            )}`,
+        );
         process.parentPort.postMessage({
             channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
         });
@@ -163,10 +156,8 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
     const swinsianLibraryOutputPath = options.filepath;
     const modifiedLibraryOutputPath = getOutputLibraryPath();
 
-    if (DEBUG) {
-        console.log(`[server] Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
-        console.log(`[server] Writing modified library to ${modifiedLibraryOutputPath}...`);
-    }
+    console.debug(`[server] Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
+    console.debug(`[server] Writing modified library to ${modifiedLibraryOutputPath}...`);
 
     writeFileSync(swinsianLibraryOutputPath, serializedSwinsianLibrary);
     writeFileSync(modifiedLibraryOutputPath, serializedMusicAppLibrary);
@@ -175,7 +166,5 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
         channel: ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
     });
 
-    if (DEBUG) {
-        console.log(`[server] ... done!`);
-    }
+    console.debug(`[server] ... done!`);
 }

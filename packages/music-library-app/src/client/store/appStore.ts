@@ -4,6 +4,8 @@ import {
     SwinsianTrackDefinition,
 } from "@adahiya/music-library-tools-lib";
 import type { IpcRendererEvent } from "electron";
+import { Roarr as log } from "roarr";
+import { serializeError } from "serialize-error";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist } from "zustand/middleware";
@@ -149,7 +151,7 @@ export const useAppStore = create<AppState & AppAction>()(
                         set({ libraryLoadingState: "loading" });
 
                         const loadSwinsianLibraryTimeout = setTimeout(() => {
-                            console.error(`[client] timed out loading Swinsian library`);
+                            log.error(`[client] timed out loading Swinsian library`);
                             reject();
                         }, LOAD_SWINSIAN_LIBRARY_TIMEOUT);
                         window.api.send("loadSwinsianLibrary", options);
@@ -159,8 +161,9 @@ export const useAppStore = create<AppState & AppAction>()(
                             (event: IpcRendererEvent, data: LoadedSwinsianLibraryEventPayload) => {
                                 clearTimeout(loadSwinsianLibraryTimeout);
 
+                                log.trace("[renderer] got loaded library");
                                 if (DEBUG) {
-                                    console.log("[renderer] got loaded library", event, data);
+                                    console.log(data);
                                 }
 
                                 set((state) => {
@@ -183,13 +186,14 @@ export const useAppStore = create<AppState & AppAction>()(
                     const { library, libraryFilepath, libraryWriteState } = get();
 
                     if (library === undefined) {
-                        console.error("[client] Unable to write modified library");
+                        log.error("[client] No library loaded");
                         return;
                     } else if (libraryWriteState !== "ready") {
-                        console.info(`[client] No library modifications to write to disk`);
+                        log.info(`[client] No library modifications to write to disk`);
                         return;
                     }
 
+                    log.trace(`[client] Writing modified library to disk...`);
                     set({ libraryWriteState: "busy" });
                     window.api.send(ClientEventChannel.WRITE_MODIFIED_LIBRARY, {
                         library,
@@ -198,7 +202,7 @@ export const useAppStore = create<AppState & AppAction>()(
 
                     return new Promise((resolve, reject) => {
                         const writeModifiedLibraryTimeout = setTimeout(() => {
-                            console.error(`[client] timed out writing modified library to disk`);
+                            log.error(`[client] timed out writing modified library to disk`);
                             set({ libraryWriteState: "ready" });
                             reject();
                         }, WRITE_MODIFIED_LIBRARY_TIMEOUT);
@@ -207,6 +211,7 @@ export const useAppStore = create<AppState & AppAction>()(
                             ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
                             () => {
                                 clearTimeout(writeModifiedLibraryTimeout);
+                                log.trace(`[client] Done writing modified library to disk.`);
                                 set({ libraryWriteState: "none" });
                                 resolve();
                             },
@@ -221,16 +226,12 @@ export const useAppStore = create<AppState & AppAction>()(
                             window.api.handleOnce(
                                 ServerEventChannel.AUDIO_FILES_SERVER_READY_FOR_RESTART,
                                 () => {
-                                    if (DEBUG) {
-                                        console.info("[client] restarting audio files server...");
-                                    }
+                                    log.debug("[client] restarting audio files server...");
                                     initAudioFilesServerWithStore();
                                 },
                             );
                         } else {
-                            if (DEBUG) {
-                                console.info("[client] starting audio files server...");
-                            }
+                            log.debug("[client] starting audio files server...");
                             initAudioFilesServerWithStore();
                         }
                     }),
@@ -240,7 +241,7 @@ export const useAppStore = create<AppState & AppAction>()(
                     const trackDef = get().getTrackDef(trackId);
 
                     if (trackDef === undefined) {
-                        console.error(`[client] Unable to analyze track ${trackId}`);
+                        log.error(`[client] Unable to analyze track ${trackId}`);
                         return;
                     }
 
@@ -248,25 +249,36 @@ export const useAppStore = create<AppState & AppAction>()(
                     const canAnalyzeFileFormat = isSupportedWebAudioFileFormat(trackDef);
 
                     if (trackDef?.BPM !== undefined || !canAnalyzeFileFormat) {
-                        if (DEBUG) {
-                            console.info(`[client] skipping analysis of track ${trackId}`);
-                        }
+                        log.debug(`[client] skipping analysis of track ${trackId}`);
                         return;
                     }
 
                     return new Promise(async (resolve, reject) => {
                         set({ analyzerState: "busy" });
                         const analyzeAudioTimeout = setTimeout(() => {
-                            console.error(
-                                `[client] failed or timed out while analyzing track ${trackId}, is the audio files server running? file location: ${fileLocation})`,
-                            );
+                            log.error(`[client] timed out while analyzing track ${trackId}`);
                             set({ analyzerState: "ready" });
                             reject();
                         }, ANALYZE_AUDIO_FILE_TIMEOUT);
 
-                        const trackAudio = await loadAudioBuffer(fileLocation);
-                        const bpm = Math.round(await analyzeBPM(trackAudio));
-                        clearTimeout(analyzeAudioTimeout);
+                        let bpm: number | undefined;
+
+                        try {
+                            const trackAudio = await loadAudioBuffer(fileLocation);
+                            bpm = Math.round(await analyzeBPM(trackAudio));
+                        } catch (e) {
+                            log.error(
+                                `[client] failed to analyze track ${trackId}, is the audio files server running? (file location: ${fileLocation})`,
+                            );
+                            set({ analyzerState: "ready" });
+                            reject();
+                        } finally {
+                            clearTimeout(analyzeAudioTimeout);
+                        }
+
+                        if (bpm === undefined) {
+                            return;
+                        }
 
                         window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
                             fileLocation,
@@ -275,20 +287,16 @@ export const useAppStore = create<AppState & AppAction>()(
                         });
 
                         const writeTagTimeout = setTimeout(() => {
-                            console.error(
-                                `[client] timed out writing BPM tag for track ${trackId}`,
-                            );
+                            log.error(`[client] timed out writing BPM tag for track ${trackId}`);
                             reject();
                         }, WRITE_AUDIO_FILE_TAG_TIMEOUT);
 
                         window.api.handleOnce(
                             ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
                             () => {
-                                console.info(
-                                    `[client] completed updating BPM for track ${trackId}`,
-                                );
+                                log.info(`[client] completed updating BPM for track ${trackId}`);
                                 set((state) => {
-                                    state.library!.Tracks![trackId].BPM = bpm;
+                                    state.library!.Tracks![trackId].BPM = bpm!;
                                     state.libraryWriteState = "ready"; // needs to be written to disk
                                     state.analyzerState = "ready";
                                 });
@@ -303,7 +311,7 @@ export const useAppStore = create<AppState & AppAction>()(
                     const { libraryPlaylists, analyzeTrack } = get();
 
                     if (libraryPlaylists === undefined) {
-                        console.error(
+                        log.error(
                             `[client] Unable to analyze playlist ${playlistId}, libraryPlaylists is undefined`,
                         );
                         return;
@@ -311,17 +319,15 @@ export const useAppStore = create<AppState & AppAction>()(
 
                     const playlistDef = libraryPlaylists![playlistId];
                     if (playlistDef === undefined) {
-                        console.error(
+                        log.error(
                             `[client] Unable to analyze playlist ${playlistId}, could not find it in the library`,
                         );
                         return;
                     }
 
-                    if (DEBUG) {
-                        console.info(
-                            `[client] analyzing playlist '${playlistDef.Name}' (ID: ${playlistId})...`,
-                        );
-                    }
+                    log.debug(
+                        `[client] analyzing playlist ${playlistId} (name: '${playlistDef.Name}')...`,
+                    );
 
                     const trackIds = playlistDef["Playlist Items"].map((item) => item["Track ID"]);
 
@@ -329,9 +335,10 @@ export const useAppStore = create<AppState & AppAction>()(
                         try {
                             await analyzeTrack(trackId);
                         } catch (e) {
-                            console.error(
-                                `[client] error analyzing track ${trackId} in playlist ${playlistId}`,
-                                e,
+                            log.error(
+                                `[client] error analyzing track ${trackId} in playlist ${playlistId}, error: ${serializeError(
+                                    e,
+                                )}`,
                             );
                             continue;
                         }
@@ -344,8 +351,14 @@ export const useAppStore = create<AppState & AppAction>()(
             version: 0,
             getStorage: () => localStorage,
             onRehydrateStorage: (state) => {
-                if (DEBUG) {
-                    console.info("[client] rehydrated app store from localStorage", state);
+                if (state == null) {
+                    log.debug(`[client] no app state found in localStorage to rehydrate`);
+                } else {
+                    log.debug(
+                        `[client] rehydrated app store from localStorage with properties: ${JSON.stringify(
+                            Object.keys(state),
+                        )}`,
+                    );
                 }
             },
             partialize: (state) =>

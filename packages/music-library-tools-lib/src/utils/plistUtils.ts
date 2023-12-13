@@ -3,23 +3,23 @@ import { readFileSync } from "node:fs";
 import { collapsePropertiesIntoSingleLine } from "./xmlUtils.js";
 
 export function loadPlistFile(path: string): plist.PlistObject {
-    console.info(`Loading library at ${path}`);
-    console.time(`loadPlistFile`);
+    console.info(`[lib] Loading library at ${path}`);
+    console.time(`[lib] loadPlistFile`);
     const plistContents = readFileSync(path, { encoding: "utf8" });
     const parsedPlist = plist.parse(plistContents) as plist.PlistObject;
-    console.timeEnd(`loadPlistFile`);
+    console.timeEnd(`[lib] loadPlistFile`);
     return parsedPlist;
 }
 
 export function buildPlistOutput(library: object): string {
-    console.time(`buildPlistOutput`);
+    console.time(`[lib] buildPlistOutput`);
     let output = plist.build(library as plist.PlistObject, {
         pretty: true,
         indent: "	",
     });
     output = collapsePropertiesIntoSingleLine(output);
     output = fixDoctype(output);
-    console.timeEnd(`buildPlistOutput`);
+    console.timeEnd(`[lib] buildPlistOutput`);
     return output;
 }
 
