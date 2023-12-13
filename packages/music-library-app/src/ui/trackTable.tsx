@@ -1,5 +1,5 @@
 import { TrackDefinition } from "@adahiya/music-library-tools-lib";
-import { Button, Classes, HTMLTable } from "@blueprintjs/core";
+import { Button, Classes, HTMLTable, Tooltip } from "@blueprintjs/core";
 import {
     CellContext,
     ColumnDef,
@@ -35,6 +35,8 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         return;
     }
 
+    const numTracksInPlaylist = trackDefs.length;
+
     const columnHelper = createColumnHelper<TrackDefinition>();
     const columns = [
         columnHelper.display({
@@ -44,7 +46,14 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
                     {info.row.index + 1}
                 </span>
             ),
-            header: () => <span>#</span>,
+            header: () => (
+                <span>
+                    #{" "}
+                    <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+                        (of {numTracksInPlaylist})
+                    </span>
+                </span>
+            ),
             size: 60,
         }),
         columnHelper.accessor("BPM", {
@@ -161,14 +170,26 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
         await analyzeTrack(trackId);
     }, []);
     const disabled = useMemo(() => !isSupportedWebAudioFileFormat(trackDef), [trackDef]);
+    const tooltipContent = useMemo(
+        () => (disabled ? "Unsupported audio file format" : undefined),
+        [disabled],
+    );
     return (
-        <Button
-            disabled={disabled}
-            outlined={true}
-            small={true}
-            text="Analyze"
-            onClick={handleAnalyzeBPM}
-        />
+        <Tooltip
+            compact={true}
+            disabled={!disabled}
+            placement="top"
+            content={tooltipContent}
+            hoverOpenDelay={300}
+        >
+            <Button
+                disabled={disabled}
+                outlined={true}
+                small={true}
+                text="Analyze"
+                onClick={handleAnalyzeBPM}
+            />
+        </Tooltip>
     );
 }
 
