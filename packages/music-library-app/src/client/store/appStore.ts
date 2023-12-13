@@ -23,10 +23,10 @@ import {
     LoadSwinsianLibraryOptions,
     LoadedSwinsianLibraryEventPayload,
     ServerEventChannel,
-} from "../../events";
-import { loadAudioBuffer } from "../../audio/buffer";
-import { analyzeBPM } from "../../audio/bpm";
-import { isSupportedWebAudioFileFormat } from "../../audio/audioUtils";
+} from "../../common/events";
+import { loadAudioBuffer } from "../audio/buffer";
+import { analyzeBPM } from "../audio/bpm";
+import { isSupportedWebAudioFileFormat } from "../audio/webAudioUtils";
 
 export type LibraryLoadingState = "none" | "loading" | "loaded" | "error";
 export type libraryWriteState = "none" | "ready" | "busy";

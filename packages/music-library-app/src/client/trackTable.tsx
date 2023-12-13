@@ -14,11 +14,11 @@ import classNames from "classnames";
 import { useShallow } from "zustand/react/shallow";
 import { useCallback, useMemo } from "react";
 
-import { isSupportedWebAudioFileFormat } from "../audio/audioUtils";
+import { isSupportedWebAudioFileFormat } from "./audio/webAudioUtils";
 import { LIBRARY_VIEW_SETTINGS } from "../common/constants";
 import { appStore, useAppStore } from "./store/appStore";
 
-import commonStyles from "../common/commonStyles.module.scss";
+import commonStyles from "./common/commonStyles.module.scss";
 import styles from "./trackTable.module.scss";
 
 export interface TrackTableProps {

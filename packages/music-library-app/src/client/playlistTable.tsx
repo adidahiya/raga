@@ -14,7 +14,7 @@ import { useCallback, useMemo, useState, MouseEvent, useEffect } from "react";
 
 import { appStore } from "./store/appStore";
 
-import commonStyles from "../common/commonStyles.module.scss";
+import commonStyles from "./common/commonStyles.module.scss";
 import styles from "./playlistTable.module.scss";
 import { formatStatNumber } from "../common/format";
 
