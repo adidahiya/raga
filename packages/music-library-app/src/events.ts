@@ -21,6 +21,7 @@ export const ServerEventChannel = {
     AUDIO_FILES_SERVER_READY_FOR_RESTART: "audioFilesServerReadyForRestart" as const,
     LOADED_SWINSIAN_LIBRARY: "loadedSwinsianLibrary" as "loadedSwinsianLibrary",
     WRITE_AUDIO_FILE_TAG_COMPLETE: "writeAudioFileTagComplete" as const,
+    WRITE_MODIFIED_LIBRARY_COMPLETE: "writeModifiedLibraryComplete" as const,
 };
 export type ServerEventChannel = (typeof ServerEventChannel)[keyof typeof ServerEventChannel];
 

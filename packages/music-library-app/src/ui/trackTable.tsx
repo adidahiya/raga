@@ -12,8 +12,9 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import { useShallow } from "zustand/react/shallow";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
+import { isSupportedWebAudioFileFormat } from "../audio/audioUtils";
 import { LIBRARY_VIEW_SETTINGS } from "../common/constants";
 import { appStore, useAppStore } from "./store/appStore";
 
@@ -153,12 +154,22 @@ function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number>) {
 BPMColumnHeader.displayName = "BPMColumnHeader";
 
 function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
-    const trackId = props.row.original["Track ID"];
+    const trackDef = props.row.original;
+    const trackId = trackDef["Track ID"];
     const analyzeTrack = appStore.use.analyzeTrack();
     const handleAnalyzeBPM = useCallback(async () => {
         await analyzeTrack(trackId);
     }, []);
-    return <Button outlined={true} small={true} text="Analyze" onClick={handleAnalyzeBPM} />;
+    const disabled = useMemo(() => !isSupportedWebAudioFileFormat(trackDef), [trackDef]);
+    return (
+        <Button
+            disabled={disabled}
+            outlined={true}
+            small={true}
+            text="Analyze"
+            onClick={handleAnalyzeBPM}
+        />
+    );
 }
 
 function AnalyzeAllTracksInSelectedPlaylistButton() {

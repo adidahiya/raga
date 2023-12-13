@@ -144,6 +144,10 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
     writeFileSync(swinsianLibraryOutputPath, serializedSwinsianLibrary);
     writeFileSync(modifiedLibraryOutputPath, serializedMusicAppLibrary);
 
+    process.parentPort.postMessage({
+        channel: ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
+    });
+
     if (DEBUG) {
         console.log(`[server] ... done!`);
     }
