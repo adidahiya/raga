@@ -3,17 +3,17 @@ import { ClientEventChannel, ServerEventChannel } from "./common/events.js";
 
 export interface ContextBridgeApi {
     versions: Record<string, string | undefined>;
-    send: (channel: ClientEventChannel, data?: any) => void;
-    handle: (
+    send: <T = object>(channel: ClientEventChannel, data?: T) => void;
+    handle: <T = object>(
         channel: ServerEventChannel,
-        callback: (event: IpcRendererEvent, data?: any) => void,
+        callback: (event: IpcRendererEvent, data?: T) => void,
     ) => void;
-    handleOnce: (
+    handleOnce: <T = object>(
         channel: ServerEventChannel,
-        callback: (event: IpcRendererEvent, data?: any) => void,
+        callback: (event: IpcRendererEvent, data?: T) => void,
     ) => void;
-    removeHandler: (
+    removeHandler: <T = object>(
         channel: ServerEventChannel,
-        callback: (event: IpcRendererEvent, data?: any) => void,
+        callback: (event: IpcRendererEvent, data?: T) => void,
     ) => void;
 }

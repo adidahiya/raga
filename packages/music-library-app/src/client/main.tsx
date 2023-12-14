@@ -6,16 +6,15 @@ import { createLogWriter } from "@roarr/browser-log-writer";
 import App from "./app";
 // import { INSTALL_REACT_DEVELOPER_TOOLS } from "../common/constants";
 
-declare module globalThis {
-    const ROARR: any;
-}
-
 localStorage.setItem("ROARR_LOG", "true");
 globalThis.ROARR.write = createLogWriter();
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
-const domNode = document.getElementById("root")!;
+const domNode = document.getElementById("root");
+if (domNode === null) {
+    throw new Error(`[client] Failed to render application: no root DOM node available.`);
+}
 const root = createRoot(domNode);
 root.render(<App />);
 

@@ -1,5 +1,6 @@
 /* eslint-env node */
 module.exports = {
+    root: true,
     extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
@@ -12,13 +13,25 @@ module.exports = {
         tsconfigRootDir: __dirname,
         project: ["./packages/*/tsconfig.json"],
     },
-    root: true,
+    rules: {
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+        ],
+    },
     overrides: [
         {
             extends: ["plugin:@typescript-eslint/disable-type-checked"],
             files: ["./**/*.js", "./**/*.mjs"],
             parserOptions: {
                 project: undefined,
+            },
+        },
+        {
+            files: ["./**/.eslintrc.js", "./**/vite.*.mjs"],
+            env: {
+                node: true,
             },
         },
     ],

@@ -13,7 +13,7 @@ import { useCallback } from "react";
 
 import { appStore } from "../store/appStore";
 
-export interface LibraryOptionsProps extends Props {}
+export type LibraryOptionsProps = Props
 
 export default function LibraryOptions(props: LibraryOptionsProps) {
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();

@@ -1,21 +1,19 @@
-import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 import { Card, NonIdealState } from "@blueprintjs/core";
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import { PanelGroup, Panel } from "react-resizable-panels";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
-import { AUTO_LOAD_LIBRARY } from "../common/constants";
 
 import PlaylistTable from "./playlistTable";
 import TrackTable from "./trackTable";
 import ResizeHandle from "./resizeHandle";
 import { appStore } from "./store/appStore";
 import LibraryOptions from "./library/libraryOptions";
-
-import styles from "./libraryView.module.scss";
 import LibraryStats from "./library/libraryStats";
 import LibraryActions from "./library/libraryActions";
+
+import styles from "./libraryView.module.scss";
 
 declare global {
     interface Window {
@@ -25,13 +23,10 @@ declare global {
 
 export default function LibraryView() {
     const libraryState = appStore.use.libraryLoadingState();
-    const libraryPlist = appStore.use.library();
     const loadLibrary = appStore.use.loadSwinsianLibrary();
 
     useEffect(() => {
-        if (AUTO_LOAD_LIBRARY) {
-            loadLibrary();
-        }
+        void loadLibrary();
     }, []);
 
     return (
@@ -44,18 +39,14 @@ export default function LibraryView() {
                 <NonIdealState title="Error loading library" icon="error" />
             ) : (
                 <div className={styles.libraryLoaded}>
-                    <Library library={libraryPlist!} />
+                    <Library />
                 </div>
             )}
         </Card>
     );
 }
 
-interface LibraryProps {
-    library: MusicLibraryPlist;
-}
-
-function Library(props: LibraryProps) {
+function Library() {
     const [headerHeight, setHeaderHeight] = useState<number>(0);
     const headerRef = useRef<HTMLDivElement>(null);
     const selectedPlaylistId = appStore.use.selectedPlaylistId();

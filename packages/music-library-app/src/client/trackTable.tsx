@@ -12,9 +12,10 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import { useShallow } from "zustand/react/shallow";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 import { isSupportedWebAudioFileFormat } from "./audio/webAudioUtils";
+import { useVoidCallback } from "./common/hooks";
 import { appStore, useAppStore } from "./store/appStore";
 
 import commonStyles from "./common/commonStyles.module.scss";
@@ -82,7 +83,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span>Artist</span>,
         }),
-    ].filter((c) => !!c) as Array<ColumnDef<TrackDefinition, unknown>>;
+    ].filter((c) => !!c) as ColumnDef<TrackDefinition>[];
 
     const table = useReactTable({
         data: trackDefs,
@@ -150,7 +151,7 @@ function TrackTableRow(row: Row<TrackDefinition>) {
 }
 TrackTableRow.displayName = "TrackTableRow";
 
-function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number>) {
+function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number | undefined>) {
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
     return (
         <div className={styles.bpmColumnHeader}>
@@ -166,9 +167,7 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
     const trackDef = props.row.original;
     const trackId = trackDef["Track ID"];
     const analyzeTrack = appStore.use.analyzeTrack();
-    const handleAnalyzeBPM = useCallback(async () => {
-        await analyzeTrack(trackId);
-    }, []);
+    const handleAnalyzeBPM = useVoidCallback(() => analyzeTrack(trackId), [analyzeTrack, trackId]);
     const isUnsupportedFileFormat = useMemo(
         () => !isSupportedWebAudioFileFormat(trackDef),
         [trackDef],
@@ -207,9 +206,10 @@ function AnalyzeAllTracksInSelectedPlaylistButton() {
     const analyzerState = appStore.use.analyzerState();
     const analyzePlaylist = appStore.use.analyzePlaylist();
     const selectedPlaylistId = appStore.use.selectedPlaylistId();
-    const handleAnalyzeClick = useCallback(async () => {
-        await analyzePlaylist(selectedPlaylistId!);
-    }, []);
+    const handleAnalyzeClick = useVoidCallback(
+        () => analyzePlaylist(selectedPlaylistId!),
+        [analyzePlaylist, selectedPlaylistId],
+    );
 
     return (
         <Button

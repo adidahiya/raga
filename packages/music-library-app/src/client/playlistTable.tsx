@@ -35,25 +35,28 @@ interface PlaylistRow {
 
 export default function PlaylistTable(props: LibraryTableProps) {
     const library = appStore.use.library();
-    const selectedPlaylistPath = useSelectedPlaylistPath();
 
     if (library === undefined) {
         return;
     }
 
-    const folderChildrenByParentId = useMemo<Record<string, PlaylistDefinition[]>>(
+    const folderChildrenByParentId = useMemo<PartialRecord<string, PlaylistDefinition[]>>(
         () =>
-            library.Playlists.reduce<Record<string, PlaylistDefinition[]>>((acc, playlist) => {
-                const parentId = playlist["Parent Persistent ID"];
-                if (parentId !== undefined) {
-                    if (acc[parentId] !== undefined) {
-                        acc[parentId].push(playlist);
-                    } else {
-                        acc[parentId] = [playlist];
+            library.Playlists.reduce<PartialRecord<string, PlaylistDefinition[]>>(
+                (acc, playlist) => {
+                    const parentId = playlist["Parent Persistent ID"];
+                    if (parentId !== undefined) {
+                        const parent = acc[parentId];
+                        if (parent !== undefined) {
+                            parent.push(playlist);
+                        } else {
+                            acc[parentId] = [playlist];
+                        }
                     }
-                }
-                return acc;
-            }, {}),
+                    return acc;
+                },
+                {},
+            ),
         [library.Playlists],
     );
 
@@ -65,7 +68,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
     const recursivelyGetFolderChildern: (playlistId: string) => PlaylistRow[] = useCallback(
         (playlistId: string) =>
             playlistIsFolderWithChildren(playlistId)
-                ? folderChildrenByParentId[playlistId].map((def) => ({
+                ? folderChildrenByParentId[playlistId]!.map((def) => ({
                       def,
                       children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
                   }))
@@ -160,14 +163,11 @@ export default function PlaylistTable(props: LibraryTableProps) {
     });
 
     // TODO: adjustable column widths
-    const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-        columns.reduce(
-            (acc, column) => {
-                acc[column.id!] = 100;
-                return acc;
-            },
-            {} as Record<string, number>,
-        ),
+    const [columnWidths, _setColumnWidths] = useState<Record<string, number>>(
+        columns.reduce<Record<string, number>>((acc, column) => {
+            acc[column.id!] = 100;
+            return acc;
+        }, {}),
     );
 
     const headerRows = table.getHeaderGroups().map((headerGroup) => (
@@ -295,6 +295,7 @@ function useSelectedPlaylistPath() {
 
         const path = [selectedPlaylistId];
         let currentPlaylistId = selectedPlaylistId;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
         while (true) {
             const currentPlaylist = libraryPlaylists[currentPlaylistId];
             if (currentPlaylist === undefined) {

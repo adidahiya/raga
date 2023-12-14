@@ -1,15 +1,15 @@
 import { ButtonGroup, Button, Props } from "@blueprintjs/core";
-import { useCallback } from "react";
 import { appStore } from "../store/appStore";
+import { useVoidCallback } from "../common/hooks";
 
-export interface LibraryActionsProps extends Props {}
+export type LibraryActionsProps = Props;
 
 export default function LibraryActions(props: LibraryActionsProps) {
     const isLibraryLoaded = appStore.use.libraryLoadingState() !== "none";
     const loadLibrary = appStore.use.loadSwinsianLibrary();
 
-    const handleLoad = useCallback(() => loadLibrary(), []);
-    const handleLoadFromDisk = useCallback(() => loadLibrary({ reloadFromDisk: true }), []);
+    const handleLoad = useVoidCallback(loadLibrary);
+    const handleLoadFromDisk = useVoidCallback(() => loadLibrary({ reloadFromDisk: true }));
 
     return (
         <div className={props.className}>
@@ -32,9 +32,8 @@ export default function LibraryActions(props: LibraryActionsProps) {
 function WriteModifiedLibraryButton() {
     const libraryWriteState = appStore.use.libraryWriteState();
     const writeModifiedLibrary = appStore.use.writeModiifedLibrary();
-    const handleWriteModifiedLibrary = useCallback(async () => {
-        await writeModifiedLibrary();
-    }, []);
+
+    const handleWriteModifiedLibrary = useVoidCallback(writeModifiedLibrary);
 
     return (
         <Button

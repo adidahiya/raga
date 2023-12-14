@@ -6,7 +6,7 @@ import { format, parseISO } from "date-fns";
 import { formatStatNumber } from "../../common/format";
 import { appStore } from "../store/appStore";
 
-export interface LibraryStatsProps extends Props {}
+export type LibraryStatsProps = Props
 
 export default function LibraryStats(props: LibraryStatsProps) {
     const library = appStore.use.library();
@@ -27,7 +27,7 @@ export default function LibraryStats(props: LibraryStatsProps) {
                 )}
                 {library && (
                     <>
-                        <p># playlists: {formatStatNumber(library?.Playlists.length)}</p>
+                        <p># playlists: {formatStatNumber(library.Playlists.length)}</p>
                     </>
                 )}
             </SectionCard>
