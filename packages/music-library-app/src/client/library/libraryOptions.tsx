@@ -13,7 +13,7 @@ import { useCallback } from "react";
 
 import { appStore } from "../store/appStore";
 
-export type LibraryOptionsProps = Props
+export type LibraryOptionsProps = Props;
 
 export default function LibraryOptions(props: LibraryOptionsProps) {
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
@@ -21,7 +21,7 @@ export default function LibraryOptions(props: LibraryOptionsProps) {
 
     const handleToggleAnalyzeBPMPerTrack = useCallback(() => {
         setAnalyzeBPMPerTrack(!analyzeBPMPerTrack);
-    }, [analyzeBPMPerTrack]);
+    }, [analyzeBPMPerTrack, setAnalyzeBPMPerTrack]);
 
     return (
         <Section className={props.className} compact={true} title="Options">

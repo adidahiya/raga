@@ -25,8 +25,10 @@ export default function LibraryView() {
     const libraryState = appStore.use.libraryLoadingState();
     const loadLibrary = appStore.use.loadSwinsianLibrary();
 
+    // automatically load the library from disk on client startup
     useEffect(() => {
         void loadLibrary();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

@@ -17,6 +17,7 @@ import { appStore } from "./store/appStore";
 import commonStyles from "./common/commonStyles.module.scss";
 import styles from "./playlistTable.module.scss";
 import { formatStatNumber } from "../common/format";
+import { useLibraryOrThrow } from "./store/useLibraryOrThrow";
 
 export interface LibraryTableProps {
     headerHeight: number;
@@ -34,11 +35,7 @@ interface PlaylistRow {
 }
 
 export default function PlaylistTable(props: LibraryTableProps) {
-    const library = appStore.use.library();
-
-    if (library === undefined) {
-        return;
-    }
+    const library = useLibraryOrThrow();
 
     const folderChildrenByParentId = useMemo<PartialRecord<string, PlaylistDefinition[]>>(
         () =>
@@ -73,7 +70,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                       children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
                   }))
                 : [],
-        [folderChildrenByParentId],
+        [folderChildrenByParentId, playlistIsFolderWithChildren],
     );
 
     const playlistRows = useMemo<PlaylistRow[]>(
@@ -84,7 +81,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                 def,
                 children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
             })),
-        [library.Playlists],
+        [library.Playlists, recursivelyGetFolderChildern],
     );
 
     const numPlaylistsStat = formatStatNumber(library.Playlists.length);
@@ -264,7 +261,7 @@ function PlaylistTableRow(row: Row<PlaylistRow>) {
                 setSelectedPlaylistId(rowPlaylistId);
             }
         },
-        [row, setSelectedPlaylistId],
+        [row, rowPlaylistId, setSelectedPlaylistId, toggleExpanded, toggleSelected],
     );
 
     return (
