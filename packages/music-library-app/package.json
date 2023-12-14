@@ -10,7 +10,8 @@
         "dev": "cross-env ELECTRON_RUN_AS_NODE=true ROARR_LOG=true electron-forge start",
         "clean": "rm -rf .vite/* out/*",
         "dist": "electron-forge make",
-        "lint": "echo \"No linting configured\"",
+        "lint": "eslint .",
+        "lint-fix": "eslint --fix .",
         "publish-electron": "electron-forge publish"
     },
     "dependencies": {
@@ -48,8 +49,11 @@
         "@types/react": "^18.2.43",
         "@types/react-devtools": "^3.6.2",
         "@types/react-dom": "^18.2.17",
+        "@typescript-eslint/eslint-plugin": "^6.14.0",
+        "@typescript-eslint/parser": "^6.14.0",
         "electron": "^28.0.0",
         "electron-devtools-installer": "^3.2.0",
+        "eslint": "^8.55.0",
         "react-devtools": "^5.0.0",
         "sass": "^1.69.5",
         "typescript": "^5.3.3"
