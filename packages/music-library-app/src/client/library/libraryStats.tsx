@@ -6,7 +6,7 @@ import { format, parseISO } from "date-fns";
 import { formatStatNumber } from "../../common/format";
 import { appStore } from "../store/appStore";
 
-export type LibraryStatsProps = Props
+export type LibraryStatsProps = Props;
 
 export default function LibraryStats(props: LibraryStatsProps) {
     const library = appStore.use.library();
