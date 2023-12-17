@@ -121,9 +121,10 @@ export const MusicAppTrackProperty = {
 export type MusicAppTrackProperty =
     (typeof MusicAppTrackProperty)[keyof typeof MusicAppTrackProperty];
 
-export type MusicAppTrackDefinition = TrackDefinition & {
-    [P in MusicAppTrackProperty]: string | number | boolean;
-};
+export type MusicAppTrackDefinition = TrackDefinition &
+    Partial<{
+        [P in MusicAppTrackProperty]: string | number | boolean;
+    }>;
 
 export function convertSwinsianTrackToMusicAppTrack(
     track: SwinsianTrackDefinition,
@@ -163,6 +164,7 @@ export const SwinsianTrackProperty = {
 export type SwinsianTrackProperty =
     (typeof SwinsianTrackProperty)[keyof typeof SwinsianTrackProperty];
 
-export type SwinsianTrackDefinition = TrackDefinition & {
-    [P in SwinsianTrackProperty]: string | number;
-};
+export type SwinsianTrackDefinition = TrackDefinition &
+    Partial<{
+        [P in SwinsianTrackProperty]: string | number;
+    }>;

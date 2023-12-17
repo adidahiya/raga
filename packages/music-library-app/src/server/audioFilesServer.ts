@@ -20,26 +20,33 @@ export interface AudioFilesServer {
 export async function startAudioFilesServer(
     options: AudioFilesServerOptions,
 ): Promise<AudioFilesServer> {
-    if (audioFilesServer !== undefined) {
-        console.info(`[server] audio files server is already running`);
-        options.onReady?.();
-        return audioFilesServer;
-    }
+    return new Promise((resolve, reject) => {
+        if (audioFilesServer !== undefined) {
+            console.info(`[server] audio files server is already running`);
+            options.onReady?.();
+            resolve(audioFilesServer);
+        }
 
-    console.debug(`[server] starting audio files server at ${options.audioFilesRootFolder}...`);
+        console.debug(`[server] starting audio files server at ${options.audioFilesRootFolder}...`);
 
-    const app = new App();
-    const staticServerMiddleware = sirv(options.audioFilesRootFolder, { dev: true });
-    app.use(staticServerMiddleware).listen(DEFAULT_AUDIO_FILES_SERVER_PORT, () => {
-        options.onReady?.();
+        const app = new App();
+        const staticServerMiddleware = sirv(options.audioFilesRootFolder, { dev: true });
+
+        audioFilesServer = {
+            _app: app,
+            stop: () => {
+                // TODO: unsure how to implement this, app.close() isn't available like with Express
+                audioFilesServer = undefined;
+            },
+        };
+
+        app.use(staticServerMiddleware).listen(DEFAULT_AUDIO_FILES_SERVER_PORT, () => {
+            options.onReady?.();
+            if (audioFilesServer === undefined) {
+                reject("[server] Unknown error occured attempting to starrt audio files server");
+            } else {
+                resolve(audioFilesServer);
+            }
+        });
     });
-
-    audioFilesServer = {
-        _app: app,
-        stop: () => {
-            // TODO: unsure how to implement this, app.close() isn't available like with Express
-            audioFilesServer = undefined;
-        },
-    };
-    return audioFilesServer;
 }

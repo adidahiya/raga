@@ -1,4 +1,5 @@
 import type { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
+import type { MessageEvent } from "electron";
 
 // Event channels
 
@@ -19,7 +20,7 @@ export const ServerEventChannel = {
     AUDIO_FILES_SERVER_ERROR: "audioFilesServerError" as const,
     AUDIO_FILES_SERVER_STARTED: "audioFilesServerStarted" as const,
     AUDIO_FILES_SERVER_READY_FOR_RESTART: "audioFilesServerReadyForRestart" as const,
-    LOADED_SWINSIAN_LIBRARY: "loadedSwinsianLibrary" as "loadedSwinsianLibrary",
+    LOADED_SWINSIAN_LIBRARY: "loadedSwinsianLibrary" as const,
     WRITE_AUDIO_FILE_TAG_COMPLETE: "writeAudioFileTagComplete" as const,
     WRITE_MODIFIED_LIBRARY_COMPLETE: "writeModifiedLibraryComplete" as const,
 };
@@ -30,6 +31,23 @@ export function isServerEventChannel(channel: string): channel is ServerEventCha
 }
 
 // Event payloads
+
+export interface ClientMessageEvent<C extends ClientEventChannel = ClientEventChannel>
+    extends MessageEvent {
+    data: {
+        channel: C;
+        data: ClientEventPayloadMap[C];
+    };
+}
+
+export interface ClientEventPayloadMap {
+    [ClientEventChannel.AUDIO_FILES_SERVER_START]: AudioFilesServerStartOptions;
+    [ClientEventChannel.LOAD_SWINSIAN_LIBRARY]: LoadSwinsianLibraryOptions;
+    [ClientEventChannel.WRITE_AUDIO_FILE_TAG]: WriteAudioFileTagOptions;
+    [ClientEventChannel.WRITE_MODIFIED_LIBRARY]: WriteModifiedLibraryOptions;
+    [ClientEventChannel.AUDIO_FILES_SERVER_STOP]: never;
+}
+
 export interface LoadedSwinsianLibraryEventPayload {
     /** Library XML plist */
     library: SwinsianLibraryPlist;
@@ -40,6 +58,18 @@ export interface LoadedSwinsianLibraryEventPayload {
 
 export interface LoadSwinsianLibraryOptions {
     reloadFromDisk?: boolean;
+}
+
+export interface AudioFilesServerStartOptions {
+    audioFilesRootFolder: string;
+}
+
+type SupportedTagName = "BPM";
+
+export interface WriteAudioFileTagOptions {
+    fileLocation: string;
+    tagName: SupportedTagName;
+    value: string | number;
 }
 
 export interface WriteModifiedLibraryOptions {

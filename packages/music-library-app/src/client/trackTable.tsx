@@ -3,21 +3,21 @@ import { Button, Classes, HTMLTable, Tooltip } from "@blueprintjs/core";
 import {
     CellContext,
     ColumnDef,
-    HeaderContext,
-    Row,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
+    HeaderContext,
+    Row,
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
+import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useCallback, useMemo } from "react";
 
 import { isSupportedWebAudioFileFormat } from "./audio/webAudioUtils";
-import { appStore, useAppStore } from "./store/appStore";
-
 import commonStyles from "./common/commonStyles.module.scss";
+import { useVoidCallback } from "./common/hooks";
+import { appStore, useAppStore } from "./store/appStore";
 import styles from "./trackTable.module.scss";
 
 export interface TrackTableProps {
@@ -31,7 +31,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
     const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
 
     if (trackDefs === undefined) {
-        return;
+        throw new Error(`[client] No track definitions found for playlist ${playlistId}.`);
     }
 
     const numTracksInPlaylist = trackDefs.length;
@@ -82,7 +82,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span>Artist</span>,
         }),
-    ].filter((c) => !!c) as Array<ColumnDef<TrackDefinition, unknown>>;
+    ].filter((c) => !!c) as ColumnDef<TrackDefinition>[];
 
     const table = useReactTable({
         data: trackDefs,
@@ -150,7 +150,7 @@ function TrackTableRow(row: Row<TrackDefinition>) {
 }
 TrackTableRow.displayName = "TrackTableRow";
 
-function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number>) {
+function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number | undefined>) {
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
     return (
         <div className={styles.bpmColumnHeader}>
@@ -165,15 +165,14 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
     const isAudioFilesServerReady = appStore.use.audioFilesServerState() === "started";
     const trackDef = props.row.original;
     const trackId = trackDef["Track ID"];
+
     const analyzeTrack = appStore.use.analyzeTrack();
-    const handleAnalyzeBPM = useCallback(async () => {
-        await analyzeTrack(trackId);
-    }, []);
+    const handleAnalyzeBPM = useVoidCallback(() => analyzeTrack(trackId), [analyzeTrack, trackId]);
+
     const isUnsupportedFileFormat = useMemo(
         () => !isSupportedWebAudioFileFormat(trackDef),
         [trackDef],
     );
-    const disabled = !isAudioFilesServerReady || isUnsupportedFileFormat;
     const tooltipContent = useMemo(
         () =>
             isUnsupportedFileFormat
@@ -181,8 +180,10 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
                 : !isAudioFilesServerReady
                   ? "Disconnected from audio files server"
                   : undefined,
-        [disabled],
+        [isAudioFilesServerReady, isUnsupportedFileFormat],
     );
+    const disabled = !isAudioFilesServerReady || isUnsupportedFileFormat;
+
     return (
         <Tooltip
             compact={true}
@@ -207,9 +208,10 @@ function AnalyzeAllTracksInSelectedPlaylistButton() {
     const analyzerState = appStore.use.analyzerState();
     const analyzePlaylist = appStore.use.analyzePlaylist();
     const selectedPlaylistId = appStore.use.selectedPlaylistId();
-    const handleAnalyzeClick = useCallback(async () => {
-        await analyzePlaylist(selectedPlaylistId!);
-    }, []);
+    const handleAnalyzeClick = useVoidCallback(
+        () => analyzePlaylist(selectedPlaylistId!),
+        [analyzePlaylist, selectedPlaylistId],
+    );
 
     return (
         <Button

@@ -1,5 +1,6 @@
 // HACKHACK: regular imports are not working here, for some reason
-import type { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
+import type { MusicAppLibraryPlist, SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const {
     convertSwinsianToItunesXmlLibrary,
     getDefaultSwinsianExportFolder,
@@ -7,19 +8,23 @@ const {
     getOutputLibraryPath,
     loadSwinsianLibrary,
     serializeLibraryPlist,
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require("@adahiya/music-library-tools-lib");
 
-import type { MessageEvent } from "electron";
-import NodeID3 from "node-id3";
-import { fileURLToPath } from "node:url";
-import { ChildProcessWithoutNullStreams } from "node:child_process";
 import { writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+import NodeID3 from "node-id3";
 
 import {
+    AudioFilesServerStartOptions,
     ClientEventChannel,
-    LoadSwinsianLibraryOptions,
+    ClientEventPayloadMap,
+    ClientMessageEvent,
     LoadedSwinsianLibraryEventPayload,
+    LoadSwinsianLibraryOptions,
     ServerEventChannel,
+    WriteAudioFileTagOptions,
     WriteModifiedLibraryOptions,
 } from "../common/events";
 import { AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
@@ -27,35 +32,44 @@ import { AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
 let library: SwinsianLibraryPlist | undefined;
 
 export function initAppServer() {
-    process.parentPort.on("message", ({ data: event }: MessageEvent) => {
+    process.parentPort.on("message", ({ data: event }: ClientMessageEvent) => {
         console.debug(`[server] received '${event.channel}' event`);
 
+        // HACKHACK: need to figure out the right syntax to get conditional inferred types working for event payloads
         switch (event.channel) {
             case ClientEventChannel.LOAD_SWINSIAN_LIBRARY:
-                handleLoadSwinsianLibrary(event.data);
+                handleLoadSwinsianLibrary(
+                    event.data as ClientEventPayloadMap[typeof event.channel],
+                );
                 break;
             case ClientEventChannel.WRITE_AUDIO_FILE_TAG:
-                handleWriteAudioFileTag(event.data);
+                handleWriteAudioFileTag(event.data as ClientEventPayloadMap[typeof event.channel]);
                 break;
             case ClientEventChannel.AUDIO_FILES_SERVER_START:
-                handleAudioFilesServerStart(event.data);
+                void handleAudioFilesServerStart(
+                    event.data as ClientEventPayloadMap[typeof event.channel],
+                );
                 break;
             case ClientEventChannel.AUDIO_FILES_SERVER_STOP:
                 handleAudioFilesServerStop();
                 break;
             case ClientEventChannel.WRITE_MODIFIED_LIBRARY:
-                handleWriteModifiedLibrary(event.data);
+                handleWriteModifiedLibrary(
+                    event.data as ClientEventPayloadMap[typeof event.channel],
+                );
                 break;
             default:
                 break;
         }
     });
 }
+
 function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
-    const filepath = getSwinsianLibraryPath(getDefaultSwinsianExportFolder());
+    /* eslint-disable @typescript-eslint/no-unsafe-call */
+    const filepath = getSwinsianLibraryPath(getDefaultSwinsianExportFolder()) as string;
 
     if (library === undefined || options.reloadFromDisk) {
-        library = loadSwinsianLibrary(filepath);
+        library = loadSwinsianLibrary(filepath) as SwinsianLibraryPlist | undefined;
     }
 
     if (library === undefined) {
@@ -72,13 +86,7 @@ function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
     process.parentPort.postMessage(response);
 }
 
-type SupportedTagName = "BPM";
-
-function handleWriteAudioFileTag(options: {
-    fileLocation: string;
-    tagName: SupportedTagName;
-    value: string | number;
-}) {
+function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
     const filepath = fileURLToPath(options.fileLocation);
     // TODO: better type for tags record
     const newTags: Record<string, string> = {};
@@ -108,7 +116,7 @@ function handleWriteAudioFileTag(options: {
 
 let audioFilesServer: AudioFilesServer | undefined;
 
-async function handleAudioFilesServerStart(options: { audioFilesRootFolder: string }) {
+async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions) {
     await startAudioFilesServer({
         ...options,
         onReady: () => {
@@ -144,12 +152,14 @@ function handleAudioFilesServerStop() {
  */
 function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
     options.library.Date = new Date();
-    const serializedSwinsianLibrary = serializeLibraryPlist(options.library);
-    const convertedLibrary = convertSwinsianToItunesXmlLibrary(options.library);
-    const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary);
+    const serializedSwinsianLibrary = serializeLibraryPlist(options.library) as string;
+    const convertedLibrary = convertSwinsianToItunesXmlLibrary(
+        options.library,
+    ) as MusicAppLibraryPlist;
+    const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary) as string;
 
     const swinsianLibraryOutputPath = options.filepath;
-    const modifiedLibraryOutputPath = getOutputLibraryPath();
+    const modifiedLibraryOutputPath = getOutputLibraryPath() as string;
 
     console.debug(`[server] Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
     console.debug(`[server] Writing modified library to ${modifiedLibraryOutputPath}...`);

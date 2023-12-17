@@ -1,12 +1,12 @@
 import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
-import { Classes, Section, SectionCard, Props } from "@blueprintjs/core";
+import { Classes, Props, Section, SectionCard } from "@blueprintjs/core";
 import classNames from "classnames";
 import { format, parseISO } from "date-fns";
 
 import { formatStatNumber } from "../../common/format";
 import { appStore } from "../store/appStore";
 
-export interface LibraryStatsProps extends Props {}
+export type LibraryStatsProps = Props;
 
 export default function LibraryStats(props: LibraryStatsProps) {
     const library = appStore.use.library();
@@ -27,7 +27,7 @@ export default function LibraryStats(props: LibraryStatsProps) {
                 )}
                 {library && (
                     <>
-                        <p># playlists: {formatStatNumber(library?.Playlists.length)}</p>
+                        <p># playlists: {formatStatNumber(library.Playlists.length)}</p>
                     </>
                 )}
             </SectionCard>

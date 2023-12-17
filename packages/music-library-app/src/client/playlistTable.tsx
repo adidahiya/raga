@@ -10,13 +10,13 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useCallback, useMemo, useState, MouseEvent, useEffect } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 
-import { appStore } from "./store/appStore";
-
+import { formatStatNumber } from "../common/format";
 import commonStyles from "./common/commonStyles.module.scss";
 import styles from "./playlistTable.module.scss";
-import { formatStatNumber } from "../common/format";
+import { appStore } from "./store/appStore";
+import { useLibraryOrThrow } from "./store/useLibraryOrThrow";
 
 export interface LibraryTableProps {
     headerHeight: number;
@@ -34,26 +34,25 @@ interface PlaylistRow {
 }
 
 export default function PlaylistTable(props: LibraryTableProps) {
-    const library = appStore.use.library();
-    const selectedPlaylistPath = useSelectedPlaylistPath();
+    const library = useLibraryOrThrow();
 
-    if (library === undefined) {
-        return;
-    }
-
-    const folderChildrenByParentId = useMemo<Record<string, PlaylistDefinition[]>>(
+    const folderChildrenByParentId = useMemo<PartialRecord<string, PlaylistDefinition[]>>(
         () =>
-            library.Playlists.reduce<Record<string, PlaylistDefinition[]>>((acc, playlist) => {
-                const parentId = playlist["Parent Persistent ID"];
-                if (parentId !== undefined) {
-                    if (acc[parentId] !== undefined) {
-                        acc[parentId].push(playlist);
-                    } else {
-                        acc[parentId] = [playlist];
+            library.Playlists.reduce<PartialRecord<string, PlaylistDefinition[]>>(
+                (acc, playlist) => {
+                    const parentId = playlist["Parent Persistent ID"];
+                    if (parentId !== undefined) {
+                        const parent = acc[parentId];
+                        if (parent !== undefined) {
+                            parent.push(playlist);
+                        } else {
+                            acc[parentId] = [playlist];
+                        }
                     }
-                }
-                return acc;
-            }, {}),
+                    return acc;
+                },
+                {},
+            ),
         [library.Playlists],
     );
 
@@ -65,12 +64,12 @@ export default function PlaylistTable(props: LibraryTableProps) {
     const recursivelyGetFolderChildern: (playlistId: string) => PlaylistRow[] = useCallback(
         (playlistId: string) =>
             playlistIsFolderWithChildren(playlistId)
-                ? folderChildrenByParentId[playlistId].map((def) => ({
+                ? folderChildrenByParentId[playlistId]!.map((def) => ({
                       def,
                       children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
                   }))
                 : [],
-        [folderChildrenByParentId],
+        [folderChildrenByParentId, playlistIsFolderWithChildren],
     );
 
     const playlistRows = useMemo<PlaylistRow[]>(
@@ -81,7 +80,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                 def,
                 children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
             })),
-        [library.Playlists],
+        [library.Playlists, recursivelyGetFolderChildern],
     );
 
     const numPlaylistsStat = formatStatNumber(library.Playlists.length);
@@ -160,14 +159,11 @@ export default function PlaylistTable(props: LibraryTableProps) {
     });
 
     // TODO: adjustable column widths
-    const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-        columns.reduce(
-            (acc, column) => {
-                acc[column.id!] = 100;
-                return acc;
-            },
-            {} as Record<string, number>,
-        ),
+    const [columnWidths, _setColumnWidths] = useState<Record<string, number>>(
+        columns.reduce<Record<string, number>>((acc, column) => {
+            acc[column.id!] = 100;
+            return acc;
+        }, {}),
     );
 
     const headerRows = table.getHeaderGroups().map((headerGroup) => (
@@ -264,7 +260,7 @@ function PlaylistTableRow(row: Row<PlaylistRow>) {
                 setSelectedPlaylistId(rowPlaylistId);
             }
         },
-        [row, setSelectedPlaylistId],
+        [row, rowPlaylistId, setSelectedPlaylistId, toggleExpanded, toggleSelected],
     );
 
     return (
@@ -295,6 +291,7 @@ function useSelectedPlaylistPath() {
 
         const path = [selectedPlaylistId];
         let currentPlaylistId = selectedPlaylistId;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
         while (true) {
             const currentPlaylist = libraryPlaylists[currentPlaylistId];
             if (currentPlaylist === undefined) {

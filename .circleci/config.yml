@@ -105,6 +105,7 @@ workflows:
       - format-check:
           requires: [checkout-code]
       - lint:
-          requires: [checkout-code]
+          # ESLint rules with type checking require dependent packages to be built
+          requires: [build]
       - dist:
           requires: [build]

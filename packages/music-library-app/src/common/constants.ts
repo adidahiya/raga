@@ -1,4 +1,4 @@
-export const DEBUG = true;
+export const DEBUG = process.env.NODE_ENV === "development";
 
 // HACKHACK: this is currently not working, tried various packages (electron-devtools-installer,
 // electron-devtools-vendor, and standalone react-devtools), and nothing seems to work with the current combination of
@@ -6,7 +6,6 @@ export const DEBUG = true;
 export const INSTALL_REACT_DEVELOPER_TOOLS = false;
 
 export const LOCAL_STORAGE_KEY = "music-library-app";
-export const AUTO_LOAD_LIBRARY = true;
 // HACKHACK: need a better default
 export const DEFAULT_AUDIO_FILES_ROOT_FOLDER = "/Volumes/CZSSD/music/tracks";
 export const DEFAULT_AUDIO_FILES_SERVER_PORT = 8457;

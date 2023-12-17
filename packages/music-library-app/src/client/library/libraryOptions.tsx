@@ -3,17 +3,17 @@ import {
     ButtonGroup,
     FormGroup,
     InputGroup,
+    Props,
     Section,
     SectionCard,
-    Props,
-    Tooltip,
     Switch,
+    Tooltip,
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 
 import { appStore } from "../store/appStore";
 
-export interface LibraryOptionsProps extends Props {}
+export type LibraryOptionsProps = Props;
 
 export default function LibraryOptions(props: LibraryOptionsProps) {
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
@@ -21,7 +21,7 @@ export default function LibraryOptions(props: LibraryOptionsProps) {
 
     const handleToggleAnalyzeBPMPerTrack = useCallback(() => {
         setAnalyzeBPMPerTrack(!analyzeBPMPerTrack);
-    }, [analyzeBPMPerTrack]);
+    }, [analyzeBPMPerTrack, setAnalyzeBPMPerTrack]);
 
     return (
         <Section className={props.className} compact={true} title="Options">
