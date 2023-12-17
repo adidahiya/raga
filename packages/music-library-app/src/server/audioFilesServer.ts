@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from "node:fs";
+
 import { App } from "@tinyhttp/app";
 import sirv from "sirv";
 
@@ -20,33 +22,53 @@ export interface AudioFilesServer {
 export async function startAudioFilesServer(
     options: AudioFilesServerOptions,
 ): Promise<AudioFilesServer> {
-    return new Promise((resolve, reject) => {
-        if (audioFilesServer !== undefined) {
-            console.info(`[server] audio files server is already running`);
-            options.onReady?.();
-            resolve(audioFilesServer);
-        }
-
-        console.debug(`[server] starting audio files server at ${options.audioFilesRootFolder}...`);
-
-        const app = new App();
-        const staticServerMiddleware = sirv(options.audioFilesRootFolder, { dev: true });
-
-        audioFilesServer = {
-            _app: app,
-            stop: () => {
-                // TODO: unsure how to implement this, app.close() isn't available like with Express
-                audioFilesServer = undefined;
-            },
-        };
-
-        app.use(staticServerMiddleware).listen(DEFAULT_AUDIO_FILES_SERVER_PORT, () => {
-            options.onReady?.();
-            if (audioFilesServer === undefined) {
-                reject("[server] Unknown error occured attempting to starrt audio files server");
-            } else {
+    return new Promise((resolve, _reject) => {
+        try {
+            if (audioFilesServer !== undefined) {
+                console.info(`[server] audio files server is already running`);
+                options.onReady?.();
                 resolve(audioFilesServer);
+                return;
             }
-        });
+
+            const rootFolderExists =
+                existsSync(options.audioFilesRootFolder) &&
+                readdirSync(options.audioFilesRootFolder).length > 0;
+
+            if (!rootFolderExists) {
+                throw new Error(
+                    `[server] audio files root folder ${options.audioFilesRootFolder} does not exist or is empty`,
+                );
+            }
+
+            console.debug(
+                `[server] starting audio files server at ${options.audioFilesRootFolder}...`,
+            );
+
+            const app = new App();
+            const staticServerMiddleware = sirv(options.audioFilesRootFolder, { dev: true });
+
+            audioFilesServer = {
+                _app: app,
+                stop: () => {
+                    // TODO: unsure how to implement this, app.close() isn't available like with Express
+                    audioFilesServer = undefined;
+                },
+            };
+
+            app.use(staticServerMiddleware).listen(DEFAULT_AUDIO_FILES_SERVER_PORT, () => {
+                options.onReady?.();
+                if (audioFilesServer === undefined) {
+                    throw new Error(
+                        "[server] Unknown error occured attempting to start audio files server",
+                    );
+                } else {
+                    resolve(audioFilesServer);
+                }
+            });
+        } catch (e) {
+            const err = e as Error;
+            options.onError?.(err);
+        }
     });
 }

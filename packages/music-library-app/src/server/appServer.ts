@@ -117,20 +117,24 @@ function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
 let audioFilesServer: AudioFilesServer | undefined;
 
 async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions) {
-    await startAudioFilesServer({
-        ...options,
-        onReady: () => {
-            process.parentPort.postMessage({
-                channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
-            });
-        },
-        onError: (error) => {
-            process.parentPort.postMessage({
-                channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
-                data: error,
-            });
-        },
-    });
+    try {
+        await startAudioFilesServer({
+            ...options,
+            onReady: () => {
+                process.parentPort.postMessage({
+                    channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
+                });
+            },
+            onError: (error) => {
+                process.parentPort.postMessage({
+                    channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
+                    data: error,
+                });
+            },
+        });
+    } catch (e) {
+        console.error((e as Error).message);
+    }
 }
 
 function handleAudioFilesServerStop() {

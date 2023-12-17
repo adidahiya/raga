@@ -182,18 +182,18 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
                   : undefined,
         [isAudioFilesServerReady, isUnsupportedFileFormat],
     );
-    const disabled = !isAudioFilesServerReady || isUnsupportedFileFormat;
+    const buttonDisabled = !isAudioFilesServerReady || isUnsupportedFileFormat;
 
     return (
         <Tooltip
             compact={true}
-            disabled={!disabled}
+            disabled={!buttonDisabled}
             placement="top"
             content={tooltipContent}
             hoverOpenDelay={300}
         >
             <Button
-                disabled={disabled}
+                disabled={buttonDisabled}
                 outlined={true}
                 small={true}
                 text="Analyze"
@@ -212,18 +212,27 @@ function AnalyzeAllTracksInSelectedPlaylistButton() {
         () => analyzePlaylist(selectedPlaylistId!),
         [analyzePlaylist, selectedPlaylistId],
     );
+    const buttonDisabled = audioFilesServerStatus !== "started";
 
     return (
-        <Button
-            className={styles.analyzeAllButton}
-            disabled={audioFilesServerStatus !== "started"}
-            ellipsizeText={true}
-            intent="primary"
-            loading={analyzerStatus === "busy"}
-            minimal={true}
-            onClick={handleAnalyzeClick}
-            small={true}
-            text="Analyze all"
-        />
+        <Tooltip
+            compact={true}
+            disabled={!buttonDisabled}
+            placement="top"
+            content={buttonDisabled ? "Disconnected from audio files server" : undefined}
+            hoverOpenDelay={300}
+        >
+            <Button
+                className={styles.analyzeAllButton}
+                disabled={buttonDisabled}
+                ellipsizeText={true}
+                intent="primary"
+                loading={analyzerStatus === "busy"}
+                minimal={true}
+                onClick={handleAnalyzeClick}
+                small={true}
+                text="Analyze all"
+            />
+        </Tooltip>
     );
 }

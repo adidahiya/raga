@@ -98,7 +98,7 @@ function AudioFilesServerButtons() {
                         audioFilesServerStatus === "started"
                             ? "refresh"
                             : audioFilesServerStatus === "failed"
-                              ? "cross"
+                              ? "refresh"
                               : "play"
                     }
                     loading={audioFilesServerStatus === "starting"}
