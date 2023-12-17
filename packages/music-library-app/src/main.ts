@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { app, BrowserWindow, ipcMain, UtilityProcess,utilityProcess } from "electron";
+import { app, BrowserWindow, ipcMain, UtilityProcess, utilityProcess } from "electron";
 
 import { DEBUG } from "./common/constants";
 import { ClientEventChannel, isServerEventChannel } from "./common/events";

@@ -10,7 +10,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { MouseEvent, useCallback, useEffect,useMemo, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 import { formatStatNumber } from "../common/format";
 import commonStyles from "./common/commonStyles.module.scss";

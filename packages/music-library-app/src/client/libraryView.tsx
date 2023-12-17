@@ -1,7 +1,7 @@
 import { Card, NonIdealState } from "@blueprintjs/core";
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
-import { Panel,PanelGroup } from "react-resizable-panels";
+import { Panel, PanelGroup } from "react-resizable-panels";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
 import LibraryActions from "./library/libraryActions";
