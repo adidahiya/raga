@@ -1,19 +1,17 @@
 import { Card, NonIdealState } from "@blueprintjs/core";
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
-import { PanelGroup, Panel } from "react-resizable-panels";
+import { Panel,PanelGroup } from "react-resizable-panels";
 
 import type { ContextBridgeApi } from "../contextBridgeApi";
-
-import PlaylistTable from "./playlistTable";
-import TrackTable from "./trackTable";
-import ResizeHandle from "./resizeHandle";
-import { appStore } from "./store/appStore";
+import LibraryActions from "./library/libraryActions";
 import LibraryOptions from "./library/libraryOptions";
 import LibraryStats from "./library/libraryStats";
-import LibraryActions from "./library/libraryActions";
-
 import styles from "./libraryView.module.scss";
+import PlaylistTable from "./playlistTable";
+import ResizeHandle from "./resizeHandle";
+import { appStore } from "./store/appStore";
+import TrackTable from "./trackTable";
 
 declare global {
     interface Window {

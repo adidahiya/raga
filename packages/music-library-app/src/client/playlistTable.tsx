@@ -10,13 +10,12 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useCallback, useMemo, useState, MouseEvent, useEffect } from "react";
+import { MouseEvent, useCallback, useEffect,useMemo, useState } from "react";
 
-import { appStore } from "./store/appStore";
-
+import { formatStatNumber } from "../common/format";
 import commonStyles from "./common/commonStyles.module.scss";
 import styles from "./playlistTable.module.scss";
-import { formatStatNumber } from "../common/format";
+import { appStore } from "./store/appStore";
 import { useLibraryOrThrow } from "./store/useLibraryOrThrow";
 
 export interface LibraryTableProps {

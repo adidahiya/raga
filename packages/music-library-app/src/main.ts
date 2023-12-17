@@ -1,8 +1,9 @@
-import { app, BrowserWindow, utilityProcess, ipcMain, UtilityProcess } from "electron";
 import path from "node:path";
 
-import { ClientEventChannel, isServerEventChannel } from "./common/events";
+import { app, BrowserWindow, ipcMain, UtilityProcess,utilityProcess } from "electron";
+
 import { DEBUG } from "./common/constants";
+import { ClientEventChannel, isServerEventChannel } from "./common/events";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {

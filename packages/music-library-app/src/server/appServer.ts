@@ -11,17 +11,18 @@ const {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require("@adahiya/music-library-tools-lib");
 
-import NodeID3 from "node-id3";
-import { fileURLToPath } from "node:url";
 import { writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+import NodeID3 from "node-id3";
 
 import {
     AudioFilesServerStartOptions,
     ClientEventChannel,
     ClientEventPayloadMap,
     ClientMessageEvent,
-    LoadSwinsianLibraryOptions,
     LoadedSwinsianLibraryEventPayload,
+    LoadSwinsianLibraryOptions,
     ServerEventChannel,
     WriteAudioFileTagOptions,
     WriteModifiedLibraryOptions,

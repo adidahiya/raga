@@ -7,7 +7,7 @@ module.exports = {
         "plugin:@typescript-eslint/stylistic-type-checked",
         "plugin:@typescript-eslint/strict-type-checked",
     ],
-    plugins: ["@typescript-eslint"],
+    plugins: ["@typescript-eslint", "simple-import-sort"],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         tsconfigRootDir: __dirname,
@@ -19,6 +19,8 @@ module.exports = {
             "error",
             { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
         ],
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
     },
     overrides: [
         {

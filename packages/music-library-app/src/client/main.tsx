@@ -1,7 +1,6 @@
 import { FocusStyleManager } from "@blueprintjs/core";
-import { createRoot } from "react-dom/client";
-
 import { createLogWriter } from "@roarr/browser-log-writer";
+import { createRoot } from "react-dom/client";
 
 import App from "./app";
 // import { INSTALL_REACT_DEVELOPER_TOOLS } from "../common/constants";

@@ -3,11 +3,11 @@ import {
     ButtonGroup,
     FormGroup,
     InputGroup,
+    Props,
     Section,
     SectionCard,
-    Props,
-    Tooltip,
     Switch,
+    Tooltip,
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 

@@ -1,16 +1,15 @@
 import {
-    SwinsianLibraryPlist,
     PlaylistDefinition,
+    SwinsianLibraryPlist,
     SwinsianTrackDefinition,
 } from "@adahiya/music-library-tools-lib";
 import type { IpcRendererEvent } from "electron";
 import { Roarr as log } from "roarr";
 import { serializeError } from "serialize-error";
 import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
 import { persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
-import { createSelectors } from "./createSelectors";
 import {
     ANALYZE_AUDIO_FILE_TIMEOUT,
     DEBUG,
@@ -22,13 +21,14 @@ import {
 } from "../../common/constants";
 import {
     ClientEventChannel,
-    LoadSwinsianLibraryOptions,
     LoadedSwinsianLibraryEventPayload,
+    LoadSwinsianLibraryOptions,
     ServerEventChannel,
 } from "../../common/events";
-import { loadAudioBuffer } from "../audio/buffer";
 import { analyzeBPM } from "../audio/bpm";
+import { loadAudioBuffer } from "../audio/buffer";
 import { isSupportedWebAudioFileFormat } from "../audio/webAudioUtils";
+import { createSelectors } from "./createSelectors";
 
 export type LibraryLoadingState = "none" | "loading" | "loaded" | "error";
 export type libraryWriteState = "none" | "ready" | "busy";

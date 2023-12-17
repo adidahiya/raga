@@ -3,22 +3,21 @@ import { Button, Classes, HTMLTable, Tooltip } from "@blueprintjs/core";
 import {
     CellContext,
     ColumnDef,
-    HeaderContext,
-    Row,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
+    HeaderContext,
+    Row,
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useShallow } from "zustand/react/shallow";
 import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { isSupportedWebAudioFileFormat } from "./audio/webAudioUtils";
+import commonStyles from "./common/commonStyles.module.scss";
 import { useVoidCallback } from "./common/hooks";
 import { appStore, useAppStore } from "./store/appStore";
-
-import commonStyles from "./common/commonStyles.module.scss";
 import styles from "./trackTable.module.scss";
 
 export interface TrackTableProps {
