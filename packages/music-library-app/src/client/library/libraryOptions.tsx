@@ -40,16 +40,16 @@ export default function LibraryOptions(props: LibraryOptionsProps) {
 }
 
 function AudioFilesServerForm() {
-    const audioFilesServerState = appStore.use.audioFilesServerState();
+    const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
     const audioFilesRootFolder = appStore.use.audioFilesRootFolder();
     const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         appStore.use.setAudioTracksRootFolder()(event.target.value);
     }, []);
 
     const label = `Audio files server${
-        audioFilesServerState === "started"
+        audioFilesServerStatus === "started"
             ? ": running"
-            : audioFilesServerState === "failed"
+            : audioFilesServerStatus === "failed"
               ? ": error"
               : ""
     }`;
@@ -60,9 +60,9 @@ function AudioFilesServerForm() {
                 value={audioFilesRootFolder}
                 onChange={setAudioFilesRootFolder}
                 intent={
-                    audioFilesServerState === "failed"
+                    audioFilesServerStatus === "failed"
                         ? "danger"
-                        : audioFilesServerState === "started"
+                        : audioFilesServerStatus === "started"
                           ? "success"
                           : undefined
                 }
@@ -73,7 +73,7 @@ function AudioFilesServerForm() {
 }
 
 function AudioFilesServerButtons() {
-    const audioFilesServerState = appStore.use.audioFilesServerState();
+    const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
     const startAudioFilesServer = appStore.use.startAudioFilesServer();
     const stopAudioFilesServer = appStore.use.stopAudioFilesServer();
 
@@ -83,11 +83,11 @@ function AudioFilesServerButtons() {
                 placement="top"
                 compact={true}
                 content={
-                    audioFilesServerState === "started"
+                    audioFilesServerStatus === "started"
                         ? "Restart audio files server"
-                        : audioFilesServerState === "failed"
+                        : audioFilesServerStatus === "failed"
                           ? "Failed to start audio files server"
-                          : audioFilesServerState === "stopped"
+                          : audioFilesServerStatus === "stopped"
                             ? "Start audio files server"
                             : "Starting audio files server..."
                 }
@@ -95,17 +95,17 @@ function AudioFilesServerButtons() {
                 <AnchorButton
                     minimal={true}
                     icon={
-                        audioFilesServerState === "started"
+                        audioFilesServerStatus === "started"
                             ? "refresh"
-                            : audioFilesServerState === "failed"
+                            : audioFilesServerStatus === "failed"
                               ? "cross"
                               : "play"
                     }
-                    loading={audioFilesServerState === "starting"}
+                    loading={audioFilesServerStatus === "starting"}
                     onClick={startAudioFilesServer}
                 />
             </Tooltip>
-            {audioFilesServerState === "started" && (
+            {audioFilesServerStatus === "started" && (
                 <Tooltip placement="top" compact={true} content="Stop audio files server">
                     <AnchorButton
                         minimal={true}

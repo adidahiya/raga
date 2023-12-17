@@ -162,7 +162,7 @@ function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number | undefin
 BPMColumnHeader.displayName = "BPMColumnHeader";
 
 function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
-    const isAudioFilesServerReady = appStore.use.audioFilesServerState() === "started";
+    const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
     const trackDef = props.row.original;
     const trackId = trackDef["Track ID"];
 
@@ -204,8 +204,8 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
 }
 
 function AnalyzeAllTracksInSelectedPlaylistButton() {
-    const audioFilesServerState = appStore.use.audioFilesServerState();
-    const analyzerState = appStore.use.analyzerState();
+    const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
+    const analyzerStatus = appStore.use.analyzerStatus();
     const analyzePlaylist = appStore.use.analyzePlaylist();
     const selectedPlaylistId = appStore.use.selectedPlaylistId();
     const handleAnalyzeClick = useVoidCallback(
@@ -216,10 +216,10 @@ function AnalyzeAllTracksInSelectedPlaylistButton() {
     return (
         <Button
             className={styles.analyzeAllButton}
-            disabled={audioFilesServerState !== "started"}
+            disabled={audioFilesServerStatus !== "started"}
             ellipsizeText={true}
             intent="primary"
-            loading={analyzerState === "busy"}
+            loading={analyzerStatus === "busy"}
             minimal={true}
             onClick={handleAnalyzeClick}
             small={true}
