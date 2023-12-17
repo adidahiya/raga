@@ -1,5 +1,5 @@
-import { join } from "node:path";
 import { homedir } from "node:os";
+import { join } from "node:path";
 
 export const getDefaultSwinsianExportFolder = () =>
     join(homedir(), "Music", "Swinsian export", "Latest");

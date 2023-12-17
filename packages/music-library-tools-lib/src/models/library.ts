@@ -1,9 +1,9 @@
+import { PlaylistDefinition } from "./playlists.js";
 import {
     BasicTrackDefinition,
     MusicAppTrackDefinition,
     SwinsianTrackDefinition,
 } from "./tracks.js";
-import { PlaylistDefinition } from "./playlists.js";
 
 export interface MusicLibraryPlist {
     "Application Version": string;

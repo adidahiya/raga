@@ -9,7 +9,8 @@
         "dist:arm": "deno compile --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write --target aarch64-apple-darwin --output bin/standalone/darwin-arm src/main.mts",
         "dist:x86": "deno compile --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write --target x86_64-apple-darwin --output bin/standalone/darwin-x86 src/main.mts",
         "clean": "rm -rf lib/ bin/standalone/",
-        "lint": "echo \"No linting configured\"",
+        "lint": "eslint .",
+        "lint-fix": "eslint --fix .",
         "publish-npm": "npm publish --access public",
         "run-deno": "deno run --v8-flags=--max-heap-size=4096 --allow-env --allow-sys --allow-read --allow-write src/main.mts",
         "run-node": "node lib/main.mjs"
@@ -24,6 +25,7 @@
         "@types/dedent": "^0.7.2",
         "@types/node": "^20.10.4",
         "@types/prompts": "^2.4.9",
+        "eslint": "^8.55.0",
         "typescript": "^5.3.3"
     },
     "engines": {

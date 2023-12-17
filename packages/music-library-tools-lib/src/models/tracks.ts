@@ -11,11 +11,11 @@ export const BasicTrackProperty = {
 };
 export type BasicTrackProperty = (typeof BasicTrackProperty)[keyof typeof BasicTrackProperty];
 
-export type BasicTrackDefinition = {
+export interface BasicTrackDefinition {
     [BasicTrackProperty.TRACK_ID]: number;
     [BasicTrackProperty.PERSISTENT_ID]: string;
     [BasicTrackProperty.LOCATION]: string;
-};
+}
 
 /**
  * @returns whether a record contains all the basic track properties

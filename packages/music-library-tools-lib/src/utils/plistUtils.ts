@@ -1,5 +1,7 @@
-import plist from "plist";
 import { readFileSync } from "node:fs";
+
+import plist from "plist";
+
 import { collapsePropertiesIntoSingleLine } from "./xmlUtils.js";
 
 export function loadPlistFile(path: string): plist.PlistObject {

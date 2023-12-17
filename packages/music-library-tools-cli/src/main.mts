@@ -1,7 +1,5 @@
-import dedent from "dedent";
+import { existsSync, writeFileSync } from "node:fs";
 import { argv } from "node:process";
-import parseArgs from "minimist";
-import prompts from "prompts";
 
 import {
     convertSwinsianToItunesXmlLibrary,
@@ -11,7 +9,9 @@ import {
     loadSwinsianLibrary,
     serializeLibraryPlist,
 } from "@adahiya/music-library-tools-lib";
-import { existsSync, writeFileSync } from "node:fs";
+import dedent from "dedent";
+import parseArgs from "minimist";
+import prompts from "prompts";
 
 const args = parseArgs(argv.slice(1), {
     boolean: ["help", "non-interactive"],
@@ -60,10 +60,14 @@ if (!args["non-interactive"]) {
             initial: getDefaultSwinsianExportFolder(),
         },
     ]);
-    whichScript = answers.whichScript;
-    libraryLocation = answers.libraryLocation;
+    whichScript = answers.whichScript as ScriptId;
+    libraryLocation = answers.libraryLocation as string;
 }
 
+// HACKHACK: there's only one kind of ScriptId, so ESLint correctly detects this as an unnecessary conditional.
+// It's unlikely that we'll add more scripts now that the UI is under active development, but keep this execution
+// pattern in place just in case we do.
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 if (whichScript === ScriptId.ConvertSwinsianLibrary) {
     const inputLibraryPath = getSwinsianLibraryPath(libraryLocation);
     const outputLibraryPath = getOutputLibraryPath(libraryLocation);
