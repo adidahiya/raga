@@ -4,7 +4,7 @@
 
 ## Usage guide
 
-Requirements: Node.js v20.8+ (see version specified in `.nvmrc`)
+Requirements: [Node.js](https://nodejs.org/en) v20.x (see version specified in `.nvmrc`)
 
 Installation:
 
