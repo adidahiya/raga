@@ -84,6 +84,7 @@ __metadata:
     "@types/node": "npm:^20.10.4"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
+    ansis: "npm:^2.0.3"
     dedent: "npm:^1.5.1"
     eslint: "npm:^8.56.0"
     html-entities: "npm:^2.4.0"

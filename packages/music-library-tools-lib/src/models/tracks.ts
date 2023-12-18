@@ -1,5 +1,7 @@
 import { extname } from "node:path";
 
+import { log } from "../utils/log";
+
 /**
  * Basic track properties, the bare minimum required for these scripts to function and for various applications
  * to locate & manage tracks.
@@ -26,7 +28,7 @@ export function isBasicTrackDefinition(
     const expectedProperties = Object.values(BasicTrackProperty);
     const missingProperties = expectedProperties.filter((prop) => track[prop] === undefined);
     if (missingProperties.length > 0) {
-        console.info(`Track missing expected properties: ${missingProperties.join(", ")}`);
+        log.info(`Track missing expected properties: ${missingProperties.join(", ")}`);
         return false;
     }
     return true;
@@ -102,7 +104,7 @@ export function isTrackDefinition(
     const expectedProperties = Object.values(TrackProperty);
     const missingProperties = expectedProperties.filter((prop) => track[prop] === undefined);
     if (missingProperties.length > 0) {
-        console.info(`Track missing expected properties: ${missingProperties.join(", ")}`);
+        log.info(`Track missing expected properties: ${missingProperties.join(", ")}`);
         return false;
     }
     return true;

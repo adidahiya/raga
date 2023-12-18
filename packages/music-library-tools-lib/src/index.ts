@@ -1,4 +1,3 @@
-export {} from "./";
 export {
     getDefaultSwinsianExportFolder,
     getOutputLibraryPath,
