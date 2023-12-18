@@ -1,9 +1,11 @@
 import path from "node:path";
 
+import { cyan } from "ansis";
 import { app, BrowserWindow, ipcMain, UtilityProcess, utilityProcess } from "electron";
 
 import { DEBUG } from "./common/constants";
 import { ClientEventChannel, isServerEventChannel } from "./common/events";
+import { createScopedLogger } from "./common/logUtils";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -13,6 +15,8 @@ if (require("electron-squirrel-startup")) {
 // see https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
+
+export const log = createScopedLogger("main", cyan);
 
 let mainWindow: BrowserWindow | null = null;
 let serverProcess: UtilityProcess | null = null;
@@ -42,7 +46,7 @@ const createWindow = async () => {
         );
     }
 
-    console.debug(`[main] initializing server process...`);
+    log.debug(`initializing server process...`);
     // Note that server.ts must be configured as an electron-forge Vite entry point to get transpiled adjacent to this module
     serverProcess = utilityProcess.fork(path.resolve(__dirname, "./server.js"), [], {
         serviceName: "server",
@@ -56,9 +60,7 @@ const createWindow = async () => {
                 data,
             };
 
-            console.debug(
-                `[main] received "${channel}" event from renderer, forwarding to utility process`,
-            );
+            log.debug(`received "${channel}" event from renderer, forwarding to utility process`);
 
             serverProcess?.postMessage(messageToForward);
         });
@@ -69,9 +71,7 @@ const createWindow = async () => {
             return;
         }
 
-        console.debug(
-            `[main] received "${channel}" message from server, forwarding to renderer process`,
-        );
+        log.debug(`received "${channel}" message from server, forwarding to renderer process`);
 
         mainWindow?.webContents.send(channel, data);
     });
