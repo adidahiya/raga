@@ -11,6 +11,7 @@ import {
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 
+import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../../common/constants";
 import { appStore } from "../store/appStore";
 
 export type LibraryOptionsProps = Props;
@@ -40,31 +41,44 @@ export default function LibraryOptions(props: LibraryOptionsProps) {
 }
 
 function AudioFilesServerForm() {
-    const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
-    const audioFilesRootFolder = appStore.use.audioFilesRootFolder();
+    const status = appStore.use.audioFilesServerStatus();
+    const rootFolder = appStore.use.audioFilesRootFolder();
     const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         appStore.use.setAudioTracksRootFolder()(event.target.value);
     }, []);
 
-    const label = `Audio files server${
-        audioFilesServerStatus === "started"
-            ? ": running"
-            : audioFilesServerStatus === "failed"
-              ? ": error"
-              : ""
-    }`;
+    const label = (
+        <span>
+            Audio files server
+            {status === "failed" ? (
+                <strong> failed</strong>
+            ) : status === "starting" ? (
+                <em> starting...</em>
+            ) : status === "started" ? (
+                <>
+                    {" "}
+                    is running at{" "}
+                    <a
+                        href={`http://localhost:${DEFAULT_AUDIO_FILES_SERVER_PORT}/`}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        localhost:{DEFAULT_AUDIO_FILES_SERVER_PORT}
+                    </a>
+                </>
+            ) : (
+                ""
+            )}
+        </span>
+    );
 
     return (
         <FormGroup label={label}>
             <InputGroup
-                value={audioFilesRootFolder}
+                value={rootFolder}
                 onChange={setAudioFilesRootFolder}
                 intent={
-                    audioFilesServerStatus === "failed"
-                        ? "danger"
-                        : audioFilesServerStatus === "started"
-                          ? "success"
-                          : undefined
+                    status === "failed" ? "danger" : status === "started" ? "success" : undefined
                 }
                 rightElement={<AudioFilesServerButtons />}
             />

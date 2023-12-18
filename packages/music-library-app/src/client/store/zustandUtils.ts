@@ -1,4 +1,4 @@
-import type { StateCreator, StoreApi, UseBoundStore } from "zustand";
+import type { Mutate, StateCreator, StoreApi, UseBoundStore } from "zustand";
 
 import type { AppStore } from "./appStore";
 
@@ -12,6 +12,15 @@ export type AppStoreSliceCreator<S extends Partial<AppStore>> = StateCreator<
     [["zustand/immer", never]],
     S
 >;
+
+// copied from zustand/vanilla.d.ts
+type Get<T, K, F> = K extends keyof T ? T[K] : F;
+export type AppStoreSet = Get<
+    Mutate<StoreApi<AppStore>, [["zustand/immer", never]]>,
+    "setState",
+    never
+>;
+export type AppStoreGet = () => AppStore;
 
 type WithSelectors<S> = S extends { getState: () => infer T }
     ? S & { use: { [K in keyof T]: () => T[K] } }

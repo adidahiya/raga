@@ -3,8 +3,8 @@ import {
     SwinsianLibraryPlist,
     SwinsianTrackDefinition,
 } from "@adahiya/music-library-tools-lib";
-import type { IpcRendererEvent } from "electron";
 import { Roarr as log } from "roarr";
+import { serializeError } from "serialize-error";
 
 import {
     DEBUG,
@@ -80,52 +80,49 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     },
 
     // complex actions
-    loadSwinsianLibrary: (options: LoadSwinsianLibraryOptions = {}) =>
-        new Promise((resolve, reject) => {
-            set({ libraryLoadingState: "loading" });
+    loadSwinsianLibrary: async (options: LoadSwinsianLibraryOptions = {}) => {
+        set({ libraryLoadingState: "loading" });
 
-            const loadSwinsianLibraryTimeout = setTimeout(() => {
-                log.error(`[client] timed out loading Swinsian library`);
-                set({ libraryLoadingState: "error" });
-                reject();
-            }, LOAD_SWINSIAN_LIBRARY_TIMEOUT);
-            window.api.send("loadSwinsianLibrary", options);
-
-            window.api.handleOnce(
-                "loadedSwinsianLibrary",
-                (_event: IpcRendererEvent, data?: LoadedSwinsianLibraryEventPayload) => {
-                    clearTimeout(loadSwinsianLibraryTimeout);
-
-                    log.trace("[renderer] got loaded library");
-                    if (DEBUG) {
-                        console.log(data);
-                    }
-
-                    set((state) => {
-                        if (data === undefined) {
-                            state.libraryLoadingState = "error";
-                            reject();
-                        } else {
-                            state.libraryLoadingState = "loaded";
-                            state.library = data.library;
-                            state.libraryFilepath = data.filepath;
-                            state.libraryPlaylists = getLibraryPlaylists(data.library);
-                            resolve();
-                        }
-                    });
-                },
+        window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
+        try {
+            const data = await window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
+                ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+                LOAD_SWINSIAN_LIBRARY_TIMEOUT,
             );
-        }),
 
-    writeModiifedLibrary: () => {
+            if (data === undefined) {
+                set({ libraryLoadingState: "error" });
+                throw new Error("unknown error");
+            }
+
+            log.trace("[renderer] got loaded library");
+            if (DEBUG) {
+                console.log(data);
+            }
+
+            set((state) => {
+                state.libraryLoadingState = "loaded";
+                state.library = data.library;
+                state.libraryFilepath = data.filepath;
+                state.libraryPlaylists = getLibraryPlaylists(data.library);
+            });
+        } catch (e) {
+            set({ libraryLoadingState: "error" });
+            log.error(
+                `[client] failed to load Swinsian library: ${JSON.stringify(serializeError(e))}`,
+            );
+        }
+    },
+
+    writeModiifedLibrary: async () => {
         const { library, libraryFilepath, libraryWriteState } = get();
 
         if (library === undefined) {
             log.error("[client] No library loaded");
-            return Promise.reject();
+            return;
         } else if (libraryWriteState !== "ready") {
             log.info(`[client] No library modifications to write to disk`);
-            return Promise.resolve();
+            return;
         }
 
         log.trace(`[client] Writing modified library to disk...`);
@@ -135,20 +132,16 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
             filepath: libraryFilepath,
         });
 
-        return new Promise((resolve, reject) => {
-            const writeModifiedLibraryTimeout = setTimeout(() => {
-                log.error(`[client] timed out writing modified library to disk`);
-                set({ libraryWriteState: "ready" });
-                reject();
-            }, WRITE_MODIFIED_LIBRARY_TIMEOUT);
-
-            window.api.handleOnce(ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE, () => {
-                clearTimeout(writeModifiedLibraryTimeout);
-                log.trace(`[client] Done writing modified library to disk.`);
-                set({ libraryWriteState: "none" });
-                resolve();
-            });
-        });
+        try {
+            await window.api.waitForResponse(
+                ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
+                WRITE_MODIFIED_LIBRARY_TIMEOUT,
+            );
+            set({ libraryWriteState: "none" });
+        } catch (e) {
+            log.error(`[client] timed out writing modified library to disk`);
+            set({ libraryWriteState: "ready" });
+        }
     },
 });
 

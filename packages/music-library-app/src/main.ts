@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import { cyan } from "ansis";
-import { app, BrowserWindow, ipcMain, UtilityProcess, utilityProcess } from "electron";
+import { app, BrowserWindow, ipcMain, shell, UtilityProcess, utilityProcess } from "electron";
 
 import { DEBUG } from "./common/constants";
 import { ClientEventChannel, isServerEventChannel } from "./common/events";
@@ -60,7 +60,7 @@ const createWindow = async () => {
                 data,
             };
 
-            log.debug(`received "${channel}" event from renderer, forwarding to utility process`);
+            log.trace(`received "${channel}" event from renderer, forwarding to utility process`);
 
             serverProcess?.postMessage(messageToForward);
         });
@@ -71,9 +71,14 @@ const createWindow = async () => {
             return;
         }
 
-        log.debug(`received "${channel}" message from server, forwarding to renderer process`);
+        log.trace(`received "${channel}" message from server, forwarding to renderer process`);
 
         mainWindow?.webContents.send(channel, data);
+    });
+
+    mainWindow.webContents.setWindowOpenHandler((details) => {
+        void shell.openExternal(details.url); // Open URL in user's browser.
+        return { action: "deny" }; // Prevent the app from opening the URL.
     });
 
     if (DEBUG) {

@@ -1,8 +1,11 @@
-const SIMPLE_HTTP_SERVER_ROOT = "/Volumes/CZSSD/music/tracks";
-const SIMPLE_HTTP_SERVER_PORT = 8000;
+export interface LoadAudioBufferOptions {
+    fileLocation: string;
+    serverPort: number;
+    serverRootFolder: string;
+}
 
-export async function loadAudioBuffer(fileLocation: string): Promise<AudioBuffer> {
-    const fileUrl = fileLocationToServerUrl(fileLocation);
+export async function loadAudioBuffer(options: LoadAudioBufferOptions): Promise<AudioBuffer> {
+    const fileUrl = getAudioFileURL(options);
     // see https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Advanced_techniques#loading_the_sample
     const response = await fetch(fileUrl);
     const arrayBuffer = await response.arrayBuffer();
@@ -10,9 +13,10 @@ export async function loadAudioBuffer(fileLocation: string): Promise<AudioBuffer
     return audioBuffer;
 }
 
-function fileLocationToServerUrl(fileLocation: string): string {
-    return fileLocation.replace(
-        `file://${SIMPLE_HTTP_SERVER_ROOT}`,
-        `http://localhost:${SIMPLE_HTTP_SERVER_PORT}`,
-    );
+export function getAudioFileURL({
+    fileLocation,
+    serverPort,
+    serverRootFolder,
+}: LoadAudioBufferOptions): string {
+    return fileLocation.replace(`file://${serverRootFolder}`, `http://localhost:${serverPort}`);
 }
