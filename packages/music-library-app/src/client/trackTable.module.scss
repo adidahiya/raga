@@ -4,7 +4,6 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    border-top: solid 1px bp.$pt-dark-divider-white;
 
     :global(.#{bp.$ns}-non-ideal-state) {
         flex-grow: 1;
@@ -33,7 +32,6 @@
 
 .body {
     overflow-y: scroll;
-    border-top: solid 1px bp.$pt-dark-divider-white;
 
     td {
         white-space: nowrap;

@@ -1,7 +1,6 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 .container {
-    border-top: solid 1px bp.$pt-dark-divider-white;
     width: 100%;
 }
 
@@ -23,7 +22,6 @@
 
 .body {
     overflow-y: scroll;
-    border-top: solid 1px bp.$pt-dark-divider-white;
 
     tr.selectedPath {
         background-color: darken(bp.$blue1, 15%);

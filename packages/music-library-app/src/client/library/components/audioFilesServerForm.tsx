@@ -1,46 +1,10 @@
-import {
-    AnchorButton,
-    ButtonGroup,
-    FormGroup,
-    InputGroup,
-    Props,
-    Section,
-    SectionCard,
-    Switch,
-    Tooltip,
-} from "@blueprintjs/core";
+import { AnchorButton, ButtonGroup, FormGroup, InputGroup, Tooltip } from "@blueprintjs/core";
 import { useCallback } from "react";
 
-import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../../common/constants";
-import { appStore } from "../store/appStore";
+import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../../../common/constants";
+import { appStore } from "../../store/appStore";
 
-export type LibraryOptionsProps = Props;
-
-export default function LibraryOptions(props: LibraryOptionsProps) {
-    const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-    const setAnalyzeBPMPerTrack = appStore.use.setAnalyzeBPMPerTrack();
-
-    const handleToggleAnalyzeBPMPerTrack = useCallback(() => {
-        setAnalyzeBPMPerTrack(!analyzeBPMPerTrack);
-    }, [analyzeBPMPerTrack, setAnalyzeBPMPerTrack]);
-
-    return (
-        <Section className={props.className} compact={true} title="Options">
-            <SectionCard>
-                <AudioFilesServerForm />
-            </SectionCard>
-            <SectionCard>
-                <Switch
-                    label="Analyze BPM per track"
-                    onChange={handleToggleAnalyzeBPMPerTrack}
-                    checked={analyzeBPMPerTrack}
-                />
-            </SectionCard>
-        </Section>
-    );
-}
-
-function AudioFilesServerForm() {
+export function AudioFilesServerForm() {
     const status = appStore.use.audioFilesServerStatus();
     const rootFolder = appStore.use.audioFilesRootFolder();
     const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,13 +37,14 @@ function AudioFilesServerForm() {
     );
 
     return (
-        <FormGroup label={label}>
+        <FormGroup label={label} inline={true}>
             <InputGroup
                 value={rootFolder}
                 onChange={setAudioFilesRootFolder}
                 intent={
                     status === "failed" ? "danger" : status === "started" ? "success" : undefined
                 }
+                style={{ minWidth: 300 }}
                 rightElement={<AudioFilesServerButtons />}
             />
         </FormGroup>

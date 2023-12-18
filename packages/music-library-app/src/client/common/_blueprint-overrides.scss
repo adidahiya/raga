@@ -19,3 +19,12 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
     min-height: 20px;
     font-size: 12px;
 }
+
+.#{bp.$ns}-section.#{bp.$ns}-compact .#{bp.$ns}-section-card.#{bp.$ns}-padded {
+    padding: 10px 15px;
+}
+
+.#{bp.$ns}-form-group,
+.#{bp.$ns}-control {
+    margin: 0;
+}

@@ -1,12 +1,11 @@
 import { Card, NonIdealState } from "@blueprintjs/core";
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
+import { formatStatNumber } from "../common/format";
 import type { ContextBridgeApi } from "../contextBridgeApi";
-import LibraryActions from "./library/libraryActions";
-import LibraryOptions from "./library/libraryOptions";
-import LibraryStats from "./library/libraryStats";
+import LibraryHeaderSection from "./library/libraryHeaderSection";
 import styles from "./libraryView.module.scss";
 import PlaylistTable from "./playlistTable";
 import ResizeHandle from "./resizeHandle";
@@ -60,13 +59,16 @@ function Library() {
     return (
         <div className={classNames("flex-column", styles.library)}>
             <div className={styles.libraryHeader} ref={headerRef}>
-                <LibraryStats className={styles.statsSection} />
-                <LibraryOptions className={styles.libraryOptions} />
-                <LibraryActions className={styles.libraryActions} />
+                <LibraryHeaderSection className={styles.libraryHeaderSection} />
             </div>
             <PanelGroup direction="horizontal">
-                <Panel defaultSize={20} minSize={20}>
+                <Panel
+                    className={classNames("flex-column", styles.librarySidebar)}
+                    defaultSize={20}
+                    minSize={20}
+                >
                     <PlaylistTable headerHeight={headerHeight} />
+                    <LibrarySidebarFooter />
                 </Panel>
                 <ResizeHandle />
                 <Panel minSize={30}>
@@ -85,3 +87,21 @@ function Library() {
     );
 }
 LibraryView.displayName = "LibraryView";
+
+function LibrarySidebarFooter() {
+    const library = appStore.use.library();
+    const masterPlaylist = useMemo(
+        () => library?.Playlists.find((playlist) => playlist.Master),
+        [library],
+    );
+
+    if (masterPlaylist === undefined) {
+        return undefined;
+    }
+
+    return (
+        <div className={styles.librarySidebarFooter}>
+            Total # tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}
+        </div>
+    );
+}
