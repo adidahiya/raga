@@ -7,3 +7,7 @@ Installation: download latest app binary for your OS platform from the [Releases
 ### Getting started
 
 > Coming soon
+
+### Screenshot
+
+![app screenshot](./docs/app.png)
