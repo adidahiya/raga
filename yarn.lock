@@ -33,6 +33,7 @@ __metadata:
     "@types/react": "npm:^18.2.45"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.18"
+    ansis: "npm:^2.0.3"
     classnames: "npm:^2.3.2"
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^2.30.0"
@@ -2297,6 +2298,13 @@ __metadata:
   version: 6.2.1
   resolution: "ansi-styles@npm:6.2.1"
   checksum: 70fdf883b704d17a5dfc9cde206e698c16bcd74e7f196ab821511651aee4f9f76c9514bdfa6ca3a27b5e49138b89cb222a28caf3afe4567570139577f991df32
+  languageName: node
+  linkType: hard
+
+"ansis@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "ansis@npm:2.0.3"
+  checksum: 7ac1a7505536ec20523fc57e2234c38f7bc0620eff90bfb3efe237384ccc392dae4445c77ec6ffe5159002a65cc5b77227610b9228bb2b68e065490520ef9476
   languageName: node
   linkType: hard
 

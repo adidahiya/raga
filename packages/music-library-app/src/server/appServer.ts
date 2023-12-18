@@ -28,12 +28,13 @@ import {
     WriteModifiedLibraryOptions,
 } from "../common/events";
 import { AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
+import { log } from "./serverLogger";
 
 let library: SwinsianLibraryPlist | undefined;
 
 export function initAppServer() {
     process.parentPort.on("message", ({ data: event }: ClientMessageEvent) => {
-        console.debug(`[server] received '${event.channel}' event`);
+        log.debug(`received '${event.channel}' event`);
 
         // HACKHACK: need to figure out the right syntax to get conditional inferred types working for event payloads
         switch (event.channel) {
@@ -73,7 +74,7 @@ function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
     }
 
     if (library === undefined) {
-        console.error(`[server] Could not load Swinsian library from ${filepath}`);
+        log.error(`Could not load Swinsian library from ${filepath}`);
         return;
     }
 
@@ -101,10 +102,8 @@ function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
 
     const result = NodeID3.update(newTags, filepath);
     if (result === true) {
-        console.debug(
-            `[server] Wrote tags for file located at ${options.fileLocation}: ${JSON.stringify(
-                newTags,
-            )}`,
+        log.debug(
+            `Wrote tags for file located at ${options.fileLocation}: ${JSON.stringify(newTags)}`,
         );
         process.parentPort.postMessage({
             channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
@@ -133,13 +132,13 @@ async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions
             },
         });
     } catch (e) {
-        console.error((e as Error).message);
+        log.error((e as Error).message);
     }
 }
 
 function handleAudioFilesServerStop() {
     if (audioFilesServer === undefined) {
-        console.info("[server] Received request to stop audio files server, but it is not running");
+        log.info("Received request to stop audio files server, but it is not running");
         return;
     }
 
@@ -165,8 +164,8 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
     const swinsianLibraryOutputPath = options.filepath;
     const modifiedLibraryOutputPath = getOutputLibraryPath() as string;
 
-    console.debug(`[server] Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
-    console.debug(`[server] Writing modified library to ${modifiedLibraryOutputPath}...`);
+    log.debug(`Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
+    log.debug(`Writing modified library to ${modifiedLibraryOutputPath}...`);
 
     writeFileSync(swinsianLibraryOutputPath, serializedSwinsianLibrary);
     writeFileSync(modifiedLibraryOutputPath, serializedMusicAppLibrary);
@@ -175,5 +174,5 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
         channel: ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
     });
 
-    console.debug(`[server] ... done!`);
+    log.debug(`...done!`);
 }

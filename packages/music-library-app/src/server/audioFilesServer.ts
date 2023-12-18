@@ -4,6 +4,7 @@ import { App } from "@tinyhttp/app";
 import sirv from "sirv";
 
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
+import { log } from "./serverLogger";
 
 let audioFilesServer: AudioFilesServer | undefined;
 
@@ -25,7 +26,7 @@ export async function startAudioFilesServer(
     return new Promise((resolve, _reject) => {
         try {
             if (audioFilesServer !== undefined) {
-                console.info(`[server] audio files server is already running`);
+                log.info(`audio files server is already running`);
                 options.onReady?.();
                 resolve(audioFilesServer);
                 return;
@@ -41,9 +42,7 @@ export async function startAudioFilesServer(
                 );
             }
 
-            console.debug(
-                `[server] starting audio files server at ${options.audioFilesRootFolder}...`,
-            );
+            log.debug(`starting audio files server at ${options.audioFilesRootFolder}...`);
 
             const app = new App();
             const staticServerMiddleware = sirv(options.audioFilesRootFolder, { dev: true });
