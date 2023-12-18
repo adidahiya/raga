@@ -13,10 +13,10 @@ import classNames from "classnames";
 
 import { useVoidCallback } from "../common/hooks";
 import { appStore } from "../store/appStore";
-import { AnalyzerSettings } from "./components/analyzerSettings";
-import { AudioFilesServerForm } from "./components/audioFilesServerForm";
-import { LibraryLastModifiedText } from "./components/libraryLastModifiedText";
-import { WriteModifiedLibraryButton } from "./components/writeModifiedLibraryButton";
+import { AnalyzerSettings } from "./library/analyzerSettings";
+import { AudioFilesServerForm } from "./library/audioFilesServerForm";
+import { LibraryLastModifiedText } from "./library/libraryLastModifiedText";
+import { WriteModifiedLibraryButton } from "./library/writeModifiedLibraryButton";
 
 export type LibraryHeaderSectionProps = Props;
 

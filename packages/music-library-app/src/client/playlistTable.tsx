@@ -255,7 +255,7 @@ function PlaylistTableRow(row: Row<PlaylistRow>) {
         (event: MouseEvent) => {
             if (row.getCanExpand()) {
                 toggleExpanded();
-            } else {
+            } else if (row.getCanSelect()) {
                 toggleSelected(event);
                 setSelectedPlaylistId(rowPlaylistId);
             }

@@ -14,11 +14,19 @@ import {
     AudioFilesServerState,
     createAudioFilesServerSlice,
 } from "./slices/audioFilesServerSlice";
+import {
+    AudioPlayerActions,
+    AudioPlayerState,
+    createAudioPlayerSlice,
+} from "./slices/audioPlayerSlice";
 import { createLibrarySlice, LibraryActions, LibraryState } from "./slices/librarySlice";
 import { createSelectors } from "./zustandUtils";
 
-type AppState = AudioFilesServerState & LibraryState & AudioAnalyzerState;
-type AppActions = AudioFilesServerActions & LibraryActions & AudioAnalyzerActions;
+type AppState = AudioFilesServerState & LibraryState & AudioAnalyzerState & AudioPlayerState;
+type AppActions = AudioFilesServerActions &
+    LibraryActions &
+    AudioAnalyzerActions &
+    AudioPlayerActions;
 export type AppStore = AppState & AppActions;
 
 const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
@@ -26,6 +34,7 @@ const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
     "audioFilesServerStatus",
     "libraryLoadingState",
     "library",
+    "waveSurfer",
 ];
 
 export const useAppStore = create<AppStore>()(
@@ -36,6 +45,7 @@ export const useAppStore = create<AppStore>()(
             ...createAudioFilesServerSlice(...args),
             ...createLibrarySlice(...args),
             ...createAudioAnalyzerSlice(...args),
+            ...createAudioPlayerSlice(...args),
         })),
         {
             name: `${LOCAL_STORAGE_KEY}-appStore`,

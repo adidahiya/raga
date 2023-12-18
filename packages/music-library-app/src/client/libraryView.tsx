@@ -5,7 +5,8 @@ import { Panel, PanelGroup } from "react-resizable-panels";
 
 import { formatStatNumber } from "../common/format";
 import type { ContextBridgeApi } from "../contextBridgeApi";
-import LibraryHeaderSection from "./library/libraryHeaderSection";
+import { AudioPlayer } from "./components/audioPlayer";
+import LibraryHeaderSection from "./components/libraryHeaderSection";
 import styles from "./libraryView.module.scss";
 import PlaylistTable from "./playlistTable";
 import ResizeHandle from "./resizeHandle";
@@ -60,6 +61,9 @@ function Library() {
         <div className={classNames("flex-column", styles.library)}>
             <div className={styles.libraryHeader} ref={headerRef}>
                 <LibraryHeaderSection className={styles.libraryHeaderSection} />
+            </div>
+            <div className={styles.audioPlayer}>
+                <AudioPlayer />
             </div>
             <PanelGroup direction="horizontal">
                 <Panel

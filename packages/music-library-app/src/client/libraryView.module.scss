@@ -28,10 +28,13 @@
 }
 
 .libraryHeaderSection {
-    // empty
     :global(.#{bp.$ns}-form-group:not(:last-of-type)) {
         margin-bottom: 5px;
     }
+}
+
+.audioPlayer {
+    // empty
 }
 
 .librarySidebar {

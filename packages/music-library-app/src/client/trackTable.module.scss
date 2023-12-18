@@ -42,6 +42,10 @@
             border-right: solid 1px bp.$pt-dark-divider-white;
         }
     }
+
+    tr.selected {
+        background-color: bp.$blue1;
+    }
 }
 
 .bpmColumnHeader {

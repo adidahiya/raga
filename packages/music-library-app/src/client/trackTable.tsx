@@ -11,7 +11,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { useMemo } from "react";
+import { MouseEvent, useCallback, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { isSupportedWebAudioFileFormat } from "./audio/webAudioUtils";
@@ -138,8 +138,28 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
 TrackTable.displayName = "TrackTable";
 
 function TrackTableRow(row: Row<TrackDefinition>) {
+    const setSelectedTrackId = appStore.use.setSelectedTrackId();
+    const rowTrackId = row.original["Track ID"];
+    const isRowSelected = row.getIsSelected();
+    const toggleSelected = row.getToggleSelectedHandler();
+
+    const handleClick = useCallback(
+        (event: MouseEvent) => {
+            if (row.getCanSelect()) {
+                toggleSelected(event);
+                setSelectedTrackId(rowTrackId);
+            }
+        },
+        [row, rowTrackId, setSelectedTrackId, toggleSelected],
+    );
+
     return (
-        <tr>
+        <tr
+            className={classNames({
+                [styles.selected]: isRowSelected,
+            })}
+            onClick={handleClick}
+        >
             {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} style={{ width: cell.column.getSize() }}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

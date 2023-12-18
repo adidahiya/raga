@@ -15,3 +15,11 @@ $dark-app-background-color: bp.$dark-gray1;
         background: $dark-app-background-color;
     }
 }
+
+.appChrome {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}

@@ -30,6 +30,7 @@ export interface LibraryState {
     libraryPlaylists: PartialRecord<string, PlaylistDefinition> | undefined;
     libraryFilepath: string | undefined;
     selectedPlaylistId: string | undefined;
+    selectedTrackId: number | undefined;
 }
 
 export interface LibraryActions {
@@ -46,6 +47,7 @@ export interface LibraryActions {
     setLibraryPlist: (libraryPlist: SwinsianLibraryPlist | undefined) => void;
     setLibraryFilepath: (libraryFilepath: string | undefined) => void;
     setSelectedPlaylistId: (selectedPlaylistId: string | undefined) => void;
+    setSelectedTrackId: (selectedTrackId: number | undefined) => void;
 }
 
 export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActions> = (
@@ -58,6 +60,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     libraryPlaylists: undefined,
     libraryWriteState: "none",
     selectedPlaylistId: undefined,
+    selectedTrackId: undefined,
 
     // simple getters
     getTrackDef: (id) => get().library?.Tracks[id],
@@ -77,6 +80,9 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     },
     setLibraryFilepath: (libraryFilepath) => {
         set({ libraryFilepath });
+    },
+    setSelectedTrackId: (selectedTrackId) => {
+        set({ selectedTrackId });
     },
 
     // complex actions
