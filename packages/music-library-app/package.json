@@ -50,12 +50,14 @@
         "@types/react": "^18.2.45",
         "@types/react-devtools": "^3.6.2",
         "@types/react-dom": "^18.2.18",
+        "@vitejs/plugin-react": "^4.2.1",
         "electron": "^28.0.0",
         "electron-devtools-installer": "^3.2.0",
         "eslint": "^8.56.0",
         "react-devtools": "^5.0.0",
         "sass": "^1.69.5",
-        "typescript": "^5.3.3"
+        "typescript": "^5.3.3",
+        "vite": "^5.0.10"
     },
     "keywords": [],
     "author": {

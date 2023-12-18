@@ -18,7 +18,7 @@ export default function LibraryStats(props: LibraryStatsProps) {
     return (
         <Section className={props.className} compact={true} title="Stats">
             <SectionCard>
-                <p className={skeltonClasses}>Date created: {format(dateCreated, "Pp")}</p>
+                <p className={skeltonClasses}>Last modified: {format(dateCreated, "Pp")}</p>
                 <p className={skeltonClasses}>Location: {libraryFilepath}</p>
                 {masterPlaylist && (
                     <>
