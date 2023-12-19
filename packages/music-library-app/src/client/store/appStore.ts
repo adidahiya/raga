@@ -75,3 +75,10 @@ export const useAppStore = create<AppStore>()(
 );
 
 export const appStore = createSelectors(useAppStore);
+
+export const useAudioPlayerControls = () =>
+    useAppStore((state) => ({
+        isPlaying: state.audioIsPlaying,
+        play: state.audioPlay,
+        pause: state.audioPause,
+    }));

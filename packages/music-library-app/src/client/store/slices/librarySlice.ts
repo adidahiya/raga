@@ -42,6 +42,7 @@ export interface LibraryActions {
     getPlaylistTrackDefs: (playlistId: string) => SwinsianTrackDefinition[] | undefined;
     getPlaylistTrackIds: (playlistId: string) => number[] | undefined;
     getTrackDef: (id: number) => SwinsianTrackDefinition | undefined;
+    getSelectedTrackDef: () => SwinsianTrackDefinition | undefined;
 
     // actions - simple setters
     setLibraryPlist: (libraryPlist: SwinsianLibraryPlist | undefined) => void;
@@ -69,6 +70,10 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     getPlaylistTrackDefs: (playlistId: string) => {
         const { getPlaylistTrackIds, getTrackDef } = get();
         return getPlaylistTrackIds(playlistId)?.map((trackId: number) => getTrackDef(trackId)!);
+    },
+    getSelectedTrackDef: () => {
+        const { getTrackDef, selectedTrackId } = get();
+        return selectedTrackId === undefined ? undefined : getTrackDef(selectedTrackId);
     },
 
     // simple setters

@@ -1,3 +1,4 @@
+import { Roarr as log } from "roarr";
 import type WaveSurfer from "wavesurfer.js";
 
 import { AppStoreSliceCreator } from "../zustandUtils";
@@ -21,7 +22,19 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
     waveSurfer: undefined,
 
     setWaveSurfer: (waveSurfer) => {
-        get().waveSurfer?.destroy();
+        const { getSelectedTrackDef, waveSurfer: oldWaveSurfer } = get();
+        const selectedTrackDef = getSelectedTrackDef();
+
+        if (oldWaveSurfer !== undefined) {
+            oldWaveSurfer.destroy();
+        }
+
+        if (selectedTrackDef !== undefined) {
+            log.debug(
+                `[client] created new waveSurfer instance for track ${selectedTrackDef["Track ID"]} (location: ${selectedTrackDef.Location}))`,
+            );
+        }
+
         set({ waveSurfer });
     },
 
