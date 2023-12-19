@@ -1,0 +1,12 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+$inputWidth: 400px;
+
+.outputFilepath {
+    margin-bottom: 10px;
+    width: $inputWidth;
+
+    :global(.#{bp.$ns}-file-upload-input) {
+        width: $inputWidth;
+    }
+}

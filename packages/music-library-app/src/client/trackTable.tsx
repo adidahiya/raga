@@ -145,7 +145,9 @@ function TrackTableRow(row: Row<TrackDefinition>) {
 
     const handleClick = useCallback(
         (event: MouseEvent) => {
-            if (row.getCanSelect()) {
+            const isClickOnAnalyzeButton =
+                (event.target as HTMLElement).closest(`.${styles.analyzeTrackButton}`) != null;
+            if (row.getCanSelect() && !isClickOnAnalyzeButton) {
                 toggleSelected(event);
                 setSelectedTrackId(rowTrackId);
             }
@@ -211,8 +213,10 @@ function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
             placement="top"
             content={tooltipContent}
             hoverOpenDelay={300}
+            fill={true}
         >
             <Button
+                className={styles.analyzeTrackButton}
                 disabled={buttonDisabled}
                 outlined={true}
                 small={true}

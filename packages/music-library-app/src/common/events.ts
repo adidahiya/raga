@@ -78,5 +78,11 @@ export interface WriteModifiedLibraryOptions {
     library: SwinsianLibraryPlist;
 
     /** Location of the original Swinsian library XML on disk (to be overwritten) */
-    filepath: string;
+    inputFilepath: string;
+
+    /**
+     * Location of the new modified library (compatible with Music.app & Rekordbox) to be written to disk, usually
+     * adjacent to the input library file.
+     */
+    outputFilepath: string;
 }

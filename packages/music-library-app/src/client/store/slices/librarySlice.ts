@@ -88,7 +88,14 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         set({ library: libraryPlist });
     },
     setLibraryInputFilepath: (libraryFilepath) => {
-        set({ libraryInputFilepath: libraryFilepath });
+        set((state) => {
+            state.libraryInputFilepath = libraryFilepath;
+            if (state.libraryOutputFilepath === undefined) {
+                // place the output adjacent to the input file by default
+                const inputFolder = libraryFilepath?.split("/").slice(0, -1).join("/");
+                state.libraryOutputFilepath = `${inputFolder}/ModifiedLibrary.xml`;
+            }
+        });
     },
     setLibraryOutputFilepath: (libraryFilepath) => {
         set({ libraryOutputFilepath: libraryFilepath });
@@ -134,7 +141,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     },
 
     writeModiifedLibrary: async () => {
-        const { library, libraryInputFilepath: libraryFilepath, libraryWriteState } = get();
+        const { library, libraryInputFilepath, libraryOutputFilepath, libraryWriteState } = get();
 
         if (library === undefined) {
             log.error("[client] No library loaded");
@@ -142,13 +149,17 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         } else if (libraryWriteState !== "ready") {
             log.info(`[client] No library modifications to write to disk`);
             return;
+        } else if (libraryInputFilepath === undefined || libraryOutputFilepath === undefined) {
+            log.error("[client] No output filepath specified");
+            return;
         }
 
         log.trace(`[client] Writing modified library to disk...`);
         set({ libraryWriteState: "busy" });
         window.api.send(ClientEventChannel.WRITE_MODIFIED_LIBRARY, {
             library,
-            filepath: libraryFilepath,
+            inputFilepath: libraryInputFilepath,
+            outputFilepath: libraryOutputFilepath,
         });
 
         try {
@@ -167,9 +178,11 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         set({
             library: undefined,
             libraryInputFilepath: undefined,
+            libraryOutputFilepath: undefined,
             libraryPlaylists: undefined,
             libraryLoadingState: "none",
         });
+        get().stopAudioFilesServer();
     },
 });
 

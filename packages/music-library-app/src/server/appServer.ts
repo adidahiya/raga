@@ -158,10 +158,10 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
         options.library,
     ) as MusicAppLibraryPlist;
     const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary) as string;
-
-    const swinsianLibraryOutputPath = options.filepath;
-    const modifiedLibraryOutputPath = getOutputLibraryPath() as string;
     /* eslint-enable @typescript-eslint/no-unsafe-call */
+
+    const swinsianLibraryOutputPath = options.inputFilepath;
+    const modifiedLibraryOutputPath = options.outputFilepath;
 
     log.debug(`Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
     log.debug(`Writing modified library to ${modifiedLibraryOutputPath}...`);

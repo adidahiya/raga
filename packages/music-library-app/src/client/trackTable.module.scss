@@ -64,6 +64,10 @@
     margin-left: -4px;
 }
 
+.analyzeTrackButton:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
+    border-color: rgba(bp.$white, 0.25);
+}
+
 :global(.resizer) {
     position: absolute;
     right: 0;

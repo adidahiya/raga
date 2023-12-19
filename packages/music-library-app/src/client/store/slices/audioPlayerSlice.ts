@@ -56,7 +56,12 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
             set({ audioCurrentTimeMs: Math.floor(currentTimeSeconds * 1000) });
         });
 
-        set({ audioCurrentTimeMs: 0, audioDuration: selectedTrackDef?.["Total Time"], waveSurfer });
+        set({
+            audioIsPlaying: false,
+            audioCurrentTimeMs: 0,
+            audioDuration: selectedTrackDef?.["Total Time"],
+            waveSurfer,
+        });
     },
 
     audioPlay: async () => {
