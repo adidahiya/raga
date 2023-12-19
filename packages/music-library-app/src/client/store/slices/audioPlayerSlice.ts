@@ -4,14 +4,18 @@ import type WaveSurfer from "wavesurfer.js";
 import { AppStoreSliceCreator } from "../zustandUtils";
 
 export interface AudioPlayerState {
+    audioIsPlaying: boolean;
+    audioVolume: number;
+    audioCurrentTimeMs: number;
+    audioDuration: number;
     waveSurfer: WaveSurfer | undefined;
 }
 
 export interface AudioPlayerActions {
     audioPlay: () => Promise<void>;
     audioPause: () => void;
+    setAudioVolume: (volume: number) => void;
     setWaveSurfer: (waveSurfer: WaveSurfer) => void;
-    audioIsPlaying: boolean;
 }
 
 export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & AudioPlayerActions> = (
@@ -19,13 +23,26 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
     get,
 ) => ({
     audioIsPlaying: false,
+    audioVolume: 1,
+    audioCurrentTimeMs: 0,
+    audioDuration: 0,
     waveSurfer: undefined,
+
+    setAudioVolume: (volume) => {
+        const { waveSurfer } = get();
+        if (waveSurfer === undefined) {
+            return;
+        }
+        waveSurfer.setVolume(volume);
+        set({ audioVolume: volume });
+    },
 
     setWaveSurfer: (waveSurfer) => {
         const { getSelectedTrackDef, waveSurfer: oldWaveSurfer } = get();
         const selectedTrackDef = getSelectedTrackDef();
 
         if (oldWaveSurfer !== undefined) {
+            oldWaveSurfer.unAll();
             oldWaveSurfer.destroy();
         }
 
@@ -35,7 +52,11 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
             );
         }
 
-        set({ waveSurfer });
+        waveSurfer.on("timeupdate", (currentTimeSeconds: number) => {
+            set({ audioCurrentTimeMs: Math.floor(currentTimeSeconds * 1000) });
+        });
+
+        set({ audioCurrentTimeMs: 0, audioDuration: selectedTrackDef?.["Total Time"], waveSurfer });
     },
 
     audioPlay: async () => {

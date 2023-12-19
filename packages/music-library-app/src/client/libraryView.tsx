@@ -1,7 +1,8 @@
 import { Card, NonIdealState } from "@blueprintjs/core";
 import classNames from "classnames";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
+import { useEffectOnce } from "usehooks-ts";
 
 import { formatStatNumber } from "../common/format";
 import type { ContextBridgeApi } from "../contextBridgeApi";
@@ -24,10 +25,9 @@ export default function LibraryView() {
     const loadLibrary = appStore.use.loadSwinsianLibrary();
 
     // automatically load the library from disk on client startup
-    useEffect(() => {
+    useEffectOnce(() => {
         void loadLibrary();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    });
 
     return (
         <Card className={styles.container}>
@@ -51,11 +51,11 @@ function Library() {
     const headerRef = useRef<HTMLDivElement>(null);
     const selectedPlaylistId = appStore.use.selectedPlaylistId();
 
-    useEffect(() => {
+    useEffectOnce(() => {
         if (headerRef.current != null) {
             setHeaderHeight(headerRef.current.clientHeight);
         }
-    }, []);
+    });
 
     return (
         <div className={classNames("flex-column", styles.library)}>

@@ -1,0 +1,26 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.trackName {
+    max-width: 500px;
+}
+
+.timeProgress {
+    // fixed width to avoid shifting during playback
+    width: 80px;
+}
+
+.volumeSlider {
+    position: relative;
+    width: 150px;
+    padding: 0 10px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+}

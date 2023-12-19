@@ -10,7 +10,8 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useCallback, useMemo, useState } from "react";
+import { useEffectOnce } from "usehooks-ts";
 
 import { formatStatNumber } from "../common/format";
 import commonStyles from "./common/commonStyles.module.scss";
@@ -244,7 +245,7 @@ function PlaylistTableRow(row: Row<PlaylistRow>) {
     const toggleExpanded = row.getToggleExpandedHandler();
     const toggleSelected = row.getToggleSelectedHandler();
 
-    useEffect(() => {
+    useEffectOnce(() => {
         // run once on initial render, if we have a selected playlist from local storage and need to show its path
         if (isRowInSelectedPlaylistPath && !isRowExpanded) {
             toggleExpanded();

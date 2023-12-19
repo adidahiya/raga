@@ -1,8 +1,7 @@
 import { Colors } from "@blueprintjs/colors";
 import { ProgressBar } from "@blueprintjs/core";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useToggle } from "react-use";
-import { Roarr as log } from "roarr";
+import { useEffect, useRef, useState } from "react";
+import { useBoolean } from "usehooks-ts";
 import WaveSurfer from "wavesurfer.js";
 
 import { useSelectedTrackFileURL } from "../hooks/useSelectedTrackFileURL";
@@ -17,14 +16,13 @@ export default function AudioWaveform() {
     const setWaveSurfer = appStore.use.setWaveSurfer();
     const selectedFileURL = useSelectedTrackFileURL();
     const [loadingPercentage, setLoadingPercentage] = useState<number>(0);
-    const [isWaveformReady, setIsWaveformReady] = useToggle(false);
-    const handleReady = useCallback(() => {
-        setIsWaveformReady(true);
-    }, [setIsWaveformReady]);
+    const {
+        value: isWaveformReady,
+        setTrue: handleWaveformReady,
+        setFalse: resetWaveformReady,
+    } = useBoolean(false);
 
     useEffect(() => {
-        const subscriptions: (() => void)[] = [];
-
         if (audioFilesServerStatus === "started" && waveformElement.current != null) {
             const height = waveformElement.current.clientHeight;
             const inst = WaveSurfer.create({
@@ -34,26 +32,23 @@ export default function AudioWaveform() {
                 waveColor: Colors.BLUE3,
             });
             setWaveSurfer(inst);
-            subscriptions.push(
-                inst.on("loading", setLoadingPercentage),
-                inst.on("ready", handleReady),
-            );
+
+            // these subscriptions are cleaned up in setWaveSurfer() by WaveSurfer.unAll()
+            inst.on("loading", setLoadingPercentage);
+            inst.on("ready", handleWaveformReady);
         }
 
         return () => {
-            for (const unsub of subscriptions) {
-                unsub();
-            }
             setLoadingPercentage(0);
-            setIsWaveformReady(false);
+            resetWaveformReady();
         };
     }, [
         audioFilesServerStatus,
         waveformElement,
-        handleReady,
         selectedFileURL,
         setWaveSurfer,
-        setIsWaveformReady,
+        handleWaveformReady,
+        resetWaveformReady,
     ]);
 
     return (
