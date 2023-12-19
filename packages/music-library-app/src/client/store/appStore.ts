@@ -38,6 +38,7 @@ const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
     "libraryLoadingState",
     "libraryWriteState",
     "library",
+    "selectedTrackId",
     "waveSurfer",
 ];
 
