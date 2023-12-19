@@ -30,9 +30,13 @@ type AppActions = AudioFilesServerActions &
 export type AppStore = AppState & AppActions;
 
 const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
+    "audioCurrentTimeMs",
+    "audioDuration",
+    "audioIsPlaying",
     "analyzerStatus",
     "audioFilesServerStatus",
     "libraryLoadingState",
+    "libraryWriteState",
     "library",
     "waveSurfer",
 ];

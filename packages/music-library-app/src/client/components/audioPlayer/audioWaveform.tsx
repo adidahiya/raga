@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import WaveSurfer from "wavesurfer.js";
 
-import { useSelectedTrackFileURL } from "../hooks/useSelectedTrackFileURL";
-import { appStore } from "../store/appStore";
+import { useSelectedTrackFileURL } from "../../hooks/useSelectedTrackFileURL";
+import { appStore } from "../../store/appStore";
+import InlineOverlay from "../common/inlineOverlay";
 import styles from "./audioWaveform.module.scss";
-import InlineOverlay from "./inlineOverlay";
 
 /** It's recommended to lazy-load this component to defer loading the wavesurfer.js library. */
 export default function AudioWaveform() {

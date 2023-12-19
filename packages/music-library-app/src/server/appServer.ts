@@ -3,8 +3,6 @@ import type { MusicAppLibraryPlist, SwinsianLibraryPlist } from "@adahiya/music-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const {
     convertSwinsianToItunesXmlLibrary,
-    getDefaultSwinsianExportFolder,
-    getSwinsianLibraryPath,
     getOutputLibraryPath,
     loadSwinsianLibrary,
     serializeLibraryPlist,
@@ -65,11 +63,10 @@ export function initAppServer() {
     });
 }
 
-function handleLoadSwinsianLibrary(options: LoadSwinsianLibraryOptions = {}) {
-    /* eslint-disable @typescript-eslint/no-unsafe-call */
-    const filepath = getSwinsianLibraryPath(getDefaultSwinsianExportFolder()) as string;
-
-    if (library === undefined || options.reloadFromDisk) {
+function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLibraryOptions) {
+    if (library === undefined || reloadFromDisk) {
+        // HACKHACK
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         library = loadSwinsianLibrary(filepath) as SwinsianLibraryPlist | undefined;
     }
 

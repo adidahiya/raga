@@ -28,15 +28,17 @@ export interface LibraryState {
     libraryWriteState: libraryWriteState;
     /** Augmentation of MusicLibraryPlaylist which keeps a record of Playlist persistent ID -> definition */
     libraryPlaylists: PartialRecord<string, PlaylistDefinition> | undefined;
-    libraryFilepath: string | undefined;
+    libraryInputFilepath: string | undefined;
+    libraryOutputFilepath: string | undefined;
     selectedPlaylistId: string | undefined;
     selectedTrackId: number | undefined;
 }
 
 export interface LibraryActions {
     // actions - complex
-    loadSwinsianLibrary: (options?: LoadSwinsianLibraryOptions) => Promise<void>;
+    loadSwinsianLibrary: (options: LoadSwinsianLibraryOptions) => Promise<void>;
     writeModiifedLibrary: () => Promise<void>;
+    unloadSwinsianLibrary: () => void;
 
     // actions - simple getters
     getPlaylistTrackDefs: (playlistId: string) => SwinsianTrackDefinition[] | undefined;
@@ -46,7 +48,8 @@ export interface LibraryActions {
 
     // actions - simple setters
     setLibraryPlist: (libraryPlist: SwinsianLibraryPlist | undefined) => void;
-    setLibraryFilepath: (libraryFilepath: string | undefined) => void;
+    setLibraryInputFilepath: (libraryFilepath: string | undefined) => void;
+    setLibraryOutputFilepath: (libraryFilepath: string | undefined) => void;
     setSelectedPlaylistId: (selectedPlaylistId: string | undefined) => void;
     setSelectedTrackId: (selectedTrackId: number | undefined) => void;
 }
@@ -56,7 +59,8 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     get,
 ) => ({
     library: undefined,
-    libraryFilepath: undefined,
+    libraryInputFilepath: undefined,
+    libraryOutputFilepath: undefined,
     libraryLoadingState: "none",
     libraryPlaylists: undefined,
     libraryWriteState: "none",
@@ -83,15 +87,18 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     setLibraryPlist: (libraryPlist) => {
         set({ library: libraryPlist });
     },
-    setLibraryFilepath: (libraryFilepath) => {
-        set({ libraryFilepath });
+    setLibraryInputFilepath: (libraryFilepath) => {
+        set({ libraryInputFilepath: libraryFilepath });
+    },
+    setLibraryOutputFilepath: (libraryFilepath) => {
+        set({ libraryOutputFilepath: libraryFilepath });
     },
     setSelectedTrackId: (selectedTrackId) => {
         set({ selectedTrackId });
     },
 
     // complex actions
-    loadSwinsianLibrary: async (options: LoadSwinsianLibraryOptions = {}) => {
+    loadSwinsianLibrary: async (options: LoadSwinsianLibraryOptions) => {
         set({ libraryLoadingState: "loading" });
 
         window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
@@ -111,10 +118,11 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
                 console.log(data);
             }
 
+            get().startAudioFilesServer();
+
             set((state) => {
                 state.libraryLoadingState = "loaded";
                 state.library = data.library;
-                state.libraryFilepath = data.filepath;
                 state.libraryPlaylists = getLibraryPlaylists(data.library);
             });
         } catch (e) {
@@ -126,7 +134,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     },
 
     writeModiifedLibrary: async () => {
-        const { library, libraryFilepath, libraryWriteState } = get();
+        const { library, libraryInputFilepath: libraryFilepath, libraryWriteState } = get();
 
         if (library === undefined) {
             log.error("[client] No library loaded");
@@ -153,6 +161,15 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
             log.error(`[client] timed out writing modified library to disk`);
             set({ libraryWriteState: "ready" });
         }
+    },
+
+    unloadSwinsianLibrary: () => {
+        set({
+            library: undefined,
+            libraryInputFilepath: undefined,
+            libraryPlaylists: undefined,
+            libraryLoadingState: "none",
+        });
     },
 });
 

@@ -1,12 +1,13 @@
-import { Card, NonIdealState } from "@blueprintjs/core";
+import { Card, NonIdealState, ProgressBar } from "@blueprintjs/core";
 import classNames from "classnames";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 import { useEffectOnce } from "usehooks-ts";
 
 import { formatStatNumber } from "../common/format";
 import type { ContextBridgeApi } from "../contextBridgeApi";
-import { AudioPlayer } from "./components/audioPlayer";
+import { AudioPlayer } from "./components/audioPlayer/audioPlayer";
+import LoadLibraryForm from "./components/library/loadLibraryForm";
 import LibraryHeaderSection from "./components/libraryHeaderSection";
 import styles from "./libraryView.module.scss";
 import PlaylistTable from "./playlistTable";
@@ -21,22 +22,32 @@ declare global {
 }
 
 export default function LibraryView() {
+    const libraryInputFilepath = appStore.use.libraryInputFilepath();
     const libraryState = appStore.use.libraryLoadingState();
     const loadLibrary = appStore.use.loadSwinsianLibrary();
 
-    // automatically load the library from disk on client startup
-    useEffectOnce(() => {
-        void loadLibrary();
-    });
+    useEffect(() => {
+        if (libraryInputFilepath !== undefined) {
+            void loadLibrary({ filepath: libraryInputFilepath });
+        }
+    }, [libraryInputFilepath, loadLibrary]);
 
     return (
         <Card className={styles.container}>
             {libraryState === "none" ? (
-                <NonIdealState title="No library loaded" icon="music" />
+                <NonIdealState
+                    title="Select a Swinsian library"
+                    icon="music"
+                    action={<LoadLibraryForm />}
+                />
             ) : libraryState === "loading" ? (
-                <NonIdealState title="Loading library..." icon="refresh" />
+                <NonIdealState
+                    title="Loading Swinsian library..."
+                    icon="music"
+                    action={<ProgressBar intent="primary" />}
+                />
             ) : libraryState === "error" ? (
-                <NonIdealState title="Error loading library" icon="error" />
+                <NonIdealState title="Error loading Swinsian library" icon="error" />
             ) : (
                 <div className={styles.libraryLoaded}>
                     <Library />

@@ -3,10 +3,10 @@ import classNames from "classnames";
 import { debounce } from "radash";
 import { useCallback, useMemo } from "react";
 
-import { formatAudioDuration } from "../../common/format";
-import { useVoidCallback } from "../common/hooks";
-import { appStore } from "../store/appStore";
-import { useAudioPlayerControls } from "../store/selectors/useAudioPlayerControls";
+import { formatAudioDuration } from "../../../common/format";
+import { useVoidCallback } from "../../common/hooks";
+import { appStore } from "../../store/appStore";
+import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 import styles from "./audioPlayerControls.module.scss";
 
 export function AudioPlayerControls() {
@@ -37,15 +37,11 @@ export function AudioPlayerControls() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.nowPlaying}>
-                <Text className={styles.trackArtist} title={selectedTrack.Artist} tagName="span">
-                    <strong>{selectedTrack.Artist}</strong>
-                </Text>
+            <Text className={styles.nowPlaying} ellipsize={true} title={selectedTrack.Artist}>
+                <strong>{selectedTrack.Artist}</strong>
                 <span className={Classes.TEXT_MUTED}> &ndash; </span>
-                <Text className={styles.trackName} title={selectedTrack.Name} tagName="span">
-                    <strong>{selectedTrack.Name}</strong>
-                </Text>
-            </div>
+                <strong>{selectedTrack.Name}</strong>
+            </Text>
             <div className={classNames(styles.timeProgress, Classes.TEXT_MUTED)}>
                 {formattedCurrentTime} / {formattedDuration}
             </div>

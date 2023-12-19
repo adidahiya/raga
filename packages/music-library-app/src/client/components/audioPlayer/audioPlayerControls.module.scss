@@ -7,8 +7,9 @@
     align-items: center;
 }
 
-.trackName {
-    max-width: 500px;
+.nowPlaying {
+    text-align: right;
+    max-width: calc(100vw - 880px);
 }
 
 .timeProgress {

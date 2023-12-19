@@ -57,6 +57,7 @@ export interface LoadedSwinsianLibraryEventPayload {
 }
 
 export interface LoadSwinsianLibraryOptions {
+    filepath: string;
     reloadFromDisk?: boolean;
 }
 
