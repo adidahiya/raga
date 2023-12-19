@@ -152,6 +152,7 @@ function handleAudioFilesServerStop() {
  */
 function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
     options.library.Date = new Date();
+    /* eslint-disable @typescript-eslint/no-unsafe-call */
     const serializedSwinsianLibrary = serializeLibraryPlist(options.library) as string;
     const convertedLibrary = convertSwinsianToItunesXmlLibrary(
         options.library,
@@ -160,6 +161,7 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
 
     const swinsianLibraryOutputPath = options.filepath;
     const modifiedLibraryOutputPath = getOutputLibraryPath() as string;
+    /* eslint-enable @typescript-eslint/no-unsafe-call */
 
     log.debug(`Overwriting Swinsian library at ${swinsianLibraryOutputPath}...`);
     log.debug(`Writing modified library to ${modifiedLibraryOutputPath}...`);

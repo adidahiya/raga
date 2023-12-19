@@ -2,9 +2,9 @@ import { Classes, Divider, H4 } from "@blueprintjs/core";
 import classNames from "classnames";
 
 import styles from "./app.module.scss";
-import AppSettingsDialog from "./components/settings/appSettingsDialog";
 import AudioFilesServerControls from "./components/audioFilesServerControls";
 import { AudioPlayerControls } from "./components/audioPlayer/audioPlayerControls";
+import AppSettingsDialog from "./components/settings/appSettingsDialog";
 import LibraryView from "./libraryView";
 
 export default function App() {
