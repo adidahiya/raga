@@ -10,7 +10,3 @@
 .popover {
     padding: 10px;
 }
-
-.backdrop:global(.#{bp.$ns}-popover-backdrop) {
-    background-color: rgba(bp.$black, 0.25);
-}

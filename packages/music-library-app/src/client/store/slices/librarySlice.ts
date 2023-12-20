@@ -155,7 +155,10 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         }
 
         log.trace(`[client] Writing modified library to disk...`);
-        set({ libraryWriteState: "busy" });
+
+        // lock up the analyzer while writing to disk, for simplicity's sake
+        set({ analyzerStatus: "busy", libraryWriteState: "busy" });
+
         window.api.send(ClientEventChannel.WRITE_MODIFIED_LIBRARY, {
             library,
             inputFilepath: libraryInputFilepath,
@@ -171,6 +174,8 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         } catch (e) {
             log.error(`[client] timed out writing modified library to disk`);
             set({ libraryWriteState: "ready" });
+        } finally {
+            set({ analyzerStatus: "ready" });
         }
     },
 

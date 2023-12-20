@@ -18,6 +18,16 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
 .#{bp.$ns}-button.#{bp.$ns}-small {
     min-height: 20px;
     font-size: 12px;
+
+    .#{bp.$ns}-icon:not(.#{bp.$ns}-icon-caret-down) {
+        width: 12px;
+        height: 12px;
+
+        > svg {
+            height: 12px;
+            width: 12px;
+        }
+    }
 }
 
 .#{bp.$ns}-section.#{bp.$ns}-compact .#{bp.$ns}-section-card.#{bp.$ns}-padded {

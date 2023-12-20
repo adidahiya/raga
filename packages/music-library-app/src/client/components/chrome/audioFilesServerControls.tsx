@@ -12,6 +12,7 @@ import {
 import classNames from "classnames";
 import { useCallback } from "react";
 
+import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore } from "../../store/appStore";
 import styles from "./audioFilesServerControls.module.scss";
 
@@ -65,14 +66,12 @@ export default function AudioFilesServerControls() {
 
     return (
         <div className={styles.container}>
-            <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
-                Audio files server
-            </span>
+            <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>Audio server</span>
             <Popover
                 placement="bottom"
                 content={serverOptionsPopover}
                 hasBackdrop={true}
-                backdropProps={{ className: styles.backdrop }}
+                backdropProps={{ className: commonStyles.popoverBackdrop }}
             >
                 <Button
                     small={true}

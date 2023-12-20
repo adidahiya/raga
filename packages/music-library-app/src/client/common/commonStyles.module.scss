@@ -9,3 +9,7 @@
         }
     }
 }
+
+.popoverBackdrop:global(.#{bp.$ns}-popover-backdrop) {
+    background-color: rgba(bp.$black, 0.25);
+}
