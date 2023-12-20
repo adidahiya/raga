@@ -7,7 +7,7 @@ import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
 
-export function AnalyzeSingleTrackButton({ trackDef }: { trackDef: TrackDefinition }) {
+export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: TrackDefinition }) {
     const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
     const trackId = trackDef["Track ID"];
 

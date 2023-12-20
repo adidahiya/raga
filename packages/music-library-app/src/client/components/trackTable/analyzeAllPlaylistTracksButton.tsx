@@ -4,14 +4,19 @@ import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
 
-export function AnalyzeAllTracksInSelectedPlaylistButton() {
+export interface AnalyzeAllPlaylistTracksButtonProps {
+    playlistId: string;
+}
+
+export default function AnalyzeAllPlaylistTracksButton({
+    playlistId,
+}: AnalyzeAllPlaylistTracksButtonProps) {
     const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
     const analyzerStatus = appStore.use.analyzerStatus();
     const analyzePlaylist = appStore.use.analyzePlaylist();
-    const selectedPlaylistId = appStore.use.selectedPlaylistId();
     const handleAnalyzeClick = useVoidCallback(
-        () => analyzePlaylist(selectedPlaylistId!),
-        [analyzePlaylist, selectedPlaylistId],
+        () => analyzePlaylist(playlistId),
+        [analyzePlaylist, playlistId],
     );
     const buttonDisabled = audioFilesServerStatus !== "started";
 

@@ -5,22 +5,21 @@ import {
     createColumnHelper,
     flexRender,
     getCoreRowModel,
-    HeaderContext,
     Row,
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import { useShallow } from "zustand/react/shallow";
 
-import { getTrackFileType } from "../../../common/audioFileType";
+import { getTrackFileType } from "../../../common/trackUtils";
 import { isSupportedWebAudioFileFormat } from "../../audio/webAudioUtils";
 import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore, useAppStore } from "../../store/appStore";
-import { AnalyzeAllTracksInSelectedPlaylistButton } from "./analyzeAllTracksButton";
-import { AnalyzeSingleTrackButton } from "./analyzeSingleTrackButton";
+import AnalyzeAlPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
+import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import styles from "./trackTable.module.scss";
-import { TrackTableRow } from "./trackTableRow";
+import TrackTableRow from "./trackTableRow";
 
 export interface TrackTableProps {
     // TODO: move this state to app store
@@ -60,18 +59,14 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         columnHelper.accessor("BPM", {
             id: "bpm",
             cell: (info) => info.cell.getValue() ?? "-",
-            header: BPMColumnHeader,
+            header: () => <BPMColumnHeader playlistId={playlistId} />,
             size: 60,
         }),
         analyzeBPMPerTrack &&
             columnHelper.display({
                 id: "analyzeBPM",
                 cell: (info) => <AnalyzeSingleTrackButton trackDef={info.row.original} />,
-                header: () => (
-                    <div>
-                        <AnalyzeAllTracksInSelectedPlaylistButton />
-                    </div>
-                ),
+                header: () => <AnalyzeAlPlaylistTracksButton playlistId={playlistId} />,
                 size: 60,
             }),
         columnHelper.accessor("Name", {
@@ -144,12 +139,12 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
 }
 TrackTable.displayName = "TrackTable";
 
-function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number | undefined>) {
+function BPMColumnHeader(props: { playlistId: string }) {
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
     return (
         <div className={styles.bpmColumnHeader}>
             <span>BPM</span>
-            {!analyzeBPMPerTrack && <AnalyzeAllTracksInSelectedPlaylistButton />}
+            {!analyzeBPMPerTrack && <AnalyzeAlPlaylistTracksButton {...props} />}
         </div>
     );
 }

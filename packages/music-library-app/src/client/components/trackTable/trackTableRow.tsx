@@ -6,7 +6,7 @@ import { MouseEvent, useCallback } from "react";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
 
-export function TrackTableRow(row: Row<TrackDefinition>) {
+export default function TrackTableRow(row: Row<TrackDefinition>) {
     const setSelectedTrackId = appStore.use.setSelectedTrackId();
     const rowTrackId = row.original["Track ID"];
     const isRowSelected = row.getIsSelected();

@@ -1,7 +1,7 @@
+import { AudioFileType } from "@adahiya/music-library-tools-lib";
 import { Tag, TagProps } from "@blueprintjs/core";
 import { useMemo } from "react";
 
-import { AudioFileType } from "../../../common/audioFileType";
 import { isSupportedWebAudioFileFormat } from "../../audio/webAudioUtils";
 
 export interface AudioFileTypeTagProps extends TagProps {

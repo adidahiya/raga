@@ -1,6 +1,4 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
-
-import { AudioFileType } from "../../common/audioFileType";
+import type { AudioFileType, TrackDefinition } from "@adahiya/music-library-tools-lib";
 
 // see https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Containers
 const WEB_AUDIO_SUPPORTED_FILE_EXTENSIONS: AudioFileType[] = ["mp3", "wav", "flac", "aac"];
