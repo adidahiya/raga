@@ -1,0 +1,12 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+.popover {
+    padding: 10px;
+}
