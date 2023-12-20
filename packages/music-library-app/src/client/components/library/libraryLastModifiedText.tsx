@@ -5,7 +5,7 @@ import { format, parseISO } from "date-fns";
 
 import { appStore } from "../../store/appStore";
 
-export function LibraryLastModifiedText() {
+export default function LibraryLastModifiedText() {
     const library = appStore.use.library();
     const dateModified = getDateModified(library);
 

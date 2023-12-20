@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import WaveSurfer from "wavesurfer.js";
 
-import { useSelectedTrackFileURL } from "../../hooks/useSelectedTrackFileURL";
+import { useSelectedTrackFileURL } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import InlineOverlay from "../common/inlineOverlay";
 import styles from "./audioWaveform.module.scss";

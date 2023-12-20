@@ -1,7 +1,7 @@
 import { Props, Section } from "@blueprintjs/core";
 
-import LibraryIOActions from "./library/libraryIOActions";
-import { LibraryLastModifiedText } from "./library/libraryLastModifiedText";
+import LibraryIOActions from "./libraryIOActions";
+import LibraryLastModifiedText from "./libraryLastModifiedText";
 
 export type LibraryHeaderSectionProps = Props;
 

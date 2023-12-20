@@ -1,25 +1,18 @@
 import { Card, NonIdealState, ProgressBar } from "@blueprintjs/core";
 import classNames from "classnames";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 import { useEffectOnce } from "usehooks-ts";
 
-import { formatStatNumber } from "../common/format";
-import type { ContextBridgeApi } from "../contextBridgeApi";
-import { AudioPlayer } from "./components/audioPlayer/audioPlayer";
-import LoadLibraryForm from "./components/library/loadLibraryForm";
-import LibraryHeaderSection from "./components/libraryHeaderSection";
-import TrackTable from "./components/trackTable/trackTable";
+import { formatStatNumber } from "../../common/format";
+import { AudioPlayer } from "../components/audioPlayer/audioPlayer";
+import { ResizeHandle } from "../components/common";
+import { LibraryHeaderSection, LoadLibraryForm } from "../components/library";
+import PlaylistTable from "../components/playlistTable/playlistTable";
+import TrackTable from "../components/trackTable/trackTable";
+import { useMasterPlaylist } from "../hooks";
+import { appStore } from "../store/appStore";
 import styles from "./libraryView.module.scss";
-import PlaylistTable from "./playlistTable";
-import ResizeHandle from "./resizeHandle";
-import { appStore } from "./store/appStore";
-
-declare global {
-    interface Window {
-        api: ContextBridgeApi;
-    }
-}
 
 export default function LibraryView() {
     const libraryInputFilepath = appStore.use.libraryInputFilepath();
@@ -104,11 +97,7 @@ function Library() {
 LibraryView.displayName = "LibraryView";
 
 function LibrarySidebarFooter() {
-    const library = appStore.use.library();
-    const masterPlaylist = useMemo(
-        () => library?.Playlists.find((playlist) => playlist.Master),
-        [library],
-    );
+    const masterPlaylist = useMasterPlaylist();
 
     if (masterPlaylist === undefined) {
         return undefined;

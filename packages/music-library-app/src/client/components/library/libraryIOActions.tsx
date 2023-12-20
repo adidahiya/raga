@@ -10,7 +10,7 @@ import {
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 
-import { useVoidCallback } from "../../common/hooks";
+import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./libraryIOActions.module.scss";
 

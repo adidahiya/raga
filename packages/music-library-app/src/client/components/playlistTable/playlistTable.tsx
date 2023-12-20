@@ -13,11 +13,11 @@ import classNames from "classnames";
 import { MouseEvent, useCallback, useMemo, useState } from "react";
 import { useEffectOnce } from "usehooks-ts";
 
-import { formatStatNumber } from "../common/format";
-import commonStyles from "./common/commonStyles.module.scss";
+import { formatStatNumber } from "../../../common/format";
+import commonStyles from "../../common/commonStyles.module.scss";
+import { appStore } from "../../store/appStore";
+import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
 import styles from "./playlistTable.module.scss";
-import { appStore } from "./store/appStore";
-import { useLibraryOrThrow } from "./store/useLibraryOrThrow";
 
 export interface LibraryTableProps {
     headerHeight: number;

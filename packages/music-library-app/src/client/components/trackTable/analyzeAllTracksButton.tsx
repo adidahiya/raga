@@ -1,6 +1,6 @@
 import { Button, Tooltip } from "@blueprintjs/core";
 
-import { useVoidCallback } from "../../common/hooks";
+import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
 

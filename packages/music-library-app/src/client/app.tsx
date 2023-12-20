@@ -2,8 +2,8 @@ import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 
 import styles from "./app.module.scss";
-import AppChrome from "./components/appChrome";
-import LibraryView from "./libraryView";
+import AppChrome from "./components/chrome/appChrome";
+import LibraryView from "./views/libraryView";
 
 export default function App() {
     return (

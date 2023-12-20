@@ -4,7 +4,7 @@ import { debounce } from "radash";
 import { useCallback, useMemo } from "react";
 
 import { formatAudioDuration } from "../../../common/format";
-import { useVoidCallback } from "../../common/hooks";
+import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 import styles from "./audioPlayerControls.module.scss";

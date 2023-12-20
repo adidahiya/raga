@@ -12,7 +12,7 @@ import {
 import classNames from "classnames";
 import { useCallback } from "react";
 
-import { appStore } from "../store/appStore";
+import { appStore } from "../../store/appStore";
 import styles from "./audioFilesServerControls.module.scss";
 
 export default function AudioFilesServerControls() {

@@ -3,7 +3,7 @@ import { Button, Tooltip } from "@blueprintjs/core";
 import { useMemo } from "react";
 
 import { isSupportedWebAudioFileFormat } from "../../audio/webAudioUtils";
-import { useVoidCallback } from "../../common/hooks";
+import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
 
