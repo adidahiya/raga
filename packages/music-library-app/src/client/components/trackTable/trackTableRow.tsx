@@ -11,28 +11,34 @@ export function TrackTableRow(row: Row<TrackDefinition>) {
     const rowTrackId = row.original["Track ID"];
     const isRowSelected = row.getIsSelected();
     const toggleSelected = row.getToggleSelectedHandler();
+    const canSelect = row.getCanSelect();
 
     const handleClick = useCallback(
         (event: MouseEvent) => {
             const isClickOnAnalyzeButton =
                 (event.target as HTMLElement).closest(`.${styles.analyzeTrackButton}`) != null;
-            if (row.getCanSelect() && !isClickOnAnalyzeButton) {
+            if (canSelect && !isClickOnAnalyzeButton) {
                 toggleSelected(event);
                 setSelectedTrackId(rowTrackId);
             }
         },
-        [row, rowTrackId, setSelectedTrackId, toggleSelected],
+        [rowTrackId, setSelectedTrackId, toggleSelected, canSelect],
     );
 
     return (
         <tr
             className={classNames({
                 [styles.selected]: isRowSelected,
+                [styles.disabled]: !canSelect,
             })}
             onClick={handleClick}
         >
             {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} style={{ width: cell.column.getSize() }}>
+                <td
+                    className={styles.trackCell}
+                    key={cell.id}
+                    style={{ width: cell.column.getSize() }}
+                >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
             ))}

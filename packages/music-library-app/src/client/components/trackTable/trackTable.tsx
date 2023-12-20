@@ -1,21 +1,24 @@
 import { TrackDefinition } from "@adahiya/music-library-tools-lib";
-import { Classes, HTMLTable, Tag } from "@blueprintjs/core";
+import { Classes, HTMLTable } from "@blueprintjs/core";
 import {
     ColumnDef,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
     HeaderContext,
+    Row,
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import { useShallow } from "zustand/react/shallow";
 
 import { getTrackFileType } from "../../../common/audioFileType";
+import { isSupportedWebAudioFileFormat } from "../../audio/webAudioUtils";
 import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore, useAppStore } from "../../store/appStore";
 import { AnalyzeAllTracksInSelectedPlaylistButton } from "./analyzeAllTracksButton";
 import { AnalyzeSingleTrackButton } from "./analyzeSingleTrackButton";
+import AudioFileTypeTag from "./audioFileTypeTag";
 import styles from "./trackTable.module.scss";
 import { TrackTableRow } from "./trackTableRow";
 
@@ -83,11 +86,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         }),
         columnHelper.accessor(getTrackFileType, {
             id: "fileType",
-            cell: (info) => (
-                <Tag fill={true} minimal={true}>
-                    {info.getValue()}
-                </Tag>
-            ),
+            cell: (info) => <AudioFileTypeTag fileType={info.getValue()} />,
             header: () => <span>Type</span>,
         }),
     ].filter((c) => !!c) as ColumnDef<TrackDefinition>[];
@@ -98,7 +97,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         state: {},
         columnResizeMode: "onChange",
         getCoreRowModel: getCoreRowModel(),
-        enableRowSelection: true,
+        enableRowSelection: canSelectRow,
         enableMultiRowSelection: false,
     });
 
@@ -153,4 +152,8 @@ function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number | undefin
             {!analyzeBPMPerTrack && <AnalyzeAllTracksInSelectedPlaylistButton />}
         </div>
     );
+}
+
+function canSelectRow(row: Row<TrackDefinition>): boolean {
+    return isSupportedWebAudioFileFormat(row.original);
 }

@@ -46,6 +46,12 @@
     tr.selected {
         background-color: bp.$blue1;
     }
+
+    :global(.#{bp.$ns}-html-table) {
+        tr.disabled:hover td.trackCell {
+            cursor: auto;
+        }
+    }
 }
 
 .bpmColumnHeader {
