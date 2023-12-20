@@ -9,11 +9,11 @@ import type { ContextBridgeApi } from "../contextBridgeApi";
 import { AudioPlayer } from "./components/audioPlayer/audioPlayer";
 import LoadLibraryForm from "./components/library/loadLibraryForm";
 import LibraryHeaderSection from "./components/libraryHeaderSection";
+import TrackTable from "./components/trackTable/trackTable";
 import styles from "./libraryView.module.scss";
 import PlaylistTable from "./playlistTable";
 import ResizeHandle from "./resizeHandle";
 import { appStore } from "./store/appStore";
-import TrackTable from "./trackTable";
 
 declare global {
     interface Window {

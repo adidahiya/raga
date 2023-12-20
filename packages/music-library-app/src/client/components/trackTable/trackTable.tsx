@@ -1,24 +1,23 @@
 import { TrackDefinition } from "@adahiya/music-library-tools-lib";
-import { Button, Classes, HTMLTable, Tooltip } from "@blueprintjs/core";
+import { Classes, HTMLTable, Tag } from "@blueprintjs/core";
 import {
-    CellContext,
     ColumnDef,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
     HeaderContext,
-    Row,
     useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { MouseEvent, useCallback, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { isSupportedWebAudioFileFormat } from "./audio/webAudioUtils";
-import commonStyles from "./common/commonStyles.module.scss";
-import { useVoidCallback } from "./common/hooks";
-import { appStore, useAppStore } from "./store/appStore";
+import { getTrackFileType } from "../../../common/audioFileType";
+import commonStyles from "../../common/commonStyles.module.scss";
+import { appStore, useAppStore } from "../../store/appStore";
+import { AnalyzeAllTracksInSelectedPlaylistButton } from "./analyzeAllTracksButton";
+import { AnalyzeSingleTrackButton } from "./analyzeSingleTrackButton";
 import styles from "./trackTable.module.scss";
+import { TrackTableRow } from "./trackTableRow";
 
 export interface TrackTableProps {
     // TODO: move this state to app store
@@ -64,7 +63,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         analyzeBPMPerTrack &&
             columnHelper.display({
                 id: "analyzeBPM",
-                cell: AnalyzeBPMCell,
+                cell: (info) => <AnalyzeSingleTrackButton trackDef={info.row.original} />,
                 header: () => (
                     <div>
                         <AnalyzeAllTracksInSelectedPlaylistButton />
@@ -81,6 +80,15 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
             id: "artist",
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span>Artist</span>,
+        }),
+        columnHelper.accessor(getTrackFileType, {
+            id: "fileType",
+            cell: (info) => (
+                <Tag fill={true} minimal={true}>
+                    {info.getValue()}
+                </Tag>
+            ),
+            header: () => <span>Type</span>,
         }),
     ].filter((c) => !!c) as ColumnDef<TrackDefinition>[];
 
@@ -137,41 +145,6 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
 }
 TrackTable.displayName = "TrackTable";
 
-function TrackTableRow(row: Row<TrackDefinition>) {
-    const setSelectedTrackId = appStore.use.setSelectedTrackId();
-    const rowTrackId = row.original["Track ID"];
-    const isRowSelected = row.getIsSelected();
-    const toggleSelected = row.getToggleSelectedHandler();
-
-    const handleClick = useCallback(
-        (event: MouseEvent) => {
-            const isClickOnAnalyzeButton =
-                (event.target as HTMLElement).closest(`.${styles.analyzeTrackButton}`) != null;
-            if (row.getCanSelect() && !isClickOnAnalyzeButton) {
-                toggleSelected(event);
-                setSelectedTrackId(rowTrackId);
-            }
-        },
-        [row, rowTrackId, setSelectedTrackId, toggleSelected],
-    );
-
-    return (
-        <tr
-            className={classNames({
-                [styles.selected]: isRowSelected,
-            })}
-            onClick={handleClick}
-        >
-            {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} style={{ width: cell.column.getSize() }}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-            ))}
-        </tr>
-    );
-}
-TrackTableRow.displayName = "TrackTableRow";
-
 function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number | undefined>) {
     const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
     return (
@@ -179,84 +152,5 @@ function BPMColumnHeader(_props: HeaderContext<TrackDefinition, number | undefin
             <span>BPM</span>
             {!analyzeBPMPerTrack && <AnalyzeAllTracksInSelectedPlaylistButton />}
         </div>
-    );
-}
-BPMColumnHeader.displayName = "BPMColumnHeader";
-
-function AnalyzeBPMCell(props: CellContext<TrackDefinition, unknown>) {
-    const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
-    const trackDef = props.row.original;
-    const trackId = trackDef["Track ID"];
-
-    const analyzeTrack = appStore.use.analyzeTrack();
-    const handleAnalyzeBPM = useVoidCallback(() => analyzeTrack(trackId), [analyzeTrack, trackId]);
-
-    const isUnsupportedFileFormat = useMemo(
-        () => !isSupportedWebAudioFileFormat(trackDef),
-        [trackDef],
-    );
-    const tooltipContent = useMemo(
-        () =>
-            isUnsupportedFileFormat
-                ? "Unsupported audio file format"
-                : !isAudioFilesServerReady
-                  ? "Disconnected from audio files server"
-                  : undefined,
-        [isAudioFilesServerReady, isUnsupportedFileFormat],
-    );
-    const buttonDisabled = !isAudioFilesServerReady || isUnsupportedFileFormat;
-
-    return (
-        <Tooltip
-            compact={true}
-            disabled={!buttonDisabled}
-            placement="top"
-            content={tooltipContent}
-            hoverOpenDelay={300}
-            fill={true}
-        >
-            <Button
-                className={styles.analyzeTrackButton}
-                disabled={buttonDisabled}
-                outlined={true}
-                small={true}
-                text="Analyze"
-                onClick={handleAnalyzeBPM}
-            />
-        </Tooltip>
-    );
-}
-
-function AnalyzeAllTracksInSelectedPlaylistButton() {
-    const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
-    const analyzerStatus = appStore.use.analyzerStatus();
-    const analyzePlaylist = appStore.use.analyzePlaylist();
-    const selectedPlaylistId = appStore.use.selectedPlaylistId();
-    const handleAnalyzeClick = useVoidCallback(
-        () => analyzePlaylist(selectedPlaylistId!),
-        [analyzePlaylist, selectedPlaylistId],
-    );
-    const buttonDisabled = audioFilesServerStatus !== "started";
-
-    return (
-        <Tooltip
-            compact={true}
-            disabled={!buttonDisabled}
-            placement="top"
-            content={buttonDisabled ? "Disconnected from audio files server" : undefined}
-            hoverOpenDelay={300}
-        >
-            <Button
-                className={styles.analyzeAllButton}
-                disabled={buttonDisabled}
-                ellipsizeText={true}
-                intent="primary"
-                loading={analyzerStatus === "busy"}
-                minimal={true}
-                onClick={handleAnalyzeClick}
-                small={true}
-                text="Analyze all"
-            />
-        </Tooltip>
     );
 }
