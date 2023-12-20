@@ -7,9 +7,9 @@ import {
     WRITE_AUDIO_FILE_TAG_TIMEOUT,
 } from "../../../common/constants";
 import { ClientEventChannel, ServerEventChannel } from "../../../common/events";
+import { isSupportedWebAudioFileFormat } from "../../../common/webAudioUtils";
 import { analyzeBPM } from "../../audio/bpm";
 import { getAudioFileURL, loadAudioBuffer } from "../../audio/buffer";
-import { isSupportedWebAudioFileFormat } from "../../audio/webAudioUtils";
 import type { AppStoreGet, AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
 
 export type AudioAnalyzerStatus = "ready" | "busy";

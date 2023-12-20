@@ -5,4 +5,11 @@
     border: solid 1px bp.$pt-dark-divider-white;
     border-top: none;
     padding: 5px;
+    height: 90px;
+}
+
+.nonIdealState {
+    :global(.#{bp.$ns}-non-ideal-state-text) {
+        margin-bottom: 10px;
+    }
 }

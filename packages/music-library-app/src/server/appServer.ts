@@ -113,7 +113,7 @@ let audioFilesServer: AudioFilesServer | undefined;
 
 async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions) {
     try {
-        await startAudioFilesServer({
+        audioFilesServer = await startAudioFilesServer({
             ...options,
             onReady: () => {
                 process.parentPort.postMessage({

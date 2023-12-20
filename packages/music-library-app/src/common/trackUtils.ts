@@ -1,7 +1,15 @@
 import type { AudioFileType, TrackDefinition } from "@adahiya/music-library-tools-lib";
 
 // HACKHACK: /lib/cjs is not exporting values so we need to copy them out here
-const AUDIO_FILE_TYPES: AudioFileType[] = ["mp3", "m4a", "flac", "wav", "aif", "aiff", "aac"];
+export const AUDIO_FILE_TYPES: AudioFileType[] = [
+    "mp3",
+    "m4a",
+    "flac",
+    "wav",
+    "aif",
+    "aiff",
+    "aac",
+];
 
 export function getTrackFileType(trackDef: TrackDefinition): AudioFileType | undefined {
     const fileExtension = trackDef.Location.split(".").pop()!;

@@ -11,7 +11,9 @@ import {
 } from "@blueprintjs/core";
 import classNames from "classnames";
 import { useCallback } from "react";
+import { useInterval } from "usehooks-ts";
 
+import { AUDIO_FILES_SERVER_PING_INTERVAL } from "../../../common/constants";
 import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore } from "../../store/appStore";
 import styles from "./audioFilesServerControls.module.scss";
@@ -22,6 +24,14 @@ export default function AudioFilesServerControls() {
     const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         appStore.use.setAudioTracksRootFolder()(event.target.value);
     }, []);
+    const pingServer = appStore.use.pingAudioFilesServer();
+
+    useInterval(
+        () => {
+            void pingServer();
+        },
+        status === "started" ? AUDIO_FILES_SERVER_PING_INTERVAL : null,
+    );
 
     const serverOptionsPopover = (
         <div className={styles.popover}>

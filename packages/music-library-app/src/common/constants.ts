@@ -9,6 +9,8 @@ export const LOCAL_STORAGE_KEY = "music-library-app";
 // HACKHACK: need a better default
 export const DEFAULT_AUDIO_FILES_ROOT_FOLDER = "/Volumes/CZSSD/music/tracks";
 export const DEFAULT_AUDIO_FILES_SERVER_PORT = 8457;
+export const AUDIO_FILES_SERVER_PING_INTERVAL = 5_000;
+export const AUDIO_FILES_SERVER_PINT_TIMEOUT = 1_000;
 
 export const LOAD_SWINSIAN_LIBRARY_TIMEOUT = 10000;
 export const WRITE_AUDIO_FILE_TAG_TIMEOUT = 2000;

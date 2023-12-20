@@ -2,7 +2,7 @@ import { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Button, Tooltip } from "@blueprintjs/core";
 import { useMemo } from "react";
 
-import { isSupportedWebAudioFileFormat } from "../../audio/webAudioUtils";
+import { isSupportedWebAudioFileFormat } from "../../../common/webAudioUtils";
 import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";

@@ -12,7 +12,7 @@ import classNames from "classnames";
 import { useShallow } from "zustand/react/shallow";
 
 import { getTrackFileType } from "../../../common/trackUtils";
-import { isSupportedWebAudioFileFormat } from "../../audio/webAudioUtils";
+import { isSupportedWebAudioFileFormat } from "../../../common/webAudioUtils";
 import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore, useAppStore } from "../../store/appStore";
 import AnalyzeAlPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
