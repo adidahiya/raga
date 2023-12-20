@@ -3,7 +3,6 @@ import type { MusicAppLibraryPlist, SwinsianLibraryPlist } from "@adahiya/music-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const {
     convertSwinsianToItunesXmlLibrary,
-    getOutputLibraryPath,
     loadSwinsianLibrary,
     serializeLibraryPlist,
     // eslint-disable-next-line @typescript-eslint/no-var-requires
