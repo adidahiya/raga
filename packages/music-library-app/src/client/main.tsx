@@ -1,4 +1,4 @@
-import { FocusStyleManager } from "@blueprintjs/core";
+import { Classes, FocusStyleManager, HotkeysProvider } from "@blueprintjs/core";
 import { createLogWriter } from "@roarr/browser-log-writer";
 import { createRoot } from "react-dom/client";
 
@@ -15,7 +15,11 @@ if (domNode === null) {
     throw new Error(`[client] Failed to render application: no root DOM node available.`);
 }
 const root = createRoot(domNode);
-root.render(<App />);
+root.render(
+    <HotkeysProvider dialogProps={{ className: Classes.DARK }}>
+        <App />
+    </HotkeysProvider>,
+);
 
 // (async () => {
 //     if (INSTALL_REACT_DEVELOPER_TOOLS) {

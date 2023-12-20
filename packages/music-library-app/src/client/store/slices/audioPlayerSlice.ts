@@ -14,6 +14,7 @@ export interface AudioPlayerState {
 export interface AudioPlayerActions {
     audioPlay: () => Promise<void>;
     audioPause: () => void;
+    audioSeek: (seekMs: number) => void;
     setAudioVolume: (volume: number) => void;
     setWaveSurfer: (waveSurfer: WaveSurfer) => void;
 }
@@ -80,5 +81,21 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
         }
         waveSurfer.pause();
         set({ audioIsPlaying: false });
+    },
+
+    audioSeek: (seekMs: number) => {
+        const { audioCurrentTimeMs, audioDuration, waveSurfer } = get();
+        if (waveSurfer === undefined) {
+            return;
+        }
+
+        let seekToProgress = (audioCurrentTimeMs + seekMs) / audioDuration;
+
+        // clamp to [0, 1]
+        seekToProgress = Math.min(seekToProgress, 1);
+        seekToProgress = Math.max(0, seekToProgress);
+
+        log.trace(`[client] seeking to ${Math.round(seekToProgress * 100)}% of track`);
+        waveSurfer.seekTo(seekToProgress);
     },
 });

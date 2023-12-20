@@ -8,12 +8,15 @@ import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 import styles from "./audioPlayerControls.module.scss";
+import useAudioPlayerHotkeys from "./useAudioPlayerHotkeys";
 
 export function AudioPlayerControls() {
     const { currentTime, duration, play, pause, isPlaying, volume, setVolume } =
         useAudioPlayerControls();
     const waveSurfer = appStore.use.waveSurfer();
     const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
+
+    useAudioPlayerHotkeys();
 
     const selectedTrack = getSelectedTrackDef();
     const handlePlay = useVoidCallback(play);

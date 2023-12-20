@@ -7,6 +7,7 @@ export interface AudioPlayerControls {
     duration: AudioPlayerState["audioDuration"];
     pause: AudioPlayerActions["audioPause"];
     play: AudioPlayerActions["audioPlay"];
+    seek: AudioPlayerActions["audioSeek"];
     setVolume: AudioPlayerActions["setAudioVolume"];
     volume: AudioPlayerState["audioVolume"];
 }
@@ -18,6 +19,7 @@ export const useAudioPlayerControls: () => AudioPlayerControls = () =>
         duration: state.audioDuration,
         pause: state.audioPause,
         play: state.audioPlay,
+        seek: state.audioSeek,
         setVolume: state.setAudioVolume,
         volume: state.audioVolume,
     }));
