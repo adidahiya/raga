@@ -37,7 +37,7 @@ __metadata:
     ansis: "npm:^2.0.3"
     classnames: "npm:^2.3.2"
     cross-env: "npm:^7.0.3"
-    date-fns: "npm:^2.30.0"
+    date-fns: "npm:^3.0.1"
     electron: "npm:^28.0.0"
     electron-devtools-installer: "npm:^3.2.0"
     electron-squirrel-startup: "npm:^1.0.0"
@@ -333,7 +333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.23.6, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.23.6, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.23.6
   resolution: "@babel/runtime@npm:7.23.6"
   dependencies:
@@ -4297,12 +4297,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.30.0":
-  version: 2.30.0
-  resolution: "date-fns@npm:2.30.0"
-  dependencies:
-    "@babel/runtime": "npm:^7.21.0"
-  checksum: 70b3e8ea7aaaaeaa2cd80bd889622a4bcb5d8028b4de9162cbcda359db06e16ff6e9309e54eead5341e71031818497f19aaf9839c87d1aba1e27bb4796e758a9
+"date-fns@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "date-fns@npm:3.0.1"
+  checksum: e349cf5b53982813bb8a8fb1ee395083208bdd817d8ee94e3c06af9226688af4e60d625ea44898baf089a3b824364a08eaf783bf386012e355f966d9d4d1782d
   languageName: node
   linkType: hard
 
