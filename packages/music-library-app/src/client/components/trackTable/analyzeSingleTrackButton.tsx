@@ -9,6 +9,7 @@ import styles from "./trackTable.module.scss";
 
 export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: TrackDefinition }) {
     const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
+    const isAnalyzerBusy = appStore.use.analyzerStatus() === "busy";
     const trackId = trackDef["Track ID"];
 
     const analyzeTrack = appStore.use.analyzeTrack();
@@ -27,7 +28,7 @@ export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: Track
                   : undefined,
         [isAudioFilesServerReady, isUnsupportedFileFormat],
     );
-    const buttonDisabled = !isAudioFilesServerReady || isUnsupportedFileFormat;
+    const buttonDisabled = !isAudioFilesServerReady || isUnsupportedFileFormat || isAnalyzerBusy;
 
     return (
         <Tooltip

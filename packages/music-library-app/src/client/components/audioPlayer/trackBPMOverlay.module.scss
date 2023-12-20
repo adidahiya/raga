@@ -1,23 +1,5 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
-.container {
-    background: bp.$dark-gray1;
-    border: solid 1px bp.$pt-dark-divider-white;
-    border-top: none;
-    height: 90px;
-}
-
-.nonIdealState {
-    :global(.#{bp.$ns}-non-ideal-state-text) {
-        margin-bottom: 10px;
-    }
-}
-
-.waveformContainer {
-    position: relative;
-    padding: 5px;
-}
-
 .bpmOverlay {
     align-items: center;
     background: rgba(bp.$black, 0.8);

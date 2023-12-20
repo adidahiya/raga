@@ -1,27 +1,23 @@
+import { useMemo } from "react";
+
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../../common/constants";
 import { getAudioFileURL } from "../audio/buffer";
 import { appStore } from "../store/appStore";
+import useSelectedTrackDef from "./useSelectedTrackDef";
 
 export default function useSelectedTrackFileURL() {
     const audioFilesRootFolder = appStore.use.audioFilesRootFolder();
-    const selectedTrackId = appStore.use.selectedTrackId();
-    const getTrackDef = appStore.use.getTrackDef();
+    const trackDef = useSelectedTrackDef();
 
-    if (selectedTrackId === undefined) {
-        return undefined;
-    }
+    return useMemo(() => {
+        if (trackDef === undefined) {
+            return undefined;
+        }
 
-    const trackDef = getTrackDef(selectedTrackId);
-
-    if (trackDef === undefined) {
-        return undefined;
-    }
-
-    const fileUrl = getAudioFileURL({
-        fileLocation: trackDef.Location,
-        serverRootFolder: audioFilesRootFolder,
-        serverPort: DEFAULT_AUDIO_FILES_SERVER_PORT,
-    });
-
-    return fileUrl;
+        return getAudioFileURL({
+            fileLocation: trackDef.Location,
+            serverRootFolder: audioFilesRootFolder,
+            serverPort: DEFAULT_AUDIO_FILES_SERVER_PORT,
+        });
+    }, [trackDef, audioFilesRootFolder]);
 }

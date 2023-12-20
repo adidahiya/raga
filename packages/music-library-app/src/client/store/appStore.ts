@@ -33,6 +33,7 @@ const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
     "audioCurrentTimeMs",
     "audioDuration",
     "audioIsPlaying",
+    "audioPlaybackRate",
     "analyzerStatus",
     "audioFilesServerStatus",
     "libraryLoadingState",

@@ -20,17 +20,21 @@ import styles from "./audioFilesServerControls.module.scss";
 
 export default function AudioFilesServerControls() {
     const status = appStore.use.audioFilesServerStatus();
+    const isLibraryWriting = appStore.use.libraryWriteState() === "busy";
     const rootFolder = appStore.use.audioFilesRootFolder();
     const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         appStore.use.setAudioTracksRootFolder()(event.target.value);
     }, []);
     const pingServer = appStore.use.pingAudioFilesServer();
 
+    // TODO: move this to some kind of zustand store subscription, it doesn't need to be in a React component
+    // keep pinging server to make sure it's available while state is "started"
+    const shouldPing = status === "started" && !isLibraryWriting;
     useInterval(
         () => {
             void pingServer();
         },
-        status === "started" ? AUDIO_FILES_SERVER_PING_INTERVAL : null,
+        shouldPing ? AUDIO_FILES_SERVER_PING_INTERVAL : null,
     );
 
     const serverOptionsPopover = (

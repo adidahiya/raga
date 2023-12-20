@@ -1,13 +1,16 @@
 import { Button, Classes, NonIdealState } from "@blueprintjs/core";
 import { lazy, Suspense } from "react";
 
+import useSelectedTrackDef from "../../hooks/useSelectedTrackDef";
 import { appStore } from "../../store/appStore";
 import styles from "./audioPlayer.module.scss";
+import { TrackBPMOverlay } from "./trackBPMOverlay";
 
 const AudioWaveform = lazy(() => import("./audioWaveform"));
 
 export function AudioPlayer() {
-    const hasSelectedTrack = appStore.use.selectedTrackId() !== undefined;
+    const selectedTrack = useSelectedTrackDef();
+    const hasSelectedTrack = selectedTrack !== undefined;
     const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
     const fallback = <div className={Classes.SKELETON} />;
 
@@ -15,9 +18,12 @@ export function AudioPlayer() {
         <div className={styles.container}>
             {isAudioFilesServerReady ? (
                 hasSelectedTrack ? (
-                    <Suspense fallback={fallback}>
-                        <AudioWaveform />
-                    </Suspense>
+                    <div className={styles.waveformContainer}>
+                        <Suspense fallback={fallback}>
+                            <AudioWaveform />
+                        </Suspense>
+                        <TrackBPMOverlay trackDef={selectedTrack} />
+                    </div>
                 ) : (
                     <NonIdealState
                         className={styles.nonIdealState}

@@ -8,6 +8,7 @@ export interface AudioPlayerState {
     audioVolume: number;
     audioCurrentTimeMs: number;
     audioDuration: number;
+    audioPlaybackRate: number;
     waveSurfer: WaveSurfer | undefined;
 }
 
@@ -16,6 +17,7 @@ export interface AudioPlayerActions {
     audioPause: () => void;
     audioSeek: (seekMs: number) => void;
     setAudioVolume: (volume: number) => void;
+    setAudioPlaybackRate: (tempoAdjustment: number) => void;
     setWaveSurfer: (waveSurfer: WaveSurfer) => void;
 }
 
@@ -27,6 +29,7 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
     audioVolume: 1,
     audioCurrentTimeMs: 0,
     audioDuration: 0,
+    audioPlaybackRate: 1,
     waveSurfer: undefined,
 
     setAudioVolume: (volume) => {
@@ -36,6 +39,15 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
         }
         waveSurfer.setVolume(volume);
         set({ audioVolume: volume });
+    },
+
+    setAudioPlaybackRate: (audioPlaybackRate) => {
+        const { waveSurfer } = get();
+        if (waveSurfer === undefined) {
+            return;
+        }
+        waveSurfer.setPlaybackRate(audioPlaybackRate);
+        set({ audioPlaybackRate });
     },
 
     setWaveSurfer: (waveSurfer) => {

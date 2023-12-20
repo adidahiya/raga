@@ -19,7 +19,13 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
     min-height: 20px;
     font-size: 12px;
 
-    .#{bp.$ns}-icon:not(.#{bp.$ns}-icon-caret-down) {
+    // prettier-ignore
+    .#{bp.$ns}-icon
+        :not(.#{bp.$ns}-icon-caret-down)
+        :not(.#{bp.$ns}-icon-caret-up)
+        :not(.#{bp.$ns}-icon-caret-left)
+        :not(.#{bp.$ns}-icon-caret-right) {
+
         width: 12px;
         height: 12px;
 
