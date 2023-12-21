@@ -1,8 +1,8 @@
+import { debounce } from "radash";
 import { Roarr as log } from "roarr";
 import type WaveSurfer from "wavesurfer.js";
 
 import { AppStoreSliceCreator } from "../zustandUtils";
-import { debounce } from "radash";
 
 export interface AudioPlayerState {
   audioIsPlaying: boolean;
