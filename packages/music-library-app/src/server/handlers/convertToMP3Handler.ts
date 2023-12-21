@@ -6,9 +6,9 @@ import { sync as commandExistsSync } from "command-exists";
 import ffmpeg from "fluent-ffmpeg";
 import { json, ReqWithBody as RequestWithBody } from "milliparsec";
 
-import { ServerErrors } from "../common/errorMessages";
-import { AudioFilesConverter, AudioFilesConverterTrackDefinition } from "./audioFilesConverter";
-import { log } from "./serverLogger";
+import { ServerErrors } from "../../common/errorMessages";
+import { AudioFilesConverter, AudioFilesConverterTrackDefinition } from "../audioFilesConverter";
+import { log } from "../serverLogger";
 
 export function getConvertToMP3RequestHandler(converter: AudioFilesConverter): Handler {
   return async (

@@ -8,8 +8,8 @@ import sirv from "sirv";
 import { AudioFilesServerRoutes as ServerRoutes } from "../common/audioFilesServerRoutes";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
-import { getConvertToMP3RequestHandler } from "./audioFileConverterMiddleware";
 import { AudioFilesConverter } from "./audioFilesConverter";
+import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";
 import { log } from "./serverLogger";
 
 let audioFilesServer: AudioFilesServer | undefined;
