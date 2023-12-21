@@ -6,26 +6,26 @@ $visible-width: 2px;
 $overflow: ($grabbable-width - $visible-width) * 0.5;
 
 .outer {
-    flex: 0 0 $grabbable-width;
-    position: relative;
-    outline: none;
-    display: flex;
-    justify-content: center;
-    margin-left: -$overflow;
-    margin-right: -$overflow;
+  flex: 0 0 $grabbable-width;
+  position: relative;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  margin-left: -$overflow;
+  margin-right: -$overflow;
 
-    &[data-resize-handle-active] .inner {
-        opacity: 1;
-    }
+  &[data-resize-handle-active] .inner {
+    opacity: 1;
+  }
 
-    &:hover .inner {
-        opacity: 0.8;
-    }
+  &:hover .inner {
+    opacity: 0.8;
+  }
 }
 
 .inner {
-    width: 1px;
-    background-color: bp.$pt-dark-divider-white;
-    transition: opacity 0.1s linear;
-    opacity: 0.6;
+  width: 1px;
+  background-color: bp.$pt-dark-divider-white;
+  transition: opacity 0.1s linear;
+  opacity: 0.6;
 }

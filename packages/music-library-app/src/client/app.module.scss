@@ -3,15 +3,15 @@
 $dark-app-background-color: bp.$dark-gray1;
 
 .app {
-    background: bp.$pt-app-background-color;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: bp.$pt-grid-size;
+  background: bp.$pt-app-background-color;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: bp.$pt-grid-size;
 
-    &:global(.#{bp.$ns}-dark) {
-        background: $dark-app-background-color;
-    }
+  &:global(.#{bp.$ns}-dark) {
+    background: $dark-app-background-color;
+  }
 }

@@ -1,11 +1,11 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 .overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(bp.$black, 0.5);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(bp.$black, 0.5);
 }

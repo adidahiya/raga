@@ -40,5 +40,5 @@ you can just hit the refresh button to load the library when you run this proces
 
 ## Development tasks
 
--   Build from source: `yarn build`
--   Run CLI: `yarn run-cli`
+- Build from source: `yarn build`
+- Run CLI: `yarn run-cli`

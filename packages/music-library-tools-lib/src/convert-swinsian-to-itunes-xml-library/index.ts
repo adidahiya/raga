@@ -6,14 +6,14 @@ export { default as loadSwinsianLibrary } from "./loadSwinsianLibrary.js";
 export { default as serializeLibraryPlist } from "./serializeLibraryPlist.js";
 
 export default function (swinsianLibrary: SwinsianLibraryPlist): MusicLibraryPlist {
-    const musicAppLibrary = { ...swinsianLibrary } as MusicAppLibraryPlist;
+  const musicAppLibrary = { ...swinsianLibrary } as MusicAppLibraryPlist;
 
-    forEachTrackInLibrary(swinsianLibrary, (track) => {
-        const newTrackDefinition = convertSwinsianTrackToMusicAppTrack(
-            track as SwinsianTrackDefinition,
-        );
-        musicAppLibrary.Tracks[track["Track ID"]] = newTrackDefinition;
-    });
+  forEachTrackInLibrary(swinsianLibrary, (track) => {
+    const newTrackDefinition = convertSwinsianTrackToMusicAppTrack(
+      track as SwinsianTrackDefinition,
+    );
+    musicAppLibrary.Tracks[track["Track ID"]] = newTrackDefinition;
+  });
 
-    return musicAppLibrary;
+  return musicAppLibrary;
 }

@@ -8,22 +8,22 @@ import { Ansis, blue, gray, magenta, red, yellow } from "ansis";
  * to stdout / stderr correctly 🤷‍♂️
  */
 export function createScopedLogger(scope: string, scopeColor: Ansis) {
-    // N.B. pad log level identifiers to make them take up a fixed width
-    return {
-        debug: (msg: string) => {
-            console.debug(`${magenta.inverse` debug `} ${scopeColor`[${scope}]`} ${msg}`);
-        },
-        info: (msg: string) => {
-            console.debug(`${blue.inverse` info  `} ${scopeColor`[${scope}]`} ${msg}`);
-        },
-        warn: (msg: string) => {
-            console.debug(`${yellow.inverse` warn  `} ${scopeColor`[${scope}]`} ${msg}`);
-        },
-        error: (msg: string) => {
-            console.debug(`${red.inverse` error `} ${scopeColor`[${scope}]`} ${msg}`);
-        },
-        trace: (msg: string) => {
-            console.debug(`${gray.inverse` trace `} ${scopeColor`[${scope}]`} ${msg}`);
-        },
-    };
+  // N.B. pad log level identifiers to make them take up a fixed width
+  return {
+    debug: (msg: string) => {
+      console.debug(`${magenta.inverse` debug `} ${scopeColor`[${scope}]`} ${msg}`);
+    },
+    info: (msg: string) => {
+      console.debug(`${blue.inverse` info  `} ${scopeColor`[${scope}]`} ${msg}`);
+    },
+    warn: (msg: string) => {
+      console.debug(`${yellow.inverse` warn  `} ${scopeColor`[${scope}]`} ${msg}`);
+    },
+    error: (msg: string) => {
+      console.debug(`${red.inverse` error `} ${scopeColor`[${scope}]`} ${msg}`);
+    },
+    trace: (msg: string) => {
+      console.debug(`${gray.inverse` trace `} ${scopeColor`[${scope}]`} ${msg}`);
+    },
+  };
 }

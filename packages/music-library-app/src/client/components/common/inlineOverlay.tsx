@@ -5,9 +5,9 @@ import React from "react";
 import styles from "./inlineOverlay.module.scss";
 
 export interface InlineOverlayProps extends Props {
-    children?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function InlineOverlay(props: InlineOverlayProps) {
-    return <div className={classNames(styles.overlay, props.className)}>{props.children}</div>;
+  return <div className={classNames(styles.overlay, props.className)}>{props.children}</div>;
 }

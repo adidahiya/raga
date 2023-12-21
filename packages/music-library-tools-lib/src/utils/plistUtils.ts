@@ -6,24 +6,24 @@ import { log } from "../utils/log.js";
 import { collapsePropertiesIntoSingleLine } from "./xmlUtils.js";
 
 export function loadPlistFile(path: string): plist.PlistObject {
-    log.info(`Loading library at ${path}`);
-    log.time(`loadPlistFile`);
-    const plistContents = readFileSync(path, { encoding: "utf8" });
-    const parsedPlist = plist.parse(plistContents) as plist.PlistObject;
-    log.timeEnd(`loadPlistFile`);
-    return parsedPlist;
+  log.info(`Loading library at ${path}`);
+  log.time(`loadPlistFile`);
+  const plistContents = readFileSync(path, { encoding: "utf8" });
+  const parsedPlist = plist.parse(plistContents) as plist.PlistObject;
+  log.timeEnd(`loadPlistFile`);
+  return parsedPlist;
 }
 
 export function buildPlistOutput(library: object): string {
-    log.time(`buildPlistOutput`);
-    let output = plist.build(library as plist.PlistObject, {
-        pretty: true,
-        indent: "	",
-    });
-    output = collapsePropertiesIntoSingleLine(output);
-    output = fixDoctype(output);
-    log.timeEnd(`buildPlistOutput`);
-    return output;
+  log.time(`buildPlistOutput`);
+  let output = plist.build(library as plist.PlistObject, {
+    pretty: true,
+    indent: "	",
+  });
+  output = collapsePropertiesIntoSingleLine(output);
+  output = fixDoctype(output);
+  log.timeEnd(`buildPlistOutput`);
+  return output;
 }
 
 /**
@@ -32,5 +32,5 @@ export function buildPlistOutput(library: object): string {
  * that doctype, so we need to go in there and edit it to match its expectations.
  */
 function fixDoctype(xmlString: string): string {
-    return xmlString.replace("//Apple//DTD PLIST", "//Apple Computer//DTD PLIST");
+  return xmlString.replace("//Apple//DTD PLIST", "//Apple Computer//DTD PLIST");
 }

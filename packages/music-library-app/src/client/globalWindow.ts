@@ -1,7 +1,7 @@
 import type { ContextBridgeApi } from "../contextBridgeApi";
 
 declare global {
-    interface Window {
-        api: ContextBridgeApi;
-    }
+  interface Window {
+    api: ContextBridgeApi;
+  }
 }

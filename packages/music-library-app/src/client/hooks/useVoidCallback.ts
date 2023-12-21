@@ -6,11 +6,11 @@ import { DependencyList, useCallback } from "react";
  * If no dependency list is provided, the callback function will be used as the only dependency.
  */
 export default function useVoidCallback<T>(
-    cb: () => Promise<T>,
-    deps: DependencyList = [cb],
+  cb: () => Promise<T>,
+  deps: DependencyList = [cb],
 ): () => void {
-    /* eslint-disable react-hooks/exhaustive-deps */
-    return useCallback(() => {
-        void cb();
-    }, [deps]);
+  /* eslint-disable react-hooks/exhaustive-deps */
+  return useCallback(() => {
+    void cb();
+  }, [deps]);
 }

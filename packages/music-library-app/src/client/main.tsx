@@ -12,13 +12,13 @@ FocusStyleManager.onlyShowFocusOnTabs();
 
 const domNode = document.getElementById("root");
 if (domNode === null) {
-    throw new Error(`[client] Failed to render application: no root DOM node available.`);
+  throw new Error(`[client] Failed to render application: no root DOM node available.`);
 }
 const root = createRoot(domNode);
 root.render(
-    <HotkeysProvider dialogProps={{ className: Classes.DARK }}>
-        <App />
-    </HotkeysProvider>,
+  <HotkeysProvider dialogProps={{ className: Classes.DARK }}>
+    <App />
+  </HotkeysProvider>,
 );
 
 // (async () => {

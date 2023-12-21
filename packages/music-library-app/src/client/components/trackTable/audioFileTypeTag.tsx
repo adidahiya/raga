@@ -5,24 +5,24 @@ import { useMemo } from "react";
 import { isSupportedWebAudioFileFormat } from "../../../common/webAudioUtils";
 
 export interface AudioFileTypeTagProps extends TagProps {
-    fileType: AudioFileType | undefined;
+  fileType: AudioFileType | undefined;
 }
 
 export default function AudioFileTypeTag({ fileType, ...props }: AudioFileTypeTagProps) {
-    const isUnsupportedFileFormat = useMemo(
-        () => fileType === undefined || !isSupportedWebAudioFileFormat(fileType),
-        [fileType],
-    );
+  const isUnsupportedFileFormat = useMemo(
+    () => fileType === undefined || !isSupportedWebAudioFileFormat(fileType),
+    [fileType],
+  );
 
-    return (
-        <Tag
-            minimal={true}
-            fill={true}
-            intent={isUnsupportedFileFormat ? "warning" : "none"}
-            style={{ textAlign: "center" }}
-            {...props}
-        >
-            {fileType ?? "unknown"}
-        </Tag>
-    );
+  return (
+    <Tag
+      minimal={true}
+      fill={true}
+      intent={isUnsupportedFileFormat ? "warning" : "none"}
+      style={{ textAlign: "center" }}
+      {...props}
+    >
+      {fileType ?? "unknown"}
+    </Tag>
+  );
 }

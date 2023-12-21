@@ -1,92 +1,92 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
-    :global(.#{bp.$ns}-non-ideal-state) {
-        flex-grow: 1;
-    }
+  :global(.#{bp.$ns}-non-ideal-state) {
+    flex-grow: 1;
+  }
 }
 
 .header,
 .body,
 .footer {
-    table {
-        table-layout: fixed;
-        width: 100%;
-    }
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
 }
 
 .header {
-    // empty for now
+  // empty for now
 }
 
 .body,
 .footer {
-    thead {
-        display: none;
-    }
+  thead {
+    display: none;
+  }
 }
 
 .body {
-    overflow-y: scroll;
+  overflow-y: scroll;
 
-    td {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+  td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 
-        &:not(:last-child) {
-            border-right: solid 1px bp.$pt-dark-divider-white;
-        }
+    &:not(:last-child) {
+      border-right: solid 1px bp.$pt-dark-divider-white;
     }
+  }
 
-    tr.selected {
-        background-color: bp.$blue1;
-    }
+  tr.selected {
+    background-color: bp.$blue1;
+  }
 
-    :global(.#{bp.$ns}-html-table) {
-        tr.disabled:hover td.trackCell {
-            cursor: auto;
-        }
+  :global(.#{bp.$ns}-html-table) {
+    tr.disabled:hover td.trackCell {
+      cursor: auto;
     }
+  }
 }
 
 .bpmColumnHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .bpmCell {
-    display: block;
-    text-align: right;
+  display: block;
+  text-align: right;
 }
 
 .analyzeAllButton {
-    font-weight: bold;
-    margin-left: -4px;
+  font-weight: bold;
+  margin-left: -4px;
 }
 
 .analyzeTrackButton:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-    border-color: rgba(bp.$white, 0.25);
+  border-color: rgba(bp.$white, 0.25);
 }
 
 :global(.resizer) {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 3px;
-    background: bp.$pt-dark-divider-white;
-    opacity: 0.8;
-    cursor: col-resize;
-    user-select: none;
-    touch-action: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: bp.$pt-dark-divider-white;
+  opacity: 0.8;
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
 
-    &:global(.isResizing) {
-        opacity: 1;
-    }
+  &:global(.isResizing) {
+    opacity: 1;
+  }
 }

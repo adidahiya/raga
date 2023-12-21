@@ -8,11 +8,6 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
-# 4 spaces for indentation
-indent_size = 4
-indent_style = space
-# 120 characters max per line
-max_line_length = 120
-
-[*.{yml,yaml}]
 indent_size = 2
+indent_style = space
+max_line_length = 100

@@ -8,11 +8,8 @@ import { decodeEntity } from "html-entities";
  * which wastes a lot of vertical space when you are trying to debug XML files.
  */
 export function collapsePropertiesIntoSingleLine(xmlString: string): string {
-    // only inline simple types, not dicts or arrays
-    return xmlString.replace(
-        /(<\/key>)\n(\t| )+<(string|integer|date|true\/?|false\/?)>/g,
-        "$1<$3>",
-    );
+  // only inline simple types, not dicts or arrays
+  return xmlString.replace(/(<\/key>)\n(\t| )+<(string|integer|date|true\/?|false\/?)>/g, "$1<$3>");
 }
 
 /**
@@ -20,12 +17,12 @@ export function collapsePropertiesIntoSingleLine(xmlString: string): string {
  * we've reimplemented that encoding here, for consistency (this may not affect functionality).
  */
 export function reEncodeHtmlEntities(xmlString: string): string {
-    return xmlString.replace(/(&\w*;)/g, (entity) => {
-        if (entity === "&apos;") {
-            // special case: just use a regular apostrophe
-            return "'";
-        }
-        const charCode = decodeEntity(entity).charCodeAt(0);
-        return `&#${charCode};`;
-    });
+  return xmlString.replace(/(&\w*;)/g, (entity) => {
+    if (entity === "&apos;") {
+      // special case: just use a regular apostrophe
+      return "'";
+    }
+    const charCode = decodeEntity(entity).charCodeAt(0);
+    return `&#${charCode};`;
+  });
 }

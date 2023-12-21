@@ -1,26 +1,26 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
-    th,
-    td {
-        padding: 2px 6px;
-    }
+  th,
+  td {
+    padding: 2px 6px;
+  }
 }
 
 // darker dark theme
 .#{bp.$ns}-dark {
-    .#{bp.$ns}-card {
-        background-color: bp.$dark-gray2;
-    }
+  .#{bp.$ns}-card {
+    background-color: bp.$dark-gray2;
+  }
 }
 
 // smaller small button
 .#{bp.$ns}-button.#{bp.$ns}-small {
-    min-height: 20px;
-    font-size: 12px;
+  min-height: 20px;
+  font-size: 12px;
 
-    // prettier-ignore
-    .#{bp.$ns}-icon
+  // prettier-ignore
+  .#{bp.$ns}-icon
         :not(.#{bp.$ns}-icon-caret-down)
         :not(.#{bp.$ns}-icon-caret-up)
         :not(.#{bp.$ns}-icon-caret-left)
@@ -37,14 +37,14 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
 }
 
 .#{bp.$ns}-section.#{bp.$ns}-compact .#{bp.$ns}-section-card.#{bp.$ns}-padded {
-    padding: 10px 15px;
+  padding: 10px 15px;
 }
 
 .#{bp.$ns}-form-group,
 .#{bp.$ns}-control {
-    margin: 0;
+  margin: 0;
 }
 
 .#{bp.$ns}-slider {
-    min-width: 100px;
+  min-width: 100px;
 }

@@ -1,15 +1,15 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 .compactTable {
-    table:global(.#{bp.$ns}-html-table) {
-        th {
-            height: 24px;
-            vertical-align: middle;
-            position: relative; // create a stacking context for the resize handle
-        }
+  table:global(.#{bp.$ns}-html-table) {
+    th {
+      height: 24px;
+      vertical-align: middle;
+      position: relative; // create a stacking context for the resize handle
     }
+  }
 }
 
 .popoverBackdrop:global(.#{bp.$ns}-popover-backdrop) {
-    background-color: rgba(bp.$black, 0.25);
+  background-color: rgba(bp.$black, 0.25);
 }

@@ -3,10 +3,10 @@
 $inputWidth: 400px;
 
 .outputFilepath {
-    margin-bottom: 10px;
-    width: $inputWidth;
+  margin-bottom: 10px;
+  width: $inputWidth;
 
-    :global(.#{bp.$ns}-file-upload-input) {
-        width: $inputWidth;
-    }
+  :global(.#{bp.$ns}-file-upload-input) {
+    width: $inputWidth;
+  }
 }

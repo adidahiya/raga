@@ -1,39 +1,39 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 .container {
-    width: 100%;
+  width: 100%;
 }
 
 .header,
 .body,
 .footer {
-    table {
-        table-layout: fixed;
-        width: 100%;
-    }
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
 }
 
 .body,
 .footer {
-    thead {
-        display: none;
-    }
+  thead {
+    display: none;
+  }
 }
 
 .body {
-    overflow-y: scroll;
+  overflow-y: scroll;
 
-    tr.selectedPath {
-        background-color: darken(bp.$blue1, 15%);
-    }
+  tr.selectedPath {
+    background-color: darken(bp.$blue1, 15%);
+  }
 
-    tr.selected {
-        background-color: bp.$blue1;
-    }
+  tr.selected {
+    background-color: bp.$blue1;
+  }
 
-    td {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
+  td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }

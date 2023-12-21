@@ -1,56 +1,56 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
 .container {
-    background: bp.$dark-gray1;
-    border: solid 1px bp.$pt-dark-divider-white;
-    border-top: none;
-    height: 90px;
+  background: bp.$dark-gray1;
+  border: solid 1px bp.$pt-dark-divider-white;
+  border-top: none;
+  height: 90px;
 }
 
 .nonIdealState {
-    :global(.#{bp.$ns}-non-ideal-state-text) {
-        margin-bottom: 10px;
-    }
+  :global(.#{bp.$ns}-non-ideal-state-text) {
+    margin-bottom: 10px;
+  }
 }
 
 .waveformContainer {
-    position: relative;
-    padding: 5px;
+  position: relative;
+  padding: 5px;
 }
 
 .bpmOverlay {
-    align-items: center;
-    background: rgba(bp.$black, 0.8);
-    border-bottom-left-radius: 3px;
-    display: inline-flex;
-    gap: 5px;
-    padding: 10px;
-    height: 55px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 2; // just above the waveform
+  align-items: center;
+  background: rgba(bp.$black, 0.8);
+  border-bottom-left-radius: 3px;
+  display: inline-flex;
+  gap: 5px;
+  padding: 10px;
+  height: 55px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2; // just above the waveform
 }
 
 .bpmValue {
-    width: 40px;
+  width: 40px;
 
-    &.adjusted {
-        color: bp.$blue4;
-    }
+  &.adjusted {
+    color: bp.$blue4;
+  }
 }
 
 .tempoSliderToggleButton {
-    margin: 0 5px;
+  margin: 0 5px;
 }
 
 .tempoSliderContainer {
-    align-items: center;
-    display: inline-flex;
-    gap: 5px;
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
 
-    :global(.#{bp.$ns}-slider) {
-        margin: 0 20px;
-        width: 200px;
-    }
+  :global(.#{bp.$ns}-slider) {
+    margin: 0 20px;
+    width: 200px;
+  }
 }

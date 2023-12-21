@@ -6,24 +6,24 @@ import { format, parseISO } from "date-fns";
 import { appStore } from "../../store/appStore";
 
 export default function LibraryLastModifiedText() {
-    const library = appStore.use.library();
-    const dateModified = getDateModified(library);
+  const library = appStore.use.library();
+  const dateModified = getDateModified(library);
 
-    return (
-        <span className={classNames({ [Classes.SKELETON]: !library })}>
-            Last modified: {format(dateModified, "Pp")}
-        </span>
-    );
+  return (
+    <span className={classNames({ [Classes.SKELETON]: !library })}>
+      Last modified: {format(dateModified, "Pp")}
+    </span>
+  );
 }
 
 function getDateModified(library: MusicLibraryPlist | undefined) {
-    if (library === undefined) {
-        return new Date();
-    }
+  if (library === undefined) {
+    return new Date();
+  }
 
-    if (typeof library.Date === "string") {
-        return parseISO(library.Date);
-    }
+  if (typeof library.Date === "string") {
+    return parseISO(library.Date);
+  }
 
-    return library.Date;
+  return library.Date;
 }
