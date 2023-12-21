@@ -9,6 +9,7 @@ import {
 } from "../../../common/constants";
 import { ClientEventChannel, ServerEventChannel } from "../../../common/events";
 import convertTrackToMP3Request from "../requestFactories/convertTrackToMP3Request";
+import pingRequest from "../requestFactories/pingRequest";
 import type { AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
 
 export type AudioFilesServerStatus = "stopped" | "starting" | "started" | "failed";
@@ -95,9 +96,6 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
     },
 
     pingAudioFilesServer: () => {
-      const port = DEFAULT_AUDIO_FILES_SERVER_PORT;
-      const pingURL = `http://localhost:${port}/ping`;
-
       return new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
           log.error(`[client] audio files server ping timed out`);
@@ -105,8 +103,8 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
           reject();
         }, AUDIO_FILES_SERVER_PINT_TIMEOUT);
 
-        log.debug(`[client] pinging audio files server at ${pingURL}...`);
-        fetch(pingURL)
+        log.debug(`[client] pinging audio files server at ${serverBaseURL}...`);
+        pingRequest(serverBaseURL)
           .then((res) => {
             if (res.ok) {
               set({ audioFilesServerStatus: "started" });
