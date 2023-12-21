@@ -6,7 +6,7 @@ declare global {
   // eslint-disable-next-line no-var
   var ROARR: RoarrGlobalState;
 
-  type PartialRecord<K extends string, T> = {
+  type PartialRecord<K extends string | number, T> = {
     [P in K]?: T;
   };
 }

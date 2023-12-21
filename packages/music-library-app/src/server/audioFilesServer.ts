@@ -1,15 +1,15 @@
-import { createReadStream, existsSync, mkdtempSync, readdirSync, ReadStream } from "node:fs";
+import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { Server } from "node:http";
-import { tmpdir } from "node:os";
-import { basename, extname, join } from "node:path";
 import { env } from "node:process";
 
-import { App, NextFunction, Request, Response } from "@tinyhttp/app";
-import ffmpeg from "fluent-ffmpeg";
+import { App, Request, Response } from "@tinyhttp/app";
 import sirv from "sirv";
 
+import { AudioFilesServerRoutes as ServerRoutes } from "../common/audioFilesServerRoutes";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
-import { isSupportedWebAudioFileFormat } from "../common/webAudioUtils";
+import { ServerErrors } from "../common/errorMessages";
+import { getConvertToMP3RequestHandler } from "./audioFileConverterMiddleware";
+import { AudioFilesConverter } from "./audioFilesConverter";
 import { log } from "./serverLogger";
 
 let audioFilesServer: AudioFilesServer | undefined;
@@ -42,6 +42,10 @@ export async function startAudioFilesServer(
 
       log.debug(`starting audio files server at ${options.audioFilesRootFolder}...`);
       const app = initServerApp(options);
+      if (app === undefined) {
+        options.onError?.(new Error("[server] failed to initialize audio files server"));
+        return;
+      }
 
       waitForServerToStart(app)
         .then((server: Server) => {
@@ -64,53 +68,20 @@ export async function startAudioFilesServer(
   });
 }
 
-function initServerApp(options: AudioFilesServerOptions): App {
+function initServerApp(options: AudioFilesServerOptions): App | undefined {
   const app = new App();
+  let converter: AudioFilesConverter;
+
+  try {
+    converter = new AudioFilesConverter(options);
+  } catch (e) {
+    log.error((e as Error).message);
+    return undefined;
+  }
 
   const staticServerMiddleware = sirv(options.audioFilesRootFolder, {
     dev: env.NODE_ENV === "development",
   });
-
-  const audioFileConverterMiddleware = async (
-    { path }: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    const inputRelativeFilePath = decodeURIComponent(path);
-    const filePath = `${options.audioFilesRootFolder}${inputRelativeFilePath}`;
-    if (filePath.includes(".") && !isSupportedWebAudioFileFormat(filePath)) {
-      log.debug(`Received request for audio file type unsupported by Web Audio: ${filePath}`);
-
-      const fileExists = existsSync(filePath);
-      if (!fileExists) {
-        res.status(404).send(`Audio file not found: ${filePath}`);
-        return;
-      }
-
-      const inputFileStream = createReadStream(filePath);
-      const outputFileName = basename(inputRelativeFilePath).replace(
-        extname(inputRelativeFilePath),
-        ".mp3",
-      );
-
-      // TODO: re-use already-converted files if available
-      try {
-        // N.B. the `tempy` package is not compatible with Vite for some strange reason, so we
-        // create temp directories ourself with built-in Node.js APIs
-        const outputFolder = mkdtempSync(join(tmpdir(), "music-library-app"));
-        log.debug(`Created temporary folder ${outputFolder}`);
-        const outputFilePath = join(outputFolder, outputFileName);
-        await convertAudioFileToMP3(inputFileStream, outputFilePath);
-        res.status(200).sendFile(outputFilePath);
-      } catch (e) {
-        const err = e as Error;
-        log.error(err.message);
-        res.status(500).send(err.message);
-      }
-    } else {
-      next();
-    }
-  };
 
   function handlePingRequest(_req: Request, res: Response) {
     try {
@@ -123,9 +94,28 @@ function initServerApp(options: AudioFilesServerOptions): App {
     res.status(200).send("pong");
   }
 
+  function handleGetConvertedMP3FileRequest(req: Request, res: Response) {
+    const filepath = decodeURIComponent(req.params.filepath);
+    const fileExists = existsSync(filepath);
+
+    if (!fileExists) {
+      res.status(404).send(ServerErrors.CONVERTED_AUDIO_FILE_NOT_FOUND);
+      return;
+    }
+
+    const fileStat = statSync(filepath);
+    const fileStream = createReadStream(filepath);
+    res.status(200).header({
+      "Content-Type": "audio/mpeg",
+      "Content-Length": fileStat.size,
+    });
+    fileStream.pipe(res);
+  }
+
   return app
-    .get("/ping", handlePingRequest)
-    .use(audioFileConverterMiddleware)
+    .get(ServerRoutes.GET_PING, handlePingRequest)
+    .get(`${ServerRoutes.GET_CONVERTED_MP3}/:filepath`, handleGetConvertedMP3FileRequest)
+    .post(ServerRoutes.POST_CONVERT_TO_MP3, getConvertToMP3RequestHandler(converter))
     .use(staticServerMiddleware);
 }
 
@@ -153,25 +143,4 @@ function validateRootFolderOrThrow(rootFolder: string): void {
   if (!rootFolderExists) {
     throw new Error(`[server] audio files root folder ${rootFolder} does not exist or is empty`);
   }
-}
-
-// TODO: move this to a separate module (possibly music-library-tools-lib)
-async function convertAudioFileToMP3(inputFileStream: ReadStream, outputFilePath: string) {
-  return new Promise<void>((resolve, reject) => {
-    console.time(`audioFileConverter`);
-    ffmpeg(inputFileStream)
-      .audioCodec("libmp3lame")
-      .audioBitrate(320)
-      .audioFrequency(44100)
-      .noVideo()
-      .save(outputFilePath)
-      .on("end", () => {
-        console.timeEnd(`audioFileConverter`);
-        log.debug(`Wrote converted MP3 at ${outputFilePath}`);
-        resolve();
-      })
-      .on("error", (err) => {
-        reject(err);
-      });
-  });
 }

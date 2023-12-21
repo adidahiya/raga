@@ -1,0 +1,8 @@
+export const ServerErrors = {
+  AUDIO_FILE_NOT_FOUND: `Audio file not found`,
+  FFMPEG_NOT_INSTALLED: `ffmpeg is not installed on the system path`,
+  MP3_CODEC_UNAVAILABLE: `No MP3 codec is available`,
+  TEMP_DIR_UNAVAILABLE: `Unable to create a temporary directory for audio file conversion`,
+  INVALID_CONVERSION_REQUEST: `Invalid MP3 conversion request`,
+  CONVERTED_AUDIO_FILE_NOT_FOUND: `Converted audio file not found`,
+};

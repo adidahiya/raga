@@ -12,6 +12,7 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import NodeID3 from "node-id3";
+import { serializeError } from "serialize-error";
 
 import {
   AudioFilesServerStartOptions,
@@ -115,7 +116,7 @@ async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions
       onError: (error) => {
         process.parentPort.postMessage({
           channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
-          data: error,
+          data: serializeError(error),
         });
       },
     });
