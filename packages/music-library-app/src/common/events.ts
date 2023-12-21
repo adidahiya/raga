@@ -7,6 +7,7 @@ export const ClientEventChannel = {
   AUDIO_FILES_SERVER_START: "audioFilesServerStart" as const,
   AUDIO_FILES_SERVER_STOP: "audioFilesServerStop" as const,
   LOAD_SWINSIAN_LIBRARY: "loadSwinsianLibrary" as const,
+  OPEN_FILE_LOCATION: "openFileLocation" as const,
   WRITE_AUDIO_FILE_TAG: "writeAudioFileTag" as const,
   WRITE_MODIFIED_LIBRARY: "writeModifiedLibrary" as const,
 };
@@ -43,6 +44,7 @@ export interface ClientMessageEvent<C extends ClientEventChannel = ClientEventCh
 export interface ClientEventPayloadMap {
   [ClientEventChannel.AUDIO_FILES_SERVER_START]: AudioFilesServerStartOptions;
   [ClientEventChannel.LOAD_SWINSIAN_LIBRARY]: LoadSwinsianLibraryOptions;
+  [ClientEventChannel.OPEN_FILE_LOCATION]: OpenFileLocationOptions;
   [ClientEventChannel.WRITE_AUDIO_FILE_TAG]: WriteAudioFileTagOptions;
   [ClientEventChannel.WRITE_MODIFIED_LIBRARY]: WriteModifiedLibraryOptions;
   [ClientEventChannel.AUDIO_FILES_SERVER_STOP]: never;
@@ -85,4 +87,8 @@ export interface WriteModifiedLibraryOptions {
    * adjacent to the input library file.
    */
   outputFilepath: string;
+}
+
+export interface OpenFileLocationOptions {
+  filepath: string;
 }

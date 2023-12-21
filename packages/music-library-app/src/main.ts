@@ -4,7 +4,7 @@ import { cyan } from "ansis";
 import { app, BrowserWindow, ipcMain, shell, UtilityProcess, utilityProcess } from "electron";
 
 import { DEBUG } from "./common/constants";
-import { ClientEventChannel, isServerEventChannel } from "./common/events";
+import { ClientEventChannel, isServerEventChannel, OpenFileLocationOptions } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -53,16 +53,32 @@ const createWindow = async () => {
     stdio: "inherit",
   });
 
+  const clientEventsToHandleInMainProcess: ClientEventChannel[] = [
+    ClientEventChannel.OPEN_FILE_LOCATION,
+  ];
+
   for (const channel of Object.values(ClientEventChannel)) {
     ipcMain.on(channel, (_mainEvent, data: object) => {
-      const messageToForward = {
-        channel,
-        data,
-      };
+      if (clientEventsToHandleInMainProcess.includes(channel)) {
+        switch (channel) {
+          case ClientEventChannel.OPEN_FILE_LOCATION:
+            // N.B. this call happens _extremely slowly_ and hangs the Finder process on macOS if we
+            // expose the method directly to the renderer process, so we need this level of
+            // indirection to avoid that issue - see https://github.com/electron/electron/issues/17835
+            shell.showItemInFolder((data as OpenFileLocationOptions).filepath);
+            break;
+        }
+      } else {
+        // forward to utility server process
+        const messageToForward = {
+          channel,
+          data,
+        };
 
-      log.trace(`received "${channel}" event from renderer, forwarding to utility process`);
+        log.trace(`received "${channel}" event from renderer, forwarding to utility process`);
 
-      serverProcess?.postMessage(messageToForward);
+        serverProcess?.postMessage(messageToForward);
+      }
     });
   }
 
