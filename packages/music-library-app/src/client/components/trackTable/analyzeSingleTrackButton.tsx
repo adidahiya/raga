@@ -1,41 +1,43 @@
 import { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Button, Tooltip } from "@blueprintjs/core";
-import { useMemo } from "react";
 
-import { isSupportedWebAudioFileFormat } from "../../../common/webAudioUtils";
 import { useVoidCallback } from "../../hooks";
+import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
 
 export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: TrackDefinition }) {
   const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
   const isAnalyzerBusy = appStore.use.analyzerStatus() === "busy";
-  const trackId = trackDef["Track ID"];
-
+  const audioFilesConverterIsBusy = appStore.use.audioFilesConverterIsBusy();
   const analyzeTrack = appStore.use.analyzeTrack();
-  const handleAnalyzeBPM = useVoidCallback(() => analyzeTrack(trackId), [analyzeTrack, trackId]);
+  const convertTrackToMP3 = appStore.use.convertTrackToMP3();
 
-  const isUnsupportedFileFormat = useMemo(
-    () => !isSupportedWebAudioFileFormat(trackDef),
-    [trackDef],
-  );
-  const tooltipContent = useMemo(
-    () =>
-      isUnsupportedFileFormat
-        ? "Unsupported audio file format"
-        : !isAudioFilesServerReady
-          ? "Disconnected from audio files server"
-          : undefined,
-    [isAudioFilesServerReady, isUnsupportedFileFormat],
-  );
-  const buttonDisabled = !isAudioFilesServerReady || isUnsupportedFileFormat || isAnalyzerBusy;
+  const trackID = trackDef["Track ID"];
+  const isTrackReadyForAnalysis = useIsTrackReadyForAnalysis(trackID);
+
+  // analyze the track if it's ready for analysis, otherwise convert it to a compatible format first
+  const handleAnalyzeBPM = useVoidCallback(async () => {
+    if (!isTrackReadyForAnalysis) {
+      await convertTrackToMP3(trackDef);
+    }
+    void analyzeTrack(trackID);
+  }, [analyzeTrack, convertTrackToMP3, isTrackReadyForAnalysis, trackDef, trackID]);
+
+  const isConvertingThisFile = !isTrackReadyForAnalysis && audioFilesConverterIsBusy;
+  const buttonDisabled = !isAudioFilesServerReady || isAnalyzerBusy || isConvertingThisFile;
+  const tooltipText = !isAudioFilesServerReady
+    ? "Disconnected from audio files server"
+    : isConvertingThisFile
+      ? "Converting to compatible audio format for analysis..."
+      : undefined;
 
   return (
     <Tooltip
       compact={true}
       disabled={!buttonDisabled}
       placement="top"
-      content={tooltipContent}
+      content={tooltipText}
       hoverOpenDelay={300}
       fill={true}
     >

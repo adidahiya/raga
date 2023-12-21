@@ -35,7 +35,7 @@ export default function useSelectedTrackFileURL() {
     if (isSupportedWebAudioFileFormat(trackDef.Location)) {
       setSelectedFileURL(
         getAudioFileURL({
-          fileLocation: trackDef.Location,
+          fileOrResourceURL: trackDef.Location,
           serverRootFolder: audioFilesRootFolder,
           serverPort,
         }),

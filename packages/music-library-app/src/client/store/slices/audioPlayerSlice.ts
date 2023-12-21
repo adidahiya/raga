@@ -19,6 +19,7 @@ export interface AudioPlayerActions {
   setAudioVolume: (volume: number) => void;
   setAudioPlaybackRate: (tempoAdjustment: number) => void;
   setWaveSurfer: (waveSurfer: WaveSurfer) => void;
+  unloadWaveSurfer: () => void;
 }
 
 export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & AudioPlayerActions> = (
@@ -31,6 +32,16 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
   audioDuration: 0,
   audioPlaybackRate: 1,
   waveSurfer: undefined,
+
+  unloadWaveSurfer: () => {
+    const { waveSurfer: oldWaveSurfer } = get();
+
+    if (oldWaveSurfer !== undefined) {
+      oldWaveSurfer.unAll();
+      oldWaveSurfer.destroy();
+      set({ waveSurfer: undefined });
+    }
+  },
 
   setAudioVolume: (volume) => {
     const { waveSurfer } = get();
@@ -51,13 +62,9 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
   },
 
   setWaveSurfer: (waveSurfer) => {
-    const { getSelectedTrackDef, waveSurfer: oldWaveSurfer } = get();
+    const { getSelectedTrackDef, unloadWaveSurfer } = get();
     const selectedTrackDef = getSelectedTrackDef();
-
-    if (oldWaveSurfer !== undefined) {
-      oldWaveSurfer.unAll();
-      oldWaveSurfer.destroy();
-    }
+    unloadWaveSurfer();
 
     if (selectedTrackDef !== undefined) {
       log.debug(

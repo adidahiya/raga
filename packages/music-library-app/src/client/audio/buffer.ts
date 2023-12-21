@@ -1,5 +1,9 @@
 export interface LoadAudioBufferOptions {
-  fileLocation: string;
+  /**
+   * The URL of an audio file, either as a file URL (e.g. `file:///path/to/file.mp3`) or
+   * a web resource URL (e.g. `http://localhost:3000/file.mp3`).
+   */
+  fileOrResourceURL: string;
   serverPort: number;
   serverRootFolder: string;
 }
@@ -14,9 +18,15 @@ export async function loadAudioBuffer(options: LoadAudioBufferOptions): Promise<
 }
 
 export function getAudioFileURL({
-  fileLocation,
+  fileOrResourceURL,
   serverPort,
   serverRootFolder,
 }: LoadAudioBufferOptions): string {
-  return fileLocation.replace(`file://${serverRootFolder}`, `http://localhost:${serverPort}`);
+  if (fileOrResourceURL.startsWith("file://")) {
+    return fileOrResourceURL.replace(
+      `file://${serverRootFolder}`,
+      `http://localhost:${serverPort}`,
+    );
+  }
+  return fileOrResourceURL;
 }

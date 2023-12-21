@@ -101,6 +101,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set({ libraryOutputFilepath: libraryFilepath });
   },
   setSelectedTrackId: (selectedTrackId) => {
+    get().unloadWaveSurfer();
     set({ selectedTrackId });
   },
 

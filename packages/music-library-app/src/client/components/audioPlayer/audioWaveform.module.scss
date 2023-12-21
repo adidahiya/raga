@@ -1,3 +1,5 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
 .container {
   height: 80px;
   position: relative;
@@ -9,4 +11,13 @@
 
 .waveform {
   height: 80px;
+}
+
+.loadingOverlay {
+  top: 0;
+  z-index: 2; // just above waveform element
+
+  :global(.#{bp.$ns}-non-ideal-state-text) {
+    margin-bottom: 10px;
+  }
 }
