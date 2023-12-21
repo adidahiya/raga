@@ -7,6 +7,7 @@ import { appStore } from "../../store/appStore";
 import styles from "./audioPlayer.module.scss";
 import { TrackBPMOverlay } from "./trackBPMOverlay";
 
+// TODO: reconsider if this lazy-loading is worth it...
 const AudioWaveform = lazy(() => import("./audioWaveform"));
 
 export function AudioPlayer() {

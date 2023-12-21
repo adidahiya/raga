@@ -2,6 +2,7 @@ import { Roarr as log } from "roarr";
 import type WaveSurfer from "wavesurfer.js";
 
 import { AppStoreSliceCreator } from "../zustandUtils";
+import { debounce } from "radash";
 
 export interface AudioPlayerState {
   audioIsPlaying: boolean;
@@ -62,9 +63,13 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
   },
 
   setWaveSurfer: (waveSurfer) => {
-    const { getSelectedTrackDef, unloadWaveSurfer } = get();
+    const { getSelectedTrackDef, waveSurfer: oldWaveSurfer } = get();
     const selectedTrackDef = getSelectedTrackDef();
-    unloadWaveSurfer();
+
+    if (oldWaveSurfer !== undefined) {
+      oldWaveSurfer.unAll();
+      oldWaveSurfer.destroy();
+    }
 
     if (selectedTrackDef !== undefined) {
       log.debug(
@@ -72,9 +77,13 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
       );
     }
 
-    waveSurfer.on("timeupdate", (currentTimeSeconds: number) => {
-      set({ audioCurrentTimeMs: Math.floor(currentTimeSeconds * 1000) });
-    });
+    // debounce the timeupdate event so we don't spam the store with updates
+    waveSurfer.on(
+      "timeupdate",
+      debounce({ delay: 100 }, (currentTimeSeconds: number) => {
+        set({ audioCurrentTimeMs: Math.floor(currentTimeSeconds * 1000) });
+      }),
+    );
 
     set({
       audioIsPlaying: false,
