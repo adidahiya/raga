@@ -9,6 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
+import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { getTrackFileType } from "../../../common/trackUtils";
@@ -91,10 +92,27 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
     columns,
     state: {},
     columnResizeMode: "onChange",
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: getCoreRowModel<TrackDefinition>(),
     enableRowSelection: canSelectRow,
     enableMultiRowSelection: false,
   });
+
+  const selectedPlaylistId = appStore.use.selectedPlaylistId();
+  const selectedTrackId = appStore.use.selectedTrackId();
+
+  // HACKHACK: for some reason, the table model retains some stale row selection state that
+  // we need to clear when changing playlists
+  useEffect(() => {
+    table.resetRowSelection();
+  }, [selectedPlaylistId, table]);
+
+  useEffect(() => {
+    table.resetRowSelection();
+    table
+      .getRowModel()
+      .rows.find((row) => row.original["Track ID"] === selectedTrackId)
+      ?.toggleSelected();
+  }, [table, selectedTrackId]);
 
   const headerRows = table.getHeaderGroups().map((headerGroup) => (
     <tr key={headerGroup.id}>
@@ -114,7 +132,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
   ));
 
   return (
-    <div className={styles.container}>
+    <div className={styles.trackTableContainer}>
       <div className={classNames(styles.header, commonStyles.compactTable)}>
         <HTMLTable compact={true}>
           <thead>{headerRows}</thead>
@@ -129,7 +147,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
           <thead>{headerRows}</thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <TrackTableRow key={row.id} {...row} />
+              <TrackTableRow key={row.original["Track ID"]} {...row} />
             ))}
           </tbody>
         </HTMLTable>

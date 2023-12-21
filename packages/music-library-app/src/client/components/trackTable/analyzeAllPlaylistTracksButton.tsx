@@ -23,15 +23,17 @@ export default function AnalyzeAllPlaylistTracksButton({
   return (
     <Tooltip
       compact={true}
-      disabled={!buttonDisabled}
-      placement="top"
       content={buttonDisabled ? "Disconnected from audio files server" : undefined}
+      disabled={!buttonDisabled}
+      fill={true}
       hoverOpenDelay={300}
+      placement="top"
     >
       <Button
         className={styles.analyzeAllButton}
         disabled={buttonDisabled}
         ellipsizeText={true}
+        fill={true}
         intent="primary"
         loading={analyzerStatus === "busy"}
         minimal={true}

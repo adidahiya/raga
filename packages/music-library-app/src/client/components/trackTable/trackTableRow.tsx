@@ -18,7 +18,7 @@ export default function TrackTableRow(row: Row<TrackDefinition>) {
       const isClickOnAnalyzeButton =
         (event.target as HTMLElement).closest(`.${styles.analyzeTrackButton}`) != null;
       if (canSelect && !isClickOnAnalyzeButton) {
-        toggleSelected(event);
+        // toggleSelected(event);
         setSelectedTrackId(rowTrackId);
       }
     },
@@ -31,6 +31,7 @@ export default function TrackTableRow(row: Row<TrackDefinition>) {
         [styles.selected]: isRowSelected,
         [styles.disabled]: !canSelect,
       })}
+      data-track-id={rowTrackId}
       onClick={handleClick}
     >
       {row.getVisibleCells().map((cell) => (
