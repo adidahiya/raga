@@ -9,6 +9,7 @@ import {
 import { ClientEventChannel, ServerEventChannel } from "../../../common/events";
 import { analyzeBPM } from "../../audio/bpm";
 import { loadAudioBuffer } from "../../audio/buffer";
+import { isTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import type { AppStoreGet, AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
 
 export type AudioAnalyzerStatus = "ready" | "busy";
@@ -47,7 +48,7 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
   },
 
   analyzePlaylist: async (playlistID: string) => {
-    const { libraryPlaylists } = get();
+    const { audioConvertedFileURLs, convertTrackToMP3, getTrackDef, libraryPlaylists } = get();
 
     if (libraryPlaylists === undefined) {
       log.error(`[client] Unable to analyze playlist ${playlistID}, libraryPlaylists is undefined`);
@@ -68,6 +69,11 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
 
     for (const trackID of trackIDs) {
       try {
+        const trackDef = getTrackDef(trackID);
+        const isReadyForAnalysis = isTrackReadyForAnalysis(trackDef, audioConvertedFileURLs);
+        if (!isReadyForAnalysis && trackDef !== undefined) {
+          await convertTrackToMP3(trackDef);
+        }
         await analyzeTrackOrThrow(set, get, { trackID });
       } catch (e) {
         log.error(
