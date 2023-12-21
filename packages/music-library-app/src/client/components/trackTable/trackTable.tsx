@@ -5,7 +5,6 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  Row,
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
@@ -13,7 +12,6 @@ import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { getTrackFileType } from "../../../common/trackUtils";
-import { isSupportedWebAudioFileFormat } from "../../../common/webAudioUtils";
 import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore, useAppStore } from "../../store/appStore";
 import AnalyzeAlPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
@@ -93,7 +91,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
     state: {},
     columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel<TrackDefinition>(),
-    enableRowSelection: canSelectRow,
+    enableRowSelection: true,
     enableMultiRowSelection: false,
   });
 
@@ -165,8 +163,4 @@ function BPMColumnHeader(props: { playlistId: string }) {
       {!analyzeBPMPerTrack && <AnalyzeAlPlaylistTracksButton {...props} />}
     </div>
   );
-}
-
-function canSelectRow(row: Row<TrackDefinition>): boolean {
-  return isSupportedWebAudioFileFormat(row.original);
 }

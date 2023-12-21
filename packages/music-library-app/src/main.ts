@@ -1,4 +1,5 @@
-import path from "node:path";
+import { join, resolve } from "node:path";
+import { platform } from "node:process";
 
 import { cyan } from "ansis";
 import { app, BrowserWindow, ipcMain, shell, UtilityProcess, utilityProcess } from "electron";
@@ -32,7 +33,7 @@ const createWindow = async () => {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
-      preload: path.join(__dirname, "preload.js"),
+      preload: join(__dirname, "preload.js"),
       webSecurity: false,
     },
   });
@@ -41,14 +42,12 @@ const createWindow = async () => {
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     await mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    await mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
-    );
+    await mainWindow.loadFile(join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
   log.debug(`initializing server process...`);
   // Note that server.ts must be configured as an electron-forge Vite entry point to get transpiled adjacent to this module
-  serverProcess = utilityProcess.fork(path.resolve(__dirname, "./server.js"), [], {
+  serverProcess = utilityProcess.fork(resolve(__dirname, "./server.js"), [], {
     serviceName: "server",
     stdio: "inherit",
   });
@@ -118,13 +117,13 @@ app.on("will-quit", () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  if (platform !== "darwin") {
     app.quit();
   }
 });
 
 app.on("activate", () => {
-  // On OS X it's common to re-create a window in the app when the
+  // On macOS, it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
     void createWindow();

@@ -1,12 +1,15 @@
-import { existsSync, readdirSync } from "node:fs";
+import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { Server } from "node:http";
 import { env } from "node:process";
 
-import { App, NextFunction, Request, Response } from "@tinyhttp/app";
+import { App, Request, Response } from "@tinyhttp/app";
 import sirv from "sirv";
 
+import { AudioFilesServerRoutes as ServerRoutes } from "../common/audioFilesServerRoutes";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
-import { isSupportedWebAudioFileFormat } from "../common/webAudioUtils";
+import { ServerErrors } from "../common/errorMessages";
+import { getConvertToMP3RequestHandler } from "./audioFileConverterMiddleware";
+import { AudioFilesConverter } from "./audioFilesConverter";
 import { log } from "./serverLogger";
 
 let audioFilesServer: AudioFilesServer | undefined;
@@ -39,6 +42,10 @@ export async function startAudioFilesServer(
 
       log.debug(`starting audio files server at ${options.audioFilesRootFolder}...`);
       const app = initServerApp(options);
+      if (app === undefined) {
+        options.onError?.(new Error("[server] failed to initialize audio files server"));
+        return;
+      }
 
       waitForServerToStart(app)
         .then((server: Server) => {
@@ -61,22 +68,22 @@ export async function startAudioFilesServer(
   });
 }
 
-function initServerApp(options: AudioFilesServerOptions): App {
+function initServerApp(options: AudioFilesServerOptions): App | undefined {
   const app = new App();
+  let converter: AudioFilesConverter;
+
+  try {
+    converter = new AudioFilesConverter(options);
+  } catch (e) {
+    log.error((e as Error).message);
+    return undefined;
+  }
 
   const staticServerMiddleware = sirv(options.audioFilesRootFolder, {
     dev: env.NODE_ENV === "development",
   });
 
-  const audioFileConverterMiddleware = ({ path }: Request, res: Response, next: NextFunction) => {
-    const audioFileName = path.split("/").pop()!;
-    if (audioFileName.includes(".") && !isSupportedWebAudioFileFormat(audioFileName)) {
-      log.debug(`Received request for audio file with unsupported type: ${audioFileName}`);
-    }
-    next();
-  };
-
-  function handlePingRequest(req: Request, res: Response) {
+  function handlePingRequest(_req: Request, res: Response) {
     try {
       validateRootFolderOrThrow(options.audioFilesRootFolder);
     } catch (e) {
@@ -87,10 +94,29 @@ function initServerApp(options: AudioFilesServerOptions): App {
     res.status(200).send("pong");
   }
 
+  function handleGetConvertedMP3FileRequest(req: Request, res: Response) {
+    const filepath = decodeURIComponent(req.params.filepath);
+    const fileExists = existsSync(filepath);
+
+    if (!fileExists) {
+      res.status(404).send(ServerErrors.CONVERTED_AUDIO_FILE_NOT_FOUND);
+      return;
+    }
+
+    const fileStat = statSync(filepath);
+    const fileStream = createReadStream(filepath);
+    res.status(200).header({
+      "Content-Type": "audio/mpeg",
+      "Content-Length": fileStat.size,
+    });
+    fileStream.pipe(res);
+  }
+
   return app
-    .get("/ping", handlePingRequest)
-    .use(staticServerMiddleware)
-    .use(audioFileConverterMiddleware);
+    .get(ServerRoutes.GET_PING, handlePingRequest)
+    .get(`${ServerRoutes.GET_CONVERTED_MP3}/:filepath`, handleGetConvertedMP3FileRequest)
+    .post(ServerRoutes.POST_CONVERT_TO_MP3, getConvertToMP3RequestHandler(converter))
+    .use(staticServerMiddleware);
 }
 
 async function waitForServerToStart(app: App, timeoutMs = 1_000): Promise<Server> {

@@ -4,8 +4,12 @@ import type { AudioFileType, TrackDefinition } from "@adahiya/music-library-tool
 const WEB_AUDIO_SUPPORTED_FILE_EXTENSIONS: AudioFileType[] = ["mp3", "wav", "flac", "aac"];
 
 export function isSupportedWebAudioFileFormat(
-  trackDefOrLocation: TrackDefinition | string,
+  trackDefOrLocation: TrackDefinition | string | undefined,
 ): boolean {
+  if (trackDefOrLocation === undefined) {
+    return false;
+  }
+
   const location =
     typeof trackDefOrLocation === "string" ? trackDefOrLocation : trackDefOrLocation.Location;
 

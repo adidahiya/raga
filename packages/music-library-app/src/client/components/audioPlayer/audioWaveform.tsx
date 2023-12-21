@@ -11,10 +11,12 @@ import styles from "./audioWaveform.module.scss";
 
 /** It's recommended to lazy-load this component to defer loading the wavesurfer.js library. */
 export default function AudioWaveform() {
-  const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
+  const audioFilesConverterIsBusy = appStore.use.audioFilesConverterIsBusy();
+  const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
   const waveformElement = useRef<HTMLDivElement>(null);
   const setWaveSurfer = appStore.use.setWaveSurfer();
   const selectedFileURL = useSelectedTrackFileURL();
+
   const [loadingPercentage, setLoadingPercentage] = useState<number>(0);
   const {
     value: isWaveformReady,
@@ -22,8 +24,13 @@ export default function AudioWaveform() {
     setFalse: resetWaveformReady,
   } = useBoolean(false);
 
+  // initialize a new WaveSurfer instance when the selected track or audio server status changes
   useEffect(() => {
-    if (audioFilesServerStatus === "started" && waveformElement.current != null) {
+    if (
+      isAudioFilesServerReady &&
+      waveformElement.current != null &&
+      selectedFileURL != undefined
+    ) {
       const height = waveformElement.current.clientHeight;
       const inst = WaveSurfer.create({
         container: waveformElement.current,
@@ -43,7 +50,7 @@ export default function AudioWaveform() {
       resetWaveformReady();
     };
   }, [
-    audioFilesServerStatus,
+    isAudioFilesServerReady,
     waveformElement,
     selectedFileURL,
     setWaveSurfer,
@@ -51,13 +58,15 @@ export default function AudioWaveform() {
     resetWaveformReady,
   ]);
 
+  const showProgressOverlay = audioFilesConverterIsBusy || !isWaveformReady;
+
   return (
     <div className={styles.container}>
-      {isWaveformReady ? undefined : (
+      {showProgressOverlay && (
         <InlineOverlay>
           <ProgressBar
             className={styles.progressBar}
-            value={loadingPercentage / 100}
+            value={audioFilesConverterIsBusy ? undefined : loadingPercentage / 100}
             intent="primary"
           />
         </InlineOverlay>

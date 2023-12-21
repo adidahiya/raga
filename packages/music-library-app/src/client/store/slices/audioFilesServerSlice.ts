@@ -13,10 +13,19 @@ export type AudioFilesServerStatus = "stopped" | "starting" | "started" | "faile
 export interface AudioFilesServerState {
   audioFilesRootFolder: string;
   audioFilesServerStatus: AudioFilesServerStatus;
+  audioFilesConverterIsBusy: boolean;
+  /**
+   * Record of Track ID -> audio file server URL of the converted MP3 for tracks with
+   * unsupported file formats (.aif and .aiff). This is useful to avoid re-converting the same
+   * track over and over.
+   */
+  audioConvertedFileURLs: PartialRecord<number, string>;
 }
 
 export interface AudioFilesServerActions {
   setAudioTracksRootFolder: (audioFilesRootFolder: string) => void;
+  setAudioFilesConverterIsBusy: (isBusy: boolean) => void;
+  setConvertedAudioFileURL: (trackID: number, fileURL: string) => void;
   startAudioFilesServer: () => void;
   stopAudioFilesServer: () => void;
   pingAudioFilesServer: () => Promise<Response>;
@@ -28,9 +37,21 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
   return {
     audioFilesRootFolder: DEFAULT_AUDIO_FILES_ROOT_FOLDER,
     audioFilesServerStatus: "stopped",
+    audioFilesConverterIsBusy: false,
+    audioConvertedFileURLs: {},
 
     setAudioTracksRootFolder: (audioFilesRootFolder: string) => {
       set({ audioFilesRootFolder });
+    },
+
+    setAudioFilesConverterIsBusy: (audioFilesConverterIsBusy: boolean) => {
+      set({ audioFilesConverterIsBusy });
+    },
+
+    setConvertedAudioFileURL: (trackID: number, fileURL: string) => {
+      set((state) => {
+        state.audioConvertedFileURLs[trackID] = fileURL;
+      });
     },
 
     startAudioFilesServer: () => {
@@ -108,10 +129,14 @@ function initAudioFilesServer(set: AppStoreSet) {
       });
     });
 
-    window.api.handleOnce(ServerEventChannel.AUDIO_FILES_SERVER_ERROR, () => {
-      set((state) => {
-        state.audioFilesServerStatus = "failed";
-      });
-    });
+    window.api.handleOnce(
+      ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
+      (errorData: object | undefined) => {
+        log.error(`[client] audio files server failed to start: ${JSON.stringify(errorData)}`);
+        set((state) => {
+          state.audioFilesServerStatus = "failed";
+        });
+      },
+    );
   });
 }
