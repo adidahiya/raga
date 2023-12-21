@@ -1,14 +1,20 @@
+import { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Roarr as log } from "roarr";
 
+import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/audioFilesServerRoutes";
 import {
   AUDIO_FILES_SERVER_PINT_TIMEOUT,
   DEFAULT_AUDIO_FILES_ROOT_FOLDER,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
 } from "../../../common/constants";
 import { ClientEventChannel, ServerEventChannel } from "../../../common/events";
+import convertTrackToMP3Request from "../requestFactories/convertTrackToMP3Request";
 import type { AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
 
 export type AudioFilesServerStatus = "stopped" | "starting" | "started" | "failed";
+
+// TODO: better server URL
+const serverBaseURL = `http://localhost:${DEFAULT_AUDIO_FILES_SERVER_PORT}`;
 
 export interface AudioFilesServerState {
   audioFilesRootFolder: string;
@@ -23,12 +29,18 @@ export interface AudioFilesServerState {
 }
 
 export interface AudioFilesServerActions {
+  // simple state setters
   setAudioTracksRootFolder: (audioFilesRootFolder: string) => void;
   setAudioFilesConverterIsBusy: (isBusy: boolean) => void;
   setConvertedAudioFileURL: (trackID: number, fileURL: string) => void;
+
+  // simple server actions
   startAudioFilesServer: () => void;
   stopAudioFilesServer: () => void;
   pingAudioFilesServer: () => Promise<Response>;
+
+  // complex server actions
+  convertTrackToMP3: (trackDef: TrackDefinition) => Promise<string | undefined>;
 }
 
 export const createAudioFilesServerSlice: AppStoreSliceCreator<
@@ -112,6 +124,47 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
             clearTimeout(timeout);
           });
       });
+    },
+
+    /**
+     * @returns the URL of the converted MP3 file, or undefined if unsuccessful
+     */
+    convertTrackToMP3: async (trackDef: TrackDefinition) => {
+      const trackID = trackDef["Track ID"];
+
+      log.debug(
+        `[client] Initiating request to convert track ${trackID} to MP3, this may take a few seconds...`,
+      );
+      set({ audioFilesConverterIsBusy: true });
+
+      try {
+        const res = await convertTrackToMP3Request(serverBaseURL, trackDef);
+        if (res.ok) {
+          const outputFilePath = await res.text();
+          log.debug(
+            `[client] Successfully converted track ${trackID} to MP3 at: ${outputFilePath}`,
+          );
+
+          const convertedFileURL = `${serverBaseURL}${
+            ServerRoutes.GET_CONVERTED_MP3
+          }/${encodeURIComponent(outputFilePath)}`;
+          set((state) => {
+            state.audioConvertedFileURLs[trackID] = convertedFileURL;
+          });
+
+          return convertedFileURL;
+        } else {
+          log.error(`[client] Failed to convert ${trackDef.Location} to MP3: ${res.statusText}`);
+        }
+      } catch (e) {
+        log.error(
+          `[client] Failed to convert ${trackDef.Location} to MP3: ${(e as Error).message}`,
+        );
+      } finally {
+        set({ audioFilesConverterIsBusy: false });
+      }
+
+      return undefined;
     },
   };
 };
