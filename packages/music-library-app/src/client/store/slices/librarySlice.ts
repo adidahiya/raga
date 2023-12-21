@@ -101,7 +101,10 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set({ libraryOutputFilepath: libraryFilepath });
   },
   setSelectedTrackId: (selectedTrackId) => {
-    get().unloadWaveSurfer();
+    // TODO: figure out the right time to call this... if we do this too soon, there's a noticeable
+    // delay in UI responsiveness while the React tree re-renders (I think?), but if we keep the
+    // old waveform around too long, it feels stale.
+    // get().unloadWaveSurfer();
     set({ selectedTrackId });
   },
 

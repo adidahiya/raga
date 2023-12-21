@@ -1,28 +1,32 @@
 import { AudioFileType } from "@adahiya/music-library-tools-lib";
-import { Tag, TagProps } from "@blueprintjs/core";
-import { useMemo } from "react";
-
-import { isSupportedWebAudioFileFormat } from "../../../common/webAudioUtils";
+import { Tag, TagProps, Tooltip } from "@blueprintjs/core";
 
 export interface AudioFileTypeTagProps extends TagProps {
+  isReadyForAnalysis: boolean;
   fileType: AudioFileType | undefined;
 }
 
-export default function AudioFileTypeTag({ fileType, ...props }: AudioFileTypeTagProps) {
-  const isUnsupportedFileFormat = useMemo(
-    () => fileType === undefined || !isSupportedWebAudioFileFormat(fileType),
-    [fileType],
-  );
-
+export default function AudioFileTypeTag({
+  fileType,
+  isReadyForAnalysis,
+  ...props
+}: AudioFileTypeTagProps) {
   return (
-    <Tag
-      minimal={true}
+    <Tooltip
+      compact={true}
+      content={isReadyForAnalysis ? undefined : "Track will be converted to MP3 before analysis"}
       fill={true}
-      intent={isUnsupportedFileFormat ? "warning" : "none"}
-      style={{ textAlign: "center" }}
-      {...props}
+      hoverOpenDelay={500}
     >
-      {fileType ?? "unknown"}
-    </Tag>
+      <Tag
+        fill={true}
+        intent={isReadyForAnalysis ? "none" : "warning"}
+        minimal={true}
+        style={{ textAlign: "center" }}
+        {...props}
+      >
+        {fileType ?? "unknown"}
+      </Tag>
+    </Tooltip>
   );
 }

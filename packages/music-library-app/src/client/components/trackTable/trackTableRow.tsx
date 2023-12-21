@@ -14,6 +14,7 @@ export default function TrackTableRow(row: Row<TrackDefinition>) {
   const rowTrackId = row.original["Track ID"];
   const isRowSelected = row.getIsSelected();
   const canSelect = row.getCanSelect();
+  // const toggleSelected = row.getToggleSelectedHandler();
 
   const handleClick = useCallback(
     (event: MouseEvent) => {
@@ -21,6 +22,8 @@ export default function TrackTableRow(row: Row<TrackDefinition>) {
         (event.target as HTMLElement).closest(`.${styles.analyzeTrackButton}`) != null;
       if (canSelect && !isClickOnAnalyzeButton) {
         // N.B. row selection is toggled in an update effect in <TrackTable>
+        // TODO: consider implementing multiple selection with shift and ctrl key modifiers
+        // toggleSelected(event);
         setSelectedTrackId(rowTrackId);
       }
     },

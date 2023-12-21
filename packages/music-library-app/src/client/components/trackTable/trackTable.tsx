@@ -1,6 +1,7 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import { AudioFileType, TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Classes, HTMLTable } from "@blueprintjs/core";
 import {
+  CellContext,
   ColumnDef,
   createColumnHelper,
   flexRender,
@@ -13,6 +14,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import { getTrackFileType } from "../../../common/trackUtils";
 import commonStyles from "../../common/commonStyles.module.scss";
+import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
 import AnalyzeAlPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
@@ -80,7 +82,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
     }),
     columnHelper.accessor(getTrackFileType, {
       id: "fileType",
-      cell: (info) => <AudioFileTypeTag fileType={info.getValue()} />,
+      cell: TrackFileTypeCell,
       header: () => <span>Type</span>,
     }),
   ].filter((c) => !!c) as ColumnDef<TrackDefinition>[];
@@ -163,4 +165,9 @@ function BPMColumnHeader(props: { playlistId: string }) {
       {!analyzeBPMPerTrack && <AnalyzeAlPlaylistTracksButton {...props} />}
     </div>
   );
+}
+
+function TrackFileTypeCell(context: CellContext<TrackDefinition, AudioFileType>) {
+  const isReadyForAnalysis = useIsTrackReadyForAnalysis(context.row.original["Track ID"]);
+  return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={context.getValue()} />;
 }
