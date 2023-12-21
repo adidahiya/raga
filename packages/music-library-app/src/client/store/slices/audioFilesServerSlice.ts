@@ -3,7 +3,7 @@ import { Roarr as log } from "roarr";
 
 import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/audioFilesServerRoutes";
 import {
-  AUDIO_FILES_SERVER_PINT_TIMEOUT,
+  AUDIO_FILES_SERVER_PING_TIMEOUT,
   DEFAULT_AUDIO_FILES_ROOT_FOLDER,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
 } from "../../../common/constants";
@@ -101,7 +101,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
           log.error(`[client] audio files server ping timed out`);
           set({ audioFilesServerStatus: "stopped" });
           reject();
-        }, AUDIO_FILES_SERVER_PINT_TIMEOUT);
+        }, AUDIO_FILES_SERVER_PING_TIMEOUT);
 
         log.debug(`[client] pinging audio files server at ${serverBaseURL}...`);
         pingRequest(serverBaseURL)

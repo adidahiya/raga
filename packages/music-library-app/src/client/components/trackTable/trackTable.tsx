@@ -12,6 +12,7 @@ import classNames from "classnames";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+import { SHOW_TRACK_TABLE_CONTEXT_MENU } from "../../../common/constants";
 import { getTrackFileType } from "../../../common/trackUtils";
 import commonStyles from "../../common/commonStyles.module.scss";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
@@ -20,7 +21,7 @@ import AnalyzeAlPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import styles from "./trackTable.module.scss";
-import TrackTableRow from "./trackTableRow";
+import TrackTableRow, { TrackTableRowWithContextMenu } from "./trackTableRow";
 
 export interface TrackTableProps {
   // TODO: move this state to app store
@@ -131,6 +132,8 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
     </tr>
   ));
 
+  const RowComponent = SHOW_TRACK_TABLE_CONTEXT_MENU ? TrackTableRowWithContextMenu : TrackTableRow;
+
   return (
     <div className={styles.trackTableContainer}>
       <div className={classNames(styles.header, commonStyles.compactTable)}>
@@ -147,7 +150,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
           <thead>{headerRows}</thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <TrackTableRow key={row.original["Track ID"]} {...row} />
+              <RowComponent key={row.original["Track ID"]} {...row} />
             ))}
           </tbody>
         </HTMLTable>
