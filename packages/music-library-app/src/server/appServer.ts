@@ -9,6 +9,7 @@ const {
 } = require("@adahiya/music-library-tools-lib");
 
 import { writeFileSync } from "node:fs";
+import { extname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import NodeID3 from "node-id3";
@@ -80,6 +81,19 @@ function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLib
 
 function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
   const filepath = fileURLToPath(options.fileLocation);
+  const isAIFF = extname(filepath) === ".aiff" || extname(filepath) === ".aif";
+
+  if (isAIFF) {
+    // TOOD: implement with another tag writing library or manual approach
+    // "node-id3" does not support writing ID3 tags for AIFF files, so we should avoid corrupting
+    // those files for now and return gracefully
+    log.error(`Writing ID3 tags for AIFF files is unimplemented: ${filepath}`);
+    process.parentPort.postMessage({
+      channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+    });
+    return;
+  }
+
   // TODO: better type for tags record
   const newTags: Record<string, string> = {};
 
