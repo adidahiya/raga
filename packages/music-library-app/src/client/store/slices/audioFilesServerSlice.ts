@@ -1,5 +1,6 @@
 import { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Roarr as log } from "roarr";
+import { ErrorObject } from "serialize-error";
 
 import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/audioFilesServerRoutes";
 import {
@@ -7,7 +8,11 @@ import {
   DEFAULT_AUDIO_FILES_ROOT_FOLDER,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
 } from "../../../common/constants";
-import { ClientEventChannel, ServerEventChannel } from "../../../common/events";
+import {
+  AudioFilesServerStartedEventPayload,
+  ClientEventChannel,
+  ServerEventChannel,
+} from "../../../common/events";
 import convertTrackToMP3Request from "../requestFactories/convertTrackToMP3Request";
 import pingRequest from "../requestFactories/pingRequest";
 import type { AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
@@ -21,6 +26,8 @@ export interface AudioFilesServerState {
   audioFilesRootFolder: string;
   audioFilesServerStatus: AudioFilesServerStatus;
   audioFilesConverterIsBusy: boolean;
+  /** Temporary folder on disk where the audio files coverterer is storing MP3s */
+  audioFilesConverterTemporaryFolder: string | undefined;
   /**
    * Record of Track ID -> audio file server URL of the converted MP3 for tracks with
    * unsupported file formats (.aif and .aiff). This is useful to avoid re-converting the same
@@ -51,6 +58,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
     audioFilesRootFolder: DEFAULT_AUDIO_FILES_ROOT_FOLDER,
     audioFilesServerStatus: "stopped",
     audioFilesConverterIsBusy: false,
+    audioFilesConverterTemporaryFolder: undefined,
     audioConvertedFileURLs: {},
 
     setAudioTracksRootFolder: (audioFilesRootFolder: string) => {
@@ -174,16 +182,32 @@ function initAudioFilesServer(set: AppStoreSet) {
     });
     state.audioFilesServerStatus = "starting";
 
-    window.api.handleOnce(ServerEventChannel.AUDIO_FILES_SERVER_STARTED, () => {
-      set((state) => {
-        state.audioFilesServerStatus = "started";
-      });
-    });
+    window.api.handleOnce<AudioFilesServerStartedEventPayload>(
+      ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
+      (_event, data) => {
+        set((state) => {
+          if (
+            state.audioFilesConverterTemporaryFolder !== data?.audioConverterTemporaryFolder &&
+            Object.entries(state.audioConvertedFileURLs).length > 0
+          ) {
+            // we may receive a new temporary folder from the server (typically after an OS restart)
+            log.debug(
+              `[client] server returned a new temporary folder for converted audio files; clearing local cache of converted file URLs`,
+            );
+            state.audioConvertedFileURLs = {};
+          }
+          state.audioFilesConverterTemporaryFolder = data?.audioConverterTemporaryFolder;
+          state.audioFilesServerStatus = "started";
+        });
+      },
+    );
 
-    window.api.handleOnce(
+    window.api.handleOnce<ErrorObject>(
       ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
-      (errorData: object | undefined) => {
-        log.error(`[client] audio files server failed to start: ${JSON.stringify(errorData)}`);
+      (_event, err) => {
+        log.error(
+          `[client] audio files server failed to start, check server logs: ${JSON.stringify(err)}`,
+        );
         set((state) => {
           state.audioFilesServerStatus = "failed";
         });

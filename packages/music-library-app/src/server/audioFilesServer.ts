@@ -8,6 +8,7 @@ import sirv from "sirv";
 import { AudioFilesServerRoutes as ServerRoutes } from "../common/audioFilesServerRoutes";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
+import { AudioFilesServerStartedEventPayload } from "../common/events";
 import { AudioFilesConverter } from "./audioFilesConverter";
 import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";
 import { log } from "./serverLogger";
@@ -16,13 +17,14 @@ let audioFilesServer: AudioFilesServer | undefined;
 
 export interface AudioFilesServerOptions {
   audioFilesRootFolder: string;
-  onReady?: () => void;
+  onReady?: (startedInfo: AudioFilesServerStartedEventPayload) => void;
   onError?: (error: Error) => void;
 }
 
 export interface AudioFilesServer {
   /** @internal */
   _app: App;
+  converter: AudioFilesConverter;
   stop: () => void;
 }
 
@@ -32,18 +34,24 @@ export async function startAudioFilesServer(
   return new Promise((resolve, _reject) => {
     try {
       if (audioFilesServer !== undefined) {
-        log.info(`audio files server is already running`);
-        options.onReady?.();
+        log.info(`Audio files server is already running`);
+        options.onReady?.({
+          audioConverterTemporaryFolder: audioFilesServer.converter.temporaryOutputDir,
+        });
         resolve(audioFilesServer);
         return;
       }
 
+      log.debug(`Starting audio files server at ${options.audioFilesRootFolder}...`);
       validateRootFolderOrThrow(options.audioFilesRootFolder);
 
-      log.debug(`starting audio files server at ${options.audioFilesRootFolder}...`);
-      const app = initServerApp(options);
+      log.debug(`Initializing audio files converter...`);
+      const converter = new AudioFilesConverter(options);
+      const app = initServerApp(converter, options);
+
       if (app === undefined) {
-        options.onError?.(new Error("[server] failed to initialize audio files server"));
+        log.error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED);
+        options.onError?.(new Error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED));
         return;
       }
 
@@ -51,33 +59,35 @@ export async function startAudioFilesServer(
         .then((server: Server) => {
           audioFilesServer = {
             _app: app,
+            converter: converter,
             stop: () => {
               server.close();
               audioFilesServer = undefined;
             },
           };
-          options.onReady?.();
+          options.onReady?.({
+            audioConverterTemporaryFolder: audioFilesServer.converter.temporaryOutputDir,
+          });
           resolve(audioFilesServer);
         })
         .catch((e) => {
-          options.onError?.(e as Error);
+          const err = e as Error;
+          log.error(err.message);
+          options.onError?.(err);
         });
     } catch (e) {
-      options.onError?.(e as Error);
+      const err = e as Error;
+      log.error(err.message);
+      options.onError?.(err);
     }
   });
 }
 
-function initServerApp(options: AudioFilesServerOptions): App | undefined {
+function initServerApp(
+  converter: AudioFilesConverter,
+  options: AudioFilesServerOptions,
+): App | undefined {
   const app = new App();
-  let converter: AudioFilesConverter;
-
-  try {
-    converter = new AudioFilesConverter(options);
-  } catch (e) {
-    log.error((e as Error).message);
-    return undefined;
-  }
 
   const staticServerMiddleware = sirv(options.audioFilesRootFolder, {
     dev: env.NODE_ENV === "development",
@@ -141,6 +151,6 @@ function validateRootFolderOrThrow(rootFolder: string): void {
   const rootFolderExists = existsSync(rootFolder) && readdirSync(rootFolder).length > 0;
 
   if (!rootFolderExists) {
-    throw new Error(`[server] audio files root folder ${rootFolder} does not exist or is empty`);
+    throw new Error(ServerErrors.AUDIO_FILES_ROOT_FOLDER_NOT_FOUND);
   }
 }

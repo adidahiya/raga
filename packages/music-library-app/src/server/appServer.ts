@@ -16,6 +16,7 @@ import NodeID3 from "node-id3";
 import { serializeError } from "serialize-error";
 
 import {
+  AudioFilesServerStartedEventPayload,
   AudioFilesServerStartOptions,
   ClientEventChannel,
   ClientEventPayloadMap,
@@ -122,9 +123,10 @@ async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions
   try {
     audioFilesServer = await startAudioFilesServer({
       ...options,
-      onReady: () => {
+      onReady: (startedInfo) => {
         process.parentPort.postMessage({
           channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
+          data: startedInfo,
         });
       },
       onError: (error) => {

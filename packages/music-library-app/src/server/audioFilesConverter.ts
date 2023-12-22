@@ -45,26 +45,20 @@ export interface MP3ConversionOptions {
 }
 
 export class AudioFilesConverter {
-  private temporaryOutputDir: string;
-
-  /**
-   * Map of already-converted files on disk.
-   * Keys: track ID.
-   * Values: converted MP3 file path.
-   */
-  private convertedFiles = new Map<string, string>();
+  public temporaryOutputDir: string;
 
   constructor(public config: AudioFilesConverterConfig) {
     // N.B. the `tempy` package is not compatible with Vite for some strange reason, so we
     // create temp directories ourself with built-in Node.js APIs
     const tempDir = join(tmpdir(), LOCAL_STORAGE_KEY, "converted");
-    mkdirSync(join(tmpdir(), tempDir), { recursive: true });
+
+    log.debug(`Creating temporary folder for audio conversion output ${tempDir}`);
+    mkdirSync(tempDir, { recursive: true });
 
     if (!existsSync(tempDir)) {
       throw new Error(ServerErrors.TEMP_DIR_UNAVAILABLE);
     }
 
-    log.debug(`Created temporary folder for audio conversion output ${tempDir}`);
     this.temporaryOutputDir = tempDir;
   }
 
