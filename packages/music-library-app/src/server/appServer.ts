@@ -9,14 +9,10 @@ const {
 } = require("@adahiya/music-library-tools-lib");
 
 import { writeFileSync } from "node:fs";
-import { extname } from "node:path";
-import { fileURLToPath } from "node:url";
 
-import NodeID3 from "node-id3";
 import { serializeError } from "serialize-error";
 
 import {
-  AudioFilesServerStartedEventPayload,
   AudioFilesServerStartOptions,
   ClientEventChannel,
   ClientEventPayloadMap,
@@ -29,6 +25,7 @@ import {
 } from "../common/events";
 import { AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
 import { log } from "./serverLogger";
+import { writeAudioFileTag } from "./writeAudioFileTag";
 
 let library: SwinsianLibraryPlist | undefined;
 
@@ -81,40 +78,11 @@ function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLib
 }
 
 function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
-  const filepath = fileURLToPath(options.fileLocation);
-  const isAIFF = extname(filepath) === ".aiff" || extname(filepath) === ".aif";
-
-  if (isAIFF) {
-    // TOOD: implement with another tag writing library or manual approach
-    // "node-id3" does not support writing ID3 tags for AIFF files, so we should avoid corrupting
-    // those files for now and return gracefully
-    log.error(`Writing ID3 tags for AIFF files is unimplemented: ${filepath}`);
-    process.parentPort.postMessage({
-      channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
-    });
-    return;
-  }
-
-  // TODO: better type for tags record
-  const newTags: Record<string, string> = {};
-
-  switch (options.tagName) {
-    case "BPM":
-      newTags.TBPM = options.value.toString();
-      break;
-    default:
-      break;
-  }
-
-  const result = NodeID3.update(newTags, filepath);
-  if (result === true) {
-    log.debug(`Wrote tags for file located at ${options.fileLocation}: ${JSON.stringify(newTags)}`);
-    process.parentPort.postMessage({
-      channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
-    });
-  } else {
-    throw new Error(result.message);
-  }
+  writeAudioFileTag(options);
+  log.debug(`Wrote ${options.tagName}: ${options.value} tag to ${options.fileLocation}`);
+  process.parentPort.postMessage({
+    channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+  });
 }
 
 let audioFilesServer: AudioFilesServer | undefined;

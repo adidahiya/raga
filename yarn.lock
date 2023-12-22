@@ -48,7 +48,7 @@ __metadata:
     fluent-ffmpeg: "npm:^2.1.2"
     immer: "npm:^10.0.3"
     milliparsec: "npm:^2.3.0"
-    node-id3: "npm:^0.2.6"
+    node-taglib-sharp: "npm:^5.2.3"
     radash: "npm:^11.0.0"
     react: "npm:^18.2.0"
     react-devtools: "npm:^5.0.0"
@@ -6799,16 +6799,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.6.2":
-  version: 0.6.2
-  resolution: "iconv-lite@npm:0.6.2"
-  dependencies:
-    safer-buffer: "npm:>= 2.1.2 < 3.0.0"
-  checksum: ba81a32a54066e64ac68174851d1c17534ef398627eb5d07b4ef2999126674d66f7377aa46c8d1450ef6aee3d679ccaeb9af402b5c58ecec649cee361c1ad16d
-  languageName: node
-  linkType: hard
-
-"iconv-lite@npm:^0.6.2":
+"iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -7004,6 +6995,13 @@ __metadata:
   version: 3.1.1
   resolution: "interpret@npm:3.1.1"
   checksum: bc9e11126949c4e6ff49b0b819e923a9adc8e8bf3f9d4f2d782de6d5f592774f6fee4457c10bd08c6a2146b4baee460ccb242c99e5397defa9c846af0d00505a
+  languageName: node
+  linkType: hard
+
+"invert-kv@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "invert-kv@npm:3.0.1"
+  checksum: 9801e7876b80ee70df8bcd029a928a35a1252c9c8a92e5d7779fdcd7771ab73e834744bf1f868d6a4b849b275e5ed976ca4f2bfd86814140f863c449196484f5
   languageName: node
   linkType: hard
 
@@ -7525,6 +7523,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"itiriri@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "itiriri@npm:2.0.1"
+  checksum: 17e0c8e7142258e6559a581c2508dd10f8363799c50e08c26a5e5f1d712e70fc8dffbb26f96e4a355d33794f20fea4eb3faaf25d9edef0f595ef69431d8408d4
+  languageName: node
+  linkType: hard
+
 "jackspeak@npm:^2.3.5":
   version: 2.3.6
   resolution: "jackspeak@npm:2.3.6"
@@ -7781,6 +7786,15 @@ __metadata:
   dependencies:
     package-json: "npm:^4.0.0"
   checksum: f2e7e4fb16ace74a9220c40d0476d04e72c208f6c91dd7f3b34cdd9fb9f4c39f8db452fe9270c8537afbf84626eff86a3fb8766d51332620b62ab6804fe03f7f
+  languageName: node
+  linkType: hard
+
+"lcid@npm:^3.0.0":
+  version: 3.1.1
+  resolution: "lcid@npm:3.1.1"
+  dependencies:
+    invert-kv: "npm:^3.0.0"
+  checksum: ac2fc533882a4a62ba2ccd522e1400618c8e2e417a488fcc31c5474bb8bd62a618216d3e39f6838d15ab0f6f4536b4f60435f491f1b93c9eef6d9d6506c5c9f1
   languageName: node
   linkType: hard
 
@@ -8291,7 +8305,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"map-age-cleaner@npm:^0.1.1":
+"map-age-cleaner@npm:^0.1.1, map-age-cleaner@npm:^0.1.3":
   version: 0.1.3
   resolution: "map-age-cleaner@npm:0.1.3"
   dependencies:
@@ -8359,6 +8373,17 @@ __metadata:
     mimic-fn: "npm:^2.0.0"
     p-is-promise: "npm:^2.0.0"
   checksum: ae4afa1cac2b4d64e089ecd54e06ae857b6e5aae410802564032cb407aad13aa598c5aededae8cca6c5827f4057ec3f58415a078c80181dd08019ae1a9aa1226
+  languageName: node
+  linkType: hard
+
+"mem@npm:^5.0.0":
+  version: 5.1.1
+  resolution: "mem@npm:5.1.1"
+  dependencies:
+    map-age-cleaner: "npm:^0.1.3"
+    mimic-fn: "npm:^2.1.0"
+    p-is-promise: "npm:^2.1.0"
+  checksum: 8dc22ded29d7c0a9aeb4ae2a69ad232d32b117a5a8842d7997b7a37aa943dc306326ea24616b42de3d819e9dad0dbba083aa25dd5fe55ca1dfa654d89e5a0969
   languageName: node
   linkType: hard
 
@@ -8951,15 +8976,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-id3@npm:^0.2.6":
-  version: 0.2.6
-  resolution: "node-id3@npm:0.2.6"
-  dependencies:
-    iconv-lite: "npm:0.6.2"
-  checksum: 4356d3bf36cc13a882f99e2c3fd45f2b5c2cbeeb0c42084a28339a29f9ce49466d6f402d2d25cca99ea6e878e0bf069016f188cbb878951a0923b5e7045127ea
-  languageName: node
-  linkType: hard
-
 "node-machine-id@npm:1.1.12":
   version: 1.1.12
   resolution: "node-machine-id@npm:1.1.12"
@@ -8971,6 +8987,19 @@ __metadata:
   version: 2.0.14
   resolution: "node-releases@npm:2.0.14"
   checksum: 0f7607ec7db5ef1dc616899a5f24ae90c869b6a54c2d4f36ff6d84a282ab9343c7ff3ca3670fe4669171bb1e8a9b3e286e1ef1c131f09a83d70554f855d54f24
+  languageName: node
+  linkType: hard
+
+"node-taglib-sharp@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "node-taglib-sharp@npm:5.2.3"
+  dependencies:
+    dateformat: "npm:^3.0.3"
+    iconv-lite: "npm:^0.6.3"
+    itiriri: "npm:^2.0.1"
+    os-locale: "npm:^4.0.0"
+    uuid: "npm:^8.3.2"
+  checksum: 3c8503814c48097a30937cda9ac1c7aa7153b8372eadfd81656256342b52717e705b1c84b116807f4f13e31dc5e9bf6c0d4cacdb55a2ff763bac36aacde384dd
   languageName: node
   linkType: hard
 
@@ -9525,6 +9554,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"os-locale@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "os-locale@npm:4.0.0"
+  dependencies:
+    execa: "npm:^1.0.0"
+    lcid: "npm:^3.0.0"
+    mem: "npm:^5.0.0"
+  checksum: e971925f46dd25498045b6b1528cb478132a0179aad30a04acd7b160a61ee02c2af31fa90e842fed7349859d0d8e73271a7824a6d332f1fc698531c4b5e4d795
+  languageName: node
+  linkType: hard
+
 "os-tmpdir@npm:~1.0.2":
   version: 1.0.2
   resolution: "os-tmpdir@npm:1.0.2"
@@ -9553,7 +9593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-is-promise@npm:^2.0.0":
+"p-is-promise@npm:^2.0.0, p-is-promise@npm:^2.1.0":
   version: 2.1.0
   resolution: "p-is-promise@npm:2.1.0"
   checksum: c9a8248c8b5e306475a5d55ce7808dbce4d4da2e3d69526e4991a391a7809bfd6cfdadd9bf04f1c96a3db366c93d9a0f5ee81d949e7b1684c4e0f61f747199ef
@@ -12774,6 +12814,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 5d6949693d58cb2e636a84f3ee1c6e7b2f9c16cb1d42d0ecb386d8c025c69e327205aa1c69e2868cc06a01e5e20681fbba55a4e0ed0cce913d60334024eae798
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 9a5f7aa1d6f56dd1e8d5f2478f855f25c645e64e26e347a98e98d95781d5ed20062d6cca2eecb58ba7c84bc3910be95c0451ef4161906abaab44f9cb68ffbdd1
   languageName: node
   linkType: hard
 
