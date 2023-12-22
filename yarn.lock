@@ -27,7 +27,7 @@ __metadata:
     "@electron-forge/maker-zip": "npm:^7.2.0"
     "@electron-forge/plugin-vite": "npm:^7.2.0"
     "@roarr/browser-log-writer": "npm:^1.3.0"
-    "@tanstack/react-table": "npm:^8.11.0"
+    "@tanstack/react-table": "npm:^8.11.2"
     "@tinyhttp/app": "npm:^2.2.1"
     "@types/command-exists": "npm:^1.2.3"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
@@ -40,8 +40,8 @@ __metadata:
     classnames: "npm:^2.3.2"
     command-exists: "npm:^1.2.9"
     cross-env: "npm:^7.0.3"
-    date-fns: "npm:^3.0.1"
-    electron: "npm:^28.0.0"
+    date-fns: "npm:^3.0.6"
+    electron: "npm:^28.1.0"
     electron-devtools-installer: "npm:^3.2.0"
     electron-squirrel-startup: "npm:^1.0.0"
     eslint: "npm:^8.56.0"
@@ -53,11 +53,11 @@ __metadata:
     react: "npm:^18.2.0"
     react-devtools: "npm:^5.0.0"
     react-dom: "npm:^18.2.0"
-    react-resizable-panels: "npm:^1.0.3"
+    react-resizable-panels: "npm:^1.0.4"
     roarr: "npm:^7.21.0"
     sass: "npm:^1.69.5"
     serialize-error: "npm:^11.0.3"
-    sirv: "npm:^2.0.3"
+    sirv: "npm:^2.0.4"
     typescript: "npm:^5.3.3"
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:^2.9.1"
@@ -1849,7 +1849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polka/url@npm:^1.0.0-next.20":
+"@polka/url@npm:^1.0.0-next.24":
   version: 1.0.0-next.24
   resolution: "@polka/url@npm:1.0.0-next.24"
   checksum: 00baec4458ac86ca27edf7ce807ccfad97cd1d4b67bdedaf3401a9e755757588f3331e891290d1deea52d88df2bf2387caf8d94a6835b614d5b37b638a688273
@@ -2032,22 +2032,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-table@npm:^8.11.0":
-  version: 8.11.0
-  resolution: "@tanstack/react-table@npm:8.11.0"
+"@tanstack/react-table@npm:^8.11.2":
+  version: 8.11.2
+  resolution: "@tanstack/react-table@npm:8.11.2"
   dependencies:
-    "@tanstack/table-core": "npm:8.11.0"
+    "@tanstack/table-core": "npm:8.11.2"
   peerDependencies:
     react: ">=16"
     react-dom: ">=16"
-  checksum: 37e7ba9eead0720f28d33823ce67475f8037d2ba8bbd554ac881ccba96af1576132e7a2c71833f4dac699dfe44d3810d70d08dc1c7df85904bcb040ede6aa658
+  checksum: 617373c502a80ee932fab170074ae0ccacf6fdafd6ba7e0439445e2011e5c5161c331db488a5fd27fec80072f1ae07fc8b01dd6c7cd11f6003e33cbedd9526ca
   languageName: node
   linkType: hard
 
-"@tanstack/table-core@npm:8.11.0":
-  version: 8.11.0
-  resolution: "@tanstack/table-core@npm:8.11.0"
-  checksum: b83df5bb4a6d01a4c258356c4583f070435971f5928424edd2e87f10aa240a77be91ec856b1a16e5bcc69693779d601aebddb62f04b72714a6e1e293717aa66c
+"@tanstack/table-core@npm:8.11.2":
+  version: 8.11.2
+  resolution: "@tanstack/table-core@npm:8.11.2"
+  checksum: a0c53dc339b05be1aa6365eb099f4477ec16736844d07f1fc09c4969f1d8f89a30aff29db4c727af02e473f5e17fbd63811ba6ef63f4c50aead5447fd2838529
   languageName: node
   linkType: hard
 
@@ -3113,17 +3113,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async@npm:>=0.2.9":
+"async@npm:>=0.2.9, async@npm:^3.2.3":
   version: 3.2.5
   resolution: "async@npm:3.2.5"
   checksum: 323c3615c3f0ab1ac25a6f953296bc0ac3213d5e0f1c0debdb12964e55963af288d570293c11e44f7967af58c06d2a88d0ea588c86ec0fbf62fa98037f604a0f
-  languageName: node
-  linkType: hard
-
-"async@npm:^3.2.3":
-  version: 3.2.4
-  resolution: "async@npm:3.2.4"
-  checksum: bebb5dc2258c45b83fa1d3be179ae0eb468e1646a62d443c8d60a45e84041b28fccebe1e2d1f234bfc3dcad44e73dcdbf4ba63d98327c9f6556e3dbd47c2ae8b
   languageName: node
   linkType: hard
 
@@ -4332,10 +4325,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "date-fns@npm:3.0.1"
-  checksum: e349cf5b53982813bb8a8fb1ee395083208bdd817d8ee94e3c06af9226688af4e60d625ea44898baf089a3b824364a08eaf783bf386012e355f966d9d4d1782d
+"date-fns@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "date-fns@npm:3.0.6"
+  checksum: 4eb4c1f15257026593bd62ea366347be3940a83133fc84aa32e03bc9a19d6f8a919ef0475211200b16de7980e1d797c993713ed092a6f5c941474bce516f7d96
   languageName: node
   linkType: hard
 
@@ -4851,16 +4844,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^28.0.0":
-  version: 28.0.0
-  resolution: "electron@npm:28.0.0"
+"electron@npm:^28.1.0":
+  version: 28.1.0
+  resolution: "electron@npm:28.1.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^18.11.18"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 964b765576343d4ed935608964808471ef68253a1aca711f0587322c356dab335cf2ab76c2c710b8a59b3bc6c3c0f10eff6f2fbab34614a7d813a0100b8ec7eb
+  checksum: 9d33dd361fbda93c8583a46f5ebfd572b3fb6cf597490182e20748f100eb27baf9d958435b007bf4acebabff148dcb77d9cf84207f39f0e72e1c84cc98a6e148
   languageName: node
   linkType: hard
 
@@ -8753,10 +8746,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mrmime@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "mrmime@npm:1.0.1"
-  checksum: a157e833ffe76648ab2107319deeff024b80b136ec66c60fae9d339009a1bb72c57ec1feecfd6a905dfd3df29e2299e850bff84b69cad790cc9bd9ab075834d1
+"mrmime@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "mrmime@npm:2.0.0"
+  checksum: 8d95f714ea200c6cf3e3777cbc6168be04b05ac510090a9b41eef5ec081efeb1d1de3e535ffb9c9689fffcc42f59864fd52a500e84a677274f070adeea615c45
   languageName: node
   linkType: hard
 
@@ -10526,13 +10519,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "react-resizable-panels@npm:1.0.3"
+"react-resizable-panels@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "react-resizable-panels@npm:1.0.4"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: fd4e34de934d21565ac3f16159e5ae7007eda4a8944fce36d48692ca03d0030505c7617fcd1a4c2e4d960f3a10eea2e70eb77ecb54dd41a040c15190f8bdbab8
+  checksum: b248d20b4333e0a8b4e3f1ea9d2aa2e0b166ae44bcb3bc2ec649313cc332e7c482addcc9e55991b5615ef2b22f6f76c8746e95b05e18945a0fcf7de8afeac3d3
   languageName: node
   linkType: hard
 
@@ -11464,14 +11457,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sirv@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "sirv@npm:2.0.3"
+"sirv@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "sirv@npm:2.0.4"
   dependencies:
-    "@polka/url": "npm:^1.0.0-next.20"
-    mrmime: "npm:^1.0.0"
+    "@polka/url": "npm:^1.0.0-next.24"
+    mrmime: "npm:^2.0.0"
     totalist: "npm:^3.0.0"
-  checksum: dbfbff7355c1433df4f18683b5efe3b22eebac745e7ae30e38ba9d2bf468765a8a81993b78198dfd9bc809330fce85c67e74bccd262ca5871ecb92046fcf4560
+  checksum: 24f42cf06895017e589c9d16fc3f1c6c07fe8b0dbafce8a8b46322cfba67b7f2498610183954cb0e9d089c8cb60002a7ee7e8bca6a91a0d7042bfbc3473c95c3
   languageName: node
   linkType: hard
 
