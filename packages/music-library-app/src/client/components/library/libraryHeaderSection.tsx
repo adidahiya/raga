@@ -1,4 +1,4 @@
-import { Props, Section } from "@blueprintjs/core";
+import { type Props, Section } from "@blueprintjs/core";
 
 import LibraryIOActions from "./libraryIOActions";
 import LibraryLastModifiedText from "./libraryLastModifiedText";

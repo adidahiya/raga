@@ -1,16 +1,16 @@
-import { PlaylistDefinition } from "@adahiya/music-library-tools-lib";
+import type { PlaylistDefinition } from "@adahiya/music-library-tools-lib";
 import { Classes, HTMLTable, Icon, IconSize } from "@blueprintjs/core";
 import {
   createColumnHelper,
-  ExpandedState,
+  type ExpandedState,
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
-  Row,
+  type Row,
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { MouseEvent, useCallback, useMemo, useState } from "react";
+import { type MouseEvent, useCallback, useMemo, useState } from "react";
 import { useEffectOnce } from "usehooks-ts";
 
 import { formatStatNumber } from "../../../common/format";

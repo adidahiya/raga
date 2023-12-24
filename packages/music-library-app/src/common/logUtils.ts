@@ -1,4 +1,4 @@
-import { Ansis, blue, gray, magenta, red, yellow } from "ansis";
+import { type Ansis, blue, gray, magenta, red, yellow } from "ansis";
 
 /**
  * Creates a simple wrapper around `console` to add a named prefix to all messages, as well as a color-highlighted

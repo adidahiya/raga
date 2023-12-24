@@ -1,4 +1,4 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Button, Classes, Slider } from "@blueprintjs/core";
 import classNames from "classnames";
 import { debounce } from "radash";

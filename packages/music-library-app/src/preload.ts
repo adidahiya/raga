@@ -2,11 +2,11 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { blueBright } from "ansis";
-import { contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
+import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 
-import { ClientEventChannel, ServerEventChannel } from "./common/events";
+import { type ClientEventChannel, type ServerEventChannel } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
-import { ContextBridgeApi } from "./contextBridgeApi";
+import { type ContextBridgeApi } from "./contextBridgeApi";
 
 const log = createScopedLogger("contextBridge", blueBright);
 

@@ -1,13 +1,13 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import { Handler, NextFunction, Response } from "@tinyhttp/app";
+import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
 import { sync as commandExistsSync } from "command-exists";
 import ffmpeg from "fluent-ffmpeg";
-import { json, ReqWithBody as RequestWithBody } from "milliparsec";
+import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
 import { ServerErrors } from "../../common/errorMessages";
-import { AudioFilesConverter, AudioFilesConverterTrackDefinition } from "../audioFilesConverter";
+import { type AudioFilesConverter, type AudioFilesConverterTrackDefinition } from "../audioFilesConverter";
 import { log } from "../serverLogger";
 
 export function getConvertToMP3RequestHandler(converter: AudioFilesConverter): Handler {

@@ -1,4 +1,4 @@
-import { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
+import type { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
 
 // Event channels
 

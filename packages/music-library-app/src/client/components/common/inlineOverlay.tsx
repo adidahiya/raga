@@ -1,6 +1,6 @@
-import { Props } from "@blueprintjs/core";
+import { type Props } from "@blueprintjs/core";
 import classNames from "classnames";
-import React from "react";
+import type React from "react";
 
 import styles from "./inlineOverlay.module.scss";
 

@@ -1,6 +1,6 @@
-import { IpcRendererEvent } from "electron";
+import type { IpcRendererEvent } from "electron";
 
-import { ClientEventChannel, ServerEventChannel } from "./common/events.js";
+import type { ClientEventChannel, ServerEventChannel } from "./common/events";
 
 export interface ContextBridgeApi {
   versions: Record<string, string | undefined>;

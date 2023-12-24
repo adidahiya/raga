@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import ffmpeg from "fluent-ffmpeg";
 
 import {
@@ -12,7 +12,7 @@ import {
   LOCAL_STORAGE_KEY,
 } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
-import { AudioFilesServerOptions } from "./audioFilesServer";
+import { type AudioFilesServerOptions } from "./audioFilesServer";
 import { log } from "./serverLogger";
 
 export type AudioFilesConverterConfig = AudioFilesServerOptions;

@@ -1,14 +1,14 @@
 import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
-import { Server } from "node:http";
+import { type Server } from "node:http";
 import { env } from "node:process";
 
-import { App, Request, Response } from "@tinyhttp/app";
+import { App, type Request, type Response } from "@tinyhttp/app";
 import sirv from "sirv";
 
 import { AudioFilesServerRoutes as ServerRoutes } from "../common/audioFilesServerRoutes";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
-import { AudioFilesServerStartedEventPayload } from "../common/events";
+import { type AudioFilesServerStartedEventPayload } from "../common/events";
 import { AudioFilesConverter } from "./audioFilesConverter";
 import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";
 import { log } from "./serverLogger";

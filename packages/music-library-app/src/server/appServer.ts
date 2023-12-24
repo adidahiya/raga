@@ -3,24 +3,24 @@ import { writeFileSync } from "node:fs";
 import {
   convertSwinsianToItunesXmlLibrary,
   loadSwinsianLibrary,
-  MusicAppLibraryPlist,
+  type MusicAppLibraryPlist,
   serializeLibraryPlist,
-  SwinsianLibraryPlist,
+  type SwinsianLibraryPlist,
 } from "@adahiya/music-library-tools-lib";
 import { serializeError } from "serialize-error";
 
 import {
-  AudioFilesServerStartOptions,
+  type AudioFilesServerStartOptions,
   ClientEventChannel,
-  ClientEventPayloadMap,
-  ClientMessageEvent,
-  LoadedSwinsianLibraryEventPayload,
-  LoadSwinsianLibraryOptions,
+  type ClientEventPayloadMap,
+  type ClientMessageEvent,
+  type LoadedSwinsianLibraryEventPayload,
+  type LoadSwinsianLibraryOptions,
   ServerEventChannel,
-  WriteAudioFileTagOptions,
-  WriteModifiedLibraryOptions,
+  type WriteAudioFileTagOptions,
+  type WriteModifiedLibraryOptions,
 } from "../common/events";
-import { AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
+import { type AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
 import { log } from "./serverLogger";
 import { writeAudioFileTag } from "./writeAudioFileTag";
 

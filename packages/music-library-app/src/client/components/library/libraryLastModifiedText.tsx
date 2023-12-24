@@ -1,4 +1,4 @@
-import { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
+import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { format, parseISO } from "date-fns";

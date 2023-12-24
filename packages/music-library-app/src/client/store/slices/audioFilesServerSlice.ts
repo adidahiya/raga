@@ -1,6 +1,6 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Roarr as log } from "roarr";
-import { ErrorObject } from "serialize-error";
+import type { ErrorObject } from "serialize-error";
 
 import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/audioFilesServerRoutes";
 import {
@@ -9,7 +9,7 @@ import {
   DEFAULT_AUDIO_FILES_SERVER_PORT,
 } from "../../../common/constants";
 import {
-  AudioFilesServerStartedEventPayload,
+  type AudioFilesServerStartedEventPayload,
   ClientEventChannel,
   ServerEventChannel,
 } from "../../../common/events";

@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { File as TaglibFile, Tag, TagTypes } from "node-taglib-sharp";
 
-import { WriteAudioFileTagOptions } from "../common/events";
+import { type WriteAudioFileTagOptions } from "../common/events";
 import { log } from "./serverLogger";
 
 /** @throws if unsuccessful */

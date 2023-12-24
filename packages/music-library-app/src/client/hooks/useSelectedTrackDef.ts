@@ -1,4 +1,4 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { useMemo } from "react";
 
 import { appStore } from "../store/appStore";

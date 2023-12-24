@@ -1,4 +1,4 @@
-import { DependencyList, useCallback } from "react";
+import { type DependencyList, useCallback } from "react";
 
 /**
  * Wraps an async callback and ignores its return value, suitable for use in DOM event handlers.

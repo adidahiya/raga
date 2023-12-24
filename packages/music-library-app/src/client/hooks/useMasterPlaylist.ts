@@ -1,4 +1,4 @@
-import { PlaylistDefinition } from "@adahiya/music-library-tools-lib";
+import type { PlaylistDefinition } from "@adahiya/music-library-tools-lib";
 import { useMemo } from "react";
 
 import { appStore } from "../store/appStore";

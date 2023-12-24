@@ -1,4 +1,4 @@
-import {
+import type {
   PlaylistDefinition,
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
@@ -13,8 +13,8 @@ import {
 } from "../../../common/constants";
 import {
   ClientEventChannel,
-  LoadedSwinsianLibraryEventPayload,
-  LoadSwinsianLibraryOptions,
+  type LoadedSwinsianLibraryEventPayload,
+  type LoadSwinsianLibraryOptions,
   ServerEventChannel,
 } from "../../../common/events";
 import type { AppStoreSliceCreator } from "../zustandUtils";

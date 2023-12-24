@@ -1,4 +1,4 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { pick } from "radash";
 
 import { AudioFilesServerRoutes as Routes } from "../../../common/audioFilesServerRoutes";

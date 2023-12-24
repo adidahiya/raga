@@ -1,9 +1,9 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { useMemo } from "react";
 
 import { isSupportedWebAudioFileFormat } from "../../common/webAudioUtils";
 import { appStore } from "../store/appStore";
-import { AudioFilesServerState } from "../store/slices/audioFilesServerSlice";
+import { type AudioFilesServerState } from "../store/slices/audioFilesServerSlice";
 
 export function useIsTrackReadyForAnalysis(trackID: number): boolean {
   const audioConvertedFileURLs = appStore.use.audioConvertedFileURLs();

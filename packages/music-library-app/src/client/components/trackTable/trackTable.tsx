@@ -1,8 +1,8 @@
-import { AudioFileType, TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { AudioFileType, TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Classes, HTMLTable } from "@blueprintjs/core";
 import {
-  CellContext,
-  ColumnDef,
+  type CellContext,
+  type ColumnDef,
   createColumnHelper,
   flexRender,
   getCoreRowModel,

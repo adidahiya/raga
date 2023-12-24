@@ -1,5 +1,5 @@
-import { AudioFileType } from "@adahiya/music-library-tools-lib";
-import { Tag, TagProps, Tooltip } from "@blueprintjs/core";
+import type { AudioFileType } from "@adahiya/music-library-tools-lib";
+import { Tag, type TagProps, Tooltip } from "@blueprintjs/core";
 
 export interface AudioFileTypeTagProps extends TagProps {
   isReadyForAnalysis: boolean;

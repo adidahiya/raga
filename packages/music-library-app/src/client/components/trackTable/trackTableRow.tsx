@@ -1,8 +1,8 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
-import { ContextMenu, ContextMenuChildrenProps, Menu, MenuItem } from "@blueprintjs/core";
-import { flexRender, Row } from "@tanstack/react-table";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import { ContextMenu, type ContextMenuChildrenProps, Menu, MenuItem } from "@blueprintjs/core";
+import { flexRender, type Row } from "@tanstack/react-table";
 import classNames from "classnames";
-import { MouseEvent, useCallback } from "react";
+import { type MouseEvent, useCallback } from "react";
 import { Roarr as log } from "roarr";
 
 import { ClientEventChannel } from "../../../common/events";

@@ -2,10 +2,14 @@ import { join, resolve } from "node:path";
 import { platform } from "node:process";
 
 import { cyan } from "ansis";
-import { app, BrowserWindow, ipcMain, shell, UtilityProcess, utilityProcess } from "electron";
+import { app, BrowserWindow, ipcMain, shell, type UtilityProcess, utilityProcess } from "electron";
 
 import { DEBUG } from "./common/constants";
-import { ClientEventChannel, isServerEventChannel, OpenFileLocationOptions } from "./common/events";
+import {
+  ClientEventChannel,
+  isServerEventChannel,
+  type OpenFileLocationOptions,
+} from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

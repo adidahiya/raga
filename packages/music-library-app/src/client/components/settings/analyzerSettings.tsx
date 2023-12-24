@@ -1,4 +1,4 @@
-import { FormGroup, Props, Switch } from "@blueprintjs/core";
+import { FormGroup, type Props, Switch } from "@blueprintjs/core";
 import { useCallback } from "react";
 
 import { appStore } from "../../store/appStore";

@@ -1,4 +1,4 @@
-import { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Button, Tooltip } from "@blueprintjs/core";
 
 import { useVoidCallback } from "../../hooks";

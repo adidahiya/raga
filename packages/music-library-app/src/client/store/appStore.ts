@@ -5,21 +5,21 @@ import { immer } from "zustand/middleware/immer";
 
 import { LOCAL_STORAGE_KEY } from "../../common/constants";
 import {
-  AudioAnalyzerActions,
-  AudioAnalyzerState,
+  type AudioAnalyzerActions,
+  type AudioAnalyzerState,
   createAudioAnalyzerSlice,
 } from "./slices/audioAnalyzerSlice";
 import {
-  AudioFilesServerActions,
-  AudioFilesServerState,
+  type AudioFilesServerActions,
+  type AudioFilesServerState,
   createAudioFilesServerSlice,
 } from "./slices/audioFilesServerSlice";
 import {
-  AudioPlayerActions,
-  AudioPlayerState,
+  type AudioPlayerActions,
+  type AudioPlayerState,
   createAudioPlayerSlice,
 } from "./slices/audioPlayerSlice";
-import { createLibrarySlice, LibraryActions, LibraryState } from "./slices/librarySlice";
+import { createLibrarySlice, type LibraryActions, type LibraryState } from "./slices/librarySlice";
 import { createSelectors } from "./zustandUtils";
 
 type AppState = AudioFilesServerState & LibraryState & AudioAnalyzerState & AudioPlayerState;
