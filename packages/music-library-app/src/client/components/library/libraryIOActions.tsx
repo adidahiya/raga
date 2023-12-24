@@ -4,6 +4,7 @@ import {
   FileInput,
   FormGroup,
   Menu,
+  MenuDivider,
   MenuItem,
   Popover,
   Tooltip,
@@ -53,9 +54,19 @@ export default function LibraryIOActions() {
       <FormGroup label="Output file" className={styles.outputFilepath}>
         <FileInput text={libraryOutputFilepath} onInputChange={handleOutputFilepathInputChange} />
       </FormGroup>
-      <MenuItem text={`${isLibraryLoaded ? "Reload" : "Load"} library`} onClick={handleLoad} />
-      <MenuItem text="Reload from disk" onClick={handleLoadFromDisk} />
-      <MenuItem text="Select new library..." onClick={handleSelectNewLibrary} />
+      <MenuItem
+        icon="export"
+        text="Export library for Rekordbox"
+        onClick={handleWriteModifiedLibrary}
+      />
+      <MenuDivider />
+      <MenuItem
+        icon="reset"
+        text={`${isLibraryLoaded ? "Reload" : "Load"} library`}
+        onClick={handleLoad}
+      />
+      <MenuItem icon="floppy-disk" text="Reload from disk" onClick={handleLoadFromDisk} />
+      <MenuItem icon="folder-open" text="Select new library..." onClick={handleSelectNewLibrary} />
     </Menu>
   );
 
