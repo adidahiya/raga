@@ -7,7 +7,10 @@ import ffmpeg from "fluent-ffmpeg";
 import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
 import { ServerErrors } from "../../common/errorMessages";
-import { type AudioFilesConverter, type AudioFilesConverterTrackDefinition } from "../audioFilesConverter";
+import {
+  type AudioFilesConverter,
+  type AudioFilesConverterTrackDefinition,
+} from "../audioFilesConverter";
 import { log } from "../serverLogger";
 
 export function getConvertToMP3RequestHandler(converter: AudioFilesConverter): Handler {

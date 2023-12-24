@@ -1,5 +1,12 @@
-import { type MusicAppLibraryPlist, type MusicLibraryPlist, type SwinsianLibraryPlist } from "../index.js";
-import { convertSwinsianTrackToMusicAppTrack, type SwinsianTrackDefinition } from "../models/tracks.js";
+import {
+  type MusicAppLibraryPlist,
+  type MusicLibraryPlist,
+  type SwinsianLibraryPlist,
+} from "../index.js";
+import {
+  convertSwinsianTrackToMusicAppTrack,
+  type SwinsianTrackDefinition,
+} from "../models/tracks.js";
 import { forEachTrackInLibrary } from "./visitDefinitions.js";
 
 export { default as loadSwinsianLibrary } from "./loadSwinsianLibrary.js";
