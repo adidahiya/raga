@@ -1,6 +1,6 @@
-// Event channels
-
 import { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
+
+// Event channels
 
 export const ServerEventChannel = {
   AUDIO_FILES_SERVER_ERROR: "audioFilesServerError" as const,

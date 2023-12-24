@@ -1,14 +1,14 @@
 {
   "name": "@adahiya/music-library-tools-lib",
   "version": "0.2.0",
-  "main": "lib/cjs/index.js",
-  "types": "lib/cjs/index.d.ts",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "run-p 'build:*'",
-    "build:esm": "tsc -p .",
-    "build:cjs": "tsc -p . --module 'commonjs' --moduleResolution 'node' --outDir './lib/cjs/'",
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
     "clean": "rm -rf lib/*",
-    "dev": "yarn build:cjs --watch",
+    "dev": "yarn build --watch",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
     "publish-npm": "npm publish --access public"

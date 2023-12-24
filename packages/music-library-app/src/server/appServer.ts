@@ -1,15 +1,12 @@
-// HACKHACK: regular imports are not working here, for some reason
-import type { MusicAppLibraryPlist, SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const {
-  convertSwinsianToItunesXmlLibrary,
-  loadSwinsianLibrary,
-  serializeLibraryPlist,
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-} = require("@adahiya/music-library-tools-lib");
-
 import { writeFileSync } from "node:fs";
 
+import {
+  convertSwinsianToItunesXmlLibrary,
+  loadSwinsianLibrary,
+  MusicAppLibraryPlist,
+  serializeLibraryPlist,
+  SwinsianLibraryPlist,
+} from "@adahiya/music-library-tools-lib";
 import { serializeError } from "serialize-error";
 
 import {
@@ -128,13 +125,11 @@ function handleAudioFilesServerStop() {
  */
 function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
   options.library.Date = new Date();
-  /* eslint-disable @typescript-eslint/no-unsafe-call */
-  const serializedSwinsianLibrary = serializeLibraryPlist(options.library) as string;
+  const serializedSwinsianLibrary = serializeLibraryPlist(options.library);
   const convertedLibrary = convertSwinsianToItunesXmlLibrary(
     options.library,
   ) as MusicAppLibraryPlist;
-  const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary) as string;
-  /* eslint-enable @typescript-eslint/no-unsafe-call */
+  const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary);
 
   const swinsianLibraryOutputPath = options.inputFilepath;
   const modifiedLibraryOutputPath = options.outputFilepath;

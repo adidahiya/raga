@@ -7,6 +7,7 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "build": "electron-forge package",
+    "check-types": "tsc --noEmit",
     "dev": "cross-env NODE_ENV=development ROARR_LOG=true electron-forge start",
     "clean": "rm -rf .vite/* out/*",
     "dist": "electron-forge make",

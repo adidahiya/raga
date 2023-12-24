@@ -1,6 +1,6 @@
 import { extname } from "node:path";
 
-import { log } from "../utils/log";
+import { log } from "../utils/log.js";
 
 /**
  * Basic track properties, the bare minimum required for these scripts to function and for various applications
