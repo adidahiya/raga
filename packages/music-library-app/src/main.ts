@@ -31,6 +31,11 @@ const createWindow = async () => {
   //     await installReactDevTools();
   // }
 
+  // N.B. Vite still makes assumptions about Electron not supporting ESM (which was true until v28),
+  // so we cannot yet fully migrate to make this package a "type": "module" package. For now, we
+  // still rely on transpilation to CommonJS so that we can use globals like __dirname below to
+  // load the preload & server scripts, as well as the index.html file.
+  // See https://github.com/electron/forge/issues/3439
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
