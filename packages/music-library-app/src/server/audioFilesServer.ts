@@ -2,14 +2,14 @@ import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { type Server } from "node:http";
 import { env } from "node:process";
 
+import { AudioFileConverter } from "@adahiya/music-library-tools-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
 import sirv from "sirv";
 
-import { AudioFilesServerRoutes as ServerRoutes } from "../common/audioFilesServerRoutes";
+import { AudioFilesServerRoutes as ServerRoutes } from "../common/api/audioFilesServerAPI";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
 import { type AudioFilesServerStartedEventPayload } from "../common/events";
-import { AudioFilesConverter } from "./audioFilesConverter";
 import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";
 import { log } from "./serverLogger";
 
@@ -24,7 +24,7 @@ export interface AudioFilesServerOptions {
 export interface AudioFilesServer {
   /** @internal */
   _app: App;
-  converter: AudioFilesConverter;
+  converter: AudioFileConverter;
   stop: () => void;
 }
 
@@ -46,7 +46,7 @@ export async function startAudioFilesServer(
       validateRootFolderOrThrow(options.audioFilesRootFolder);
 
       log.debug(`Initializing audio files converter...`);
-      const converter = new AudioFilesConverter(options);
+      const converter = new AudioFileConverter();
       const app = initServerApp(converter, options);
 
       if (app === undefined) {
@@ -84,7 +84,7 @@ export async function startAudioFilesServer(
 }
 
 function initServerApp(
-  converter: AudioFilesConverter,
+  converter: AudioFileConverter,
   options: AudioFilesServerOptions,
 ): App | undefined {
   const app = new App();

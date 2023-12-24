@@ -18,10 +18,6 @@ export const WRITE_AUDIO_FILE_TAG_TIMEOUT = 2_000;
 export const WRITE_MODIFIED_LIBRARY_TIMEOUT = 20_000;
 export const ANALYZE_AUDIO_FILE_TIMEOUT = 4_000;
 
-// audio conversion settings
-export const DEFAULT_MP3_BITRATE = 320;
-export const DEFAULT_AUDIO_SAMPLE_RATE = 44_100;
-
 // UI settings
 // eslint-disable-next-line @typescript-eslint/no-inferrable-types
 export const SHOW_TRACK_TABLE_CONTEXT_MENU: boolean = true;

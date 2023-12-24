@@ -1,21 +1,19 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
+import type { AudioFileConverter } from "@adahiya/music-library-tools-lib";
 import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
 import { sync as commandExistsSync } from "command-exists";
 import ffmpeg from "fluent-ffmpeg";
 import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
+import type { ConvertTrackToMP3RequestBody } from "../../common/api/audioFilesServerAPI";
 import { ServerErrors } from "../../common/errorMessages";
-import {
-  type AudioFilesConverter,
-  type AudioFilesConverterTrackDefinition,
-} from "../audioFilesConverter";
 import { log } from "../serverLogger";
 
-export function getConvertToMP3RequestHandler(converter: AudioFilesConverter): Handler {
+export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Handler {
   return async (
-    req: RequestWithBody<{ trackProperties: AudioFilesConverterTrackDefinition }>,
+    req: RequestWithBody<ConvertTrackToMP3RequestBody>,
     res: Response,
     next: NextFunction,
   ) => {
@@ -31,11 +29,11 @@ export function getConvertToMP3RequestHandler(converter: AudioFilesConverter): H
       return;
     }
 
-    const { trackProperties } = req.body;
-    const inputFilePath = fileURLToPath(trackProperties.Location);
+    const { trackDefinition } = req.body;
+    const inputFilePath = fileURLToPath(trackDefinition.Location);
     log.debug(
       `Handling request for an track with file type unsupported by Web Audio: ${JSON.stringify(
-        trackProperties,
+        trackDefinition,
       )}`,
     );
 
@@ -59,9 +57,9 @@ export function getConvertToMP3RequestHandler(converter: AudioFilesConverter): H
     }
 
     try {
-      const outputFilePath = await converter.convertAudioFileToMP3(trackProperties, {
+      const outputFilePath = await converter.convertAudioFileToMP3(trackDefinition, {
         codec,
-        outputDirKind: "temp",
+        outputDirKind: "temporary",
       });
       res.status(200).send(outputFilePath);
     } catch (e) {

@@ -1,4 +1,8 @@
 export {
+  default as AudioFileConverter,
+  type MP3ConversionOptions,
+} from "./audio-file-converter/audioFileConverter.js";
+export {
   getDefaultSwinsianExportFolder,
   getOutputLibraryPath,
   getSwinsianLibraryPath,

@@ -3,38 +3,23 @@ import { tmpdir } from "node:os";
 import { basename, dirname, extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import ffmpeg from "fluent-ffmpeg";
 
 import {
   DEFAULT_AUDIO_SAMPLE_RATE,
   DEFAULT_MP3_BITRATE,
-  LOCAL_STORAGE_KEY,
-} from "../common/constants";
-import { ServerErrors } from "../common/errorMessages";
-import { type AudioFilesServerOptions } from "./audioFilesServer";
-import { log } from "./serverLogger";
-
-export type AudioFilesConverterConfig = AudioFilesServerOptions;
-
-/** Minimal set of properties required to run the converter */
-export type AudioFilesConverterTrackDefinition = Pick<
-  TrackDefinition,
-  "Artist" | "Album" | "Name" | "Track ID" | "Location"
->;
+  LIB_PACKAGE_NAME,
+} from "../common/constants.js";
+import { LibErrors } from "../common/errrorMessages.js";
+import type { BasicTrackDefinition } from "../models/tracks.js";
+import { log } from "../utils/log.js";
 
 export interface MP3ConversionOptions {
-  /** "libmp3lame" is preferred */
-  codec: string;
-
-  /** Whether to write to a temp directory or to a permanent one (the input file directory) */
-  outputDirKind: "temp" | "permanent";
-
   /** @default 320 */
   bitrate?: number;
 
-  /** @default 44100 */
-  sampleRate?: number;
+  /** "libmp3lame" is preferred */
+  codec: string;
 
   /**
    * Force a re-conversion even if the output file already exists on disk.
@@ -42,21 +27,31 @@ export interface MP3ConversionOptions {
    * @default false
    */
   force?: boolean;
+
+  /**
+   * The kind of directory where the output file will be written, either:
+   *  - temporary (creates a temp OS dir path which includes the track ID)
+   *  - permament (same directory as the input file)
+   */
+  outputDirKind: "temporary" | "permanent";
+
+  /** @default 44100 */
+  sampleRate?: number;
 }
 
-export class AudioFilesConverter {
+export default class AudioFileConverter {
   public temporaryOutputDir: string;
 
-  constructor(public config: AudioFilesConverterConfig) {
+  constructor() {
     // N.B. the `tempy` package is not compatible with Vite for some strange reason, so we
     // create temp directories ourself with built-in Node.js APIs
-    const tempDir = join(tmpdir(), LOCAL_STORAGE_KEY, "converted");
+    const tempDir = join(tmpdir(), LIB_PACKAGE_NAME, "converted");
 
     log.debug(`Creating temporary folder for audio conversion output ${tempDir}`);
     mkdirSync(tempDir, { recursive: true });
 
     if (!existsSync(tempDir)) {
-      throw new Error(ServerErrors.TEMP_DIR_UNAVAILABLE);
+      throw new Error(LibErrors.TEMP_DIR_UNAVAILABLE);
     }
 
     this.temporaryOutputDir = tempDir;
@@ -67,19 +62,14 @@ export class AudioFilesConverter {
    *
    * NOTE: this requires `ffmpeg` to be installed and available on the system path.
    *
-   * TODO: move this the music-library-tools-lib package once we figure out how to export values
-   * correctly (currently, only type exports work properly)
-   *
    * @returns the output file path on disk, if successful
    * @throws if the output file path could not be created on disk
    */
   public async convertAudioFileToMP3(
-    /** Track properties necessary for the conversion, including the input file location on disk */
-    trackProperties: AudioFilesConverterTrackDefinition,
-    /** MP3 conversion options forwarded to ffmpeg */
+    trackDef: BasicTrackDefinition,
     options: MP3ConversionOptions,
   ): Promise<string> {
-    const inputFilePath = fileURLToPath(trackProperties.Location);
+    const inputFilePath = fileURLToPath(trackDef.Location);
     const {
       bitrate = DEFAULT_MP3_BITRATE,
       codec,
@@ -92,8 +82,8 @@ export class AudioFilesConverter {
     const inputFileStream = createReadStream(inputFilePath);
     const outputFileName = basename(inputFilePath).replace(extname(inputFilePath), ".mp3");
     const outputFolder =
-      outputDirKind === "temp"
-        ? this.createTempOutputDirForTrack(trackProperties)
+      outputDirKind === "temporary"
+        ? this.createTempOutputDirForTrack(trackDef)
         : dirname(inputFilePath);
     const outputFilePath = join(outputFolder, outputFileName);
 
@@ -103,7 +93,7 @@ export class AudioFilesConverter {
     }
 
     return new Promise<string>((resolve, reject) => {
-      console.time(`audioFileConverter`);
+      console.time(`convertAudioFileToMP3`);
       ffmpeg(inputFileStream)
         .audioCodec(codec)
         .audioBitrate(bitrate)
@@ -111,7 +101,7 @@ export class AudioFilesConverter {
         .noVideo()
         .save(outputFilePath)
         .on("end", () => {
-          console.timeEnd(`audioFileConverter`);
+          console.timeEnd(`convertAudioFileToMP3`);
           log.debug(`Wrote converted MP3 at ${outputFilePath}`);
           resolve(outputFilePath);
         })
@@ -126,13 +116,13 @@ export class AudioFilesConverter {
   }
 
   /** @throws if unable to create output dir */
-  private createTempOutputDirForTrack(trackProperties: AudioFilesConverterTrackDefinition): string {
-    const outputDir = join(this.temporaryOutputDir, `track-id-${trackProperties["Track ID"]}`);
-    mkdirSync(join(this.temporaryOutputDir, `track-id-${trackProperties["Track ID"]}`), {
+  private createTempOutputDirForTrack(trackDef: BasicTrackDefinition): string {
+    const outputDir = join(this.temporaryOutputDir, `track-id-${trackDef["Track ID"]}`);
+    mkdirSync(join(this.temporaryOutputDir, `track-id-${trackDef["Track ID"]}`), {
       recursive: true,
     });
     if (!existsSync(outputDir)) {
-      throw new Error(ServerErrors.TEMP_DIR_UNAVAILABLE);
+      throw new Error(LibErrors.TEMP_DIR_UNAVAILABLE);
     }
     return outputDir;
   }

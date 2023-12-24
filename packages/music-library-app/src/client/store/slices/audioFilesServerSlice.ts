@@ -2,7 +2,7 @@ import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";
 
-import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/audioFilesServerRoutes";
+import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/api/audioFilesServerAPI";
 import {
   AUDIO_FILES_SERVER_PING_TIMEOUT,
   DEFAULT_AUDIO_FILES_ROOT_FOLDER,
