@@ -1,6 +1,6 @@
 {
   "name": "@adahiya/music-library-tools-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "bin": "bin/cli.sh",
   "scripts": {
