@@ -4,3 +4,4 @@
 .prettierrc
 .vscode
 data
+bin/standalone
