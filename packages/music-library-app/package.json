@@ -41,7 +41,7 @@
     "sirv": "^2.0.4",
     "use-immer": "^0.9.0",
     "usehooks-ts": "^2.9.1",
-    "wavesurfer.js": "^7.5.3",
+    "wavesurfer.js": "^7.5.4",
     "web-audio-beat-detector": "^8.2.1",
     "zustand": "^4.4.7"
   },
