@@ -73,8 +73,7 @@ export default class AudioFileConverter {
     const {
       bitrate = DEFAULT_MP3_BITRATE,
       codec,
-      // TODO: implement 'force' option
-      // force = false,
+      force = false,
       outputDirKind,
       sampleRate = DEFAULT_AUDIO_SAMPLE_RATE,
     } = options;
@@ -88,8 +87,14 @@ export default class AudioFileConverter {
     const outputFilePath = join(outputFolder, outputFileName);
 
     if (existsSync(outputFilePath)) {
-      log.info(`MP3 file already exists at ${outputFilePath}, skipping conversion`);
-      return Promise.resolve(outputFilePath);
+      if (force) {
+        log.info(
+          `MP3 file already exists at ${outputFilePath}, but force flag is set, re-converting...`,
+        );
+      } else {
+        log.info(`MP3 file already exists at ${outputFilePath}, skipping conversion.`);
+        return Promise.resolve(outputFilePath);
+      }
     }
 
     return new Promise<string>((resolve, reject) => {
