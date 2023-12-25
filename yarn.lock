@@ -10560,12 +10560,12 @@ __metadata:
   linkType: hard
 
 "react-resizable-panels@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "react-resizable-panels@npm:1.0.4"
+  version: 1.0.5
+  resolution: "react-resizable-panels@npm:1.0.5"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: b248d20b4333e0a8b4e3f1ea9d2aa2e0b166ae44bcb3bc2ec649313cc332e7c482addcc9e55991b5615ef2b22f6f76c8746e95b05e18945a0fcf7de8afeac3d3
+  checksum: 0bddd8561296a3edd0aad4eec3a93200f82715ff8d9366fb3a61b1332997e909eda7bc9dca93730e0fc140d2ad1b4f503d31fc3c40d48df7b651e96e1e95625d
   languageName: node
   linkType: hard
 
