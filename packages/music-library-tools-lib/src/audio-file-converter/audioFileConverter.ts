@@ -117,7 +117,7 @@ export default class AudioFileConverter {
   }
 
   public cleanup() {
-    throw new Error("Not implemented");
+    throw new Error(LibErrors.UNIMPLEMENTED);
   }
 
   /** @throws if unable to create output dir */

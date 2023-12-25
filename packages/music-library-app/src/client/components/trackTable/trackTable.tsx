@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { SHOW_TRACK_TABLE_CONTEXT_MENU } from "../../../common/constants";
+import { ClientErrors } from "../../../common/errorMessages";
 import { getTrackFileType } from "../../../common/trackUtils";
 import commonStyles from "../../common/commonStyles.module.scss";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
@@ -34,7 +35,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
   const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
 
   if (trackDefs === undefined) {
-    throw new Error(`[client] No track definitions found for playlist ${playlistId}.`);
+    throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
   }
 
   const numTracksInPlaylist = trackDefs.length;

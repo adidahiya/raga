@@ -2,7 +2,9 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { File as TaglibFile, Tag, TagTypes } from "node-taglib-sharp";
+import { isString } from "radash";
 
+import { ClientErrors } from "../common/errorMessages";
 import { type WriteAudioFileTagOptions } from "../common/events";
 import { log } from "./serverLogger";
 
@@ -11,7 +13,7 @@ export function writeAudioFileTag({ fileLocation, tagName, value }: WriteAudioFi
   const filepath = fileLocation.includes("file://") ? fileURLToPath(fileLocation) : fileLocation;
 
   if (!existsSync(filepath)) {
-    throw new Error(`Audio file does not exist at ${filepath}, cannot write tags`);
+    throw new Error(ClientErrors.libraryWriteTagFailedFileNotFound(filepath));
   }
 
   const file = TaglibFile.createFromPath(filepath);
@@ -24,7 +26,7 @@ export function writeAudioFileTag({ fileLocation, tagName, value }: WriteAudioFi
 
   switch (tagName) {
     case "BPM":
-      file.tag.beatsPerMinute = typeof value === "number" ? value : parseInt(value, 10);
+      file.tag.beatsPerMinute = isString(value) ? parseInt(value, 10) : value;
       break;
   }
   file.save();

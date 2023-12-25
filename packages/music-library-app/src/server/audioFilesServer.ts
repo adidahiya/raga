@@ -4,6 +4,7 @@ import { env } from "node:process";
 
 import { AudioFileConverter } from "@adahiya/music-library-tools-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
+import { tryit } from "radash";
 import sirv from "sirv";
 
 import { AudioFilesServerRoutes as ServerRoutes } from "../common/api/audioFilesServerAPI";
@@ -28,59 +29,63 @@ export interface AudioFilesServer {
   stop: () => void;
 }
 
+/**
+ * Gracefully starts the audio files server if it's not already running.
+ *
+ * If there's an error during intialization, it will be logged and the provided `onError`
+ * callback will be invoked, but it will not throw.
+ */
 export async function startAudioFilesServer(
   options: AudioFilesServerOptions,
+): Promise<AudioFilesServer | undefined> {
+  if (audioFilesServer !== undefined) {
+    log.info(`Audio files server is already running`);
+    options.onReady?.({
+      audioConverterTemporaryFolder: audioFilesServer.converter.temporaryOutputDir,
+    });
+    return Promise.resolve(audioFilesServer);
+  }
+
+  const [err, newAudioFilesServer] = await tryit(createAudioFileConverterAndInitServer)(options);
+
+  if (err !== undefined) {
+    options.onError?.(err);
+    log.error(err.message);
+    return undefined;
+  }
+
+  audioFilesServer = newAudioFilesServer;
+  return newAudioFilesServer;
+}
+
+/** @throws */
+async function createAudioFileConverterAndInitServer(
+  options: AudioFilesServerOptions,
 ): Promise<AudioFilesServer> {
-  return new Promise((resolve, _reject) => {
-    try {
-      if (audioFilesServer !== undefined) {
-        log.info(`Audio files server is already running`);
-        options.onReady?.({
-          audioConverterTemporaryFolder: audioFilesServer.converter.temporaryOutputDir,
-        });
-        resolve(audioFilesServer);
-        return;
-      }
+  log.debug(`Starting audio files server at ${options.audioFilesRootFolder}...`);
+  validateRootFolderOrThrow(options.audioFilesRootFolder);
 
-      log.debug(`Starting audio files server at ${options.audioFilesRootFolder}...`);
-      validateRootFolderOrThrow(options.audioFilesRootFolder);
+  log.debug(`Initializing audio files converter...`);
+  const converter = new AudioFileConverter();
+  const app = initServerApp(converter, options);
 
-      log.debug(`Initializing audio files converter...`);
-      const converter = new AudioFileConverter();
-      const app = initServerApp(converter, options);
+  if (app === undefined) {
+    throw new Error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED);
+  }
 
-      if (app === undefined) {
-        log.error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED);
-        options.onError?.(new Error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED));
-        return;
-      }
-
-      waitForServerToStart(app)
-        .then((server: Server) => {
-          audioFilesServer = {
-            _app: app,
-            converter: converter,
-            stop: () => {
-              server.close();
-              audioFilesServer = undefined;
-            },
-          };
-          options.onReady?.({
-            audioConverterTemporaryFolder: audioFilesServer.converter.temporaryOutputDir,
-          });
-          resolve(audioFilesServer);
-        })
-        .catch((e) => {
-          const err = e as Error;
-          log.error(err.message);
-          options.onError?.(err);
-        });
-    } catch (e) {
-      const err = e as Error;
-      log.error(err.message);
-      options.onError?.(err);
-    }
+  const httpServer = await waitForHTTPServerToStart(app);
+  const newAudioFilesServer = {
+    _app: app,
+    converter: converter,
+    stop: () => {
+      httpServer.close();
+      audioFilesServer = undefined;
+    },
+  };
+  options.onReady?.({
+    audioConverterTemporaryFolder: newAudioFilesServer.converter.temporaryOutputDir,
   });
+  return newAudioFilesServer;
 }
 
 function initServerApp(
@@ -94,14 +99,12 @@ function initServerApp(
   });
 
   function handlePingRequest(_req: Request, res: Response) {
-    try {
-      validateRootFolderOrThrow(options.audioFilesRootFolder);
-    } catch (e) {
-      const err = e as Error;
+    const [err] = tryit(validateRootFolderOrThrow)(options.audioFilesRootFolder);
+    if (err) {
       res.status(500).send(err.message);
+    } else {
+      res.status(200).send("pong");
     }
-
-    res.status(200).send("pong");
   }
 
   function handleGetConvertedMP3FileRequest(req: Request, res: Response) {
@@ -129,7 +132,7 @@ function initServerApp(
     .use(staticServerMiddleware);
 }
 
-async function waitForServerToStart(app: App, timeoutMs = 1_000): Promise<Server> {
+async function waitForHTTPServerToStart(app: App, timeoutMs = 1_000): Promise<Server> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       log.error(`audio files server failed to start after ${timeoutMs}ms`);

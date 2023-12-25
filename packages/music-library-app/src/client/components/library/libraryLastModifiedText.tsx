@@ -2,6 +2,7 @@ import type { MusicLibraryPlist } from "@adahiya/music-library-tools-lib";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { format, parseISO } from "date-fns";
+import { isString } from "radash";
 
 import { appStore } from "../../store/appStore";
 
@@ -21,7 +22,7 @@ function getDateModified(library: MusicLibraryPlist | undefined) {
     return new Date();
   }
 
-  if (typeof library.Date === "string") {
+  if (isString(library.Date)) {
     return parseISO(library.Date);
   }
 

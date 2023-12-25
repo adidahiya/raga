@@ -3,6 +3,7 @@ import type {
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
 } from "@adahiya/music-library-tools-lib";
+import { tryit } from "radash";
 import { Roarr as log } from "roarr";
 import { serializeError } from "serialize-error";
 
@@ -113,33 +114,29 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set({ libraryLoadingState: "loading" });
 
     window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
-    try {
-      const data = await window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
-        ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
-        LOAD_SWINSIAN_LIBRARY_TIMEOUT,
-      );
 
-      if (data === undefined) {
-        set({ libraryLoadingState: "error" });
-        throw new Error("unknown error");
-      }
+    const [err, data] = await tryit(window.api.waitForResponse)<LoadedSwinsianLibraryEventPayload>(
+      ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+      LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+    );
 
-      log.trace("[renderer] got loaded library");
-      if (DEBUG) {
-        console.log(data);
-      }
-
-      get().startAudioFilesServer();
-
-      set((state) => {
-        state.libraryLoadingState = "loaded";
-        state.library = data.library;
-        state.libraryPlaylists = getLibraryPlaylists(data.library);
-      });
-    } catch (e) {
+    if (data === undefined) {
       set({ libraryLoadingState: "error" });
-      log.error(`[client] failed to load Swinsian library: ${JSON.stringify(serializeError(e))}`);
+      log.error(`[client] failed to load Swinsian library: ${JSON.stringify(serializeError(err))}`);
+      return;
     }
+
+    log.trace("[renderer] got loaded library");
+    if (DEBUG) {
+      console.log(data);
+    }
+
+    set((state) => {
+      state.startAudioFilesServer();
+      state.libraryLoadingState = "loaded";
+      state.library = data.library;
+      state.libraryPlaylists = getLibraryPlaylists(data.library);
+    });
   },
 
   writeModiifedLibrary: async () => {
@@ -167,18 +164,16 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       outputFilepath: libraryOutputFilepath,
     });
 
-    try {
-      await window.api.waitForResponse(
-        ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
-        WRITE_MODIFIED_LIBRARY_TIMEOUT,
-      );
-      set({ libraryWriteState: "none" });
-    } catch (e) {
+    const [err] = await tryit(window.api.waitForResponse)(
+      ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
+      WRITE_MODIFIED_LIBRARY_TIMEOUT,
+    );
+
+    if (err !== undefined) {
       log.error(`[client] timed out writing modified library to disk`);
-      set({ libraryWriteState: "ready" });
-    } finally {
-      set({ analyzerStatus: "ready" });
     }
+
+    set({ libraryWriteState: "ready" });
   },
 
   unloadSwinsianLibrary: () => {

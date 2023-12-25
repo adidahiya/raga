@@ -2,6 +2,7 @@ import { Classes, FocusStyleManager, HotkeysProvider } from "@blueprintjs/core";
 import { createLogWriter } from "@roarr/browser-log-writer";
 import { createRoot } from "react-dom/client";
 
+import { ClientErrors } from "../common/errorMessages";
 import App from "./app";
 // import { INSTALL_REACT_DEVELOPER_TOOLS } from "../common/constants";
 
@@ -12,7 +13,7 @@ FocusStyleManager.onlyShowFocusOnTabs();
 
 const domNode = document.getElementById("root");
 if (domNode === null) {
-  throw new Error(`[client] Failed to render application: no root DOM node available.`);
+  throw new Error(ClientErrors.APP_RENDER_FAILED);
 }
 const root = createRoot(domNode);
 root.render(

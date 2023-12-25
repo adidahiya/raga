@@ -85,30 +85,26 @@ function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
 let audioFilesServer: AudioFilesServer | undefined;
 
 async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions) {
-  try {
-    audioFilesServer = await startAudioFilesServer({
-      ...options,
-      onReady: (startedInfo) => {
-        process.parentPort.postMessage({
-          channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
-          data: startedInfo,
-        });
-      },
-      onError: (error) => {
-        process.parentPort.postMessage({
-          channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
-          data: serializeError(error),
-        });
-      },
-    });
-  } catch (e) {
-    log.error((e as Error).message);
-  }
+  audioFilesServer = await startAudioFilesServer({
+    ...options,
+    onReady: (startedInfo) => {
+      process.parentPort.postMessage({
+        channel: ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
+        data: startedInfo,
+      });
+    },
+    onError: (error) => {
+      process.parentPort.postMessage({
+        channel: ServerEventChannel.AUDIO_FILES_SERVER_ERROR,
+        data: serializeError(error),
+      });
+    },
+  });
 }
 
 function handleAudioFilesServerStop() {
   if (audioFilesServer === undefined) {
-    log.info("Received request to stop audio files server, but it is not running");
+    log.error("Received request to stop audio files server, but it is not running");
     return;
   }
 

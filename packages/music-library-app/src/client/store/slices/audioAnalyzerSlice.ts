@@ -1,3 +1,4 @@
+import { tryit } from "radash";
 import { Roarr as log } from "roarr";
 import { serializeError } from "serialize-error";
 
@@ -6,6 +7,7 @@ import {
   DEFAULT_AUDIO_FILES_SERVER_PORT,
   WRITE_AUDIO_FILE_TAG_TIMEOUT,
 } from "../../../common/constants";
+import { ClientErrors } from "../../../common/errorMessages";
 import { ClientEventChannel, ServerEventChannel } from "../../../common/events";
 import { analyzeBPM } from "../../audio/bpm";
 import { loadAudioBuffer } from "../../audio/buffer";
@@ -39,10 +41,9 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
   },
 
   analyzeTrack: async (trackID: number) => {
-    try {
-      await analyzeTrackOrThrow(set, get, { trackID });
-    } catch (e) {
-      log.error(`[client] error analyzing track ${trackID}: ${JSON.stringify(serializeError(e))}`);
+    const [err] = await tryit(analyzeTrackOrThrow)(set, get, { trackID });
+    if (err) {
+      log.error(ClientErrors.analyzeTrackFailed(trackID, err));
       set({ analyzerStatus: "ready" });
     }
   },
@@ -51,14 +52,14 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
     const { audioConvertedFileURLs, convertTrackToMP3, getTrackDef, libraryPlaylists } = get();
 
     if (libraryPlaylists === undefined) {
-      log.error(`[client] Unable to analyze playlist ${playlistID}, libraryPlaylists is undefined`);
+      log.error(ClientErrors.analyzePlaylistFailed(playlistID) + " libraryPlaylists is undefined");
       return;
     }
 
     const playlistDef = libraryPlaylists[playlistID];
     if (playlistDef === undefined) {
       log.error(
-        `[client] Unable to analyze playlist ${playlistID}, could not find it in the library`,
+        ClientErrors.analyzePlaylistFailed(playlistID) + " could not find it in the library",
       );
       return;
     }
@@ -76,11 +77,7 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
         }
         await analyzeTrackOrThrow(set, get, { trackID });
       } catch (e) {
-        log.error(
-          `[client] error analyzing track ${trackID} in playlist ${playlistID}: ${JSON.stringify(
-            serializeError(e),
-          )}`,
-        );
+        log.error(ClientErrors.analyzeTrackInPlaylistFailed(trackID, playlistID, e as Error));
         set({ analyzerStatus: "ready" });
         continue;
       }
@@ -112,7 +109,7 @@ async function analyzeTrackOrThrow(
   const trackDef = getTrackDef(trackID);
 
   if (trackDef === undefined) {
-    throw new Error(`Unable to find track definition`);
+    throw new Error(ClientErrors.libraryNoTrackDefFound(trackID));
   }
 
   if (trackDef.BPM !== undefined && !force) {
@@ -123,7 +120,7 @@ async function analyzeTrackOrThrow(
   set({ analyzerStatus: "busy" });
   const analyzeAudioTimeout = setTimeout(() => {
     set({ analyzerStatus: "ready" });
-    throw new Error(`timed out while analyzing track ${trackID}`);
+    throw new Error(ClientErrors.analyzeTrackTimedOut(trackID));
   }, ANALYZE_AUDIO_FILE_TIMEOUT);
 
   let bpm: number | undefined;
