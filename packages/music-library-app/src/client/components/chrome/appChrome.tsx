@@ -9,13 +9,18 @@ import AudioFilesServerControls from "./audioFilesServerControls";
 
 export default function AppChrome() {
   const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
+  const isLibraryLoaded = appStore.use.libraryLoadingState() === "loaded";
 
   return (
     <div className={styles.appChrome}>
       <div className={styles.appChromeLeft}>
         <H4>Music Library App</H4>
-        <Divider />
-        <AudioFilesServerControls />
+        {isLibraryLoaded && (
+          <>
+            <Divider />
+            <AudioFilesServerControls />
+          </>
+        )}
         {audioFilesServerStatus === "started" && (
           <>
             <Divider />
