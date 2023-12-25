@@ -7,7 +7,16 @@ import { Roarr as log } from "roarr";
 
 import { ClientEventChannel } from "../../../common/events";
 import { appStore } from "../../store/appStore";
+import trackRatingStarsStyles from "./trackRatingStars.module.scss";
 import styles from "./trackTable.module.scss";
+
+function isClickOnInteractiveRowElement(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  return (
+    target.closest(`.${styles.analyzeTrackButton}`) != null ||
+    target.closest(`.${trackRatingStarsStyles.trackRatingStars}`) != null
+  );
+}
 
 export default function TrackTableRow({
   ctxMenuProps,
@@ -21,9 +30,7 @@ export default function TrackTableRow({
 
   const handleClick = useCallback(
     (event: MouseEvent) => {
-      const isClickOnAnalyzeButton =
-        (event.target as HTMLElement).closest(`.${styles.analyzeTrackButton}`) != null;
-      if (canSelect && !isClickOnAnalyzeButton) {
+      if (canSelect && !isClickOnInteractiveRowElement(event)) {
         // N.B. row selection is toggled in an update effect in <TrackTable>
         // TODO: consider implementing multiple selection with shift and ctrl key modifiers
         // toggleSelected(event);

@@ -21,6 +21,7 @@ import { appStore, useAppStore } from "../../store/appStore";
 import AnalyzeAlPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
+import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
 import TrackTableRow, { TrackTableRowWithContextMenu } from "./trackTableRow";
 
@@ -81,6 +82,11 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
       id: "artist",
       cell: (info) => <i>{info.getValue()}</i>,
       header: () => <span>Artist</span>,
+    }),
+    columnHelper.accessor("Rating", {
+      id: "rating",
+      cell: TrackRatingCell,
+      header: () => <span>Rating</span>,
     }),
     columnHelper.accessor(getTrackFileType, {
       id: "fileType",
@@ -174,4 +180,10 @@ function BPMColumnHeader(props: { playlistId: string }) {
 function TrackFileTypeCell(context: CellContext<TrackDefinition, AudioFileType>) {
   const isReadyForAnalysis = useIsTrackReadyForAnalysis(context.row.original["Track ID"]);
   return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={context.getValue()} />;
+}
+
+function TrackRatingCell(context: CellContext<TrackDefinition, number>) {
+  return (
+    <TrackRatingStars trackID={context.row.original["Track ID"]} rating={context.getValue()} />
+  );
 }

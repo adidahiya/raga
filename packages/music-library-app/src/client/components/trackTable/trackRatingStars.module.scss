@@ -1,0 +1,24 @@
+.trackRatingStars {
+  display: inline-flex;
+  flex-direction: row;
+  gap: 2px;
+}
+
+.starEmpty,
+.starFilled {
+  filter: saturate(50%);
+}
+
+.starFilled {
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+.starEmpty {
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+  }
+}

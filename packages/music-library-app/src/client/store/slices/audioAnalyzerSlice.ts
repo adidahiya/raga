@@ -1,6 +1,5 @@
 import { tryit } from "radash";
 import { Roarr as log } from "roarr";
-import { serializeError } from "serialize-error";
 
 import {
   ANALYZE_AUDIO_FILE_TIMEOUT,
@@ -8,7 +7,11 @@ import {
   WRITE_AUDIO_FILE_TAG_TIMEOUT,
 } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
-import { ClientEventChannel, ServerEventChannel } from "../../../common/events";
+import {
+  ClientEventChannel,
+  ServerEventChannel,
+  type WriteAudioFileTagOptions,
+} from "../../../common/events";
 import { analyzeBPM } from "../../audio/bpm";
 import { loadAudioBuffer } from "../../audio/buffer";
 import { isTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
@@ -143,7 +146,7 @@ async function analyzeTrackOrThrow(
     fileLocation: trackDef.Location,
     tagName: "BPM",
     value: bpm,
-  });
+  } satisfies WriteAudioFileTagOptions);
 
   await window.api.waitForResponse(
     ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,

@@ -10,13 +10,16 @@ import { serializeError } from "serialize-error";
 import {
   DEBUG,
   LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+  WRITE_AUDIO_FILE_TAG_TIMEOUT,
   WRITE_MODIFIED_LIBRARY_TIMEOUT,
 } from "../../../common/constants";
+import { ClientErrors } from "../../../common/errorMessages";
 import {
   ClientEventChannel,
   type LoadedSwinsianLibraryEventPayload,
   type LoadSwinsianLibraryOptions,
   ServerEventChannel,
+  type WriteAudioFileTagOptions,
 } from "../../../common/events";
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
@@ -53,6 +56,7 @@ export interface LibraryActions {
   setLibraryOutputFilepath: (libraryFilepath: string | undefined) => void;
   setSelectedPlaylistId: (selectedPlaylistId: string | undefined) => void;
   setSelectedTrackId: (selectedTrackId: number | undefined) => void;
+  setTrackRating: (trackId: number, rating: number) => Promise<void>;
 }
 
 export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActions> = (
@@ -107,6 +111,30 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     // re-renders (I think?), but if we keep the old waveform around too long, it feels stale.
     // get().unloadWaveSurfer();
     set({ selectedTrackId });
+  },
+  setTrackRating: async (trackID, ratingOutOf100) => {
+    const trackDef = get().getTrackDef(trackID);
+
+    if (trackDef === undefined) {
+      log.error(ClientErrors.libraryNoTrackDefFound(trackID));
+      return;
+    }
+
+    window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
+      fileLocation: trackDef.Location,
+      tagName: "Rating",
+      value: ratingOutOf100,
+    } satisfies WriteAudioFileTagOptions);
+
+    await window.api.waitForResponse(
+      ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+      WRITE_AUDIO_FILE_TAG_TIMEOUT,
+    );
+    log.info(`[client] completed updating Rating for track ${trackID}`);
+    set((state) => {
+      state.library!.Tracks[trackID].Rating = ratingOutOf100;
+      state.libraryWriteState = "ready"; // needs to be written to disk
+    });
   },
 
   // complex actions
