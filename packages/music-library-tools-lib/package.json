@@ -19,7 +19,8 @@
     "fluent-ffmpeg": "^2.1.2",
     "html-entities": "^2.4.0",
     "plist": "^3.1.0",
-    "prompts": "^2.4.2"
+    "prompts": "^2.4.2",
+    "react-dropzone": "^14.2.3"
   },
   "devDependencies": {
     "@types/dedent": "^0.7.2",

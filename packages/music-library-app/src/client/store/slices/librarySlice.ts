@@ -211,6 +211,8 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       libraryOutputFilepath: undefined,
       libraryPlaylists: undefined,
       libraryLoadingState: "none",
+      selectedPlaylistId: undefined,
+      selectedTrackId: undefined,
     });
     get().stopAudioFilesServer();
   },

@@ -1,0 +1,42 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.separator {
+  margin: 10px 0;
+  position: relative;
+
+  &:before {
+    background: bp.$pt-dark-divider-white;
+    content: "";
+    display: block;
+    height: 1px;
+    left: 2rem;
+    position: absolute;
+    top: 10px;
+    width: calc(50% - 3rem);
+  }
+
+  &:after {
+    background: bp.$pt-dark-divider-white;
+    content: "";
+    display: block;
+    height: 1px;
+    position: absolute;
+    right: 2rem;
+    top: 10px;
+    width: calc(50% - 3rem);
+  }
+}
+
+.dropzone {
+  align-items: center;
+  background: bp.$dark-gray3;
+  border-radius: bp.$pt-border-radius;
+  border: dashed 1px bp.$pt-dark-divider-white;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+
+  &.active {
+    background: bp.$dark-gray2;
+  }
+}
