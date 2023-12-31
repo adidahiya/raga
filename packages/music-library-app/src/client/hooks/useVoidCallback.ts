@@ -13,4 +13,5 @@ export default function useVoidCallback<T>(
   return useCallback(() => {
     void cb();
   }, [deps]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 }

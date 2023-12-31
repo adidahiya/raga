@@ -7,6 +7,7 @@ import {
   serializeLibraryPlist,
   type SwinsianLibraryPlist,
 } from "@adahiya/music-library-tools-lib";
+import { tryit } from "radash";
 import { serializeError } from "serialize-error";
 
 import {
@@ -55,14 +56,15 @@ export function initAppServer() {
 
 function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLibraryOptions) {
   if (library === undefined || reloadFromDisk) {
-    // HACKHACK
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    library = loadSwinsianLibrary(filepath) as SwinsianLibraryPlist | undefined;
-  }
+    const [err, loadedLibrary] = tryit(loadSwinsianLibrary)(filepath);
 
-  if (library === undefined) {
-    log.error(`Could not load Swinsian library from ${filepath}`);
-    return;
+    if (err !== undefined) {
+      // TODO: propagate error with a ServerEventChannel message
+      log.error(`Could not load Swinsian library from ${filepath}`);
+      return;
+    }
+
+    library = loadedLibrary;
   }
 
   const channel = ServerEventChannel.LOADED_SWINSIAN_LIBRARY;

@@ -137,7 +137,7 @@ async function analyzeTrackOrThrow(
     const analyzedBPM = await analyzeBPM(trackAudio);
     bpm = Math.round(analyzedBPM);
   } catch (e) {
-    throw new Error(`Failed to analyze track ${trackID}`);
+    throw new Error(ClientErrors.analyzeTrackFailed(trackID, e as Error));
   } finally {
     clearTimeout(analyzeAudioTimeout);
   }

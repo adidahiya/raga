@@ -6,8 +6,9 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:eslint-comments/recommended",
   ],
-  plugins: ["@typescript-eslint", "simple-import-sort"],
+  plugins: ["@typescript-eslint", "eslint-comments", "simple-import-sort"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     tsconfigRootDir: __dirname,
@@ -32,6 +33,10 @@ module.exports = {
       "error",
       { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
     ],
+    // N.B. enabling this rule here instead of `eslint --report-unused-disable-directives` so that
+    // we don't have to declare the CLI flag in every package's `package.json`. We can switch to
+    // `linterOptions.reportUnusedDisableDirectives` in ESLint v9.0
+    "eslint-comments/no-unused-disable": "error",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
   },
