@@ -4,6 +4,7 @@ import { env } from "node:process";
 
 import { AudioFileConverter } from "@adahiya/music-library-tools-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
+import { action, type Operation } from "effection";
 import { tryit } from "radash";
 import sirv from "sirv";
 
@@ -35,33 +36,32 @@ export interface AudioFilesServer {
  * If there's an error during intialization, it will be logged and the provided `onError`
  * callback will be invoked, but it will not throw.
  */
-export async function startAudioFilesServer(
+export function* startAudioFilesServer(
   options: AudioFilesServerOptions,
-): Promise<AudioFilesServer | undefined> {
+): Operation<AudioFilesServer | undefined> {
   if (audioFilesServer !== undefined) {
     log.info(`Audio files server is already running`);
     options.onReady?.({
       audioConverterTemporaryFolder: audioFilesServer.converter.temporaryOutputDir,
     });
-    return Promise.resolve(audioFilesServer);
+    return audioFilesServer;
   }
 
-  const [err, newAudioFilesServer] = await tryit(createAudioFileConverterAndInitServer)(options);
-
-  if (err !== undefined) {
-    options.onError?.(err);
-    log.error(err.message);
+  try {
+    const newAudioFilesServer = yield* createAudioFileConverterAndInitServer(options);
+    audioFilesServer = newAudioFilesServer;
+    return newAudioFilesServer;
+  } catch (e) {
+    options.onError?.(e as Error);
+    log.error((e as Error).message);
     return undefined;
   }
-
-  audioFilesServer = newAudioFilesServer;
-  return newAudioFilesServer;
 }
 
 /** @throws */
-async function createAudioFileConverterAndInitServer(
+function* createAudioFileConverterAndInitServer(
   options: AudioFilesServerOptions,
-): Promise<AudioFilesServer> {
+): Operation<AudioFilesServer> {
   log.debug(`Starting audio files server at ${options.audioFilesRootFolder}...`);
   validateRootFolderOrThrow(options.audioFilesRootFolder);
 
@@ -73,7 +73,7 @@ async function createAudioFileConverterAndInitServer(
     throw new Error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED);
   }
 
-  const httpServer = await waitForHTTPServerToStart(app);
+  const httpServer = yield* waitForHTTPServerToStart(app);
   const newAudioFilesServer = {
     _app: app,
     converter: converter,
@@ -132,11 +132,12 @@ function initServerApp(
     .use(staticServerMiddleware);
 }
 
-async function waitForHTTPServerToStart(app: App, timeoutMs = 1_000): Promise<Server> {
-  return new Promise((resolve, reject) => {
+function* waitForHTTPServerToStart(app: App, timeoutMs = 1_000): Operation<Server> {
+  // eslint-disable-next-line require-yield
+  return yield* action(function* (resolve, reject) {
     const timeout = setTimeout(() => {
-      log.error(`audio files server failed to start after ${timeoutMs}ms`);
-      reject();
+      log.error(`Audio files server failed to start after ${timeoutMs}ms`);
+      reject(new Error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED));
     }, timeoutMs);
 
     let server: Server | undefined = undefined;

@@ -1,5 +1,7 @@
+import { call, type Operation } from "effection";
+
 import { AudioFilesServerRoutes as Routes } from "../../../common/api/audioFilesServerAPI";
 
-export default function pingRequest(serverBaseURL: string) {
-  return fetch(`${serverBaseURL}${Routes.GET_PING}`);
+export default function* pingRequest(serverBaseURL: string): Operation<Response> {
+  return yield* call(fetch(`${serverBaseURL}${Routes.GET_PING}`));
 }

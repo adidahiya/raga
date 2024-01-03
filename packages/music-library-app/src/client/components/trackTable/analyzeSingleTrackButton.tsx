@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
 import { Button, Tooltip } from "@blueprintjs/core";
+import { useCallback } from "react";
 
-import { useVoidCallback } from "../../hooks";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
@@ -17,12 +17,15 @@ export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: Track
   const isTrackReadyForAnalysis = useIsTrackReadyForAnalysis(trackID);
 
   // analyze the track if it's ready for analysis, otherwise convert it to a compatible format first
-  const handleAnalyzeBPM = useVoidCallback(async () => {
-    if (!isTrackReadyForAnalysis) {
-      await convertTrackToMP3(trackDef);
-    }
-    void analyzeTrack(trackID);
-  }, [analyzeTrack, convertTrackToMP3, isTrackReadyForAnalysis, trackDef, trackID]);
+  const handleAnalyzeBPM = useCallback(
+    function* () {
+      if (!isTrackReadyForAnalysis) {
+        yield* convertTrackToMP3(trackDef);
+      }
+      yield* analyzeTrack(trackID);
+    },
+    [analyzeTrack, convertTrackToMP3, isTrackReadyForAnalysis, trackDef, trackID],
+  );
 
   const isConvertingThisFile = !isTrackReadyForAnalysis && audioFilesConverterIsBusy;
   const buttonDisabled = !isAudioFilesServerReady || isAnalyzerBusy || isConvertingThisFile;

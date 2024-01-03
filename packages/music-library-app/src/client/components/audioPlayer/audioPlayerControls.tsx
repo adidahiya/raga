@@ -4,7 +4,6 @@ import { debounce } from "radash";
 import { useCallback, useMemo } from "react";
 
 import { formatAudioDuration } from "../../../common/format";
-import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 import styles from "./audioPlayerControls.module.scss";
@@ -19,7 +18,12 @@ export function AudioPlayerControls() {
   useAudioPlayerHotkeys();
 
   const selectedTrack = getSelectedTrackDef();
-  const handlePlay = useVoidCallback(play);
+  const handlePlay = useCallback(
+    function* () {
+      yield* play();
+    },
+    [play],
+  );
   const handlePause = pause;
   const handleVolumeOff = useCallback(() => {
     setVolume(0);

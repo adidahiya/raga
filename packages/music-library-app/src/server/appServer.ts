@@ -7,6 +7,7 @@ import {
   serializeLibraryPlist,
   type SwinsianLibraryPlist,
 } from "@adahiya/music-library-tools-lib";
+import type { Operation } from "effection";
 import { tryit } from "radash";
 import { serializeError } from "serialize-error";
 
@@ -28,7 +29,7 @@ import { writeAudioFileTag } from "./writeAudioFileTag";
 let library: SwinsianLibraryPlist | undefined;
 
 export function initAppServer() {
-  process.parentPort.on("message", ({ data: event }: ClientMessageEvent) => {
+  process.parentPort.on("message", function* ({ data: event }: ClientMessageEvent) {
     log.debug(`received '${event.channel}' event`);
 
     // HACKHACK: need to figure out the right syntax to get conditional inferred types working for event payloads
@@ -40,7 +41,9 @@ export function initAppServer() {
         handleWriteAudioFileTag(event.data as ClientEventPayloadMap[typeof event.channel]);
         break;
       case ClientEventChannel.AUDIO_FILES_SERVER_START:
-        void handleAudioFilesServerStart(event.data as ClientEventPayloadMap[typeof event.channel]);
+        yield* handleAudioFilesServerStart(
+          event.data as ClientEventPayloadMap[typeof event.channel],
+        );
         break;
       case ClientEventChannel.AUDIO_FILES_SERVER_STOP:
         handleAudioFilesServerStop();
@@ -86,8 +89,8 @@ function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
 
 let audioFilesServer: AudioFilesServer | undefined;
 
-async function handleAudioFilesServerStart(options: AudioFilesServerStartOptions) {
-  audioFilesServer = await startAudioFilesServer({
+function* handleAudioFilesServerStart(options: AudioFilesServerStartOptions): Operation<void> {
+  audioFilesServer = yield* startAudioFilesServer({
     ...options,
     onReady: (startedInfo) => {
       process.parentPort.postMessage({

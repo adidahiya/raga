@@ -1,3 +1,4 @@
+import type { Operation } from "effection";
 import type { IpcRendererEvent } from "electron";
 
 import type { ClientEventChannel, ServerEventChannel } from "./common/events";
@@ -30,5 +31,5 @@ export interface ContextBridgeApi {
   waitForResponse: <T = object>(
     channel: ServerEventChannel,
     timeoutMs: number,
-  ) => Promise<T | undefined>;
+  ) => Operation<T | undefined>;
 }

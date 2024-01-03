@@ -1,5 +1,6 @@
+import { call, type Operation } from "effection";
 import { analyze } from "web-audio-beat-detector";
 
-export async function analyzeBPM(audioBuffer: AudioBuffer) {
-  return analyze(audioBuffer);
+export function* analyzeBPM(audioBuffer: AudioBuffer): Operation<number> {
+  return yield* call(analyze(audioBuffer));
 }

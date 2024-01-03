@@ -1,3 +1,4 @@
+import { call, type Operation } from "effection";
 import { debounce } from "radash";
 import { Roarr as log } from "roarr";
 import type WaveSurfer from "wavesurfer.js";
@@ -14,7 +15,7 @@ export interface AudioPlayerState {
 }
 
 export interface AudioPlayerActions {
-  audioPlay: () => Promise<void>;
+  audioPlay: () => Operation<void>;
   audioPause: () => void;
   audioSeek: (seekMs: number) => void;
   setAudioVolume: (volume: number) => void;
@@ -93,12 +94,12 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
     });
   },
 
-  audioPlay: async () => {
+  audioPlay: function* (): Operation<void> {
     const { waveSurfer } = get();
     if (waveSurfer === undefined) {
       return;
     }
-    await waveSurfer.play();
+    yield* call(waveSurfer.play());
     set({ audioIsPlaying: true });
   },
 

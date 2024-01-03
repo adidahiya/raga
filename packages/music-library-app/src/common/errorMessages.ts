@@ -12,6 +12,10 @@ export const ClientErrors = {
     )}`,
   analyzePlaylistFailed: (playlistID: string) =>
     `${CLIENT} Unable to analyze playlist ${playlistID}, libraryPlaylists is undefined`,
+
+  contextBridgeResponseTimeout: (channel: string) =>
+    `${CLIENT} Timed out waiting for response to ${channel} event`,
+
   libraryNoTracksFoundForPlaylist: (playlistID: string) =>
     `${CLIENT} No track definitions found for playlist ${playlistID}`,
   libraryNoTrackDefFound: (trackID: number) =>

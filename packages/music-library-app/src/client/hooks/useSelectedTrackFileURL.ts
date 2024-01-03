@@ -1,3 +1,4 @@
+import { run } from "effection";
 import { useEffect, useState } from "react";
 import { Roarr as log } from "roarr";
 
@@ -44,7 +45,9 @@ export default function useSelectedTrackFileURL() {
       log.debug(`[client] Using already-converted file for track ${trackDef["Track ID"]}`);
       setSelectedFileURL(existingConvertedFileURL);
     } else {
-      void convertTrackToMP3(trackDef).then(setSelectedFileURL);
+      void run(function* () {
+        return yield* convertTrackToMP3(trackDef);
+      }).then(setSelectedFileURL);
     }
   }, [trackDef, audioFilesRootFolder, audioConvertedFileURLs, convertTrackToMP3]);
 

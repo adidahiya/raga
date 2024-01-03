@@ -11,7 +11,6 @@ import {
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 
-import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./libraryIOActions.module.scss";
 
@@ -26,7 +25,12 @@ export default function LibraryIOActions() {
   const unloadSwinsianLibrary = appStore.use.unloadSwinsianLibrary();
   const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
 
-  const handleWriteModifiedLibrary = useVoidCallback(writeModifiedLibrary);
+  const handleWriteModifiedLibrary = useCallback(
+    function* () {
+      yield* writeModifiedLibrary();
+    },
+    [writeModifiedLibrary],
+  );
   const handleLoad = useCallback(() => {
     if (libraryInputFilepath === undefined) {
       return;

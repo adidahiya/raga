@@ -2,8 +2,10 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { blueBright } from "ansis";
+import { action } from "effection";
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 
+import { ClientErrors } from "./common/errorMessages";
 import { type ClientEventChannel, type ServerEventChannel } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 import { type ContextBridgeApi } from "./contextBridgeApi";
@@ -36,9 +38,11 @@ const contextBridgeApi: ContextBridgeApi = {
 
   waitForResponse: <T>(channel: ServerEventChannel, timeoutMs: number) => {
     log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
-    return new Promise<T | undefined>((resolve, reject) => {
+
+    // eslint-disable-next-line require-yield
+    return action<T | undefined>(function* (resolve, reject) {
       const timeout = setTimeout(() => {
-        reject(`timed out waiting for ${channel} response`);
+        reject(new Error(ClientErrors.contextBridgeResponseTimeout(channel)));
       }, timeoutMs);
       contextBridgeApi.handleOnce<T>(channel, (_event, data) => {
         clearTimeout(timeout);

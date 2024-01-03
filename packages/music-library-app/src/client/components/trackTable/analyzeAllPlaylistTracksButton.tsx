@@ -1,6 +1,6 @@
 import { Button, Tooltip } from "@blueprintjs/core";
+import { useCallback } from "react";
 
-import { useVoidCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./trackTable.module.scss";
 
@@ -14,8 +14,10 @@ export default function AnalyzeAllPlaylistTracksButton({
   const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
   const analyzerStatus = appStore.use.analyzerStatus();
   const analyzePlaylist = appStore.use.analyzePlaylist();
-  const handleAnalyzeClick = useVoidCallback(
-    () => analyzePlaylist(playlistId),
+  const handleAnalyzeClick = useCallback(
+    function* () {
+      yield* analyzePlaylist(playlistId);
+    },
     [analyzePlaylist, playlistId],
   );
   const buttonDisabled = audioFilesServerStatus !== "started";
