@@ -35,6 +35,9 @@ export function initAppServer() {
 
     // HACKHACK: need to figure out the right syntax to get conditional inferred types working for event payloads
     switch (event.channel) {
+      case ClientEventChannel.APP_SERVER_PING:
+        process.parentPort.postMessage({ channel: ServerEventChannel.APP_SERVER_READY });
+        break;
       case ClientEventChannel.LOAD_SWINSIAN_LIBRARY:
         handleLoadSwinsianLibrary(event.data as ClientEventPayloadMap[typeof event.channel]);
         break;
@@ -65,7 +68,6 @@ function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLib
     try {
       log.debug(`Loading Swinsian library from ${filepath}...`);
       library = loadSwinsianLibrary(filepath);
-      console.log(library);
     } catch (e) {
       log.error(`Could not load Swinsian library from ${filepath}`);
       return;

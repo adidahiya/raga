@@ -7,7 +7,7 @@ import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 
 import { withTimeout } from "./common/asyncUtils";
 import { ClientErrors } from "./common/errorMessages";
-import { type ClientEventChannel, ServerEventChannel } from "./common/events";
+import { ClientEventChannel, ServerEventChannel } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 import { type ContextBridgeApi } from "./contextBridgeApi";
 
@@ -26,6 +26,8 @@ const contextBridgeApi: ContextBridgeApi = {
     } else {
       log.debug(`queueing '${channel}' event`);
       contextBridgeApi.queue.push([channel, data]);
+      // in case we have reloaded the page, send a ping to the server to make sure it's still listening
+      ipcRenderer.send(ClientEventChannel.APP_SERVER_PING);
     }
   },
 
@@ -45,14 +47,24 @@ const contextBridgeApi: ContextBridgeApi = {
     return ipcRenderer.once(channel, callback);
   },
 
+  /**
+   * WARNING: this does not work as expected; presumably it needs to be called inside an effection
+   * `main()` call stack, but I can't figure out the right syntax for that at the moment.
+   */
   waitForResponse: <T extends object>(channel: ServerEventChannel, timeoutMs: number) =>
     withTimeout(
       action<T | undefined>(function* (resolve) {
-        contextBridgeApi.handleOnce<T>(channel, (_event, data) => {
+        const handler = (_event: IpcRendererEvent, data: T | undefined) => {
           resolve(data);
-        });
-        log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
-        yield* suspend();
+        };
+
+        try {
+          contextBridgeApi.handleOnce<T>(channel, handler);
+          log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
+          yield* suspend();
+        } finally {
+          contextBridgeApi.removeHandler(channel, handler);
+        }
       }),
       timeoutMs,
       ClientErrors.contextBridgeResponseTimeout(channel),
@@ -67,7 +79,7 @@ const contextBridgeApi: ContextBridgeApi = {
   },
 };
 
-contextBridgeApi.handle(ServerEventChannel.APP_SERVER_READY, () => {
+contextBridgeApi.handleOnce(ServerEventChannel.APP_SERVER_READY, () => {
   log.debug("app server ready");
   contextBridgeApi.isReady = true;
   contextBridgeApi.queue.forEach(([channel, data]) => {

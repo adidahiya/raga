@@ -9,7 +9,8 @@ import { serializeError } from "serialize-error";
 
 import {
   DEBUG,
-  LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+  // HACKHACK: need to fix `ContextBridgeApi.waitForResponse` and use this timeout
+  // LOAD_SWINSIAN_LIBRARY_TIMEOUT,
   WRITE_AUDIO_FILE_TAG_TIMEOUT,
   WRITE_MODIFIED_LIBRARY_TIMEOUT,
 } from "../../../common/constants";
@@ -155,6 +156,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
           yield* suspend();
         },
       );
+      // HACKHACK: need to fix `ContextBridgeApi.waitForResponse`
       // const data = yield* window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
       //   ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
       //   LOAD_SWINSIAN_LIBRARY_TIMEOUT,
