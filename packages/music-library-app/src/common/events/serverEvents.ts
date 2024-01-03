@@ -3,6 +3,7 @@ import type { SwinsianLibraryPlist } from "@adahiya/music-library-tools-lib";
 // Event channels
 
 export const ServerEventChannel = {
+  APP_SERVER_READY: "appServerReady" as const,
   AUDIO_FILES_SERVER_ERROR: "audioFilesServerError" as const,
   AUDIO_FILES_SERVER_STARTED: "audioFilesServerStarted" as const,
   AUDIO_FILES_SERVER_READY_FOR_RESTART: "audioFilesServerReadyForRestart" as const,
@@ -19,6 +20,7 @@ export function isServerEventChannel(channel: string): channel is ServerEventCha
 // Event payloads
 
 export interface ServerEventPayloadMap {
+  [ServerEventChannel.APP_SERVER_READY]: never;
   [ServerEventChannel.AUDIO_FILES_SERVER_ERROR]: Error;
   [ServerEventChannel.AUDIO_FILES_SERVER_STARTED]: AudioFilesServerStartedEventPayload;
   [ServerEventChannel.AUDIO_FILES_SERVER_READY_FOR_RESTART]: never;

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import type { AudioFileConverter } from "@adahiya/music-library-tools-lib";
 import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
 import { sync as commandExistsSync } from "command-exists";
-import { action, type Operation, run } from "effection";
+import { action, type Operation, run, suspend } from "effection";
 import ffmpeg from "fluent-ffmpeg";
 import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
@@ -79,9 +79,8 @@ const MP3_CODECS = ["libmp3lame", "libshine"] as const;
  * Caller is responsible for throwing an error in this case.
  */
 function getBestAvailableMP3Codec(): Operation<string | undefined> {
-  /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
-  // eslint-disable-next-line require-yield
   return action<string | undefined>(function* (resolve, reject) {
+    /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
     ffmpeg.getAvailableCodecs((err, codecs) => {
       if (err != null) {
         reject(err);
@@ -90,6 +89,8 @@ function getBestAvailableMP3Codec(): Operation<string | undefined> {
         resolve(codec);
       }
     });
+    /* eslint-enable @typescript-eslint/no-unnecessary-condition */
+
+    yield* suspend();
   });
-  /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 }

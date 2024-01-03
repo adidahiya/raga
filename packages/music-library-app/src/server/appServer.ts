@@ -7,8 +7,7 @@ import {
   serializeLibraryPlist,
   type SwinsianLibraryPlist,
 } from "@adahiya/music-library-tools-lib";
-import type { Operation } from "effection";
-import { tryit } from "radash";
+import { type Operation, run } from "effection";
 import { serializeError } from "serialize-error";
 
 import {
@@ -29,7 +28,9 @@ import { writeAudioFileTag } from "./writeAudioFileTag";
 let library: SwinsianLibraryPlist | undefined;
 
 export function initAppServer() {
-  process.parentPort.on("message", function* ({ data: event }: ClientMessageEvent) {
+  // N.B. this event handler must be a regular function, not an Operation, to ensure that it is run
+  // and not simply defined as a generator function
+  process.parentPort.on("message", function ({ data: event }: ClientMessageEvent) {
     log.debug(`received '${event.channel}' event`);
 
     // HACKHACK: need to figure out the right syntax to get conditional inferred types working for event payloads
@@ -41,9 +42,11 @@ export function initAppServer() {
         handleWriteAudioFileTag(event.data as ClientEventPayloadMap[typeof event.channel]);
         break;
       case ClientEventChannel.AUDIO_FILES_SERVER_START:
-        yield* handleAudioFilesServerStart(
-          event.data as ClientEventPayloadMap[typeof event.channel],
-        );
+        void run(function* () {
+          yield* handleAudioFilesServerStart(
+            event.data as ClientEventPayloadMap[typeof event.channel],
+          );
+        });
         break;
       case ClientEventChannel.AUDIO_FILES_SERVER_STOP:
         handleAudioFilesServerStop();
@@ -59,24 +62,23 @@ export function initAppServer() {
 
 function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLibraryOptions) {
   if (library === undefined || reloadFromDisk) {
-    const [err, loadedLibrary] = tryit(loadSwinsianLibrary)(filepath);
-
-    if (err !== undefined) {
-      // TODO: propagate error with a ServerEventChannel message
+    try {
+      log.debug(`Loading Swinsian library from ${filepath}...`);
+      library = loadSwinsianLibrary(filepath);
+      console.log(library);
+    } catch (e) {
       log.error(`Could not load Swinsian library from ${filepath}`);
       return;
     }
-
-    library = loadedLibrary;
   }
 
-  const channel = ServerEventChannel.LOADED_SWINSIAN_LIBRARY;
-  const data: LoadedSwinsianLibraryEventPayload = {
-    library,
-    filepath,
-  };
-  const response = { channel, data };
-  process.parentPort.postMessage(response);
+  process.parentPort.postMessage({
+    channel: ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+    data: {
+      library,
+      filepath,
+    } satisfies LoadedSwinsianLibraryEventPayload,
+  });
 }
 
 function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {

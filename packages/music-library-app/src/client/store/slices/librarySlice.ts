@@ -3,7 +3,7 @@ import type {
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
 } from "@adahiya/music-library-tools-lib";
-import type { Operation } from "effection";
+import { action, type Operation, suspend } from "effection";
 import { Roarr as log } from "roarr";
 import { serializeError } from "serialize-error";
 
@@ -144,10 +144,21 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
 
     try {
-      const data = yield* window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
-        ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
-        LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+      const data = yield* action<LoadedSwinsianLibraryEventPayload | undefined>(
+        function* (resolve) {
+          window.api.handleOnce<LoadedSwinsianLibraryEventPayload>(
+            ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+            (_event, data) => {
+              resolve(data);
+            },
+          );
+          yield* suspend();
+        },
       );
+      // const data = yield* window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
+      //   ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+      //   LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+      // );
       log.trace("[renderer] got loaded library");
       if (DEBUG) {
         console.log(data);
@@ -164,7 +175,6 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       log.error(
         `[client] failed to load Swinsian library: ${JSON.stringify(serializeError(e as Error))}`,
       );
-      return;
     }
   },
 

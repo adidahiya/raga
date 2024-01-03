@@ -1,6 +1,6 @@
 import { Card, NonIdealState, ProgressBar } from "@blueprintjs/core";
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 import { useEffectOnce } from "usehooks-ts";
 
@@ -10,7 +10,7 @@ import { ResizeHandle } from "../components/common";
 import { LibraryHeaderSection, LoadLibraryForm } from "../components/library";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
-import { useMasterPlaylist } from "../hooks";
+import { useMasterPlaylist, useOperationEffect } from "../hooks";
 import { appStore } from "../store/appStore";
 import styles from "./libraryView.module.scss";
 
@@ -19,11 +19,14 @@ export default function LibraryView() {
   const libraryState = appStore.use.libraryLoadingState();
   const loadLibrary = appStore.use.loadSwinsianLibrary();
 
-  useEffect(() => {
-    if (libraryInputFilepath !== undefined) {
-      void loadLibrary({ filepath: libraryInputFilepath });
-    }
-  }, [libraryInputFilepath, loadLibrary]);
+  useOperationEffect(
+    function* () {
+      if (libraryInputFilepath !== undefined) {
+        yield* loadLibrary({ filepath: libraryInputFilepath });
+      }
+    },
+    [libraryInputFilepath, loadLibrary],
+  );
 
   return (
     <Card className={styles.container}>
