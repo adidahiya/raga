@@ -10,6 +10,7 @@ import {
 export default function* convertTrackToMP3Request(
   serverBaseURL: string,
   trackDef: TrackDefinition,
+  init?: RequestInit,
 ): Operation<Response> {
   return yield* call(
     fetch(`${serverBaseURL}${Routes.POST_CONVERT_TO_MP3}`, {
@@ -17,6 +18,7 @@ export default function* convertTrackToMP3Request(
       body: JSON.stringify({
         trackDefinition: pick(trackDef, ["Location", "Persistent ID", "Track ID"]),
       } satisfies ConvertTrackToMP3RequestBody),
+      ...init,
     }),
   );
 }

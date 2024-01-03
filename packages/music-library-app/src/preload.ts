@@ -51,24 +51,46 @@ const contextBridgeApi: ContextBridgeApi = {
    * WARNING: this does not work as expected; presumably it needs to be called inside an effection
    * `main()` call stack, but I can't figure out the right syntax for that at the moment.
    */
-  waitForResponse: <T extends object>(channel: ServerEventChannel, timeoutMs: number) =>
-    withTimeout(
-      action<T | undefined>(function* (resolve) {
-        const handler = (_event: IpcRendererEvent, data: T | undefined) => {
-          resolve(data);
-        };
+  waitForResponse: <T extends object>(channel: ServerEventChannel, timeoutMs?: number) => {
+    const debugMessage = `waiting for '${channel}' event ${
+      timeoutMs === undefined ? "indefinitely" : `with timeout ${timeoutMs}ms`
+    }`;
 
-        try {
-          contextBridgeApi.handleOnce<T>(channel, handler);
-          log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
-          yield* suspend();
-        } finally {
-          contextBridgeApi.removeHandler(channel, handler);
-        }
-      }),
-      timeoutMs,
-      ClientErrors.contextBridgeResponseTimeout(channel),
-    ),
+    const waitOperation = action<T | undefined>(function* (resolve) {
+      const handler = (_event: IpcRendererEvent, data: T | undefined) => {
+        resolve(data);
+      };
+
+      try {
+        ipcRenderer.once(channel, handler);
+        log.debug(debugMessage);
+        yield* suspend();
+      } finally {
+        ipcRenderer.removeListener(channel, handler);
+      }
+    });
+
+    return timeoutMs === undefined
+      ? waitOperation
+      : withTimeout(waitOperation, timeoutMs, ClientErrors.contextBridgeResponseTimeout(channel));
+  },
+  // withTimeout(
+  //   action<T | undefined>(function* (resolve) {
+  //     const handler = (_event: IpcRendererEvent, data: T | undefined) => {
+  //       resolve(data);
+  //     };
+
+  //     try {
+  //       ipcRenderer.once(channel, handler);
+  //       log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
+  //       yield* suspend();
+  //     } finally {
+  //       ipcRenderer.removeListener(channel, handler);
+  //     }
+  //   }),
+  //   timeoutMs,
+  //   ClientErrors.contextBridgeResponseTimeout(channel),
+  // ),
 
   removeHandler: <T extends object>(
     channel: ServerEventChannel,

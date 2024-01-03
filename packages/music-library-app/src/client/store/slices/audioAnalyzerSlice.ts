@@ -1,4 +1,4 @@
-import { type Operation, run } from "effection";
+import { action, type Operation, run, suspend, useAbortSignal } from "effection";
 import { Roarr as log } from "roarr";
 
 import { withTimeout } from "../../../common/asyncUtils";
@@ -112,6 +112,8 @@ function* analyzeTrackOrThrow(
 ) {
   const { audioConvertedFileURLs, audioFilesRootFolder, getTrackDef } = get();
   const trackDef = getTrackDef(trackID);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const signal = yield* useAbortSignal();
 
   if (trackDef === undefined) {
     throw new Error(ClientErrors.libraryNoTrackDefFound(trackID));
@@ -126,6 +128,7 @@ function* analyzeTrackOrThrow(
     fileOrResourceURL: audioConvertedFileURLs[trackID] ?? trackDef.Location,
     serverRootFolder: audioFilesRootFolder,
     serverPort: DEFAULT_AUDIO_FILES_SERVER_PORT,
+    signal,
   };
   let bpm: number | undefined;
 
@@ -144,11 +147,33 @@ function* analyzeTrackOrThrow(
   } satisfies WriteAudioFileTagOptions);
 
   try {
-    yield* window.api.waitForResponse(
-      ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
-      WRITE_AUDIO_FILE_TAG_TIMEOUT,
-    );
+    // original impl via ContextBridgeAPI
+    // yield* window.api.waitForResponse(ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE);
+
+    // inline impl without timeout
+    // yield* action(function* (resolve) {
+    //   window.api.handleOnce(ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE, resolve);
+    //   yield* suspend();
+    // });
+
+    // inline impl with timeout
+    yield* action(function* (resolve, reject) {
+      const timeout = setTimeout(() => {
+        reject(
+          new Error(`Timed out waiting for ${ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE}`),
+        );
+      }, WRITE_AUDIO_FILE_TAG_TIMEOUT);
+
+      try {
+        window.api.handleOnce(ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE, resolve);
+        yield* suspend();
+      } finally {
+        clearTimeout(timeout);
+      }
+    });
+
     log.info(`[client] completed updating BPM for track ${trackID}`);
+
     set((state) => {
       state.library!.Tracks[trackID].BPM = bpm!;
       state.libraryWriteState = "ready"; // needs to be written to disk

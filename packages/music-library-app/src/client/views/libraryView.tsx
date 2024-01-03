@@ -10,7 +10,7 @@ import { ResizeHandle } from "../components/common";
 import { LibraryHeaderSection, LoadLibraryForm } from "../components/library";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
-import { useMasterPlaylist, useOperationEffect } from "../hooks";
+import { useMasterPlaylist, useTaskEffect } from "../hooks";
 import { appStore } from "../store/appStore";
 import styles from "./libraryView.module.scss";
 
@@ -19,7 +19,7 @@ export default function LibraryView() {
   const libraryState = appStore.use.libraryLoadingState();
   const loadLibrary = appStore.use.loadSwinsianLibrary();
 
-  useOperationEffect(
+  useTaskEffect(
     function* () {
       if (libraryInputFilepath !== undefined) {
         yield* loadLibrary({ filepath: libraryInputFilepath });
