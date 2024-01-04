@@ -3,14 +3,13 @@ import type {
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
 } from "@adahiya/music-library-tools-lib";
-import { action, type Operation, suspend } from "effection";
+import { action, call, type Operation, suspend } from "effection";
 import { Roarr as log } from "roarr";
 import { serializeError } from "serialize-error";
 
 import {
   DEBUG,
-  // HACKHACK: need to fix `ContextBridgeApi.waitForResponse` and use this timeout
-  // LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+  LOAD_SWINSIAN_LIBRARY_TIMEOUT,
   WRITE_AUDIO_FILE_TAG_TIMEOUT,
   WRITE_MODIFIED_LIBRARY_TIMEOUT,
 } from "../../../common/constants";
@@ -127,9 +126,11 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       value: ratingOutOf100,
     } satisfies WriteAudioFileTagOptions);
 
-    yield* window.api.waitForResponse(
-      ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
-      WRITE_AUDIO_FILE_TAG_TIMEOUT,
+    yield* call(
+      window.api.waitForResponse(
+        ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+        WRITE_AUDIO_FILE_TAG_TIMEOUT,
+      ),
     );
     log.info(`[client] completed updating Rating for track ${trackID}`);
     set((state) => {
@@ -145,22 +146,12 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
 
     try {
-      const data = yield* action<LoadedSwinsianLibraryEventPayload | undefined>(
-        function* (resolve) {
-          window.api.handleOnce<LoadedSwinsianLibraryEventPayload>(
-            ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
-            (_event, data) => {
-              resolve(data);
-            },
-          );
-          yield* suspend();
-        },
+      const data = yield* call(
+        window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
+          ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+          LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+        ),
       );
-      // HACKHACK: need to fix `ContextBridgeApi.waitForResponse`
-      // const data = yield* window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
-      //   ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
-      //   LOAD_SWINSIAN_LIBRARY_TIMEOUT,
-      // );
       log.trace("[renderer] got loaded library");
       if (DEBUG) {
         console.log(data);
@@ -174,9 +165,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       });
     } catch (e) {
       set({ libraryLoadingState: "error" });
-      log.error(
-        `[client] failed to load Swinsian library: ${JSON.stringify(serializeError(e as Error))}`,
-      );
+      log.error(ClientErrors.libraryFailedToLoad(e as Error));
     }
   },
 
@@ -184,13 +173,13 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     const { library, libraryInputFilepath, libraryOutputFilepath, libraryWriteState } = get();
 
     if (library === undefined) {
-      log.error("[client] No library loaded");
+      log.error(ClientErrors.LIBRARY_NOT_LOADED);
       return;
     } else if (libraryWriteState !== "ready") {
       log.info(`[client] No library modifications to write to disk`);
       return;
     } else if (libraryInputFilepath === undefined || libraryOutputFilepath === undefined) {
-      log.error("[client] No output filepath specified");
+      log.error(ClientErrors.LIBRARY_WRITE_NO_OUTPUT_FILEPATH);
       return;
     }
 
@@ -206,12 +195,14 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     });
 
     try {
-      yield* window.api.waitForResponse(
-        ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
-        WRITE_MODIFIED_LIBRARY_TIMEOUT,
+      yield* call(
+        window.api.waitForResponse(
+          ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
+          WRITE_MODIFIED_LIBRARY_TIMEOUT,
+        ),
       );
     } catch (e) {
-      log.error(`[client] timed out writing modified library to disk`);
+      log.error(ClientErrors.LIBRARY_WRITE_TIMED_OUT);
     } finally {
       set({ libraryWriteState: "ready" });
     }

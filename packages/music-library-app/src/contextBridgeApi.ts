@@ -1,8 +1,11 @@
-import type { Operation } from "effection";
 import type { IpcRendererEvent } from "electron";
 
 import type { ClientEventChannel, ServerEventChannel } from "./common/events";
 
+/**
+ * N.B. Effection generators were tricky to get working in the preload script, so this API uses
+ * Promises for async operations.
+ */
 export interface ContextBridgeApi {
   versions: Record<string, string | undefined>;
 
@@ -40,5 +43,5 @@ export interface ContextBridgeApi {
   waitForResponse: <T extends object = object>(
     channel: ServerEventChannel,
     timeoutMs?: number,
-  ) => Operation<T | undefined>;
+  ) => Promise<T | undefined>;
 }

@@ -1,4 +1,4 @@
-import { action, type Operation, run, suspend, useAbortSignal } from "effection";
+import { action, call, type Operation, run, suspend, useAbortSignal } from "effection";
 import { Roarr as log } from "roarr";
 
 import { withTimeout } from "../../../common/asyncUtils";
@@ -147,30 +147,12 @@ function* analyzeTrackOrThrow(
   } satisfies WriteAudioFileTagOptions);
 
   try {
-    // original impl via ContextBridgeAPI
-    // yield* window.api.waitForResponse(ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE);
-
-    // inline impl without timeout
-    // yield* action(function* (resolve) {
-    //   window.api.handleOnce(ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE, resolve);
-    //   yield* suspend();
-    // });
-
-    // inline impl with timeout
-    yield* action(function* (resolve, reject) {
-      const timeout = setTimeout(() => {
-        reject(
-          new Error(`Timed out waiting for ${ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE}`),
-        );
-      }, WRITE_AUDIO_FILE_TAG_TIMEOUT);
-
-      try {
-        window.api.handleOnce(ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE, resolve);
-        yield* suspend();
-      } finally {
-        clearTimeout(timeout);
-      }
-    });
+    yield* call(
+      window.api.waitForResponse(
+        ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+        WRITE_AUDIO_FILE_TAG_TIMEOUT,
+      ),
+    );
 
     log.info(`[client] completed updating BPM for track ${trackID}`);
 

@@ -16,6 +16,7 @@ export const ClientErrors = {
   contextBridgeResponseTimeout: (channel: string) =>
     `${CLIENT} Timed out waiting for response to ${channel} event`,
 
+  libraryFailedToLoad: (err: Error) => `${CLIENT} Failed to load library: ${err.message}`,
   libraryNoTracksFoundForPlaylist: (playlistID: string) =>
     `${CLIENT} No track definitions found for playlist ${playlistID}`,
   libraryNoTrackDefFound: (trackID: number) =>
@@ -25,6 +26,8 @@ export const ClientErrors = {
 
   APP_RENDER_FAILED: `${CLIENT} Failed to render application: no root DOM node available`,
   LIBRARY_NOT_LOADED: `${CLIENT} Library is not loaded`,
+  LIBRARY_WRITE_NO_OUTPUT_FILEPATH: `${CLIENT} No output filepath specified`,
+  LIBRARY_WRITE_TIMED_OUT: `${CLIENT} Timed out while writing library to disk`,
 };
 
 export const ServerErrors = {

@@ -2,11 +2,8 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { blueBright } from "ansis";
-import { action, suspend } from "effection";
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 
-import { withTimeout } from "./common/asyncUtils";
-import { ClientErrors } from "./common/errorMessages";
 import { ClientEventChannel, ServerEventChannel } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 import { type ContextBridgeApi } from "./contextBridgeApi";
@@ -47,50 +44,18 @@ const contextBridgeApi: ContextBridgeApi = {
     return ipcRenderer.once(channel, callback);
   },
 
-  /**
-   * WARNING: this does not work as expected; presumably it needs to be called inside an effection
-   * `main()` call stack, but I can't figure out the right syntax for that at the moment.
-   */
   waitForResponse: <T extends object>(channel: ServerEventChannel, timeoutMs?: number) => {
-    const debugMessage = `waiting for '${channel}' event ${
-      timeoutMs === undefined ? "indefinitely" : `with timeout ${timeoutMs}ms`
-    }`;
-
-    const waitOperation = action<T | undefined>(function* (resolve) {
-      const handler = (_event: IpcRendererEvent, data: T | undefined) => {
+    log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
+    return new Promise<T | undefined>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(`timed out waiting for ${channel} response`);
+      }, timeoutMs);
+      contextBridgeApi.handleOnce<T>(channel, (_event, data) => {
+        clearTimeout(timeout);
         resolve(data);
-      };
-
-      try {
-        ipcRenderer.once(channel, handler);
-        log.debug(debugMessage);
-        yield* suspend();
-      } finally {
-        ipcRenderer.removeListener(channel, handler);
-      }
+      });
     });
-
-    return timeoutMs === undefined
-      ? waitOperation
-      : withTimeout(waitOperation, timeoutMs, ClientErrors.contextBridgeResponseTimeout(channel));
   },
-  // withTimeout(
-  //   action<T | undefined>(function* (resolve) {
-  //     const handler = (_event: IpcRendererEvent, data: T | undefined) => {
-  //       resolve(data);
-  //     };
-
-  //     try {
-  //       ipcRenderer.once(channel, handler);
-  //       log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
-  //       yield* suspend();
-  //     } finally {
-  //       ipcRenderer.removeListener(channel, handler);
-  //     }
-  //   }),
-  //   timeoutMs,
-  //   ClientErrors.contextBridgeResponseTimeout(channel),
-  // ),
 
   removeHandler: <T extends object>(
     channel: ServerEventChannel,
