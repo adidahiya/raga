@@ -201,10 +201,12 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
           WRITE_MODIFIED_LIBRARY_TIMEOUT,
         ),
       );
+      set({ libraryWriteState: "none" });
     } catch (e) {
       log.error(ClientErrors.LIBRARY_WRITE_TIMED_OUT);
-    } finally {
       set({ libraryWriteState: "ready" });
+    } finally {
+      set({ analyzerStatus: "ready" });
     }
   },
 

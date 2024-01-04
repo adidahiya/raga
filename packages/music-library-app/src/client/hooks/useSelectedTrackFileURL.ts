@@ -1,11 +1,11 @@
-import { run } from "effection";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Roarr as log } from "roarr";
 
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../../common/constants";
 import { isSupportedWebAudioFileFormat } from "../../common/webAudioUtils";
 import { getAudioFileURL } from "../audio/buffer";
 import { appStore } from "../store/appStore";
+import { useTaskEffect } from ".";
 import useSelectedTrackDef from "./useSelectedTrackDef";
 
 const serverPort = DEFAULT_AUDIO_FILES_SERVER_PORT;
@@ -26,30 +26,32 @@ export default function useSelectedTrackFileURL() {
   const trackDef = useSelectedTrackDef();
   const [selectedFileURL, setSelectedFileURL] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
-    if (trackDef === undefined) {
-      return undefined;
-    }
+  useTaskEffect(
+    function* () {
+      if (trackDef === undefined) {
+        return undefined;
+      }
 
-    const existingConvertedFileURL = audioConvertedFileURLs[trackDef["Track ID"]];
+      const existingConvertedFileURL = audioConvertedFileURLs[trackDef["Track ID"]];
 
-    if (isSupportedWebAudioFileFormat(trackDef.Location)) {
-      setSelectedFileURL(
-        getAudioFileURL({
-          fileOrResourceURL: trackDef.Location,
-          serverRootFolder: audioFilesRootFolder,
-          serverPort,
-        }),
-      );
-    } else if (existingConvertedFileURL !== undefined) {
-      log.debug(`[client] Using already-converted file for track ${trackDef["Track ID"]}`);
-      setSelectedFileURL(existingConvertedFileURL);
-    } else {
-      void run(function* () {
-        return yield* convertTrackToMP3(trackDef);
-      }).then(setSelectedFileURL);
-    }
-  }, [trackDef, audioFilesRootFolder, audioConvertedFileURLs, convertTrackToMP3]);
+      if (isSupportedWebAudioFileFormat(trackDef.Location)) {
+        setSelectedFileURL(
+          getAudioFileURL({
+            fileOrResourceURL: trackDef.Location,
+            serverRootFolder: audioFilesRootFolder,
+            serverPort,
+          }),
+        );
+      } else if (existingConvertedFileURL !== undefined) {
+        log.debug(`[client] Using already-converted file for track ${trackDef["Track ID"]}`);
+        setSelectedFileURL(existingConvertedFileURL);
+      } else {
+        const convertedTrackURL = yield* convertTrackToMP3(trackDef);
+        setSelectedFileURL(convertedTrackURL);
+      }
+    },
+    [trackDef, audioFilesRootFolder, audioConvertedFileURLs, convertTrackToMP3],
+  );
 
   return selectedFileURL;
 }
