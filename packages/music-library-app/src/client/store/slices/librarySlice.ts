@@ -3,9 +3,8 @@ import type {
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
 } from "@adahiya/music-library-tools-lib";
-import { action, call, type Operation, suspend } from "effection";
+import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
-import { serializeError } from "serialize-error";
 
 import {
   DEBUG,
