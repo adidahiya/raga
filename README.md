@@ -16,14 +16,15 @@ the functionality of this tool can also be accessed through the
 [`music-library-tools-lib` package](https://github.com/adidahiya/music-library-scripts/blob/main/packages/music-library-tools-lib/README.md).
 
 Beyond these data connection utilities, this repository also contains an Electron-based desktop application called
-`music-library-app` with featuers to help manage a DJ library and provide some additional functionality not available
-in either Swinsian or Rekordbox:
+[`music-library-app` package](https://github.com/adidahiya/music-library-scripts/blob/main/packages/music-library-app/README.md) with features to help manage a DJ library:
 
-- (coming soon) analyze track BPM and write values to ID3 tags
+- analyze track BPM and write values to ID3 tags
+- play tracks with adjustable tempo +/-10%
+- rate tracks
 
 ## Screenshot
 
-(coming soon)
+![app screenshot](./packages/music-library-app/docs/app.png)
 
 ## Development
 
