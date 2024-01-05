@@ -77,18 +77,7 @@ function MaybeRecentlyUsedLibrariesSection() {
       <div className={styles.separator}>or</div>
       <FormGroup
         className={styles.recentLibrariesForm}
-        label={
-          <div className={styles.recentLibrariesLabel}>
-            <span className={Classes.TEXT_MUTED}>Use a recent library</span>
-            <Button
-              minimal={true}
-              onClick={handleClear}
-              rightIcon="cross"
-              small={true}
-              text="Clear"
-            />
-          </div>
-        }
+        label={<span className={Classes.TEXT_MUTED}>Use a recent library</span>}
       >
         <Menu className={styles.recentLibrariesMenu}>
           {Array.from(previouslyUsedLibaries).map(({ filePath }) => (
@@ -102,6 +91,16 @@ function MaybeRecentlyUsedLibrariesSection() {
             />
           ))}
         </Menu>
+        <div className={styles.clearRecent}>
+          <Button
+            minimal={true}
+            onClick={handleClear}
+            rightIcon="cross"
+            small={true}
+            text="Clear all recent libraries"
+            textClassName={Classes.TEXT_MUTED}
+          />
+        </div>
       </FormGroup>
     </>
   );
