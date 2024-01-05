@@ -1,13 +1,15 @@
+import { once } from "node:events";
 import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { type Server } from "node:http";
 import { env } from "node:process";
 
 import { AudioFileConverter } from "@adahiya/music-library-tools-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
-import { tryit } from "radash";
+import { call, type Operation, run } from "effection";
 import sirv from "sirv";
 
 import { AudioFilesServerRoutes as ServerRoutes } from "../common/api/audioFilesServerAPI";
+import { withTimeout } from "../common/asyncUtils";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
 import { type AudioFilesServerStartedEventPayload } from "../common/events";
@@ -35,33 +37,32 @@ export interface AudioFilesServer {
  * If there's an error during intialization, it will be logged and the provided `onError`
  * callback will be invoked, but it will not throw.
  */
-export async function startAudioFilesServer(
+export function* startAudioFilesServer(
   options: AudioFilesServerOptions,
-): Promise<AudioFilesServer | undefined> {
+): Operation<AudioFilesServer | undefined> {
   if (audioFilesServer !== undefined) {
     log.info(`Audio files server is already running`);
     options.onReady?.({
       audioConverterTemporaryFolder: audioFilesServer.converter.temporaryOutputDir,
     });
-    return Promise.resolve(audioFilesServer);
+    return audioFilesServer;
   }
 
-  const [err, newAudioFilesServer] = await tryit(createAudioFileConverterAndInitServer)(options);
-
-  if (err !== undefined) {
-    options.onError?.(err);
-    log.error(err.message);
+  try {
+    const newAudioFilesServer = yield* createAudioFileConverterAndInitServer(options);
+    audioFilesServer = newAudioFilesServer;
+    return newAudioFilesServer;
+  } catch (e) {
+    options.onError?.(e as Error);
+    log.error((e as Error).message);
     return undefined;
   }
-
-  audioFilesServer = newAudioFilesServer;
-  return newAudioFilesServer;
 }
 
 /** @throws */
-async function createAudioFileConverterAndInitServer(
+function* createAudioFileConverterAndInitServer(
   options: AudioFilesServerOptions,
-): Promise<AudioFilesServer> {
+): Operation<AudioFilesServer> {
   log.debug(`Starting audio files server at ${options.audioFilesRootFolder}...`);
   validateRootFolderOrThrow(options.audioFilesRootFolder);
 
@@ -69,11 +70,8 @@ async function createAudioFileConverterAndInitServer(
   const converter = new AudioFileConverter();
   const app = initServerApp(converter, options);
 
-  if (app === undefined) {
-    throw new Error(ServerErrors.AUDIO_FILES_SERVER_INIT_FAILED);
-  }
+  const httpServer = yield* waitForHTTPServerToStart(app);
 
-  const httpServer = await waitForHTTPServerToStart(app);
   const newAudioFilesServer = {
     _app: app,
     converter: converter,
@@ -82,16 +80,15 @@ async function createAudioFileConverterAndInitServer(
       audioFilesServer = undefined;
     },
   };
+
   options.onReady?.({
     audioConverterTemporaryFolder: newAudioFilesServer.converter.temporaryOutputDir,
   });
+
   return newAudioFilesServer;
 }
 
-function initServerApp(
-  converter: AudioFileConverter,
-  options: AudioFilesServerOptions,
-): App | undefined {
+function initServerApp(converter: AudioFileConverter, options: AudioFilesServerOptions): App {
   const app = new App();
 
   const staticServerMiddleware = sirv(options.audioFilesRootFolder, {
@@ -99,11 +96,11 @@ function initServerApp(
   });
 
   function handlePingRequest(_req: Request, res: Response) {
-    const [err] = tryit(validateRootFolderOrThrow)(options.audioFilesRootFolder);
-    if (err) {
-      res.status(500).send(err.message);
-    } else {
+    try {
+      validateRootFolderOrThrow(options.audioFilesRootFolder);
       res.status(200).send("pong");
+    } catch (e) {
+      res.status(500).send((e as Error).message);
     }
   }
 
@@ -132,22 +129,17 @@ function initServerApp(
     .use(staticServerMiddleware);
 }
 
-async function waitForHTTPServerToStart(app: App, timeoutMs = 1_000): Promise<Server> {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      log.error(`audio files server failed to start after ${timeoutMs}ms`);
-      reject();
-    }, timeoutMs);
-
-    let server: Server | undefined = undefined;
-
-    function handleStart() {
-      clearTimeout(timeout);
-      resolve(server!);
-    }
-
-    server = app.listen(DEFAULT_AUDIO_FILES_SERVER_PORT, handleStart);
-  });
+/** @throws */
+function* waitForHTTPServerToStart(app: App, timeoutMs = 1_000): Operation<Server> {
+  return yield* withTimeout(
+    run(function* () {
+      const newServer = app.listen(DEFAULT_AUDIO_FILES_SERVER_PORT);
+      yield* call(once(newServer, "listening"));
+      return newServer;
+    }),
+    timeoutMs,
+    `Audio files server failed to start after ${timeoutMs}ms`,
+  );
 }
 
 function validateRootFolderOrThrow(rootFolder: string): void {

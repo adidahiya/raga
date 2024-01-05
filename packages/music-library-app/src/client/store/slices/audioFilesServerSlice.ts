@@ -1,8 +1,10 @@
 import type { TrackDefinition } from "@adahiya/music-library-tools-lib";
+import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";
 
 import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/api/audioFilesServerAPI";
+import { withTimeout } from "../../../common/asyncUtils";
 import {
   AUDIO_FILES_SERVER_PING_TIMEOUT,
   DEFAULT_AUDIO_FILES_ROOT_FOLDER,
@@ -45,10 +47,10 @@ export interface AudioFilesServerActions {
   // simple server actions
   startAudioFilesServer: () => void;
   stopAudioFilesServer: () => void;
-  pingAudioFilesServer: () => Promise<Response>;
+  pingAudioFilesServer: () => Operation<Response | undefined>;
 
   // complex server actions
-  convertTrackToMP3: (trackDef: TrackDefinition) => Promise<string | undefined>;
+  convertTrackToMP3: (trackDef: TrackDefinition) => Operation<string | undefined>;
 }
 
 export const createAudioFilesServerSlice: AppStoreSliceCreator<
@@ -103,39 +105,37 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
       });
     },
 
-    pingAudioFilesServer: () => {
-      return new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          log.error(`[client] audio files server ping timed out`);
-          set({ audioFilesServerStatus: "stopped" });
-          reject();
-        }, AUDIO_FILES_SERVER_PING_TIMEOUT);
+    pingAudioFilesServer: function* (): Operation<Response | undefined> {
+      log.debug(`[client] pinging audio files server at ${serverBaseURL}...`);
+      let res: Response | undefined;
 
-        log.debug(`[client] pinging audio files server at ${serverBaseURL}...`);
-        pingRequest(serverBaseURL)
-          .then((res) => {
-            if (res.ok) {
-              set({ audioFilesServerStatus: "started" });
-              resolve(res);
-            } else {
-              set({ audioFilesServerStatus: "failed" });
-              reject();
-            }
-          })
-          .catch(() => {
-            set({ audioFilesServerStatus: "failed" });
-            reject();
-          })
-          .finally(() => {
-            clearTimeout(timeout);
-          });
-      });
+      try {
+        res = yield* withTimeout(
+          pingRequest(serverBaseURL),
+          AUDIO_FILES_SERVER_PING_TIMEOUT,
+          `[client] audio files server ping timed out`,
+        );
+      } catch (e) {
+        // not a catastrophic error, just log it
+        log.error((e as Error).message);
+        set({ audioFilesServerStatus: "stopped" });
+        return undefined;
+      }
+
+      if (res.ok) {
+        set({ audioFilesServerStatus: "started" });
+      } else {
+        set({ audioFilesServerStatus: "failed" });
+        log.error(`[client] audio files server ping failed`);
+      }
+
+      return res;
     },
 
     /**
      * @returns the URL of the converted MP3 file, or undefined if unsuccessful
      */
-    convertTrackToMP3: async (trackDef: TrackDefinition) => {
+    convertTrackToMP3: function* (trackDef: TrackDefinition): Operation<string | undefined> {
       const trackID = trackDef["Track ID"];
 
       log.debug(
@@ -144,9 +144,9 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
       set({ audioFilesConverterIsBusy: true });
 
       try {
-        const res = await convertTrackToMP3Request(serverBaseURL, trackDef);
+        const res = yield* convertTrackToMP3Request(serverBaseURL, trackDef);
         if (res.ok) {
-          const outputFilePath = await res.text();
+          const outputFilePath = yield* call(res.text());
           log.debug(
             `[client] Successfully converted track ${trackID} to MP3 at: ${outputFilePath}`,
           );

@@ -1,3 +1,5 @@
+import { call, type Operation } from "effection";
+
 export interface LoadAudioBufferOptions {
   /**
    * The URL of an audio file, either as a file URL (e.g. `file:///path/to/file.mp3`) or
@@ -6,14 +8,15 @@ export interface LoadAudioBufferOptions {
   fileOrResourceURL: string;
   serverPort: number;
   serverRootFolder: string;
+  signal?: AbortSignal;
 }
 
-export async function loadAudioBuffer(options: LoadAudioBufferOptions): Promise<AudioBuffer> {
+export function* loadAudioBuffer(options: LoadAudioBufferOptions): Operation<AudioBuffer> {
   const fileUrl = getAudioFileURL(options);
   // see https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Advanced_techniques#loading_the_sample
-  const response = await fetch(fileUrl);
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBuffer = await new AudioContext().decodeAudioData(arrayBuffer);
+  const response = yield* call(fetch(fileUrl, { signal: options.signal }));
+  const arrayBuffer = yield* call(response.arrayBuffer());
+  const audioBuffer = yield* call(new AudioContext().decodeAudioData(arrayBuffer));
   return audioBuffer;
 }
 

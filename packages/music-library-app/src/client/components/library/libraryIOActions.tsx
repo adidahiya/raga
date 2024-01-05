@@ -11,7 +11,7 @@ import {
 } from "@blueprintjs/core";
 import { useCallback } from "react";
 
-import { useVoidCallback } from "../../hooks";
+import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./libraryIOActions.module.scss";
 
@@ -26,20 +26,26 @@ export default function LibraryIOActions() {
   const unloadSwinsianLibrary = appStore.use.unloadSwinsianLibrary();
   const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
 
-  const handleWriteModifiedLibrary = useVoidCallback(writeModifiedLibrary);
-  const handleLoad = useCallback(() => {
-    if (libraryInputFilepath === undefined) {
-      return;
-    }
-    void loadLibrary({ filepath: libraryInputFilepath });
-  }, [libraryInputFilepath, loadLibrary]);
+  const handleWriteModifiedLibrary = useOperationCallback(writeModifiedLibrary);
+  const handleLoad = useOperationCallback(
+    function* () {
+      if (libraryInputFilepath === undefined) {
+        return;
+      }
+      yield* loadLibrary({ filepath: libraryInputFilepath });
+    },
+    [libraryInputFilepath, loadLibrary],
+  );
 
-  const handleLoadFromDisk = useCallback(() => {
-    if (libraryInputFilepath === undefined) {
-      return;
-    }
-    void loadLibrary({ filepath: libraryInputFilepath, reloadFromDisk: true });
-  }, [libraryInputFilepath, loadLibrary]);
+  const handleLoadFromDisk = useOperationCallback(
+    function* () {
+      if (libraryInputFilepath === undefined) {
+        return;
+      }
+      yield* loadLibrary({ filepath: libraryInputFilepath, reloadFromDisk: true });
+    },
+    [libraryInputFilepath, loadLibrary],
+  );
 
   const handleSelectNewLibrary = unloadSwinsianLibrary;
   const handleOutputFilepathInputChange = useCallback(

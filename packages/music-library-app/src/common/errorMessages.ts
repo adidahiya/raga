@@ -12,6 +12,11 @@ export const ClientErrors = {
     )}`,
   analyzePlaylistFailed: (playlistID: string) =>
     `${CLIENT} Unable to analyze playlist ${playlistID}, libraryPlaylists is undefined`,
+
+  contextBridgeResponseTimeout: (channel: string) =>
+    `${CLIENT} Timed out waiting for response to ${channel} event`,
+
+  libraryFailedToLoad: (err: Error) => `${CLIENT} Failed to load library: ${err.message}`,
   libraryNoTracksFoundForPlaylist: (playlistID: string) =>
     `${CLIENT} No track definitions found for playlist ${playlistID}`,
   libraryNoTrackDefFound: (trackID: number) =>
@@ -21,11 +26,12 @@ export const ClientErrors = {
 
   APP_RENDER_FAILED: `${CLIENT} Failed to render application: no root DOM node available`,
   LIBRARY_NOT_LOADED: `${CLIENT} Library is not loaded`,
+  LIBRARY_WRITE_NO_OUTPUT_FILEPATH: `${CLIENT} No output filepath specified`,
+  LIBRARY_WRITE_TIMED_OUT: `${CLIENT} Timed out while writing library to disk`,
 };
 
 export const ServerErrors = {
   AUDIO_FILE_NOT_FOUND: `Audio file not found`,
-  AUDIO_FILES_SERVER_INIT_FAILED: `Failed to initialize audio files server`,
   AUDIO_FILES_ROOT_FOLDER_NOT_FOUND: `Audio files root folder does not exist or is empty`,
   FFMPEG_NOT_INSTALLED: `ffmpeg is not installed on the system path`,
   MP3_CODEC_UNAVAILABLE: `No MP3 codec is available`,

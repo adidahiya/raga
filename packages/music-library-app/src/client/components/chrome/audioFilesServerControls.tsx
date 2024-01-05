@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@blueprintjs/core";
 import classNames from "classnames";
+import { run } from "effection";
 import { useCallback } from "react";
 import { useInterval } from "usehooks-ts";
 
@@ -30,12 +31,7 @@ export default function AudioFilesServerControls() {
   // TODO: move this to some kind of zustand store subscription, it doesn't need to be in a React component
   // keep pinging server to make sure it's available while state is "started"
   const shouldPing = status === "started" && !isLibraryWriting;
-  useInterval(
-    () => {
-      void pingServer();
-    },
-    shouldPing ? AUDIO_FILES_SERVER_PING_INTERVAL : null,
-  );
+  useInterval(() => void run(pingServer), shouldPing ? AUDIO_FILES_SERVER_PING_INTERVAL : null);
 
   const serverOptionsPopover = (
     <div className={styles.popover}>

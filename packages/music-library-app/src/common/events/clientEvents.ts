@@ -4,6 +4,7 @@ import type { MessageEvent } from "electron";
 // Event channels
 
 export const ClientEventChannel = {
+  APP_SERVER_PING: "appServerPing" as const,
   AUDIO_FILES_SERVER_START: "audioFilesServerStart" as const,
   AUDIO_FILES_SERVER_STOP: "audioFilesServerStop" as const,
   LOAD_SWINSIAN_LIBRARY: "loadSwinsianLibrary" as const,
@@ -28,6 +29,7 @@ export interface ClientMessageEvent<C extends ClientEventChannel = ClientEventCh
 }
 
 export interface ClientEventPayloadMap {
+  [ClientEventChannel.APP_SERVER_PING]: never;
   [ClientEventChannel.AUDIO_FILES_SERVER_START]: AudioFilesServerStartOptions;
   [ClientEventChannel.LOAD_SWINSIAN_LIBRARY]: LoadSwinsianLibraryOptions;
   [ClientEventChannel.OPEN_FILE_LOCATION]: OpenFileLocationOptions;

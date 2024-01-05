@@ -40,6 +40,7 @@ __metadata:
     command-exists: "npm:^1.2.9"
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.0.6"
+    effection: "npm:^3.0.1"
     electron: "npm:^28.1.0"
     electron-devtools-installer: "npm:^3.2.0"
     electron-squirrel-startup: "npm:^1.0.0"
@@ -4729,6 +4730,13 @@ __metadata:
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
   checksum: 1b4cac778d64ce3b582a7e26b218afe07e207a0f9bfe13cc7395a6d307849cfe361e65033c3251e00c27dd060cab43014c2d6b2647676135e18b77d2d05b3f4f
+  languageName: node
+  linkType: hard
+
+"effection@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "effection@npm:3.0.1"
+  checksum: d3c3837efff377d355b4ab48308377310c8475cdb0881bc77b53870449f86a09bf7482117ae52c5a116a705cb65bc7f7d92696b5317c371ccb36e8892107a7b9
   languageName: node
   linkType: hard
 

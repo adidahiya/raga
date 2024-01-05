@@ -1,6 +1,7 @@
-import { tryit } from "radash";
+import { call, type Operation, run, useAbortSignal } from "effection";
 import { Roarr as log } from "roarr";
 
+import { withTimeout } from "../../../common/asyncUtils";
 import {
   ANALYZE_AUDIO_FILE_TIMEOUT,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
@@ -13,7 +14,7 @@ import {
   type WriteAudioFileTagOptions,
 } from "../../../common/events";
 import { analyzeBPM } from "../../audio/bpm";
-import { loadAudioBuffer } from "../../audio/buffer";
+import { loadAudioBuffer, type LoadAudioBufferOptions } from "../../audio/buffer";
 import { isTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import type { AppStoreGet, AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
 
@@ -29,8 +30,8 @@ export interface AudioAnalyzerActions {
   setAnalyzeBPMPerTrack: (analyzeBPMPerTrack: boolean) => void;
 
   // complex actions
-  analyzeTrack: (trackId: number) => Promise<void>;
-  analyzePlaylist: (playlistId: string) => Promise<void>;
+  analyzeTrack: (trackId: number) => Operation<void>;
+  analyzePlaylist: (playlistId: string) => Operation<void>;
 }
 
 export const createAudioAnalyzerSlice: AppStoreSliceCreator<
@@ -43,15 +44,16 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
     set({ analyzeBPMPerTrack });
   },
 
-  analyzeTrack: async (trackID: number) => {
-    const [err] = await tryit(analyzeTrackOrThrow)(set, get, { trackID });
-    if (err) {
-      log.error(ClientErrors.analyzeTrackFailed(trackID, err));
+  analyzeTrack: function* (trackID: number) {
+    try {
+      yield* analyzeTrackOrThrow(set, get, { trackID });
+    } catch (e) {
+      log.error(ClientErrors.analyzeTrackFailed(trackID, e as Error));
       set({ analyzerStatus: "ready" });
     }
   },
 
-  analyzePlaylist: async (playlistID: string) => {
+  analyzePlaylist: function* (playlistID: string) {
     const { audioConvertedFileURLs, convertTrackToMP3, getTrackDef, libraryPlaylists } = get();
 
     if (libraryPlaylists === undefined) {
@@ -76,9 +78,9 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
         const trackDef = getTrackDef(trackID);
         const isReadyForAnalysis = isTrackReadyForAnalysis(trackDef, audioConvertedFileURLs);
         if (!isReadyForAnalysis && trackDef !== undefined) {
-          await convertTrackToMP3(trackDef);
+          yield* convertTrackToMP3(trackDef);
         }
-        await analyzeTrackOrThrow(set, get, { trackID });
+        yield* analyzeTrackOrThrow(set, get, { trackID });
       } catch (e) {
         log.error(ClientErrors.analyzeTrackInPlaylistFailed(trackID, playlistID, e as Error));
         set({ analyzerStatus: "ready" });
@@ -103,13 +105,15 @@ interface AnalyzeTrackOptions {
 }
 
 /** @throws */
-async function analyzeTrackOrThrow(
+function* analyzeTrackOrThrow(
   set: AppStoreSet,
   get: AppStoreGet,
   { force = false, trackID }: AnalyzeTrackOptions,
 ) {
   const { audioConvertedFileURLs, audioFilesRootFolder, getTrackDef } = get();
   const trackDef = getTrackDef(trackID);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const signal = yield* useAbortSignal();
 
   if (trackDef === undefined) {
     throw new Error(ClientErrors.libraryNoTrackDefFound(trackID));
@@ -120,26 +124,20 @@ async function analyzeTrackOrThrow(
     return;
   }
 
-  set({ analyzerStatus: "busy" });
-  const analyzeAudioTimeout = setTimeout(() => {
-    set({ analyzerStatus: "ready" });
-    throw new Error(ClientErrors.analyzeTrackTimedOut(trackID));
-  }, ANALYZE_AUDIO_FILE_TIMEOUT);
-
+  const loadAudioBufferOptions = {
+    fileOrResourceURL: audioConvertedFileURLs[trackID] ?? trackDef.Location,
+    serverRootFolder: audioFilesRootFolder,
+    serverPort: DEFAULT_AUDIO_FILES_SERVER_PORT,
+    signal,
+  };
   let bpm: number | undefined;
 
   try {
-    const trackAudio = await loadAudioBuffer({
-      fileOrResourceURL: audioConvertedFileURLs[trackID] ?? trackDef.Location,
-      serverRootFolder: audioFilesRootFolder,
-      serverPort: DEFAULT_AUDIO_FILES_SERVER_PORT,
-    });
-    const analyzedBPM = await analyzeBPM(trackAudio);
-    bpm = Math.round(analyzedBPM);
+    set({ analyzerStatus: "busy" });
+    bpm = yield* loadAudioBufferAndAnalyzeBPM(loadAudioBufferOptions, trackID);
   } catch (e) {
+    set({ analyzerStatus: "ready" });
     throw new Error(ClientErrors.analyzeTrackFailed(trackID, e as Error));
-  } finally {
-    clearTimeout(analyzeAudioTimeout);
   }
 
   window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
@@ -148,14 +146,36 @@ async function analyzeTrackOrThrow(
     value: bpm,
   } satisfies WriteAudioFileTagOptions);
 
-  await window.api.waitForResponse(
-    ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
-    WRITE_AUDIO_FILE_TAG_TIMEOUT,
+  try {
+    yield* call(
+      window.api.waitForResponse(
+        ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+        WRITE_AUDIO_FILE_TAG_TIMEOUT,
+      ),
+    );
+
+    log.info(`[client] completed updating BPM for track ${trackID}`);
+
+    set((state) => {
+      state.library!.Tracks[trackID].BPM = bpm!;
+      state.libraryWriteState = "ready"; // needs to be written to disk
+    });
+  } finally {
+    set({ analyzerStatus: "ready" });
+  }
+}
+
+function loadAudioBufferAndAnalyzeBPM(
+  options: LoadAudioBufferOptions,
+  trackID: number,
+): Operation<number> {
+  return withTimeout(
+    run(function* () {
+      const trackAudio = yield* loadAudioBuffer(options);
+      const analyzedBPM = yield* analyzeBPM(trackAudio);
+      return Math.round(analyzedBPM);
+    }),
+    ANALYZE_AUDIO_FILE_TIMEOUT,
+    ClientErrors.analyzeTrackTimedOut(trackID),
   );
-  log.info(`[client] completed updating BPM for track ${trackID}`);
-  set((state) => {
-    state.library!.Tracks[trackID].BPM = bpm!;
-    state.libraryWriteState = "ready"; // needs to be written to disk
-    state.analyzerStatus = "ready";
-  });
 }

@@ -1,10 +1,13 @@
 import { useHotkeys } from "@blueprintjs/core";
 import { useCallback, useMemo } from "react";
 
+import { useOperationCallback } from "../../hooks";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 
 export default function useAudioPlayerHotkeys() {
   const { play, pause, isPlaying, seek } = useAudioPlayerControls();
+
+  const handlePlay = useOperationCallback(play, [play]);
 
   const seekBackwardTen = useCallback(() => {
     seek(-10 * 1000);
@@ -28,7 +31,7 @@ export default function useAudioPlayerHotkeys() {
         global: true,
         combo: "space",
         label: "Play/Pause audio",
-        onKeyDown: isPlaying ? pause : play,
+        onKeyDown: isPlaying ? pause : handlePlay,
       },
       {
         global: true,
@@ -56,9 +59,9 @@ export default function useAudioPlayerHotkeys() {
       },
     ],
     [
+      handlePlay,
       isPlaying,
       pause,
-      play,
       seekBackwardTen,
       seekBackwardThirty,
       seekForwardTen,

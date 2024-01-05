@@ -4,21 +4,31 @@
 import { blueBright } from "ansis";
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 
-import { type ClientEventChannel, type ServerEventChannel } from "./common/events";
+import { ClientEventChannel, ServerEventChannel } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 import { type ContextBridgeApi } from "./contextBridgeApi";
 
 const log = createScopedLogger("contextBridge", blueBright);
-
 const contextBridgeApi: ContextBridgeApi = {
   versions: process.versions,
 
-  send: <T>(channel: ClientEventChannel, data?: T) => {
-    log.debug(`sending '${channel}' event`);
-    ipcRenderer.send(channel, data);
+  isReady: false,
+
+  queue: [],
+
+  send: <T extends object>(channel: ClientEventChannel, data?: T) => {
+    if (contextBridgeApi.isReady) {
+      log.debug(`sending '${channel}' event`);
+      ipcRenderer.send(channel, data);
+    } else {
+      log.debug(`queueing '${channel}' event`);
+      contextBridgeApi.queue.push([channel, data]);
+      // in case we have reloaded the page, send a ping to the server to make sure it's still listening
+      ipcRenderer.send(ClientEventChannel.APP_SERVER_PING);
+    }
   },
 
-  handle: <T>(
+  handle: <T extends object>(
     channel: ServerEventChannel,
     callback: (event: IpcRendererEvent, data?: T) => void,
   ) => {
@@ -26,7 +36,7 @@ const contextBridgeApi: ContextBridgeApi = {
     return ipcRenderer.on(channel, callback);
   },
 
-  handleOnce: <T>(
+  handleOnce: <T extends object>(
     channel: ServerEventChannel,
     callback: (event: IpcRendererEvent, data?: T) => void,
   ) => {
@@ -34,7 +44,7 @@ const contextBridgeApi: ContextBridgeApi = {
     return ipcRenderer.once(channel, callback);
   },
 
-  waitForResponse: <T>(channel: ServerEventChannel, timeoutMs: number) => {
+  waitForResponse: <T extends object>(channel: ServerEventChannel, timeoutMs?: number) => {
     log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
     return new Promise<T | undefined>((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -47,7 +57,7 @@ const contextBridgeApi: ContextBridgeApi = {
     });
   },
 
-  removeHandler: <T>(
+  removeHandler: <T extends object>(
     channel: ServerEventChannel,
     callback: (event: IpcRendererEvent, data?: T) => void,
   ) => {
@@ -55,5 +65,15 @@ const contextBridgeApi: ContextBridgeApi = {
     return ipcRenderer.removeListener(channel, callback);
   },
 };
+
+contextBridgeApi.handleOnce(ServerEventChannel.APP_SERVER_READY, () => {
+  log.debug("app server ready");
+  contextBridgeApi.isReady = true;
+  contextBridgeApi.queue.forEach(([channel, data]) => {
+    log.debug(`sending queued '${channel}' event`);
+    ipcRenderer.send(channel, data);
+  });
+  contextBridgeApi.queue = [];
+});
 
 contextBridge.exposeInMainWorld("api", contextBridgeApi);

@@ -1,8 +1,8 @@
 import { Colors } from "@blueprintjs/colors";
 import { Star, StarEmpty } from "@blueprintjs/icons";
 import { range } from "radash";
-import { useCallback } from "react";
 
+import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./trackRatingStars.module.scss";
 
@@ -38,9 +38,12 @@ interface InteractiveStarProps {
 
 function InteractiveStar({ isFilled, ratingOutOf100, trackID }: InteractiveStarProps) {
   const setTrackRating = appStore.use.setTrackRating();
-  const handleClick = useCallback(() => {
-    void setTrackRating(trackID, ratingOutOf100);
-  }, [ratingOutOf100, setTrackRating, trackID]);
+  const handleClick = useOperationCallback(
+    function* () {
+      yield* setTrackRating(trackID, ratingOutOf100);
+    },
+    [ratingOutOf100, setTrackRating, trackID],
+  );
 
   return isFilled ? (
     <Star className={styles.starFilled} onClick={handleClick} color={Colors.GOLD4} />

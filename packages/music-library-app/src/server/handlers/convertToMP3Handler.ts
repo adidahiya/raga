@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import type { AudioFileConverter } from "@adahiya/music-library-tools-lib";
 import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
 import { sync as commandExistsSync } from "command-exists";
+import { action, type Operation, run, suspend } from "effection";
 import ffmpeg from "fluent-ffmpeg";
 import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
@@ -50,7 +51,7 @@ export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Ha
       return;
     }
 
-    const codec = await getBestAvailableMP3Codec();
+    const codec = await run(getBestAvailableMP3Codec);
     if (codec === undefined) {
       res.status(501).send(ServerErrors.MP3_CODEC_UNAVAILABLE);
       return;
@@ -77,9 +78,9 @@ const MP3_CODECS = ["libmp3lame", "libshine"] as const;
  * Does not throw if unavailable, just returns `undefined`.
  * Caller is responsible for throwing an error in this case.
  */
-async function getBestAvailableMP3Codec(): Promise<string | undefined> {
-  /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
-  return new Promise<string | undefined>((resolve, reject) => {
+function getBestAvailableMP3Codec(): Operation<string | undefined> {
+  return action<string | undefined>(function* (resolve, reject) {
+    /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
     ffmpeg.getAvailableCodecs((err, codecs) => {
       if (err != null) {
         reject(err);
@@ -88,6 +89,8 @@ async function getBestAvailableMP3Codec(): Promise<string | undefined> {
         resolve(codec);
       }
     });
+    /* eslint-enable @typescript-eslint/no-unnecessary-condition */
+
+    yield* suspend();
   });
-  /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 }
