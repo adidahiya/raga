@@ -1,18 +1,36 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
+$width-standard: 300px;
+$width-wide: 500px;
+
+.loadLibraryForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  :global(.bp5-form-group) {
+    max-width: $width-standard;
+  }
+
+  .recentLibrariesForm {
+    max-width: $width-wide;
+  }
+}
+
 .separator {
   margin: 10px 0;
   position: relative;
+  width: $width-standard;
 
   &:before {
     background: bp.$pt-dark-divider-white;
     content: "";
     display: block;
     height: 1px;
-    left: 2rem;
+    left: 4rem;
     position: absolute;
     top: 10px;
-    width: calc(50% - 3rem);
+    width: calc(50% - 5rem);
   }
 
   &:after {
@@ -21,9 +39,9 @@
     display: block;
     height: 1px;
     position: absolute;
-    right: 2rem;
+    right: 4rem;
     top: 10px;
-    width: calc(50% - 3rem);
+    width: calc(50% - 5rem);
   }
 }
 
@@ -34,9 +52,18 @@
   border: dashed 1px bp.$pt-dark-divider-white;
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 20px 10px;
 
   &.active {
     background: bp.$dark-gray2;
   }
+}
+
+.recentLibrariesLabel {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.recentLibrariesMenu {
+  margin-top: 5px;
 }

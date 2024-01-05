@@ -57,6 +57,7 @@ function Library() {
   const [headerHeight, setHeaderHeight] = useState<number>(0);
   const headerRef = useRef<HTMLDivElement>(null);
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
+  console.debug(`[client] previously used paths:`, appStore.use.previouslyUsedLibraries());
 
   useEffectOnce(() => {
     if (headerRef.current != null) {

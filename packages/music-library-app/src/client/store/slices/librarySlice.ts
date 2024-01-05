@@ -94,12 +94,19 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   setLibraryInputFilepath: (libraryFilepath) => {
     set((state) => {
       state.libraryInputFilepath = libraryFilepath;
+
       if (state.libraryOutputFilepath === undefined) {
         // place the output adjacent to the input file by default
         const inputFolder = libraryFilepath?.split("/").slice(0, -1).join("/");
         state.libraryOutputFilepath = `${inputFolder}/ModifiedLibrary.xml`;
       }
     });
+
+    if (libraryFilepath !== undefined) {
+      // Important: don't call other state-mutating functions inside a producer, otherwise we may
+      // persist stale state to localStorage
+      get().saveCurrentLibraryPath(libraryFilepath);
+    }
   },
   setLibraryOutputFilepath: (libraryFilepath) => {
     set({ libraryOutputFilepath: libraryFilepath });
