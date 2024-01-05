@@ -46,18 +46,20 @@ export function writeAudioFileTag({ fileLocation, tagName, value }: WriteAudioFi
  */
 function writeRatingTag(file: TaglibFile, ratingOutOf100: number) {
   const id3v2Tag = file.getTag(TagTypes.Id3v2, true) as Id3v2Tag;
-  const popularimeterFrame = id3v2Tag.getFramesByClassType<Id3v2PopularimeterFrame>(
-    Id3v2FrameClassType.PopularimeterFrame,
-  );
 
-  if (popularimeterFrame.length === 0) {
+  let popularimeterFrame = id3v2Tag
+    .getFramesByClassType<Id3v2PopularimeterFrame>(Id3v2FrameClassType.PopularimeterFrame)
+    .shift();
+
+  if (popularimeterFrame === undefined) {
     // ID3v2 Spec says it should be an email
     const newFrame = Id3v2PopularimeterFrame.fromUser(DEFAULT_ID3_TAG_USER_EMAIL);
-    popularimeterFrame.push(newFrame);
+    id3v2Tag.addFrame(newFrame);
+    popularimeterFrame = newFrame;
   }
 
   // byte value between 0 and 255
-  popularimeterFrame[0].rating = convertRatingOutOf100ToByteValue(ratingOutOf100);
+  popularimeterFrame.rating = convertRatingOutOf100ToByteValue(ratingOutOf100);
 }
 
 /**
