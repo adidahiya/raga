@@ -9,6 +9,7 @@ export const LOCAL_STORAGE_KEY = "music-library-app";
 // HACKHACK: need a better default
 export const DEFAULT_AUDIO_FILES_ROOT_FOLDER = "/Volumes/CZSSD/music/tracks";
 export const DEFAULT_AUDIO_FILES_SERVER_PORT = 8457;
+export const DEFAULT_ID3_TAG_USER_EMAIL = "abc@123.com";
 
 // communication intervals & timeouts
 export const AUDIO_FILES_SERVER_PING_INTERVAL = 10_000;

@@ -2,7 +2,7 @@ import { Divider, H4 } from "@blueprintjs/core";
 
 import { appStore } from "../../store/appStore";
 import { AudioPlayerControls } from "../audioPlayer/audioPlayerControls";
-// import AppSettingsDialog from "../settings/appSettingsDialog";
+import UserSettingsDropdown from "../settings/userSettingsDropdown";
 import styles from "./appChrome.module.scss";
 import AudioAnalyzerStatus from "./audioAnalyzerStatus";
 import AudioFilesServerControls from "./audioFilesServerControls";
@@ -27,9 +27,8 @@ export default function AppChrome() {
             <AudioAnalyzerStatus />
           </>
         )}
-        {/* TODO: restore when we have more settings available */}
-        {/* <Divider /> */}
-        {/* <AppSettingsDialog /> */}
+        <Divider />
+        <UserSettingsDropdown />
       </div>
       <AudioPlayerControls />
     </div>

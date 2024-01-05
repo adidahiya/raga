@@ -120,6 +120,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   },
   setTrackRating: function* (trackID, ratingOutOf100) {
     const trackDef = get().getTrackDef(trackID);
+    const userEmail = get().getUserEmail();
 
     if (trackDef === undefined) {
       log.error(ClientErrors.libraryNoTrackDefFound(trackID));
@@ -129,6 +130,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
       fileLocation: trackDef.Location,
       tagName: "Rating",
+      userEmail,
       value: ratingOutOf100,
     } satisfies WriteAudioFileTagOptions);
 

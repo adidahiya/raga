@@ -10,14 +10,17 @@ import {
 } from "node-taglib-sharp";
 import { isString } from "radash";
 
+import { DEFAULT_ID3_TAG_USER_EMAIL } from "../common/constants";
 import { ClientErrors } from "../common/errorMessages";
 import { type WriteAudioFileTagOptions } from "../common/events";
 
-// TODO: better default
-const DEFAULT_ID3_TAG_USER_EMAIL = "abc@123.com";
-
 /** @throws if unsuccessful */
-export function writeAudioFileTag({ fileLocation, tagName, value }: WriteAudioFileTagOptions) {
+export function writeAudioFileTag({
+  fileLocation,
+  tagName,
+  userEmail,
+  value,
+}: WriteAudioFileTagOptions) {
   const filepath = fileLocation.includes("file://") ? fileURLToPath(fileLocation) : fileLocation;
 
   if (!existsSync(filepath)) {
@@ -32,7 +35,7 @@ export function writeAudioFileTag({ fileLocation, tagName, value }: WriteAudioFi
       file.tag.beatsPerMinute = numericValue;
       break;
     case "Rating":
-      writeRatingTag(file, numericValue);
+      writeRatingTag(file, numericValue, userEmail);
   }
 
   file.save();
@@ -44,7 +47,11 @@ export function writeAudioFileTag({ fileLocation, tagName, value }: WriteAudioFi
  * `Tag` API from TagLib#, so we need to write to the frame directly, see
  * https://github.com/benrr101/node-taglib-sharp/issues/61#issuecomment-1236182761
  */
-function writeRatingTag(file: TaglibFile, ratingOutOf100: number) {
+function writeRatingTag(
+  file: TaglibFile,
+  ratingOutOf100: number,
+  userEmail = DEFAULT_ID3_TAG_USER_EMAIL,
+) {
   const id3v2Tag = file.getTag(TagTypes.Id3v2, true) as Id3v2Tag;
 
   let popularimeterFrame = id3v2Tag
@@ -53,7 +60,7 @@ function writeRatingTag(file: TaglibFile, ratingOutOf100: number) {
 
   if (popularimeterFrame === undefined) {
     // ID3v2 Spec says it should be an email
-    const newFrame = Id3v2PopularimeterFrame.fromUser(DEFAULT_ID3_TAG_USER_EMAIL);
+    const newFrame = Id3v2PopularimeterFrame.fromUser(userEmail);
     id3v2Tag.addFrame(newFrame);
     popularimeterFrame = newFrame;
   }

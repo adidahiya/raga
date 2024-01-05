@@ -52,6 +52,7 @@ type SupportedTagName = "BPM" | "Rating";
 export interface WriteAudioFileTagOptions {
   fileLocation: string;
   tagName: SupportedTagName;
+  userEmail: string | undefined;
   value: string | number;
 }
 
