@@ -6,10 +6,10 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "check-lint": "eslint .",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf lib/*",
     "dev": "yarn build --watch",
-    "check-lint": "eslint .",
     "lint-fix": "eslint --fix .",
     "publish-npm": "npm publish --access public"
   },
