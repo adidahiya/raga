@@ -5706,12 +5706,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-selector@npm:^0.6.0":
+"file-selector@npm:0.6.0":
   version: 0.6.0
   resolution: "file-selector@npm:0.6.0"
   dependencies:
     tslib: "npm:^2.4.0"
   checksum: 6add4098ae07fd1e9050b1e8d3fd9f128680c1d6648c0676af54ace4586e6e5bfcb8fdfa45b69e9131ffd8175bf630d54a445a5facf9be244f85b99ce309183e
+  languageName: node
+  linkType: hard
+
+"file-selector@patch:file-selector@npm%3A0.6.0#~/.yarn/patches/file-selector-npm-0.6.0-04259af1f7.patch":
+  version: 0.6.0
+  resolution: "file-selector@patch:file-selector@npm%3A0.6.0#~/.yarn/patches/file-selector-npm-0.6.0-04259af1f7.patch::version=0.6.0&hash=984907"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: a53558cb6480e746174666f5d0dcb269926e4375de688f84c7eb6fd1db509858dab5fdf9ea4f57761de9cb0fb64ab54dbf89d88f871f4406fdd9d8199a69a7ec
   languageName: node
   linkType: hard
 
