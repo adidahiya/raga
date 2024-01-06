@@ -119,8 +119,8 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set({ selectedTrackId });
   },
   setTrackRating: function* (trackID, ratingOutOf100) {
-    const trackDef = get().getTrackDef(trackID);
-    const userEmail = get().getUserEmail();
+    const { getTrackDef, userEmail } = get();
+    const trackDef = getTrackDef(trackID);
 
     if (trackDef === undefined) {
       log.error(ClientErrors.libraryNoTrackDefFound(trackID));

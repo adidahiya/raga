@@ -13,10 +13,6 @@ export interface UserSettingsState {
 }
 
 export interface UserSettingsActions {
-  // actions - simple getters
-  getUserEmail: () => string | undefined;
-
-  // actions - simple setters
   setUserEmail: (userEmail: string | undefined) => void;
   saveCurrentLibraryPath: (filePath: string) => void;
   clearPreviouslyUsedLibraries: () => void;
@@ -29,10 +25,6 @@ export const createUserSettingsSlice: AppStoreSliceCreator<
 
   userEmail: undefined,
 
-  // simple getters
-  getUserEmail: () => get().userEmail,
-
-  // simple setters
   setUserEmail: (userEmail: string | undefined) => {
     set({ userEmail });
   },

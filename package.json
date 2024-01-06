@@ -7,12 +7,13 @@
   ],
   "scripts": {
     "build": "yarn lerna run build",
+    "check-format": "prettier --check \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
+    "check-lint": "yarn lerna run check-lint",
+    "check-types": "yarn lerna run check-types",
     "clean": "yarn lerna run clean",
     "dist": "yarn lerna run dist",
-    "format": "prettier --write \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
-    "format-check": "prettier --check \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
-    "lint": "yarn lerna run lint",
-    "lint-fix": "yarn lerna run lint-fix"
+    "fix-format": "prettier --write \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
+    "fix-lint": "yarn lerna run lint-fix"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.17.0",

@@ -110,7 +110,7 @@ function* analyzeTrackOrThrow(
   get: AppStoreGet,
   { force = false, trackID }: AnalyzeTrackOptions,
 ) {
-  const { audioConvertedFileURLs, audioFilesRootFolder, getTrackDef } = get();
+  const { audioConvertedFileURLs, audioFilesRootFolder, getTrackDef, userEmail } = get();
   const trackDef = getTrackDef(trackID);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const signal = yield* useAbortSignal();
@@ -143,6 +143,7 @@ function* analyzeTrackOrThrow(
   window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
     fileLocation: trackDef.Location,
     tagName: "BPM",
+    userEmail,
     value: bpm,
   } satisfies WriteAudioFileTagOptions);
 

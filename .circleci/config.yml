@@ -53,23 +53,32 @@ jobs:
             - packages/*/lib
             - packages/*/dist
 
-  format-check:
+  check-format:
     docker: *docker-node-image
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
-      - run: yarn format-check
+      - run: yarn check-format
 
-  lint:
+  check-lint:
     docker: *docker-node-image
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
-      - run: yarn lint
+      - run: yarn check-lint
+
+  check-types:
+    docker: *docker-node-image
+    steps:
+      - checkout
+      - restore_cache: *restore-node-modules-cache
+      - attach_workspace: { at: "." }
+      - run: sudo corepack enable
+      - run: yarn check-types
 
   dist:
     docker: *docker-node-image
@@ -102,9 +111,11 @@ workflows:
       - checkout-code
       - build:
           requires: [checkout-code]
-      - format-check:
+      - check-types:
           requires: [checkout-code]
-      - lint:
+      - check-format:
+          requires: [checkout-code]
+      - check-lint:
           # ESLint rules with type checking require dependent packages to be built
           requires: [build]
       - dist:

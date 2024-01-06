@@ -9,7 +9,7 @@
     "check-types": "tsc --noEmit",
     "clean": "rm -rf lib/*",
     "dev": "yarn build --watch",
-    "lint": "eslint .",
+    "check-lint": "eslint .",
     "lint-fix": "eslint --fix .",
     "publish-npm": "npm publish --access public"
   },
