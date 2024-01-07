@@ -13,7 +13,7 @@
 
 ### 2. Run the `raga-cli` application
 
-Download the latest release from the [Releases page](https://github.com/adidahiya/music-library-scripts/releases).
+Download the latest release from the [Releases page](https://github.com/adidahiya/raga/releases).
 
 Run the application binary for your platform (ARM or x86) and follow the terminal prompts.
 

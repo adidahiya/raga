@@ -33,7 +33,7 @@ management 🔮
 ### For DJs: `raga-app`
 
 Most _raga_ users will use the Electron-based desktop application. Its releases are available for
-download [here](https://github.com/adidahiya/music-library-scripts/releases). With the Raga app, you
+download [here](https://github.com/adidahiya/raga/releases). With the Raga app, you
 can:
 
 - import a Swinsian library and browse its playlists
@@ -45,15 +45,15 @@ can:
 ![app screenshot](./packages/raga-app/docs/app.png)
 
 The source code for the app lives in the
-[`raga-app` package](https://github.com/adidahiya/music-library-scripts/blob/main/packages/raga-app/README.md).
+[`raga-app` package](https://github.com/adidahiya/raga/blob/main/packages/raga-app/README.md).
 
 ### For developers: `raga-lib` and `raga-cli`
 
 Much of _raga_'s data management functionality lives in a separate Node.js library called
-[`raga-lib`](https://github.com/adidahiya/music-library-scripts/blob/main/packages/raga-lib/README.md).
+[`raga-lib`](https://github.com/adidahiya/raga/blob/main/packages/raga-lib/README.md).
 
 There is also a CLI called
-[`raga-cli`](https://github.com/adidahiya/music-library-scripts/blob/main/packages/raga-cli/README.md)
+[`raga-cli`](https://github.com/adidahiya/raga/blob/main/packages/raga-cli/README.md)
 which provides a command-line script to transform a Swinsian-exported library XML to the
 Rekordbox-compatible Music.app XML format.
 

@@ -3,13 +3,5 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Launch CLI",
-      "program": "${workspaceFolder}/packages/music-library-scripts/lib/main.mjs",
-      "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node"
-    }
-  ]
+  "configurations": []
 }
