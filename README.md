@@ -1,30 +1,61 @@
-# music library tools
+# raga
 
-> Tools for managing a large music library for DJs
+> Tools for managing a large digital music library, designed for DJs
 
 ## Motivation
 
-I built these tools to support my music library management workflow which includes:
+I built these tools to support my music library management workflow as an electronic music DJ. They
+are designed to work with my particular system of music management on macOS, so they might not fit
+your use case exactly. Feel free to file an issue or send an email (address in my GitHub profile) if
+you'd like to see additional features implemented in _raga_.
 
-- [Swinsian](https://swinsian.com/) - watch folders for new downloads, fix metadata & tags, organize tracks into manual & smart playlists
-- [Rekordbox](https://rekordbox.com/en/) - import playlists & tracks from Swinsian, analyze for CDJ playback, export to portable USB drive
+[Rekordbox](https://rekordbox.com/en/) is the de-facto library management software DJs; it's a
+necessary part of any DJ's workflow to be able to perform on CDJs. Like most DJs, I use it to
+analyze tracks, set cue points, and export to USBs. However, Rekordbox is often slow and clunky to
+use; I prefer listening to music and creating playlists in a more performant and user-friendly app,
+namely one called [Swinsian](https://swinsian.com/) for macOS (previously, I used Apple's Music app).
 
-The most fundamental tool here is one that provides the data plumbing between Swinsian and Rekordbox. The
-[`music-library-tools-cli` package](https://github.com/adidahiya/music-library-scripts/blob/main/packages/music-library-tools-cli/README.md)
-allows you to export a Swinsian library into an XML format which can be imported by Rekordbox. For Node.js developers,
-the functionality of this tool can also be accessed through the
-[`music-library-tools-lib` package](https://github.com/adidahiya/music-library-scripts/blob/main/packages/music-library-tools-lib/README.md).
+Swinsian is pretty good at a few things: watching folders for new audio file downloads, fixing
+track metadata & tags, organizing tracks into playlists (manually and with smart playlists). It's a
+great replacement for Apple's Music app. However, it lacks some important functionality for DJs:
 
-Beyond these data connection utilities, this repository also contains an Electron-based desktop application called
-[`music-library-app` package](https://github.com/adidahiya/music-library-scripts/blob/main/packages/music-library-app/README.md) with features to help manage a DJ library:
+- it can't export its playlists directly to Rekordbox
+- it can't analyze track tempo/BPM
+- its smart playlist system could be a lot smarter
+- it lacks any meaningful tag management features (genre-based or otherwise)
 
-- analyze track BPM and write values to ID3 tags
+_raga_ aims to solve these problems and more. One day, it may even be able to subsume all of
+Swinsian's or (_gasp_) Rekordbox's functionality as the all-in-one app for DJ music library
+management 🔮
+
+## Modules
+
+### For DJs: `raga-app`
+
+Most _raga_ users will use the Electron-based desktop application. Its releases are available for
+download [here](https://github.com/adidahiya/music-library-scripts/releases). With the Raga app, you
+can:
+
+- import a Swinsian library and browse its playlists
+- analyze track tempo/BPM and save the value to audio file ID3 tags
 - play tracks with adjustable tempo +/-10%
-- rate tracks
+- rate tracks (1-5 stars)
+- export a Swinsian library to a format which can be imported by Rekordbox
 
-## Screenshot
+![app screenshot](./packages/raga-app/docs/app.png)
 
-![app screenshot](./packages/music-library-app/docs/app.png)
+The source code for the app lives in the
+[`raga-app` package](https://github.com/adidahiya/music-library-scripts/blob/main/packages/raga-app/README.md).
+
+### For developers: `raga-lib` and `raga-cli`
+
+Much of _raga_'s data management functionality lives in a separate Node.js library called
+[`raga-lib`](https://github.com/adidahiya/music-library-scripts/blob/main/packages/raga-lib/README.md).
+
+There is also a CLI called
+[`raga-cli`](https://github.com/adidahiya/music-library-scripts/blob/main/packages/raga-cli/README.md)
+which provides a command-line script to transform a Swinsian-exported library XML to the
+Rekordbox-compatible Music.app XML format.
 
 ## Development
 
@@ -42,3 +73,20 @@ Dev tasks
 
 - `yarn build` - builds TypeScript sources and bundles up the Electron app
 - `yarn dist` - creates the Electron app distributable package
+
+## About
+
+_What does raga mean?_
+
+[rāga](https://en.wikipedia.org/wiki/Raga) is a Sanskrit word which roughly translates to:
+_a melodic framework for improvisation in Indian classical music_.
+
+The art of DJing is largely one of improvisation within the personal framework of one's music
+collection. DJs who invest more time in studying, organizing, and tagging their library are better
+equipped to deliver their best performances. The scale and complexity of this practice in the
+digital medium necessitates advanced tools and frameworks like _raga_.
+
+_Who created raga?_
+
+_raga_ was created by [Adi Dahiya](https://adi.pizza/), a UI engineer, new media artist, and DJ
+based in Brooklyn, NY.

@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "@adahiya/raga-lib": "../../node_modules/@adahiya/raga-lib/lib/index.js",
+    "ansis": "npm:ansis@^2.0.3",
+    "dedent": "npm:dedent@^1.5.1",
+    "fluent-ffmpeg": "npm:fluent-ffmpeg@^2.1.2",
+    "html-entities": "npm:html-entities@^2.4.0",
+    "minimist": "npm:minimist@^1.2.8",
+    "plist": "npm:plist@^3.1.0",
+    "prompts": "npm:prompts@^2.4.2"
+  },
+  "nodeModulesDir": true
+}
