@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "../../../../../raga-lib/lib";
+import type { TrackDefinition } from "@adahiya/raga-lib";
 import { call, type Operation } from "effection";
 import { pick } from "radash";
 

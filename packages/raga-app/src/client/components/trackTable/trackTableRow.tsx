@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "../../../../../raga-lib/lib";
+import type { TrackDefinition } from "@adahiya/raga-lib";
 import { ContextMenu, type ContextMenuChildrenProps, Menu, MenuItem } from "@blueprintjs/core";
 import { flexRender, type Row } from "@tanstack/react-table";
 import classNames from "classnames";

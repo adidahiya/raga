@@ -1,4 +1,4 @@
-import type { AudioFileType, TrackDefinition } from "../../../raga-lib/lib";
+import type { AudioFileType, TrackDefinition } from "@adahiya/raga-lib";
 
 // HACKHACK: /lib/cjs is not exporting values so we need to copy them out here
 export const AUDIO_FILE_TYPES: AudioFileType[] = [

@@ -6,7 +6,7 @@ import {
   type MusicAppLibraryPlist,
   serializeLibraryPlist,
   type SwinsianLibraryPlist,
-} from "../../../raga-lib/lib";
+} from "@adahiya/raga-lib";
 import { type Operation, run } from "effection";
 import { serializeError } from "serialize-error";
 

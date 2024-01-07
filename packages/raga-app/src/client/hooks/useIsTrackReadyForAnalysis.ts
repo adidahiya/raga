@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "../../../../raga-lib/lib";
+import type { TrackDefinition } from "@adahiya/raga-lib";
 import { useMemo } from "react";
 
 import { isSupportedWebAudioFileFormat } from "../../common/webAudioUtils";

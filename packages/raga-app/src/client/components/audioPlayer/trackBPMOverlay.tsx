@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "../../../../../raga-lib/lib";
+import type { TrackDefinition } from "@adahiya/raga-lib";
 import { Button, Classes, Slider } from "@blueprintjs/core";
 import classNames from "classnames";
 import { debounce } from "radash";

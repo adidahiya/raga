@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "../../../../../raga-lib/lib";
+import type { TrackDefinition } from "@adahiya/raga-lib";
 import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";

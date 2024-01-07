@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "../../../../../raga-lib/lib";
+import type { TrackDefinition } from "@adahiya/raga-lib";
 import { Button, Tooltip } from "@blueprintjs/core";
 
 import { useOperationCallback } from "../../hooks";

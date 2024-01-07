@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import type { AudioFileConverter } from "../../../../raga-lib/lib";
+import type { AudioFileConverter } from "@adahiya/raga-lib";
 import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
 import { sync as commandExistsSync } from "command-exists";
 import { action, type Operation, run, suspend } from "effection";

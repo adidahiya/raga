@@ -1,4 +1,4 @@
-import type { AudioFileType } from "../../../../../raga-lib/lib";
+import type { AudioFileType } from "@adahiya/raga-lib";
 import { Tag, type TagProps, Tooltip } from "@blueprintjs/core";
 
 export interface AudioFileTypeTagProps extends TagProps {

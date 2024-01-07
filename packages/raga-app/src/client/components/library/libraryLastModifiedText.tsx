@@ -1,4 +1,4 @@
-import type { MusicLibraryPlist } from "../../../../../raga-lib/lib";
+import type { MusicLibraryPlist } from "@adahiya/raga-lib";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { format, parseISO } from "date-fns";

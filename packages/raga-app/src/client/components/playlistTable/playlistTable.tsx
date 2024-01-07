@@ -1,4 +1,4 @@
-import type { PlaylistDefinition } from "../../../../../raga-lib/lib";
+import type { PlaylistDefinition } from "@adahiya/raga-lib";
 import { Classes, HTMLTable, Icon, IconSize } from "@blueprintjs/core";
 import {
   createColumnHelper,

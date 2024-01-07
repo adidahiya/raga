@@ -1,4 +1,4 @@
-import type { BasicTrackDefinition } from "../../../../raga-lib/lib";
+import type { BasicTrackDefinition } from "@adahiya/raga-lib";
 
 export const AudioFilesServerRoutes = {
   GET_PING: "/ping",

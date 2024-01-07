@@ -2,7 +2,7 @@ import type {
   PlaylistDefinition,
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
-} from "../../../../../raga-lib/lib";
+} from "@adahiya/raga-lib";
 import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 

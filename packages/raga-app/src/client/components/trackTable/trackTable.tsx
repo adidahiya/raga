@@ -1,4 +1,4 @@
-import type { AudioFileType, TrackDefinition } from "../../../../../raga-lib/lib";
+import type { AudioFileType, TrackDefinition } from "@adahiya/raga-lib";
 import { Classes, HTMLTable } from "@blueprintjs/core";
 import {
   type CellContext,

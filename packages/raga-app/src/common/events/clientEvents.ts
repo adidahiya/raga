@@ -1,4 +1,4 @@
-import type { SwinsianLibraryPlist } from "../../../../raga-lib/lib";
+import type { SwinsianLibraryPlist } from "@adahiya/raga-lib";
 import type { MessageEvent } from "electron";
 
 // Event channels

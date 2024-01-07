@@ -3,7 +3,7 @@ import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { type Server } from "node:http";
 import { env } from "node:process";
 
-import { AudioFileConverter } from "../../../raga-lib/lib";
+import { AudioFileConverter } from "@adahiya/raga-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
 import { call, type Operation, run } from "effection";
 import sirv from "sirv";
