@@ -12,11 +12,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@adahiya/music-library-app@workspace:packages/music-library-app":
+"@adahiya/raga-app@workspace:packages/raga-app":
   version: 0.0.0-use.local
-  resolution: "@adahiya/music-library-app@workspace:packages/music-library-app"
+  resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
-    "@adahiya/music-library-tools-lib": "workspace:^"
+    "@adahiya/raga-lib": "workspace:^"
     "@blueprintjs/core": "npm:^5.7.2"
     "@blueprintjs/icons": "npm:^5.5.0"
     "@blueprintjs/node-build-scripts": "npm:^9.0.2"
@@ -68,11 +68,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adahiya/music-library-tools-cli@workspace:packages/music-library-tools-cli":
+"@adahiya/raga-cli@workspace:packages/raga-cli":
   version: 0.0.0-use.local
-  resolution: "@adahiya/music-library-tools-cli@workspace:packages/music-library-tools-cli"
+  resolution: "@adahiya/raga-cli@workspace:packages/raga-cli"
   dependencies:
-    "@adahiya/music-library-tools-lib": "workspace:^"
+    "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
     "@types/node": "npm:^20.10.6"
     "@types/prompts": "npm:^2.4.9"
@@ -82,13 +82,13 @@ __metadata:
     prompts: "npm:^2.4.2"
     typescript: "npm:^5.3.3"
   bin:
-    music-library-tools-cli: bin/cli.sh
+    raga-cli: bin/cli.sh
   languageName: unknown
   linkType: soft
 
-"@adahiya/music-library-tools-lib@workspace:^, @adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib":
+"@adahiya/raga-lib@workspace:^, @adahiya/raga-lib@workspace:packages/raga-lib":
   version: 0.0.0-use.local
-  resolution: "@adahiya/music-library-tools-lib@workspace:packages/music-library-tools-lib"
+  resolution: "@adahiya/raga-lib@workspace:packages/raga-lib"
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"

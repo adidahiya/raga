@@ -3,5 +3,5 @@
   "deno.enable": true,
   "deno.lint": true,
   "deno.unstable": false,
-  "deno.enablePaths": ["packages/music-library-tools-cli"]
+  "deno.enablePaths": ["packages/raga-cli"]
 }
