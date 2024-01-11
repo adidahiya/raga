@@ -17,8 +17,8 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.8.0"
-    "@blueprintjs/icons": "npm:^5.6.0"
+    "@blueprintjs/core": "npm:^5.8.1"
+    "@blueprintjs/icons": "npm:^5.7.0"
     "@blueprintjs/node-build-scripts": "npm:^9.1.0"
     "@electron-forge/cli": "npm:^7.2.0"
     "@electron-forge/maker-deb": "npm:^7.2.0"
@@ -30,7 +30,7 @@ __metadata:
     "@tanstack/react-table": "npm:^8.11.3"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/command-exists": "npm:^1.2.3"
-    "@types/node": "npm:^20.10.7"
+    "@types/node": "npm:^20.11.0"
     "@types/react": "npm:^18.2.47"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.18"
@@ -39,9 +39,9 @@ __metadata:
     classnames: "npm:^2.5.1"
     command-exists: "npm:^1.2.9"
     cross-env: "npm:^7.0.3"
-    date-fns: "npm:^3.1.0"
+    date-fns: "npm:^3.2.0"
     effection: "npm:^3.0.1"
-    electron: "npm:^28.1.1"
+    electron: "npm:^28.1.3"
     electron-devtools-installer: "npm:^3.2.0"
     electron-squirrel-startup: "npm:^1.0.0"
     eslint: "npm:^8.56.0"
@@ -62,7 +62,7 @@ __metadata:
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:^2.9.2"
     vite: "npm:^5.0.11"
-    wavesurfer.js: "npm:^7.6.2"
+    wavesurfer.js: "npm:^7.6.3"
     web-audio-beat-detector: "npm:^8.2.1"
     zustand: "npm:^4.4.7"
   languageName: unknown
@@ -74,7 +74,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.10.7"
+    "@types/node": "npm:^20.11.0"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.1"
     eslint: "npm:^8.56.0"
@@ -92,7 +92,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.10.7"
+    "@types/node": "npm:^20.11.0"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^2.0.3"
@@ -398,13 +398,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.8.0":
-  version: 5.8.0
-  resolution: "@blueprintjs/core@npm:5.8.0"
+"@blueprintjs/core@npm:^5.8.1":
+  version: 5.8.1
+  resolution: "@blueprintjs/core@npm:5.8.1"
   dependencies:
     "@blueprintjs/colors": "npm:^5.0.9"
-    "@blueprintjs/icons": "npm:^5.6.0"
-    "@popperjs/core": "npm:^2.11.7"
+    "@blueprintjs/icons": "npm:^5.7.0"
+    "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
     normalize.css: "npm:^8.0.1"
     react-popper: "npm:^2.3.0"
@@ -420,13 +420,13 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 6e4ee0c7e18623b8ded703d3a0064448f265848daeb5b99cdd249548f1712ec524e1a8c560c252c5b46e312337d2ef0d4276a0845d0d7c3391c1fd8e41955976
+  checksum: 523674a5577da853853afa8ee2c89ee2a09dd9cbf9c4e2b82143e590289ab68b912d47e6ec6328fbd792d241e1a783c7f0b5b5fd461799ca4709577b02665ff4
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.6.0":
-  version: 5.6.0
-  resolution: "@blueprintjs/icons@npm:5.6.0"
+"@blueprintjs/icons@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "@blueprintjs/icons@npm:5.7.0"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -438,7 +438,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: d69346fe404911baac0e3a97ee68fda4312da2072616e1bc5667e73657dc107b9244ea7389aeadb771a9e953b309b7cb98364326d513742f049437705c9cb248
+  checksum: 682cccd6c3fbeb16edc1f68be0fafdd900753659c1b7eb1ea18ec3d401668c0373bbd11c780be4f1a4f9cef6868219a3e2520dcba7280781878239600bb65830
   languageName: node
   linkType: hard
 
@@ -1858,7 +1858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.11.7":
+"@popperjs/core@npm:^2.11.8":
   version: 2.11.8
   resolution: "@popperjs/core@npm:2.11.8"
   checksum: ddd16090cde777aaf102940f05d0274602079a95ad9805bd20bc55dcc7c3a2ba1b99dd5c73e5cc2753c3d31250ca52a67d58059459d7d27debb983a9f552936c
@@ -2395,12 +2395,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.10.7":
-  version: 20.10.7
-  resolution: "@types/node@npm:20.10.7"
+"@types/node@npm:*, @types/node@npm:^20.11.0":
+  version: 20.11.0
+  resolution: "@types/node@npm:20.11.0"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 4a1ba3fb7fc0a262c6b2d5ec763cec7abf5b5d6b2d277798ddbf05227f5778f9a806987821fd4d3eacd6f37c946ac61a9c64fb79ae4b84daaec12354158835a3
+  checksum: 8da60a8ccb65181c3d6f7686ddc5f1b1616cafa14d9e520a866adff82c17cc99336a78dd7ce7bee8f54e2332946f678b0e3aa377fbaaf751d3c05b64600872c6
   languageName: node
   linkType: hard
 
@@ -4342,10 +4342,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "date-fns@npm:3.1.0"
-  checksum: d542977c57fbb2166a569e235af5e8dde884f9a15fd6778df41a81237dae2a49891b041c8e4b12dae5270f5f00e508907fe7eee07ad24291edad0d75de352006
+"date-fns@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "date-fns@npm:3.2.0"
+  checksum: 2f36cb9165a066ae90c0b6f0c25b3c70eb75bc52e64ba6dd8680964ebda144851a244ff4ed0b2afb4a6bab796a1af6a0e6c7c2814529d04c72fa434f931d4e81
   languageName: node
   linkType: hard
 
@@ -4868,16 +4868,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^28.1.1":
-  version: 28.1.1
-  resolution: "electron@npm:28.1.1"
+"electron@npm:^28.1.3":
+  version: 28.1.3
+  resolution: "electron@npm:28.1.3"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^18.11.18"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: fa5489892ce7376aa50f0dc4c1c3225d791a301c4559ce458dab1949aabf3b036a909888202e4bd75fbf9691c8c110cae843f1bb105d9f64778f8c115f7f2015
+  checksum: 8a413db35053aaff78f8407ae5f575cf0f422d6d7eafcac415b2394d7c39074e32968b8ac4dd82c283932df3cfd2a3e3bd8d4f6500a0f5d594840129fb3e45a3
   languageName: node
   linkType: hard
 
@@ -5624,20 +5624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.7, fast-glob@npm:^3.2.9":
-  version: 3.3.1
-  resolution: "fast-glob@npm:3.3.1"
-  dependencies:
-    "@nodelib/fs.stat": "npm:^2.0.2"
-    "@nodelib/fs.walk": "npm:^1.2.3"
-    glob-parent: "npm:^5.1.2"
-    merge2: "npm:^1.3.0"
-    micromatch: "npm:^4.0.4"
-  checksum: 51bcd15472879dfe51d4b01c5b70bbc7652724d39cdd082ba11276dbd7d84db0f6b33757e1938af8b2768a4bf485d9be0c89153beae24ee8331d6dcc7550379f
-  languageName: node
-  linkType: hard
-
-"fast-glob@npm:^3.3.2":
+"fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.7, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.2":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
   dependencies:
@@ -5957,18 +5944,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^11.0.0, fs-extra@npm:^11.1.0, fs-extra@npm:^11.1.1":
-  version: 11.1.1
-  resolution: "fs-extra@npm:11.1.1"
-  dependencies:
-    graceful-fs: "npm:^4.2.0"
-    jsonfile: "npm:^6.0.1"
-    universalify: "npm:^2.0.0"
-  checksum: c4e9fabf9762a70d1403316b7faa899f3d3303c8afa765b891c2210fdeba368461e04ae1203920b64ef6a7d066a39ab8cef2160b5ce8d1011bb4368688cd9bb7
-  languageName: node
-  linkType: hard
-
-"fs-extra@npm:^11.2.0":
+"fs-extra@npm:^11.0.0, fs-extra@npm:^11.1.0, fs-extra@npm:^11.1.1, fs-extra@npm:^11.2.0":
   version: 11.2.0
   resolution: "fs-extra@npm:11.2.0"
   dependencies:
@@ -10257,18 +10233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.19, postcss@npm:^8.4.27, postcss@npm:^8.4.32":
-  version: 8.4.32
-  resolution: "postcss@npm:8.4.32"
-  dependencies:
-    nanoid: "npm:^3.3.7"
-    picocolors: "npm:^1.0.0"
-    source-map-js: "npm:^1.0.2"
-  checksum: 28084864122f29148e1f632261c408444f5ead0e0b9ea9bd9729d0468818ebe73fe5dc0075acd50c1365dbe639b46a79cba27d355ec857723a24bc9af0f18525
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.4.33":
+"postcss@npm:^8.4.19, postcss@npm:^8.4.27, postcss@npm:^8.4.32, postcss@npm:^8.4.33":
   version: 8.4.33
   resolution: "postcss@npm:8.4.33"
   dependencies:
@@ -13027,10 +12992,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.6.2":
-  version: 7.6.2
-  resolution: "wavesurfer.js@npm:7.6.2"
-  checksum: 6117cdf805dd8e3a6954337e1bcf7067d50ca4231f3673826cb21f2edf1bec3f0b290c9355472af594882107ee77ab30cfcfba08981a84e9592c49d8bd998893
+"wavesurfer.js@npm:^7.6.3":
+  version: 7.6.3
+  resolution: "wavesurfer.js@npm:7.6.3"
+  checksum: f367052f6f1e66b0e49ead9832180723bd8dde32449a0ec11784b347415661ba18c4c4fd62c6a4a866f73a60806ca749b15ab3594336abbae9f63b488f0d753e
   languageName: node
   linkType: hard
 
