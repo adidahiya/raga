@@ -60,7 +60,7 @@ __metadata:
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.3.3"
     use-immer: "npm:^0.9.0"
-    usehooks-ts: "npm:2.9.2"
+    usehooks-ts: "npm:2.9.4"
     vite: "npm:^5.0.11"
     wavesurfer.js: "npm:^7.6.4"
     web-audio-beat-detector: "npm:^8.2.1"
@@ -12790,13 +12790,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"usehooks-ts@npm:2.9.2":
-  version: 2.9.2
-  resolution: "usehooks-ts@npm:2.9.2"
+"usehooks-ts@npm:2.9.4":
+  version: 2.9.4
+  resolution: "usehooks-ts@npm:2.9.4"
   peerDependencies:
     react: ^16.8.0  || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
-  checksum: d12d1f927cbee3a22f8577c6fc77d59713928795d3bee6ea166aea6dbee359c6857876fa10ef0d2a4709c11df81b71a7cb87aa6bc1c3869e3eb89378cba83311
+  checksum: 5edfd273446b5075c178594a12997384aef2f07bd16fd7e14d7154ca52076c1dbee9171c136557b50d890624e0aaa661b9df9acd1486270ce7344880aeec5b36
   languageName: node
   linkType: hard
 
