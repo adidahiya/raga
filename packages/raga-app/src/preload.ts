@@ -48,7 +48,7 @@ const contextBridgeApi: ContextBridgeApi = {
     log.debug(`waiting for '${channel}' event with timeout ${timeoutMs}ms`);
     return new Promise<T | undefined>((resolve, reject) => {
       const timeout = setTimeout(() => {
-        reject(`timed out waiting for ${channel} response`);
+        reject(new Error(`timed out waiting for ${channel} response`));
       }, timeoutMs);
       contextBridgeApi.handleOnce<T>(channel, (_event, data) => {
         clearTimeout(timeout);

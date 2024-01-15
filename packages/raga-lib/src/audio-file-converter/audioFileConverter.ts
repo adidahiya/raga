@@ -110,7 +110,7 @@ export default class AudioFileConverter {
           log.debug(`Wrote converted MP3 at ${outputFilePath}`);
           resolve(outputFilePath);
         })
-        .on("error", (err) => {
+        .on("error", (err: Error) => {
           reject(err);
         });
     });
