@@ -28,7 +28,7 @@ _raga_ aims to solve these problems and more. One day, it may even be able to su
 Swinsian's or (_gasp_) Rekordbox's functionality as the all-in-one app for DJ music library
 management 🔮
 
-Here's a [wireframe diagram](https://www.tldraw.com/s/v2_c_KXb5jZdr22zylAUIA0Bzb?viewport=159%2C-551%2C3854%2C2234&page=page%3Apage)
+Here's a [wireframe diagram](https://www.tldraw.com/s/v2_c_VSSSVWHve_idwkbeO6FrB?viewport=97%2C-757%2C4053%2C2350&page=page%3Apage)
 which roughly illustrates the workflow at a high level:
 
 ![tldraw diagram](./packages/raga-app/docs/wireframe.png)
