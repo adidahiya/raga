@@ -15,3 +15,7 @@ Requirements:
 ### Screenshot
 
 ![app screenshot](./docs/app.png)
+
+### Workflow diagram
+
+![tldraw diagram](./docs/wireframe.png)
