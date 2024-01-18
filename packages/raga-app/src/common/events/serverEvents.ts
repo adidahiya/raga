@@ -1,5 +1,7 @@
 import type { SwinsianLibraryPlist } from "@adahiya/raga-lib";
 
+import type { LibraryMetadata } from "../../server/libraryMeta/computeLibraryMetadata";
+
 // Event channels
 
 export const ServerEventChannel = {
@@ -36,6 +38,9 @@ export interface AudioFilesServerStartedEventPayload {
 export interface LoadedSwinsianLibraryEventPayload {
   /** Library XML plist */
   library: SwinsianLibraryPlist;
+
+  /** Library metadata, computed by raga-app */
+  libraryMeta: LibraryMetadata;
 
   /** Location of library XML on disk */
   filepath: string;

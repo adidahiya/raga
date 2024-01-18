@@ -6,8 +6,6 @@ export const DEBUG = process.env.NODE_ENV === "development";
 export const INSTALL_REACT_DEVELOPER_TOOLS = false;
 
 export const LOCAL_STORAGE_KEY = "raga-app";
-// HACKHACK: need a better default
-export const DEFAULT_AUDIO_FILES_ROOT_FOLDER = "/Volumes/CZSSD/music/tracks";
 export const DEFAULT_AUDIO_FILES_SERVER_PORT = 8457;
 export const DEFAULT_ID3_TAG_USER_EMAIL = "abc@123.com";
 

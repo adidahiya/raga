@@ -160,12 +160,17 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
           LOAD_SWINSIAN_LIBRARY_TIMEOUT,
         ),
       );
-      log.trace("[renderer] got loaded library");
+      log.trace("[client] got loaded library");
       if (DEBUG) {
         console.log(data);
       }
 
       set((state) => {
+        const { longestCommonAudioFilePath } = data!.libraryMeta;
+        if (longestCommonAudioFilePath !== "") {
+          log.debug(`[client] setting audio tracks root folder to ${longestCommonAudioFilePath}`);
+          state.audioFilesRootFolder = longestCommonAudioFilePath;
+        }
         state.startAudioFilesServer();
         state.libraryLoadingState = "loaded";
         state.library = data!.library;

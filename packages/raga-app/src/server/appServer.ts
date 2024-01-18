@@ -22,6 +22,7 @@ import {
   type WriteModifiedLibraryOptions,
 } from "../common/events";
 import { type AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
+import { computeLibraryMetadata } from "./libraryMeta/computeLibraryMetadata";
 import { log } from "./serverLogger";
 import { writeAudioFileTag } from "./writeAudioFileTag";
 
@@ -78,6 +79,7 @@ function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLib
     channel: ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
     data: {
       library,
+      libraryMeta: computeLibraryMetadata(library),
       filepath,
     } satisfies LoadedSwinsianLibraryEventPayload,
   });

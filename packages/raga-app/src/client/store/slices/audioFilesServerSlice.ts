@@ -7,7 +7,6 @@ import { AudioFilesServerRoutes as ServerRoutes } from "../../../common/api/audi
 import { withTimeout } from "../../../common/asyncUtils";
 import {
   AUDIO_FILES_SERVER_PING_TIMEOUT,
-  DEFAULT_AUDIO_FILES_ROOT_FOLDER,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
 } from "../../../common/constants";
 import {
@@ -57,7 +56,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
   AudioFilesServerState & AudioFilesServerActions
 > = (set) => {
   return {
-    audioFilesRootFolder: DEFAULT_AUDIO_FILES_ROOT_FOLDER,
+    audioFilesRootFolder: "",
     audioFilesServerStatus: "stopped",
     audioFilesConverterIsBusy: false,
     audioFilesConverterTemporaryFolder: undefined,
