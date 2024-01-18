@@ -30,7 +30,7 @@ __metadata:
     "@tanstack/react-table": "npm:^8.11.6"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/command-exists": "npm:^1.2.3"
-    "@types/node": "npm:^20.11.2"
+    "@types/node": "npm:^20.11.5"
     "@types/react": "npm:^18.2.48"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.18"
@@ -41,7 +41,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.2.0"
     effection: "npm:^3.0.2"
-    electron: "npm:^28.1.3"
+    electron: "npm:^28.1.4"
     electron-devtools-installer: "npm:^3.2.0"
     electron-squirrel-startup: "npm:^1.0.0"
     eslint: "npm:^8.56.0"
@@ -55,15 +55,15 @@ __metadata:
     react-dropzone: "npm:^14.2.3"
     react-resizable-panels: "npm:^1.0.9"
     roarr: "npm:^7.21.0"
-    sass: "npm:^1.69.7"
+    sass: "npm:^1.70.0"
     serialize-error: "npm:^11.0.3"
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.3.3"
     use-immer: "npm:^0.9.0"
-    usehooks-ts: "npm:2.9.4"
+    usehooks-ts: "npm:2.9.5"
     vite: "npm:^5.0.11"
     wavesurfer.js: "npm:^7.6.4"
-    web-audio-beat-detector: "npm:^8.2.1"
+    web-audio-beat-detector: "npm:^8.2.2"
     zustand: "npm:^4.4.7"
   languageName: unknown
   linkType: soft
@@ -74,7 +74,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.11.2"
+    "@types/node": "npm:^20.11.5"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.1"
     eslint: "npm:^8.56.0"
@@ -92,7 +92,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.11.2"
+    "@types/node": "npm:^20.11.5"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^2.0.3"
@@ -340,12 +340,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.23.6, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.23.6
-  resolution: "@babel/runtime@npm:7.23.6"
+"@babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.23.6, @babel/runtime@npm:^7.23.8, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+  version: 7.23.8
+  resolution: "@babel/runtime@npm:7.23.8"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 4c4ab16f0361c59fb23956e4d0a29935f1f8a64aa8dd37876ce38355b6f4d8f0e54237aacb89c73b1532def60539ddde2d651523c8fa887b30b19a8cf0c465b0
+  checksum: ec8f1967a36164da6cac868533ffdff97badd76d23d7d820cc84f0818864accef972f22f9c6a710185db1e3810e353fc18c3da721e5bb3ee8bc61bdbabce03ff
   languageName: node
   linkType: hard
 
@@ -2395,12 +2395,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.11.2":
-  version: 20.11.2
-  resolution: "@types/node@npm:20.11.2"
+"@types/node@npm:*, @types/node@npm:^20.11.5":
+  version: 20.11.5
+  resolution: "@types/node@npm:20.11.5"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 029d603b56f7277b109a14e29e97d8e7269960cedafd8761cd0e65a0bcd9e7a554c192708becf3248a22f42681f476320af6a06c64a692a52414d1c167d9f50a
+  checksum: 9f31c471047d7b3e240ce7b77ff29b0d15e83be7e3feafb3d0b0d0931122b438b1eefa302a5a2e1e9849914ff3fd76aafbd8ccb372efb1331ba048da63bce6f8
   languageName: node
   linkType: hard
 
@@ -4868,16 +4868,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^28.1.3":
-  version: 28.1.3
-  resolution: "electron@npm:28.1.3"
+"electron@npm:^28.1.4":
+  version: 28.1.4
+  resolution: "electron@npm:28.1.4"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^18.11.18"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 8a413db35053aaff78f8407ae5f575cf0f422d6d7eafcac415b2394d7c39074e32968b8ac4dd82c283932df3cfd2a3e3bd8d4f6500a0f5d594840129fb3e45a3
+  checksum: 73d0e599c4ad6ba420c4b8224623a4fb4d1964d3d9b6963cbd42171a7f4b288b1d410364f9de75a2ea39feea46de061dd2cf508176db87950932daaa658b31e2
   languageName: node
   linkType: hard
 
@@ -10258,12 +10258,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.1.1, prettier@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "prettier@npm:3.2.2"
+"prettier@npm:^3.1.1, prettier@npm:^3.2.4":
+  version: 3.2.4
+  resolution: "prettier@npm:3.2.4"
   bin:
     prettier: bin/prettier.cjs
-  checksum: ab9470ff6cfd19f28bc424f22e58f2fc4a488d148b9384f6c3739235017c8350cae82b3697392c23d9b098b9d8dfaa1cc9ff4ef25fd45f54c97b95f9cc7a1f7d
+  checksum: e2b735d0552501b3a7ac8bd3ba3b6de2920bb35bd4cd02d08cb9057ebe3e96d83b9a7e4b903d987b7530a50223b12c74d107c154337236ae2c68156ba1e65cd2
   languageName: node
   linkType: hard
 
@@ -11167,7 +11167,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^4.6.0"
     eslint-plugin-simple-import-sort: "npm:^10.0.0"
     lerna: "npm:^8.0.2"
-    prettier: "npm:^3.2.2"
+    prettier: "npm:^3.2.4"
   languageName: unknown
   linkType: soft
 
@@ -11247,16 +11247,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.69.7":
-  version: 1.69.7
-  resolution: "sass@npm:1.69.7"
+"sass@npm:^1.69.7, sass@npm:^1.70.0":
+  version: 1.70.0
+  resolution: "sass@npm:1.70.0"
   dependencies:
     chokidar: "npm:>=3.0.0 <4.0.0"
     immutable: "npm:^4.0.0"
     source-map-js: "npm:>=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 9c6d3fe468a267949e8dd766085351f59988caf5d3d5c13eb041d370366f869ad3704b5046586fd3584b2cbf59c03650d237b62a4c6ed26a0c003e27f9ef4e89
+  checksum: f933545d72a932f4a82322dd4ca9f3ea7d3e9d08852d695f76d419939cbdf7f8db3dd894b059ed77bf76811b07319b75b3ef8bb077bf9f52f8fbdfd8cee162f6
   languageName: node
   linkType: hard
 
@@ -12790,13 +12790,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"usehooks-ts@npm:2.9.4":
-  version: 2.9.4
-  resolution: "usehooks-ts@npm:2.9.4"
+"usehooks-ts@npm:2.9.5":
+  version: 2.9.5
+  resolution: "usehooks-ts@npm:2.9.5"
   peerDependencies:
     react: ^16.8.0  || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
-  checksum: 5edfd273446b5075c178594a12997384aef2f07bd16fd7e14d7154ca52076c1dbee9171c136557b50d890624e0aaa661b9df9acd1486270ce7344880aeec5b36
+  checksum: 8a6c791b9aa0b08d4407f967e8f9976d76b078bd9fc140fec2d0b4c1ba8bd70e215fe83705d07ad981853271b2d348be1013a5d2394e45399dfcbf5fbdc7539e
   languageName: node
   linkType: hard
 
@@ -13031,15 +13031,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector@npm:^8.2.1":
-  version: 8.2.1
-  resolution: "web-audio-beat-detector@npm:8.2.1"
+"web-audio-beat-detector@npm:^8.2.2":
+  version: 8.2.2
+  resolution: "web-audio-beat-detector@npm:8.2.2"
   dependencies:
-    "@babel/runtime": "npm:^7.23.6"
+    "@babel/runtime": "npm:^7.23.8"
     tslib: "npm:^2.6.2"
     web-audio-beat-detector-broker: "npm:^4.1.1"
     web-audio-beat-detector-worker: "npm:^5.2.46"
-  checksum: 1a6c11563c4898b0ec1dc66df26cd7a72c4e2f6e525a1de23a4be0391522d556a0db2cb0b92259cccd97eb0e353d4276394ba1d2c26962630d38900a59997531
+  checksum: a2759ae78e4f0bd2fc37073bd6a7552e8378ad9cc0165a6e667ee0cd08e15b594eb0f5b5ce3611266695a37165edd854b51c79a06bf5d8c9d3299966fbdd6bae
   languageName: node
   linkType: hard
 
