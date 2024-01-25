@@ -30,7 +30,7 @@ __metadata:
     "@tanstack/react-table": "npm:^8.11.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/command-exists": "npm:^1.2.3"
-    "@types/node": "npm:^20.11.5"
+    "@types/node": "npm:^20.11.6"
     "@types/react": "npm:^18.2.48"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.18"
@@ -41,7 +41,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.3.1"
     effection: "npm:^3.0.2"
-    electron: "npm:^28.1.4"
+    electron: "npm:^28.2.0"
     electron-devtools-installer: "npm:^3.2.0"
     electron-squirrel-startup: "npm:^1.0.0"
     eslint: "npm:^8.56.0"
@@ -60,9 +60,9 @@ __metadata:
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.3.3"
     use-immer: "npm:^0.9.0"
-    usehooks-ts: "npm:2.9.5"
+    usehooks-ts: "npm:2.10.0"
     vite: "npm:^5.0.12"
-    wavesurfer.js: "npm:^7.6.5"
+    wavesurfer.js: "npm:^7.7.0"
     web-audio-beat-detector: "npm:^8.2.3"
     zustand: "npm:^4.5.0"
   languageName: unknown
@@ -74,7 +74,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.11.5"
+    "@types/node": "npm:^20.11.6"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.1"
     eslint: "npm:^8.56.0"
@@ -92,7 +92,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.11.5"
+    "@types/node": "npm:^20.11.6"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^2.0.3"
@@ -2395,12 +2395,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.11.5":
-  version: 20.11.5
-  resolution: "@types/node@npm:20.11.5"
+"@types/node@npm:*, @types/node@npm:^20.11.6":
+  version: 20.11.6
+  resolution: "@types/node@npm:20.11.6"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 9f31c471047d7b3e240ce7b77ff29b0d15e83be7e3feafb3d0b0d0931122b438b1eefa302a5a2e1e9849914ff3fd76aafbd8ccb372efb1331ba048da63bce6f8
+  checksum: 375dfc75f0aa8b7fb99382d84c317e5dab2969dcc3f54d8490b119151060923eae6483839552347bc78262bbcefb2951ee131e15372f4e80b755be2dda9afe80
   languageName: node
   linkType: hard
 
@@ -4868,16 +4868,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^28.1.4":
-  version: 28.1.4
-  resolution: "electron@npm:28.1.4"
+"electron@npm:^28.2.0":
+  version: 28.2.0
+  resolution: "electron@npm:28.2.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^18.11.18"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 73d0e599c4ad6ba420c4b8224623a4fb4d1964d3d9b6963cbd42171a7f4b288b1d410364f9de75a2ea39feea46de061dd2cf508176db87950932daaa658b31e2
+  checksum: 500ffceee47b4b077f0f053ebd33e54c07364cb49c7264e5305123989f81efdab0b9d3e4d7b21257e35cf2d7dd9aaf4407e2d646da43f4154c57f39782d35d32
   languageName: node
   linkType: hard
 
@@ -12790,13 +12790,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"usehooks-ts@npm:2.9.5":
-  version: 2.9.5
-  resolution: "usehooks-ts@npm:2.9.5"
+"usehooks-ts@npm:2.10.0":
+  version: 2.10.0
+  resolution: "usehooks-ts@npm:2.10.0"
   peerDependencies:
     react: ^16.8.0  || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
-  checksum: 8a6c791b9aa0b08d4407f967e8f9976d76b078bd9fc140fec2d0b4c1ba8bd70e215fe83705d07ad981853271b2d348be1013a5d2394e45399dfcbf5fbdc7539e
+  checksum: 35dfc898c3b593817a11eb4aa1e8b9e3d28f0250df497196a29255fbb49a8a21a4281aeeae2679ff3b462c6845a01f3c0b5d40b2cb4b4425e01860ebd5a920af
   languageName: node
   linkType: hard
 
@@ -12992,10 +12992,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.6.5":
-  version: 7.6.5
-  resolution: "wavesurfer.js@npm:7.6.5"
-  checksum: 8de4cce8dfe7118e940c6f3fb7859a2f1a581e1f787ef87f31ca84e0d878f08cda2aa59919857fee14e9210f90e4d3d9af4967f68f1a4005b8e938788056765a
+"wavesurfer.js@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "wavesurfer.js@npm:7.7.0"
+  checksum: f25356ad3b84f6c648dc85638a1e24cecb972aecd91b9116a7860c34dbcdd92a260e572132b417a6b24b313caf7ca7bed686f2465b3615f00c192fc5d40f3998
   languageName: node
   linkType: hard
 
