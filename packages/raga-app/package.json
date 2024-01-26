@@ -9,7 +9,7 @@
     "build": "electron-forge package",
     "check-lint": "eslint .",
     "check-types": "tsc --noEmit",
-    "dev": "cross-env NODE_ENV=development ROARR_LOG=true electron-forge start",
+    "dev": "cross-env NODE_ENV=development ROARR_LOG=true FLUENTFFMPEG_COV=0 electron-forge start",
     "clean": "rm -rf .vite/* out/*",
     "dist": "electron-forge make",
     "lint-fix": "eslint --fix .",

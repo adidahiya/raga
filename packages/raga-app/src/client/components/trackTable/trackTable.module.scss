@@ -8,26 +8,82 @@
   :global(.#{bp.$ns}-non-ideal-state) {
     flex-grow: 1;
   }
+
+  .header,
+  .body,
+  .footer {
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+
+  .body,
+  .footer {
+    thead {
+      display: none;
+    }
+  }
 }
 
-.header,
-.body,
-.footer {
+.trackTableNext {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
   table {
-    table-layout: fixed;
-    width: 100%;
+    // override react-table-library
+    display: table;
+  }
+
+  .header,
+  .body {
+    display: grid;
+    grid-template-columns: var(--data-table-library_grid-template-columns);
+  }
+
+  .header {
+    border-bottom: solid 1px bp.$pt-dark-divider-white;
+
+    th {
+      padding: 2px 4px;
+    }
+  }
+
+  .headerRow {
+    background: bp.$dark-gray2;
+    font-size: bp.$pt-font-size-small;
+  }
+
+  .row {
+    &:nth-of-type(odd) {
+      background: bp.$dark-gray1;
+    }
+
+    &:nth-of-type(even) {
+      background: bp.$dark-gray2;
+    }
+
+    &:global(.row-select-clickable):hover {
+      background-color: bp.$dark-gray3;
+    }
+
+    &:global(.row-select-single-selected) {
+      background-color: bp.$blue1;
+
+      &:hover {
+        background-color: bp.$blue2;
+      }
+    }
+
+    td {
+      padding: 2px 4px;
+    }
   }
 }
 
 .header {
   // empty for now
-}
-
-.body,
-.footer {
-  thead {
-    display: none;
-  }
 }
 
 .body {
