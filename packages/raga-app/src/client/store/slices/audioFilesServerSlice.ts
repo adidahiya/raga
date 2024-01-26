@@ -195,6 +195,11 @@ function initAudioFilesServer(set: AppStoreSet) {
             );
             state.audioConvertedFileURLs = {};
           }
+          state.toaster?.show({
+            message: `Audio files server started at ${state.audioFilesRootFolder}`,
+            intent: "success",
+            icon: "tick",
+          });
           state.audioFilesConverterTemporaryFolder = data?.audioConverterTemporaryFolder;
           state.audioFilesServerStatus = "started";
         });
@@ -208,6 +213,11 @@ function initAudioFilesServer(set: AppStoreSet) {
           `[client] audio files server failed to start, check server logs: ${JSON.stringify(err)}`,
         );
         set((state) => {
+          state.toaster?.show({
+            message: `Audio files server failed to start at ${state.audioFilesRootFolder}`,
+            intent: "danger",
+            icon: "cross",
+          });
           state.audioFilesServerStatus = "failed";
         });
       },

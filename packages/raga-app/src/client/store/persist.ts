@@ -19,6 +19,7 @@ const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
   "libraryWriteState",
   "library",
   "selectedTrackId",
+  "toaster",
   "waveSurfer",
 ];
 

@@ -5,6 +5,11 @@ import { immer } from "zustand/middleware/immer";
 import { LOCAL_STORAGE_KEY } from "../../common/constants";
 import { onRehydrateStorage, partialize, storage } from "./persist";
 import {
+  type AppOverlaysActions,
+  type AppOverlaysState,
+  createAppOverlaysSlice,
+} from "./slices/appOverlaysSlice";
+import {
   type AudioAnalyzerActions,
   type AudioAnalyzerState,
   createAudioAnalyzerSlice,
@@ -28,11 +33,13 @@ import {
 import { createSelectors } from "./zustandUtils";
 
 export type AppState = AudioFilesServerState &
+  AppOverlaysState &
   LibraryState &
   AudioAnalyzerState &
   AudioPlayerState &
   UserSettingsState;
 export type AppActions = AudioFilesServerActions &
+  AppOverlaysActions &
   LibraryActions &
   AudioAnalyzerActions &
   AudioPlayerActions &
@@ -44,6 +51,7 @@ export const useAppStore = create<AppStore>()(
   persist(
     immer((...args) => ({
       // store is split into slices, see https://docs.pmnd.rs/zustand/guides/slices-pattern
+      ...createAppOverlaysSlice(...args),
       ...createAudioFilesServerSlice(...args),
       ...createLibrarySlice(...args),
       ...createAudioAnalyzerSlice(...args),
