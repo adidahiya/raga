@@ -1,20 +1,27 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { Classes, HTMLTable, Icon, IconSize } from "@blueprintjs/core";
+import { Classes } from "@blueprintjs/core";
+import { ChevronDown, ChevronRight } from "@blueprintjs/icons";
+import { useRowSelect } from "@table-library/react-table-library/select";
 import {
-  createColumnHelper,
-  type ExpandedState,
-  flexRender,
-  getCoreRowModel,
-  getExpandedRowModel,
-  type Row,
-  useReactTable,
-} from "@tanstack/react-table";
+  Body,
+  type Data,
+  type ExtendedNode,
+  // Cell,
+  Header,
+  HeaderCell,
+  HeaderRow,
+  Row,
+  Table,
+} from "@table-library/react-table-library/table";
+import { useTheme } from "@table-library/react-table-library/theme";
+import { CellTree, TreeExpandClickTypes, useTree } from "@table-library/react-table-library/tree";
+import type { Action, State, TreeOptionsIcon } from "@table-library/react-table-library/types";
 import classNames from "classnames";
-import { type MouseEvent, useCallback, useMemo, useState } from "react";
-import { useEffectOnce } from "usehooks-ts";
+import { useCallback, useMemo } from "react";
+import { Roarr as log } from "roarr";
 
 import { formatStatNumber } from "../../../common/format";
-import commonStyles from "../../common/commonStyles.module.scss";
+// import { useEffectOnce } from "usehooks-ts";
 import { appStore } from "../../store/appStore";
 import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
 import styles from "./playlistTable.module.scss";
@@ -24,22 +31,27 @@ export interface LibraryTableProps {
   /** @default false */
   showItemCounts?: boolean;
   /** @default false */
-  showHeader?: boolean;
-  /** @default false */
   showFooter?: boolean;
 }
 
-interface PlaylistRow {
-  def: PlaylistDefinition;
-  children: PlaylistRow[];
+interface PlaylistDefinitionNode extends PlaylistDefinition {
+  id: string;
+  /** Child nodes of this one. `null` if this is a leaf node. */
+  nodes: PlaylistDefinitionNode[] | null;
 }
 
-export default function PlaylistTable(props: LibraryTableProps) {
-  const library = useLibraryOrThrow();
+const treeIcon: TreeOptionsIcon<PlaylistDefinitionNode> = {
+  iconRight: <ChevronRight />,
+  iconDown: <ChevronDown />,
+};
+
+/** Gets the list of playlist definitions in the music library as react-table-library data nodes */
+function usePlaylistDefNodes(): Data<PlaylistDefinitionNode> {
+  const { Playlists: playlistDefs } = useLibraryOrThrow();
 
   const folderChildrenByParentId = useMemo<PartialRecord<string, PlaylistDefinition[]>>(
     () =>
-      library.Playlists.reduce<PartialRecord<string, PlaylistDefinition[]>>((acc, playlist) => {
+      playlistDefs.reduce<PartialRecord<string, PlaylistDefinition[]>>((acc, playlist) => {
         const parentId = playlist["Parent Persistent ID"];
         if (parentId !== undefined) {
           const parent = acc[parentId];
@@ -51,7 +63,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
         }
         return acc;
       }, {}),
-    [library.Playlists],
+    [playlistDefs],
   );
 
   const playlistIsFolderWithChildren = useCallback(
@@ -59,164 +71,91 @@ export default function PlaylistTable(props: LibraryTableProps) {
     [folderChildrenByParentId],
   );
 
-  const recursivelyGetFolderChildern: (playlistId: string) => PlaylistRow[] = useCallback(
-    (playlistId: string) =>
-      playlistIsFolderWithChildren(playlistId)
-        ? folderChildrenByParentId[playlistId]!.map((def) => ({
-            def,
-            children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
-          }))
-        : [],
-    [folderChildrenByParentId, playlistIsFolderWithChildren],
+  const recursivelyGetFolderChildern: (playlistId: string) => PlaylistDefinitionNode[] | null =
+    useCallback(
+      (playlistId: string) =>
+        playlistIsFolderWithChildren(playlistId)
+          ? folderChildrenByParentId[playlistId]!.map((def) => ({
+              ...def,
+              id: def["Playlist Persistent ID"],
+              nodes: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
+            }))
+          : null,
+      [folderChildrenByParentId, playlistIsFolderWithChildren],
+    );
+
+  return useMemo<Data<PlaylistDefinitionNode>>(
+    () => ({
+      nodes: playlistDefs
+        .filter((p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined)
+        .map((d) => ({
+          ...d,
+          id: d["Playlist Persistent ID"],
+          nodes: recursivelyGetFolderChildern(d["Playlist Persistent ID"]),
+        })),
+    }),
+    [playlistDefs, recursivelyGetFolderChildern],
+  );
+}
+
+export default function PlaylistTable(props: LibraryTableProps) {
+  const playlistDefNodes = usePlaylistDefNodes();
+  const theme = useTheme([]);
+
+  const selectedPlaylistPath = useSelectedPlaylistPath();
+  const treeSelectionState = useMemo(() => ({ ids: selectedPlaylistPath }), [selectedPlaylistPath]);
+  const handleTreeChange = useCallback((action: Action, state: State) => {
+    // TODO
+    console.log(action, state);
+  }, []);
+  const tree = useTree(
+    playlistDefNodes,
+    { state: treeSelectionState, onChange: handleTreeChange },
+    { clickType: TreeExpandClickTypes.ButtonClick, treeIcon },
   );
 
-  const playlistRows = useMemo<PlaylistRow[]>(
-    () =>
-      library.Playlists.filter(
-        (p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined,
-      ).map((def) => ({
-        def,
-        children: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
-      })),
-    [library.Playlists, recursivelyGetFolderChildern],
-  );
-
-  const numPlaylistsStat = formatStatNumber(library.Playlists.length);
-  const columnHelper = createColumnHelper<PlaylistRow>();
-
-  const iconRightPadding = 4;
-  const columns = [
-    columnHelper.accessor((row) => row.def.Name, {
-      id: "name",
-      cell: (info) => (
-        <span
-          style={{
-            // Since rows are flattened by default, we can use the row.depth property
-            // and paddingLeft to visually indicate the depth of the row
-            paddingLeft:
-              info.row.depth === 0 ? 0 : info.row.depth * IconSize.STANDARD + iconRightPadding,
-          }}
-        >
-          {info.row.getCanExpand() && (
-            <Icon
-              className={Classes.TEXT_MUTED}
-              style={{ paddingRight: iconRightPadding }}
-              icon={info.row.getIsExpanded() ? "chevron-down" : "chevron-right"}
-            />
-          )}
-          {info.getValue()}
-        </span>
-      ),
-      header: () => (
-        <span>
-          Playlists{" "}
-          <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
-            ({numPlaylistsStat})
-          </span>
-        </span>
-      ),
-      footer: (info) => info.column.id,
-    }),
-    columnHelper.accessor((row) => row.def["Playlist Items"].length, {
-      id: "numberOfTracks",
-      cell: (info) => <i>{info.getValue()}</i>,
-      header: () => <span># tracks</span>,
-      footer: (info) => info.column.id,
-      enableHiding: true,
-    }),
-    columnHelper.accessor((row) => row.def["Playlist Persistent ID"], {
-      id: "persistentId",
-      cell: (info) => <i>{info.getValue()}</i>,
-      header: () => <span>Persistent ID</span>,
-      footer: (info) => info.column.id,
-      enableHiding: true,
-    }),
-  ];
-
-  const [expanded, setExpanded] = useState<ExpandedState>({});
-  const [columnVisibility, _setColumnVisibility] = useState({
-    numberOfTracks: props.showItemCounts ?? false,
-    persistentId: false,
-  });
-
-  const table = useReactTable({
-    data: playlistRows,
-    columns,
-    state: {
-      columnVisibility,
-      expanded,
+  const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
+  const handleSelectChange = useCallback(
+    (action: Action, state: State) => {
+      // TODO: better typedef for `state`
+      log.debug(`[client] selected playlist ${state.id}`);
+      if (state.id != null) {
+        setSelectedPlaylistId(state.id);
+      }
     },
-    onExpandedChange: setExpanded,
-    getSubRows: (row) => row.children,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-  });
-
-  // TODO: adjustable column widths
-  const [columnWidths, _setColumnWidths] = useState<Record<string, number>>(
-    columns.reduce<Record<string, number>>((acc, column) => {
-      acc[column.id!] = 100;
-      return acc;
-    }, {}),
+    [setSelectedPlaylistId],
   );
-
-  const headerRows = table.getHeaderGroups().map((headerGroup) => (
-    <tr key={headerGroup.id}>
-      {headerGroup.headers.map((header) => (
-        <th key={header.id} style={{ width: columnWidths[header.column.columnDef.id!] }}>
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
-        </th>
-      ))}
-    </tr>
-  ));
+  const select = useRowSelect(playlistDefNodes, {
+    onChange: handleSelectChange,
+  });
 
   return (
-    <div className={styles.container}>
-      {props.showHeader && (
-        <div className={classNames(styles.header, commonStyles.compactTable)}>
-          <HTMLTable compact={true}>
-            <thead>{headerRows}</thead>
-          </HTMLTable>
-        </div>
-      )}
-      <div
-        className={styles.body}
-        // HACKHACK: magic number
-        style={{ maxHeight: `calc(100vh - ${props.headerHeight + 74}px)` }}
-      >
-        <HTMLTable compact={true} interactive={true}>
-          <thead>{headerRows}</thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <PlaylistTableRow key={row.id} {...row} />
-            ))}
-          </tbody>
-        </HTMLTable>
-      </div>
-      {props.showFooter && (
-        <div className={styles.footer}>
-          <HTMLTable className={styles.footer} compact={true}>
-            <thead>{headerRows}</thead>
-            <tfoot>
-              {table.getFooterGroups().map((footerGroup) => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.footer, header.getContext())}
-                    </th>
-                  ))}
-                </tr>
+    <div className={styles.playlistTableContainer}>
+      <Table data={playlistDefNodes} select={select} tree={tree} theme={theme}>
+        {(nodes: ExtendedNode<PlaylistDefinitionNode>[]) => (
+          <>
+            <Header className={styles.header}>
+              <HeaderRow className={styles.row}>
+                <HeaderCell>
+                  Playlists{" "}
+                  <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+                    ({formatStatNumber(nodes.length)})
+                  </span>
+                </HeaderCell>
+              </HeaderRow>
+            </Header>
+            <Body
+              className={styles.body}
+              // HACKHACK: magic number
+              style={{ maxHeight: `calc(100vh - ${props.headerHeight + 164}px)` }}
+            >
+              {nodes.map((playlist) => (
+                <PlaylistTableRow playlist={playlist} key={playlist.id} />
               ))}
-            </tfoot>
-          </HTMLTable>
-        </div>
-      )}
+            </Body>
+          </>
+        )}
+      </Table>
     </div>
   );
 }
@@ -227,47 +166,25 @@ PlaylistTable.defaultProps = {
   showFooter: false,
 };
 
-function PlaylistTableRow(row: Row<PlaylistRow>) {
-  const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
+function PlaylistTableRow({ playlist }: { playlist: ExtendedNode<PlaylistDefinitionNode> }) {
+  const selectedPlaylistId = appStore.use.selectedPlaylistId();
   const selectedPlaylistPath = useSelectedPlaylistPath();
-  const rowPlaylistId = row.original.def["Playlist Persistent ID"];
-  const isRowInSelectedPlaylistPath = selectedPlaylistPath.includes(rowPlaylistId);
-  const isRowSelected = row.getIsSelected();
-  const isRowExpanded = row.getIsExpanded();
-  const toggleExpanded = row.getToggleExpandedHandler();
-  const toggleSelected = row.getToggleSelectedHandler();
-
-  useEffectOnce(() => {
-    // run once on initial render, if we have a selected playlist from local storage and need to show its path
-    if (isRowInSelectedPlaylistPath && !isRowExpanded) {
-      toggleExpanded();
-    }
-  });
-
-  const handleClick = useCallback(
-    (event: MouseEvent) => {
-      if (row.getCanExpand()) {
-        toggleExpanded();
-      } else if (row.getCanSelect()) {
-        toggleSelected(event);
-        setSelectedPlaylistId(rowPlaylistId);
-      }
-    },
-    [row, rowPlaylistId, setSelectedPlaylistId, toggleExpanded, toggleSelected],
-  );
+  const isRowInSelectedPlaylistPath = selectedPlaylistPath.includes(playlist.id);
+  const isRowSelected = playlist.id === selectedPlaylistId;
 
   return (
-    <tr
-      className={classNames({
+    <Row
+      className={classNames(styles.row, {
         [styles.selectedPath]: isRowInSelectedPlaylistPath && !isRowSelected,
         [styles.selected]: isRowSelected,
       })}
-      onClick={handleClick}
+      item={playlist}
+      key={playlist.id}
     >
-      {row.getVisibleCells().map((cell) => (
-        <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-      ))}
-    </tr>
+      <CellTree treeIcon={treeIcon} item={playlist}>
+        {playlist.Name}
+      </CellTree>
+    </Row>
   );
 }
 PlaylistTableRow.displayName = "PlaylistTableRow";
