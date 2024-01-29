@@ -26,7 +26,6 @@ export default function TrackTableRow({
   const rowTrackId = row.original["Track ID"];
   const isRowSelected = row.getIsSelected();
   const canSelect = row.getCanSelect();
-  // const toggleSelected = row.getToggleSelectedHandler();
 
   const handleClick = useCallback(
     (event: MouseEvent) => {

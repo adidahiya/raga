@@ -9,7 +9,7 @@ import { AudioPlayer } from "../components/audioPlayer/audioPlayer";
 import { ResizeHandle } from "../components/common";
 import { LibraryHeaderSection, LoadLibraryForm } from "../components/library";
 import PlaylistTable from "../components/playlistTable/playlistTable";
-import TrackTableNext from "../components/trackTable/trackTableNext";
+import TrackTable from "../components/trackTable/trackTable";
 import { useMasterPlaylist, useTaskEffect } from "../hooks";
 import { appStore } from "../store/appStore";
 import styles from "./libraryView.module.scss";
@@ -90,7 +90,7 @@ function Library() {
               icon="list-detail-view"
             />
           ) : (
-            <TrackTableNext headerHeight={headerHeight} playlistId={selectedPlaylistId} />
+            <TrackTable headerHeight={headerHeight} playlistId={selectedPlaylistId} />
           )}
         </Panel>
       </PanelGroup>

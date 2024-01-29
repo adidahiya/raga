@@ -5,32 +5,8 @@
   display: flex;
   flex-direction: column;
 
-  :global(.#{bp.$ns}-non-ideal-state) {
-    flex-grow: 1;
-  }
-
-  .header,
-  .body,
-  .footer {
-    table {
-      table-layout: fixed;
-      width: 100%;
-    }
-  }
-
-  .body,
-  .footer {
-    thead {
-      display: none;
-    }
-  }
-}
-
-.trackTableNext {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-
+  // TODO: consider one of the suggested fixed header layouts
+  // see https://react-table-library.com/?path=%2Fdocs%2Ffeatures-fixed-header--in-flex-container
   table {
     // override react-table-library
     display: table;
@@ -53,6 +29,10 @@
   .headerRow {
     background: bp.$dark-gray2;
     font-size: bp.$pt-font-size-small;
+  }
+
+  :global(.resizer-handle) {
+    background-color: bp.$pt-dark-divider-white;
   }
 
   .row {
@@ -80,10 +60,6 @@
       padding: 2px 4px;
     }
   }
-}
-
-.header {
-  // empty for now
 }
 
 .body {
@@ -116,6 +92,12 @@
   justify-content: space-between;
 }
 
+.indexCell {
+  font-size: bp.$pt-font-size-small;
+  color: bp.$pt-dark-text-color-muted;
+  text-align: right;
+}
+
 .bpmCell {
   display: block;
   text-align: right;
@@ -123,7 +105,6 @@
 
 .analyzeAllButton {
   font-weight: bold;
-  margin-left: -4px;
 }
 
 .analyzeTrackButton:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
