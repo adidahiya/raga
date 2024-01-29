@@ -5,28 +5,60 @@
   display: flex;
   flex-direction: column;
 
-  :global(.#{bp.$ns}-non-ideal-state) {
-    flex-grow: 1;
-  }
-}
-
-.header,
-.body,
-.footer {
+  // TODO: consider one of the suggested fixed header layouts
+  // see https://react-table-library.com/?path=%2Fdocs%2Ffeatures-fixed-header--in-flex-container
   table {
-    table-layout: fixed;
-    width: 100%;
+    // override react-table-library
+    display: table;
   }
-}
 
-.header {
-  // empty for now
-}
+  .header,
+  .body {
+    display: grid;
+    grid-template-columns: var(--data-table-library_grid-template-columns);
+  }
 
-.body,
-.footer {
-  thead {
-    display: none;
+  .header {
+    border-bottom: solid 1px bp.$pt-dark-divider-white;
+
+    th {
+      padding: 2px 4px;
+    }
+  }
+
+  .headerRow {
+    background: bp.$dark-gray2;
+    font-size: bp.$pt-font-size-small;
+  }
+
+  :global(.resizer-handle) {
+    background-color: bp.$pt-dark-divider-white;
+  }
+
+  .row {
+    &:nth-of-type(odd) {
+      background: bp.$dark-gray1;
+    }
+
+    &:nth-of-type(even) {
+      background: bp.$dark-gray2;
+    }
+
+    &:global(.row-select-clickable):hover {
+      background-color: bp.$dark-gray3;
+    }
+
+    &:global(.row-select-single-selected) {
+      background-color: bp.$blue1;
+
+      &:hover {
+        background-color: bp.$blue2;
+      }
+    }
+
+    td {
+      padding: 2px 4px;
+    }
   }
 }
 
@@ -60,6 +92,12 @@
   justify-content: space-between;
 }
 
+.indexCell {
+  font-size: bp.$pt-font-size-small;
+  color: bp.$pt-dark-text-color-muted;
+  text-align: right;
+}
+
 .bpmCell {
   display: block;
   text-align: right;
@@ -67,7 +105,6 @@
 
 .analyzeAllButton {
   font-weight: bold;
-  margin-left: -4px;
 }
 
 .analyzeTrackButton:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {

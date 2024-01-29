@@ -1,29 +1,40 @@
-import type { AudioFileType, TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, HTMLTable } from "@blueprintjs/core";
+import type { TrackDefinition } from "@adahiya/raga-lib";
+import { Classes, Colors } from "@blueprintjs/core";
+import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
+import { useRowSelect } from "@table-library/react-table-library/select";
+import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
-  type CellContext,
-  type ColumnDef,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+  Body,
+  Cell,
+  type Data,
+  type ExtendedNode,
+  Header,
+  HeaderCell,
+  HeaderRow,
+  Row,
+  Table,
+} from "@table-library/react-table-library/table";
+import { useTheme } from "@table-library/react-table-library/theme";
+import type {
+  Action,
+  SortFn,
+  SortOptionsIcon,
+  State,
+} from "@table-library/react-table-library/types";
 import classNames from "classnames";
-import { useEffect } from "react";
+import { useCallback, useMemo } from "react";
+import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/react/shallow";
 
-import { SHOW_TRACK_TABLE_CONTEXT_MENU } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
 import { getTrackFileType } from "../../../common/trackUtils";
-import commonStyles from "../../common/commonStyles.module.scss";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
-import AnalyzeAlPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
+import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
-import TrackTableRow, { TrackTableRowWithContextMenu } from "./trackTableRow";
 
 export interface TrackTableProps {
   // TODO: move this state to app store
@@ -31,159 +42,217 @@ export interface TrackTableProps {
   playlistId: string;
 }
 
-export default function TrackTable({ headerHeight, playlistId }: TrackTableProps) {
-  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-  const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
+interface TrackDefinitionNode extends TrackDefinition {
+  id: number;
+  indexInPlaylist: number;
+}
 
+/** Gets the list of track definitions for the given playlist as react-table-library data notes */
+function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> {
+  const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
   if (trackDefs === undefined) {
     throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
   }
+  return useMemo(
+    () => ({
+      nodes: trackDefs.map((d, indexInPlaylist) => ({ ...d, id: d["Track ID"], indexInPlaylist })),
+    }),
+    [trackDefs],
+  );
+}
 
-  const numTracksInPlaylist = trackDefs.length;
+// HACKHACK: do not use `{ TrackDefinition } from "@adahiya/raga-lib"` values for this because that import
+// causes our fluent-ffmepg resolution alias (defined in `vite.main.config.mjs`) to be insufficient; we cannot
+// configure how raga-lib's CJS dependencies are resolved
+const enum TrackPropertySortKey {
+  INDEX = "index",
+  NAME = "name",
+  ARTIST = "artist",
+  FILETYPE = "filetype",
+  RATING = "rating",
+  BPM = "bpm",
+}
 
-  const columnHelper = createColumnHelper<TrackDefinition>();
-  const columns = [
-    columnHelper.display({
-      id: "index",
-      cell: (info) => (
-        <span className={classNames(Classes.TEXT_SMALL, Classes.TEXT_MUTED)}>
-          {info.row.index + 1}
-        </span>
-      ),
-      header: () => (
-        <span>
-          #{" "}
-          <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
-            (of {numTracksInPlaylist})
-          </span>
-        </span>
-      ),
-      size: 60,
-    }),
-    columnHelper.accessor("BPM", {
-      id: "bpm",
-      cell: (info) => info.cell.getValue() ?? "-",
-      header: () => <BPMColumnHeader playlistId={playlistId} />,
-      size: 60,
-    }),
-    analyzeBPMPerTrack &&
-      columnHelper.display({
-        id: "analyzeBPM",
-        cell: (info) => <AnalyzeSingleTrackButton trackDef={info.row.original} />,
-        header: () => <AnalyzeAlPlaylistTracksButton playlistId={playlistId} />,
-        size: 60,
-      }),
-    columnHelper.accessor("Name", {
-      id: "name",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: () => <span>Name</span>,
-    }),
-    columnHelper.accessor("Artist", {
-      id: "artist",
-      cell: (info) => <i>{info.getValue()}</i>,
-      header: () => <span>Artist</span>,
-    }),
-    columnHelper.accessor("Rating", {
-      id: "rating",
-      cell: TrackRatingCell,
-      header: () => <span>Rating</span>,
-    }),
-    columnHelper.accessor(getTrackFileType, {
-      id: "fileType",
-      cell: TrackFileTypeCell,
-      header: () => <span>Type</span>,
-    }),
-  ].filter((c) => !!c) as ColumnDef<TrackDefinition>[];
+const sortFns: Record<TrackPropertySortKey, SortFn> = {
+  [TrackPropertySortKey.INDEX]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) => a.indexInPlaylist - b.indexInPlaylist),
+  [TrackPropertySortKey.NAME]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) => (a.Name ?? "").localeCompare(b.Name ?? "")),
+  [TrackPropertySortKey.ARTIST]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) => (a.Artist ?? "").localeCompare(b.Artist ?? "")),
+  [TrackPropertySortKey.BPM]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) => (a.BPM ?? 0) - (b.BPM ?? 0)),
+  [TrackPropertySortKey.RATING]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) => (a.Rating ?? 0) - (b.Rating ?? 0)),
+  [TrackPropertySortKey.FILETYPE]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) =>
+      getTrackFileType(a)!.localeCompare(getTrackFileType(b)!),
+    ),
+};
 
-  const table = useReactTable({
-    data: trackDefs,
-    columns,
-    state: {},
-    columnResizeMode: "onChange",
-    getCoreRowModel: getCoreRowModel<TrackDefinition>(),
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-  });
+const sortOptionsIcon: SortOptionsIcon = {
+  iconDefault: <ExpandAll />,
+  iconDown: <ChevronDown />,
+  iconUp: <ChevronUp />,
+};
 
-  const selectedPlaylistId = appStore.use.selectedPlaylistId();
+export default function TrackTable({ headerHeight, playlistId }: TrackTableProps) {
   const selectedTrackId = appStore.use.selectedTrackId();
+  const setSelectedTrackId = appStore.use.setSelectedTrackId();
+  const trackDefNodes = useTrackDefinitionNodes(playlistId);
 
-  // HACKHACK: for some reason, the table model retains some stale row selection state that
-  // we need to clear when changing playlists
-  useEffect(() => {
-    table.resetRowSelection();
-  }, [selectedPlaylistId, table]);
+  const numTracksInPlaylist = trackDefNodes.nodes.length;
+  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
+  const analyzeColumnWidth = 90;
+  const bpmColumnWidth = 60;
+  const ratingColumnWidth = 100;
+  const fileTypeColumnWidth = 90;
 
-  useEffect(() => {
-    table.resetRowSelection();
-    table
-      .getRowModel()
-      .rows.find((row) => row.original["Track ID"] === selectedTrackId)
-      ?.toggleSelected();
-  }, [table, selectedTrackId]);
+  const theme = useTheme([
+    {
+      Table: `
+        --data-table-library_grid-template-columns: ${indexColumnWidth}px ${analyzeColumnWidth}px ${bpmColumnWidth}px repeat(2, minmax(40px, 1fr)) ${ratingColumnWidth}px ${fileTypeColumnWidth}px;
+      `,
+    },
+  ]);
 
-  const headerRows = table.getHeaderGroups().map((headerGroup) => (
-    <tr key={headerGroup.id}>
-      {headerGroup.headers.map((header) => (
-        <th key={header.id} colSpan={header.colSpan} style={{ width: header.getSize() }}>
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
-          <div
-            onMouseDown={header.getResizeHandler()}
-            onTouchStart={header.getResizeHandler()}
-            className={`resizer ${header.column.getIsResizing() ? "isResizing" : ""}`}
-          />
-        </th>
-      ))}
-    </tr>
-  ));
+  const handleSortChange = useCallback((_action: Action, state: State) => {
+    log.debug(`[client] sorted track table: ${JSON.stringify(state)}`);
+  }, []);
 
-  const RowComponent = SHOW_TRACK_TABLE_CONTEXT_MENU ? TrackTableRowWithContextMenu : TrackTableRow;
+  const handleSelectChange = useCallback(
+    (_action: Action, state: State) => {
+      // TODO: better typedef for `state`
+      log.debug(`[client] selected track ${state.id} in current playlist ${playlistId}`);
+      setSelectedTrackId(state.id);
+    },
+    [playlistId, setSelectedTrackId],
+  );
+
+  const sort = useSort(trackDefNodes, { onChange: handleSortChange }, { sortFns });
+
+  const select = useRowSelect(trackDefNodes, {
+    state: { id: selectedTrackId },
+    onChange: handleSelectChange,
+  });
 
   return (
     <div className={styles.trackTableContainer}>
-      <div className={classNames(styles.header, commonStyles.compactTable)}>
-        <HTMLTable compact={true}>
-          <thead>{headerRows}</thead>
-        </HTMLTable>
-      </div>
-      <div
-        className={styles.body}
-        // HACKHACK: magic number
-        style={{ maxHeight: `calc(100vh - ${headerHeight + 74}px)` }}
+      <Table
+        data={trackDefNodes}
+        theme={theme}
+        layout={{ custom: true }}
+        sort={sort}
+        select={select}
       >
-        <HTMLTable compact={true} interactive={true} striped={true}>
-          <thead>{headerRows}</thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <RowComponent key={row.original["Track ID"]} {...row} />
-            ))}
-          </tbody>
-        </HTMLTable>
-      </div>
+        {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
+          <>
+            <TrackTableHeader playlistId={playlistId} />
+            <TrackTableBody trackNodes={trackNodes} headerHeight={headerHeight} />
+          </>
+        )}
+      </Table>
     </div>
   );
 }
-TrackTable.displayName = "TrackTable";
+TrackTable.displayName = "TrackTableNext";
 
-function BPMColumnHeader(props: { playlistId: string }) {
+const defaultResizer = {
+  minWidth: 50,
+  resizerHighlight: Colors.DARK_GRAY5,
+  resizerWidth: 8,
+};
+
+function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   return (
-    <div className={styles.bpmColumnHeader}>
-      <span>BPM</span>
-      {!analyzeBPMPerTrack && <AnalyzeAlPlaylistTracksButton {...props} />}
-    </div>
+    <Header className={styles.header}>
+      <HeaderRow className={styles.headerRow}>
+        <HeaderCellSort
+          stiff={true}
+          pinLeft={true}
+          sortKey={TrackPropertySortKey.INDEX}
+          sortIcon={sortOptionsIcon}
+        >
+          <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>#</span>
+        </HeaderCellSort>
+        <HeaderCell stiff={true} pinLeft={true} hide={!analyzeBPMPerTrack}>
+          <AnalyzeAllPlaylistTracksButton playlistId={playlistId} />
+        </HeaderCell>
+        <HeaderCellSort stiff={true} sortKey={TrackPropertySortKey.BPM} sortIcon={sortOptionsIcon}>
+          <div className={styles.bpmColumnHeader}>
+            <span>BPM</span>{" "}
+            {!analyzeBPMPerTrack && <AnalyzeAllPlaylistTracksButton playlistId={playlistId} />}
+          </div>
+        </HeaderCellSort>
+        <HeaderCellSort
+          resize={defaultResizer}
+          sortKey={TrackPropertySortKey.NAME}
+          sortIcon={sortOptionsIcon}
+        >
+          Name
+        </HeaderCellSort>
+        <HeaderCellSort
+          resize={defaultResizer}
+          sortKey={TrackPropertySortKey.ARTIST}
+          sortIcon={sortOptionsIcon}
+        >
+          Artist
+        </HeaderCellSort>
+        <HeaderCellSort
+          stiff={true}
+          sortKey={TrackPropertySortKey.RATING}
+          sortIcon={sortOptionsIcon}
+        >
+          Rating
+        </HeaderCellSort>
+        <HeaderCellSort
+          stiff={true}
+          pinRight={true}
+          sortKey={TrackPropertySortKey.FILETYPE}
+          sortIcon={sortOptionsIcon}
+        >
+          File Type
+        </HeaderCellSort>
+      </HeaderRow>
+    </Header>
   );
 }
 
-function TrackFileTypeCell(context: CellContext<TrackDefinition, AudioFileType>) {
-  const isReadyForAnalysis = useIsTrackReadyForAnalysis(context.row.original["Track ID"]);
-  return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={context.getValue()} />;
-}
-
-function TrackRatingCell(context: CellContext<TrackDefinition, number>) {
+function TrackTableBody({
+  trackNodes,
+  headerHeight,
+}: { trackNodes: ExtendedNode<TrackDefinitionNode>[] } & Pick<TrackTableProps, "headerHeight">) {
+  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   return (
-    <TrackRatingStars trackID={context.row.original["Track ID"]} rating={context.getValue()} />
+    <Body
+      className={styles.body}
+      // HACKHACK: magic number
+      style={{ maxHeight: `calc(100vh - ${headerHeight + 164}px)` }}
+    >
+      {trackNodes.map((track) => (
+        <Row className={styles.row} item={track} key={track.id}>
+          <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
+          <Cell hide={!analyzeBPMPerTrack}>
+            <AnalyzeSingleTrackButton trackDef={track} />
+          </Cell>
+          <Cell className={styles.bpmCell}>{track.BPM}</Cell>
+          <Cell>{track.Name}</Cell>
+          <Cell>{track.Artist}</Cell>
+          <Cell>
+            <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
+          </Cell>
+          <Cell>
+            <TrackFileTypeCell track={track} />
+          </Cell>
+        </Row>
+      ))}
+    </Body>
   );
+}
+
+function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
+  const isReadyForAnalysis = useIsTrackReadyForAnalysis(track["Track ID"]);
+  const fileType = getTrackFileType(track);
+  return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={fileType} />;
 }
