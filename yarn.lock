@@ -2530,27 +2530,27 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^20.11.6":
-  version: 20.11.6
-  resolution: "@types/node@npm:20.11.6"
+  version: 20.11.10
+  resolution: "@types/node@npm:20.11.10"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 375dfc75f0aa8b7fb99382d84c317e5dab2969dcc3f54d8490b119151060923eae6483839552347bc78262bbcefb2951ee131e15372f4e80b755be2dda9afe80
+  checksum: 41ca9c7e7c95bf070ad747ab266f267f41950e01f5ddda739d0665c2ed39acc45cce46f78e33ffa2bf2dacd74a8493044b967c86358017dacce12958e49db664
   languageName: node
   linkType: hard
 
 "@types/node@npm:^16.11.26":
-  version: 16.18.71
-  resolution: "@types/node@npm:16.18.71"
-  checksum: ce8c3b96f6da5d14cce5371b1bc02928cf78b98bc4a47eb5d48eec3f5a8b2c25104b3b72e38bcf05d736cfb58ad205a24fdd07343747aa278ea30cfd79ad67af
+  version: 16.18.76
+  resolution: "@types/node@npm:16.18.76"
+  checksum: 554eb4b94b6ac4cfdf1a12f446399c5f60723c46f7d0227c04e1f6b8578a2ae26e8132bb6e05f7dbc9460a85c166bd241b2390d80b814bd3b68ceb5e52478b5d
   languageName: node
   linkType: hard
 
 "@types/node@npm:^18.11.18":
-  version: 18.19.7
-  resolution: "@types/node@npm:18.19.7"
+  version: 18.19.10
+  resolution: "@types/node@npm:18.19.10"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 6dd1624c7f34c5100aceecba87d5a9713a41406674b52aef9db6d79ec207a67a8a3b7cb57e0890569efbddd7c0e73ce27d91a50970593b0cfa0d47799572d556
+  checksum: 95795b1aee78f2ca364caa14aeec6d793581be2d228e0293180ef1fe700fc3af12aa28afe94ee042d794c60ba51dbf7ac94fbfa074dba35512812f5f5ed506a7
   languageName: node
   linkType: hard
 
@@ -10780,12 +10780,12 @@ __metadata:
   linkType: hard
 
 "react-resizable-panels@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "react-resizable-panels@npm:1.0.9"
+  version: 1.0.10
+  resolution: "react-resizable-panels@npm:1.0.10"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: 325b98390504602c52ab6eef419d93c504db11f818569cedc388ae390150adf4cb3957f7c701055d28b3f12727a039c801d29d92ead0d91569adee6853b9fb44
+  checksum: d109ea2c82f6ee2a06d038b8bcfe46ed83723f283f48b9af8d1e8fcc32fec1c0eaca848ac1f18b571a136236558254684c7b186d31fe16a1dce5fca89995a8d1
   languageName: node
   linkType: hard
 
@@ -13212,9 +13212,9 @@ __metadata:
   linkType: hard
 
 "wavesurfer.js@npm:^7.7.0":
-  version: 7.7.0
-  resolution: "wavesurfer.js@npm:7.7.0"
-  checksum: f25356ad3b84f6c648dc85638a1e24cecb972aecd91b9116a7860c34dbcdd92a260e572132b417a6b24b313caf7ca7bed686f2465b3615f00c192fc5d40f3998
+  version: 7.7.1
+  resolution: "wavesurfer.js@npm:7.7.1"
+  checksum: 3d3709e67227849dba1dbaf10a90d5ceb6a04bd0f1ace4fa734fae0012f705a40572ee1205ed97ad7ec12bf576b5427872d991a3c9243c01c42273bc94900776
   languageName: node
   linkType: hard
 
