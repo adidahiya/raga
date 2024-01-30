@@ -22,6 +22,7 @@ import type {
   State,
 } from "@table-library/react-table-library/types";
 import classNames from "classnames";
+import { unique } from "radash";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/react/shallow";
@@ -53,9 +54,16 @@ function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> 
   if (trackDefs === undefined) {
     throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
   }
+
+  // filter out duplicates since a track may appear multiple times in a playlist
+  // (this is more common in playlist folders which aggregate playlists)
   return useMemo(
     () => ({
-      nodes: trackDefs.map((d, indexInPlaylist) => ({ ...d, id: d["Track ID"], indexInPlaylist })),
+      nodes: unique(trackDefs, (d) => d["Track ID"]).map((d, indexInPlaylist) => ({
+        ...d,
+        id: d["Track ID"],
+        indexInPlaylist,
+      })),
     }),
     [trackDefs],
   );
@@ -95,6 +103,8 @@ const sortOptionsIcon: SortOptionsIcon = {
   iconDown: <ChevronDown />,
   iconUp: <ChevronUp />,
 };
+
+// TODO: show singleton ContextMenuPopover on row click
 
 export default function TrackTable({ headerHeight, playlistId }: TrackTableProps) {
   const selectedTrackId = appStore.use.selectedTrackId();
@@ -148,7 +158,11 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
         {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
           <>
             <TrackTableHeader playlistId={playlistId} />
-            <TrackTableBody trackNodes={trackNodes} headerHeight={headerHeight} />
+            <TrackTableBody
+              trackNodes={trackNodes}
+              headerHeight={headerHeight}
+              playlistId={playlistId}
+            />
           </>
         )}
       </Table>
@@ -222,7 +236,11 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
 function TrackTableBody({
   trackNodes,
   headerHeight,
-}: { trackNodes: ExtendedNode<TrackDefinitionNode>[] } & Pick<TrackTableProps, "headerHeight">) {
+  playlistId,
+}: { trackNodes: ExtendedNode<TrackDefinitionNode>[] } & Pick<
+  TrackTableProps,
+  "headerHeight" | "playlistId"
+>) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   return (
     <Body
@@ -231,15 +249,17 @@ function TrackTableBody({
       style={{ maxHeight: `calc(100vh - ${headerHeight + 164}px)` }}
     >
       {trackNodes.map((track) => (
-        <Row className={styles.row} item={track} key={track.id}>
+        // key must include the playlist ID because there is row information which changes as we navigate
+        // through different playlists (like the index column)
+        <Row className={styles.row} item={track} key={`${playlistId}-${track.id}`}>
           <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
-          <Cell hide={!analyzeBPMPerTrack}>
+          <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
             <AnalyzeSingleTrackButton trackDef={track} />
           </Cell>
           <Cell className={styles.bpmCell}>{track.BPM}</Cell>
           <Cell>{track.Name}</Cell>
           <Cell>{track.Artist}</Cell>
-          <Cell>
+          <Cell onClick={stopPropagation}>
             <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
           </Cell>
           <Cell>
@@ -255,4 +275,12 @@ function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
   const isReadyForAnalysis = useIsTrackReadyForAnalysis(track["Track ID"]);
   const fileType = getTrackFileType(track);
   return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={fileType} />;
+}
+
+/**
+ * Stop propagation of click events on interactive cells which should not trigger a change in the
+ * currently selected track.
+ */
+function stopPropagation(event: React.SyntheticEvent) {
+  event.stopPropagation();
 }
