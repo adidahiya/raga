@@ -6,7 +6,6 @@ import {
   Body,
   type Data,
   type ExtendedNode,
-  // Cell,
   Header,
   HeaderCell,
   HeaderRow,
@@ -21,7 +20,6 @@ import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
 import { formatStatNumber } from "../../../common/format";
-// import { useEffectOnce } from "usehooks-ts";
 import { appStore } from "../../store/appStore";
 import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
 import styles from "./playlistTable.module.scss";
@@ -99,14 +97,14 @@ function usePlaylistDefNodes(): Data<PlaylistDefinitionNode> {
 }
 
 export default function PlaylistTable(props: LibraryTableProps) {
+  const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistDefNodes();
   const theme = useTheme([]);
 
   const selectedPlaylistPath = useSelectedPlaylistPath();
   const treeSelectionState = useMemo(() => ({ ids: selectedPlaylistPath }), [selectedPlaylistPath]);
-  const handleTreeChange = useCallback((action: Action, state: State) => {
+  const handleTreeChange = useCallback((_action: Action, _state: State) => {
     // TODO
-    console.log(action, state);
   }, []);
   const tree = useTree(
     playlistDefNodes,
@@ -139,7 +137,7 @@ export default function PlaylistTable(props: LibraryTableProps) {
                 <HeaderCell>
                   Playlists{" "}
                   <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
-                    ({formatStatNumber(nodes.length)})
+                    ({formatStatNumber(numTotalPlaylists)})
                   </span>
                 </HeaderCell>
               </HeaderRow>

@@ -3,11 +3,13 @@
 .playlistTableContainer {
   width: 100%;
   border-left: solid 1px bp.$pt-dark-divider-white;
+
   // TODO: consider one of the suggested fixed header layouts
   // see https://react-table-library.com/?path=%2Fdocs%2Ffeatures-fixed-header--in-flex-container
   table {
     // override react-table-library
     display: table;
+    width: 100%;
   }
 
   .header,

@@ -8,7 +8,6 @@ import { formatStatNumber } from "../../common/format";
 import { AudioPlayer } from "../components/audioPlayer/audioPlayer";
 import { ResizeHandle } from "../components/common";
 import { LibraryHeaderSection, LoadLibraryForm } from "../components/library";
-// import PlaylistTable from "../components/playlistTable/playlistTableLegacy";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
 import { useMasterPlaylist, useTaskEffect } from "../hooks";
