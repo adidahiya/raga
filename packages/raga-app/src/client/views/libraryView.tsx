@@ -90,7 +90,7 @@ function Library() {
               icon="list-detail-view"
             />
           ) : (
-            <TrackTable headerHeight={headerHeight} playlistId={selectedPlaylistId} />
+            <TrackTable playlistId={selectedPlaylistId} />
           )}
         </Panel>
       </PanelGroup>

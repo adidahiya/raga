@@ -21,6 +21,7 @@ import type {
   SortOptionsIcon,
   State,
 } from "@table-library/react-table-library/types";
+import { Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
 import { useCallback, useMemo } from "react";
@@ -38,8 +39,6 @@ import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
 
 export interface TrackTableProps {
-  // TODO: move this state to app store
-  headerHeight: number;
   playlistId: string;
 }
 
@@ -47,6 +46,9 @@ interface TrackDefinitionNode extends TrackDefinition {
   id: number;
   indexInPlaylist: number;
 }
+
+// TODO: make track table row height configurable
+const ROW_HEIGHT = 24;
 
 /** Gets the list of track definitions for the given playlist as react-table-library data notes */
 function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> {
@@ -106,7 +108,7 @@ const sortOptionsIcon: SortOptionsIcon = {
 
 // TODO: show singleton ContextMenuPopover on row click
 
-export default function TrackTable({ headerHeight, playlistId }: TrackTableProps) {
+export default function TrackTable({ playlistId }: TrackTableProps) {
   const selectedTrackId = appStore.use.selectedTrackId();
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
   const trackDefNodes = useTrackDefinitionNodes(playlistId);
@@ -121,6 +123,7 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
   const theme = useTheme([
     {
       Table: `
+        flex: 1;
         --data-table-library_grid-template-columns: ${indexColumnWidth}px ${analyzeColumnWidth}px ${bpmColumnWidth}px repeat(2, minmax(40px, 1fr)) ${ratingColumnWidth}px ${fileTypeColumnWidth}px;
       `,
     },
@@ -151,19 +154,17 @@ export default function TrackTable({ headerHeight, playlistId }: TrackTableProps
       <Table
         data={trackDefNodes}
         theme={theme}
-        layout={{ custom: true }}
+        layout={{ isDiv: true, fixedHeader: true }}
         sort={sort}
         select={select}
       >
         {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
-          <>
-            <TrackTableHeader playlistId={playlistId} />
-            <TrackTableBody
-              trackNodes={trackNodes}
-              headerHeight={headerHeight}
-              playlistId={playlistId}
-            />
-          </>
+          <Virtualized
+            tableList={trackNodes}
+            rowHeight={ROW_HEIGHT}
+            header={() => <TrackTableHeader playlistId={playlistId} />}
+            body={(item) => <TrackTableRow item={item} playlistId={playlistId} />}
+          />
         )}
       </Table>
     </div>
@@ -183,6 +184,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
     <Header className={styles.header}>
       <HeaderRow className={styles.headerRow}>
         <HeaderCellSort
+          className={styles.headerCell}
           stiff={true}
           pinLeft={true}
           sortKey={TrackPropertySortKey.INDEX}
@@ -190,16 +192,27 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
         >
           <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>#</span>
         </HeaderCellSort>
-        <HeaderCell stiff={true} pinLeft={true} hide={!analyzeBPMPerTrack}>
+        <HeaderCell
+          className={styles.headerCell}
+          stiff={true}
+          pinLeft={true}
+          hide={!analyzeBPMPerTrack}
+        >
           <AnalyzeAllPlaylistTracksButton playlistId={playlistId} />
         </HeaderCell>
-        <HeaderCellSort stiff={true} sortKey={TrackPropertySortKey.BPM} sortIcon={sortOptionsIcon}>
+        <HeaderCellSort
+          className={styles.headerCell}
+          stiff={true}
+          sortKey={TrackPropertySortKey.BPM}
+          sortIcon={sortOptionsIcon}
+        >
           <div className={styles.bpmColumnHeader}>
             <span>BPM</span>{" "}
             {!analyzeBPMPerTrack && <AnalyzeAllPlaylistTracksButton playlistId={playlistId} />}
           </div>
         </HeaderCellSort>
         <HeaderCellSort
+          className={styles.headerCell}
           resize={defaultResizer}
           sortKey={TrackPropertySortKey.NAME}
           sortIcon={sortOptionsIcon}
@@ -207,6 +220,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           Name
         </HeaderCellSort>
         <HeaderCellSort
+          className={styles.headerCell}
           resize={defaultResizer}
           sortKey={TrackPropertySortKey.ARTIST}
           sortIcon={sortOptionsIcon}
@@ -214,6 +228,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           Artist
         </HeaderCellSort>
         <HeaderCellSort
+          className={styles.headerCell}
           stiff={true}
           sortKey={TrackPropertySortKey.RATING}
           sortIcon={sortOptionsIcon}
@@ -221,6 +236,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           Rating
         </HeaderCellSort>
         <HeaderCellSort
+          className={styles.headerCell}
           stiff={true}
           pinRight={true}
           sortKey={TrackPropertySortKey.FILETYPE}
@@ -233,41 +249,30 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   );
 }
 
-function TrackTableBody({
-  trackNodes,
-  headerHeight,
+function TrackTableRow({
+  item: track,
   playlistId,
-}: { trackNodes: ExtendedNode<TrackDefinitionNode>[] } & Pick<
-  TrackTableProps,
-  "headerHeight" | "playlistId"
->) {
+}: { item: ExtendedNode<TrackDefinitionNode> } & Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+
+  // N.B. key must include the playlist ID because there is row information which changes as we navigate
+  // through different playlists (like the index column)
   return (
-    <Body
-      className={styles.body}
-      // HACKHACK: magic number
-      style={{ maxHeight: `calc(100vh - ${headerHeight + 164}px)` }}
-    >
-      {trackNodes.map((track) => (
-        // key must include the playlist ID because there is row information which changes as we navigate
-        // through different playlists (like the index column)
-        <Row className={styles.row} item={track} key={`${playlistId}-${track.id}`}>
-          <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
-          <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
-            <AnalyzeSingleTrackButton trackDef={track} />
-          </Cell>
-          <Cell className={styles.bpmCell}>{track.BPM}</Cell>
-          <Cell>{track.Name}</Cell>
-          <Cell>{track.Artist}</Cell>
-          <Cell onClick={stopPropagation}>
-            <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
-          </Cell>
-          <Cell>
-            <TrackFileTypeCell track={track} />
-          </Cell>
-        </Row>
-      ))}
-    </Body>
+    <Row className={styles.row} item={track} key={`${playlistId}-${track.id}`}>
+      <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
+      <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
+        <AnalyzeSingleTrackButton trackDef={track} />
+      </Cell>
+      <Cell className={styles.bpmCell}>{track.BPM}</Cell>
+      <Cell>{track.Name}</Cell>
+      <Cell>{track.Artist}</Cell>
+      <Cell onClick={stopPropagation}>
+        <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
+      </Cell>
+      <Cell>
+        <TrackFileTypeCell track={track} />
+      </Cell>
+    </Row>
   );
 }
 
