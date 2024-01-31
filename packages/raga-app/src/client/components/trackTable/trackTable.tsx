@@ -94,7 +94,7 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
     (array as TrackDefinitionNode[]).sort((a, b) => (a.Rating ?? 0) - (b.Rating ?? 0)),
   [TrackPropertySortKey.FILETYPE]: (array) =>
     (array as TrackDefinitionNode[]).sort((a, b) =>
-      getTrackFileType(a)!.localeCompare(getTrackFileType(b)!),
+      (getTrackFileType(a) ?? "").localeCompare(getTrackFileType(b) ?? ""),
     ),
 };
 
