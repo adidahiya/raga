@@ -14,7 +14,7 @@
     "publish-npm": "npm publish --access public"
   },
   "dependencies": {
-    "ansis": "^2.0.3",
+    "ansis": "^2.1.0",
     "dedent": "^1.5.1",
     "fluent-ffmpeg": "^2.1.2",
     "html-entities": "^2.4.0",
@@ -24,7 +24,7 @@
   "devDependencies": {
     "@types/dedent": "^0.7.2",
     "@types/fluent-ffmpeg": "^2.1.24",
-    "@types/node": "^20.11.6",
+    "@types/node": "^20.11.13",
     "@types/plist": "^3.0.5",
     "@types/prompts": "^2.4.9",
     "eslint": "^8.56.0",
