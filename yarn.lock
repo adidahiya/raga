@@ -54,7 +54,7 @@ __metadata:
     react-devtools: "npm:^5.0.0"
     react-dom: "npm:^18.2.0"
     react-dropzone: "npm:^14.2.3"
-    react-resizable-panels: "npm:^1.0.9"
+    react-resizable-panels: "npm:^2.0.2"
     roarr: "npm:^7.21.0"
     sass: "npm:^1.70.0"
     serialize-error: "npm:^11.0.3"
@@ -63,7 +63,7 @@ __metadata:
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:2.10.0"
     vite: "npm:^5.0.12"
-    wavesurfer.js: "npm:^7.7.0"
+    wavesurfer.js: "npm:^7.7.1"
     web-audio-beat-detector: "npm:^8.2.3"
     zustand: "npm:^4.5.0"
   languageName: unknown
@@ -10759,13 +10759,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^1.0.9":
-  version: 1.0.10
-  resolution: "react-resizable-panels@npm:1.0.10"
+"react-resizable-panels@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "react-resizable-panels@npm:2.0.2"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: d109ea2c82f6ee2a06d038b8bcfe46ed83723f283f48b9af8d1e8fcc32fec1c0eaca848ac1f18b571a136236558254684c7b186d31fe16a1dce5fca89995a8d1
+  checksum: 8e863f5e40756247ea3781bdbd77ae6ca573324186977fa84235b25af9ee019b97c9fe27a4f3b2351fa0af5e8f2a0f3d2ee8b504b88800c2bfb62e5f6e9de49b
   languageName: node
   linkType: hard
 
@@ -13191,7 +13191,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.7.0":
+"wavesurfer.js@npm:^7.7.1":
   version: 7.7.1
   resolution: "wavesurfer.js@npm:7.7.1"
   checksum: 3d3709e67227849dba1dbaf10a90d5ceb6a04bd0f1ace4fa734fae0012f705a40572ee1205ed97ad7ec12bf576b5427872d991a3c9243c01c42273bc94900776
