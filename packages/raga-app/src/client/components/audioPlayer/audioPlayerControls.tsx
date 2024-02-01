@@ -29,9 +29,7 @@ export function AudioPlayerControls() {
     setVolume(1);
   }, [setVolume]);
 
-  const formattedCurrentTime = useMemo(() => {
-    return formatAudioDuration(currentTime);
-  }, [currentTime]);
+  const formattedCurrentTime = useMemo(() => formatAudioDuration(currentTime), [currentTime]);
   const formattedDuration = useMemo(() => formatAudioDuration(duration), [duration]);
 
   if (waveSurfer === undefined || selectedTrack === undefined) {

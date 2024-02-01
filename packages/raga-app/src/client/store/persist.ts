@@ -18,7 +18,6 @@ const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
   "libraryLoadingState",
   "libraryWriteState",
   "library",
-  "selectedTrackId",
   "toaster",
   "waveSurfer",
 ];
@@ -32,9 +31,7 @@ const SET_PROPERTIES: (keyof AppState)[] = ["previouslyUsedLibraries"];
 /**
  * Instrument logging for store rehydration.
  */
-export function onRehydrateStorage(state: AppStore) {
-  // HACKHACK: zustand types are wrong here, the state may be undefined
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export function onRehydrateStorage(state: AppStore | undefined) {
   if (state == null) {
     log.debug(`[client] no app state found in localStorage to rehydrate`);
   } else {

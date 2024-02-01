@@ -165,6 +165,19 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         console.log(data);
       }
 
+      // validate that the currently selected track ID (possibly loaded from local storage) exists in the newly loaded library
+      const { selectedTrackId } = get();
+      if (selectedTrackId !== undefined) {
+        const trackDef = data!.library.Tracks[selectedTrackId];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (trackDef === undefined) {
+          log.trace(
+            `[client] previous selectedTrackId '${selectedTrackId}' does not exist in current library`,
+          );
+          set({ selectedTrackId: undefined });
+        }
+      }
+
       set((state) => {
         const { longestCommonAudioFilePath } = data!.libraryMeta;
         if (longestCommonAudioFilePath !== "") {
