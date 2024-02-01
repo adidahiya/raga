@@ -24,7 +24,10 @@ import { appStore } from "../../store/appStore";
 import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
 import styles from "./playlistTable.module.scss";
 
-export interface LibraryTableProps {
+// INTERFACES
+// -------------------------------------------------------------------------------------------------
+
+export interface PlaylistTableProps {
   headerHeight: number;
   /** @default false */
   showItemCounts?: boolean;
@@ -38,10 +41,122 @@ interface PlaylistDefinitionNode extends PlaylistDefinition {
   nodes: PlaylistDefinitionNode[] | null;
 }
 
+// CONFIGURATION
+// -------------------------------------------------------------------------------------------------
+
 const treeIcon: TreeOptionsIcon<PlaylistDefinitionNode> = {
   iconRight: <ChevronRight />,
   iconDown: <ChevronDown />,
 };
+
+// COMPONENTS
+// -------------------------------------------------------------------------------------------------
+
+export default function PlaylistTable(props: PlaylistTableProps) {
+  const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
+  const playlistDefNodes = usePlaylistDefNodes();
+  const theme = useTheme([]);
+
+  const selectedPlaylistPath = useSelectedPlaylistPath();
+  const treeSelectionState = useMemo(() => ({ ids: selectedPlaylistPath }), [selectedPlaylistPath]);
+  const handleTreeChange = useCallback((_action: Action, _state: State) => {
+    // TODO
+  }, []);
+  const tree = useTree(
+    playlistDefNodes,
+    { state: treeSelectionState, onChange: handleTreeChange },
+    { clickType: TreeExpandClickTypes.ButtonClick, treeIcon },
+  );
+
+  const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
+  const handleSelectChange = useCallback(
+    (action: Action, state: State) => {
+      // TODO: better typedef for `state`
+      log.debug(`[client] selected playlist ${state.id}`);
+      if (state.id != null) {
+        setSelectedPlaylistId(state.id);
+      }
+    },
+    [setSelectedPlaylistId],
+  );
+  const select = useRowSelect(playlistDefNodes, {
+    onChange: handleSelectChange,
+  });
+
+  return (
+    <div className={styles.playlistTableContainer}>
+      <Table
+        className={styles.table}
+        data={playlistDefNodes}
+        layout={{ isDiv: true, fixedHeader: true }}
+        select={select}
+        theme={theme}
+        tree={tree}
+      >
+        {(nodes: ExtendedNode<PlaylistDefinitionNode>[]) => (
+          <>
+            <Header className={styles.header}>
+              <HeaderRow className={styles.row}>
+                <HeaderCell className={styles.headerCell}>
+                  Playlists{" "}
+                  <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+                    ({formatStatNumber(numTotalPlaylists)})
+                  </span>
+                </HeaderCell>
+              </HeaderRow>
+            </Header>
+            <Body
+              className={styles.body}
+              // HACKHACK: magic number
+              style={{ maxHeight: `calc(100vh - ${props.headerHeight + 164}px)` }}
+            >
+              {nodes.map((playlist) => (
+                <PlaylistTableRow playlist={playlist} key={playlist.id} />
+              ))}
+            </Body>
+          </>
+        )}
+      </Table>
+    </div>
+  );
+}
+PlaylistTable.displayName = "PlaylistTable";
+PlaylistTable.defaultProps = {
+  showHeader: true,
+  showItemCounts: false,
+  showFooter: false,
+};
+
+function PlaylistTableRow({ playlist }: { playlist: ExtendedNode<PlaylistDefinitionNode> }) {
+  const selectedPlaylistId = appStore.use.selectedPlaylistId();
+  const selectedPlaylistPath = useSelectedPlaylistPath();
+  const isRowInSelectedPlaylistPath = selectedPlaylistPath.includes(playlist.id);
+  const isRowSelected = playlist.id === selectedPlaylistId;
+
+  return (
+    <Row
+      className={classNames(styles.row, {
+        [styles.selectedPath]: isRowInSelectedPlaylistPath && !isRowSelected,
+        [styles.selected]: isRowSelected,
+      })}
+      item={playlist}
+      key={playlist.id}
+    >
+      <CellTree
+        style={{ height: "24px" }}
+        className={styles.cell}
+        treeIcon={treeIcon}
+        item={playlist}
+      >
+        {playlist.Name}
+      </CellTree>
+    </Row>
+  );
+}
+PlaylistTableRow.displayName = "PlaylistTableRow";
+
+// HOOKS
+// -------------------------------------------------------------------------------------------------
 
 /** Gets the list of playlist definitions in the music library as react-table-library data nodes */
 function usePlaylistDefNodes(): Data<PlaylistDefinitionNode> {
@@ -95,97 +210,6 @@ function usePlaylistDefNodes(): Data<PlaylistDefinitionNode> {
     [playlistDefs, recursivelyGetFolderChildern],
   );
 }
-
-export default function PlaylistTable(props: LibraryTableProps) {
-  const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
-  const playlistDefNodes = usePlaylistDefNodes();
-  const theme = useTheme([]);
-
-  const selectedPlaylistPath = useSelectedPlaylistPath();
-  const treeSelectionState = useMemo(() => ({ ids: selectedPlaylistPath }), [selectedPlaylistPath]);
-  const handleTreeChange = useCallback((_action: Action, _state: State) => {
-    // TODO
-  }, []);
-  const tree = useTree(
-    playlistDefNodes,
-    { state: treeSelectionState, onChange: handleTreeChange },
-    { clickType: TreeExpandClickTypes.ButtonClick, treeIcon },
-  );
-
-  const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
-  const handleSelectChange = useCallback(
-    (action: Action, state: State) => {
-      // TODO: better typedef for `state`
-      log.debug(`[client] selected playlist ${state.id}`);
-      if (state.id != null) {
-        setSelectedPlaylistId(state.id);
-      }
-    },
-    [setSelectedPlaylistId],
-  );
-  const select = useRowSelect(playlistDefNodes, {
-    onChange: handleSelectChange,
-  });
-
-  return (
-    <div className={styles.playlistTableContainer}>
-      <Table data={playlistDefNodes} select={select} tree={tree} theme={theme}>
-        {(nodes: ExtendedNode<PlaylistDefinitionNode>[]) => (
-          <>
-            <Header className={styles.header}>
-              <HeaderRow className={styles.row}>
-                <HeaderCell>
-                  Playlists{" "}
-                  <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
-                    ({formatStatNumber(numTotalPlaylists)})
-                  </span>
-                </HeaderCell>
-              </HeaderRow>
-            </Header>
-            <Body
-              className={styles.body}
-              // HACKHACK: magic number
-              style={{ maxHeight: `calc(100vh - ${props.headerHeight + 164}px)` }}
-            >
-              {nodes.map((playlist) => (
-                <PlaylistTableRow playlist={playlist} key={playlist.id} />
-              ))}
-            </Body>
-          </>
-        )}
-      </Table>
-    </div>
-  );
-}
-PlaylistTable.displayName = "PlaylistTable";
-PlaylistTable.defaultProps = {
-  showHeader: true,
-  showItemCounts: false,
-  showFooter: false,
-};
-
-function PlaylistTableRow({ playlist }: { playlist: ExtendedNode<PlaylistDefinitionNode> }) {
-  const selectedPlaylistId = appStore.use.selectedPlaylistId();
-  const selectedPlaylistPath = useSelectedPlaylistPath();
-  const isRowInSelectedPlaylistPath = selectedPlaylistPath.includes(playlist.id);
-  const isRowSelected = playlist.id === selectedPlaylistId;
-
-  return (
-    <Row
-      className={classNames(styles.row, {
-        [styles.selectedPath]: isRowInSelectedPlaylistPath && !isRowSelected,
-        [styles.selected]: isRowSelected,
-      })}
-      item={playlist}
-      key={playlist.id}
-    >
-      <CellTree treeIcon={treeIcon} item={playlist}>
-        {playlist.Name}
-      </CellTree>
-    </Row>
-  );
-}
-PlaylistTableRow.displayName = "PlaylistTableRow";
 
 /** @returns a list of the persistent playlist IDs which form the tree path to the currently selected playlist */
 function useSelectedPlaylistPath() {

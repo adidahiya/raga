@@ -1,4 +1,4 @@
-import { Card, NonIdealState, ProgressBar } from "@blueprintjs/core";
+import { Card, NonIdealState, ProgressBar, Text } from "@blueprintjs/core";
 import classNames from "classnames";
 import { useRef, useState } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
@@ -73,11 +73,7 @@ function Library() {
         <AudioPlayer />
       </div>
       <PanelGroup direction="horizontal">
-        <Panel
-          className={classNames("flex-column", styles.librarySidebar)}
-          defaultSize={20}
-          minSize={20}
-        >
+        <Panel className={styles.librarySidebar} defaultSize={20} minSize={20}>
           <PlaylistTable headerHeight={headerHeight} />
           <LibrarySidebarFooter />
         </Panel>
@@ -108,7 +104,9 @@ function LibrarySidebarFooter() {
 
   return (
     <div className={styles.librarySidebarFooter}>
-      Total # tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}
+      <Text ellipsize={true}>
+        Total # tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}
+      </Text>
     </div>
   );
 }

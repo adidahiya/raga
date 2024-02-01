@@ -39,10 +39,15 @@
 
 .librarySidebar {
   justify-content: space-between;
+  position: relative; // creates a stacking context for playlist table layout
 
   .librarySidebarFooter {
-    height: 30px;
-    padding: 5px 7px;
     border-top: solid 1px bp.$pt-dark-divider-white;
+    bottom: 0;
+    height: $sidebar-footer-height;
+    left: 0;
+    padding: $sidebar-footer-padding;
+    position: absolute;
+    right: 0;
   }
 }

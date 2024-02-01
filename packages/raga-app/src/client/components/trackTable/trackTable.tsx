@@ -128,10 +128,10 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
     <div className={styles.trackTableContainer}>
       <Table
         data={trackDefNodes}
-        theme={theme}
         layout={{ isDiv: true, fixedHeader: true, custom: true }}
-        sort={sort}
         select={select}
+        sort={sort}
+        theme={theme}
       >
         {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
           <Virtualized

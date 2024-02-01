@@ -5,6 +5,9 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  // padding allows container border to show
+  padding-right: 1px;
+  padding-bottom: 1px;
 
   .headerRow {
     background: bp.$dark-gray2;

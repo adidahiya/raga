@@ -1,50 +1,52 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+@import "../../common/variables";
 
 .playlistTableContainer {
-  width: 100%;
   border-left: solid 1px bp.$pt-dark-divider-white;
+  // absolute positioning is a bit ugly, but it works based on this example:
+  // https://react-table-library.com/?path=%2Fdocs%2Ffeatures-fixed-header--in-flex-container
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: $sidebar-footer-height + 1px; // space for footer + border
 
-  // TODO: consider one of the suggested fixed header layouts
-  // see https://react-table-library.com/?path=%2Fdocs%2Ffeatures-fixed-header--in-flex-container
-  table {
-    // override react-table-library
-    display: table;
-    width: 100%;
+  .table {
+    align-content: start;
+    flex: 1;
   }
 
-  .header,
-  .body {
-    display: grid;
-    grid-template-columns: var(--data-table-library_grid-template-columns);
+  .headerCell {
+    line-height: $small-button-height - 1px; // subtract 1px for border width
+    padding: $table-cell-padding;
+    border-bottom: solid 1px bp.$pt-dark-divider-white;
   }
 
   .row {
     background: bp.$dark-gray2;
-  }
-}
 
-.header {
-  th {
-    padding: 2px 4px;
-  }
-}
+    &.selectedPath {
+      background-color: darken(bp.$blue1, 15%);
+    }
 
-.body {
-  border-top: solid 1px bp.$pt-dark-divider-white;
-  overflow-y: scroll;
-
-  tr.selectedPath {
-    background-color: darken(bp.$blue1, 15%);
+    &.selected {
+      background-color: bp.$blue1;
+    }
   }
 
-  tr.selected {
-    background-color: bp.$blue1;
-  }
-
-  td {
+  .cell {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding: 2px 4px;
+    padding: $table-cell-padding;
+  }
+
+  .footerRow {
+    background: none;
+  }
+
+  .footerCell {
+    border-top: solid 1px bp.$pt-dark-divider-white;
+    padding: $table-cell-padding;
   }
 }

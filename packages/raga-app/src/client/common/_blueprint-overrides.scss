@@ -1,4 +1,5 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+@import "variables";
 
 table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
   th,
@@ -16,8 +17,8 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
 
 // smaller small button
 .#{bp.$ns}-button.#{bp.$ns}-small {
-  min-height: 20px;
-  font-size: 12px;
+  min-height: $small-button-height;
+  font-size: $small-button-font-size;
 
   // prettier-ignore
   .#{bp.$ns}-icon
