@@ -17,7 +17,7 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.9.0"
+    "@blueprintjs/core": "npm:^5.9.1"
     "@blueprintjs/icons": "npm:^5.7.1"
     "@blueprintjs/node-build-scripts": "npm:^9.2.0"
     "@electron-forge/cli": "npm:^7.2.0"
@@ -31,8 +31,8 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/command-exists": "npm:^1.2.3"
-    "@types/node": "npm:^20.11.13"
-    "@types/react": "npm:^18.2.48"
+    "@types/node": "npm:^20.11.16"
+    "@types/react": "npm:^18.2.51"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.18"
     "@vitejs/plugin-react": "npm:^4.2.1"
@@ -42,7 +42,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.3.1"
     effection: "npm:^3.0.2"
-    electron: "npm:^28.2.0"
+    electron: "npm:^28.2.1"
     electron-devtools-installer: "npm:^3.2.0"
     electron-squirrel-startup: "npm:^1.0.0"
     eslint: "npm:^8.56.0"
@@ -61,7 +61,7 @@ __metadata:
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.3.3"
     use-immer: "npm:^0.9.0"
-    usehooks-ts: "npm:2.10.0"
+    usehooks-ts: "npm:2.12.1"
     vite: "npm:^5.0.12"
     wavesurfer.js: "npm:^7.7.1"
     web-audio-beat-detector: "npm:^8.2.3"
@@ -75,7 +75,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.11.13"
+    "@types/node": "npm:^20.11.16"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.1"
     eslint: "npm:^8.56.0"
@@ -93,7 +93,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.11.13"
+    "@types/node": "npm:^20.11.16"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^2.1.0"
@@ -399,9 +399,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.9.0":
-  version: 5.9.0
-  resolution: "@blueprintjs/core@npm:5.9.0"
+"@blueprintjs/core@npm:^5.9.1":
+  version: 5.9.1
+  resolution: "@blueprintjs/core@npm:5.9.1"
   dependencies:
     "@blueprintjs/colors": "npm:^5.1.0"
     "@blueprintjs/icons": "npm:^5.7.1"
@@ -423,7 +423,7 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: aa78dd27d0fec8c5078bc226b550f2386f4ca86c7265fabda42943713922878cacc11cafb74f40493f6034c84c3c32989bfdc798d652bdc81c22eac6cfdee861
+  checksum: bda26c0dabb7ef9e57ec577d8b2474dc2077747a7cd74603751bd4eb8a7527a3ea5bb4cf7df2a6fa7cad64c77eea8e0cdf37a3ebc338575d496b7cb624863963
   languageName: node
   linkType: hard
 
@@ -2511,12 +2511,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.11.13":
-  version: 20.11.13
-  resolution: "@types/node@npm:20.11.13"
+"@types/node@npm:*, @types/node@npm:^20.11.16":
+  version: 20.11.16
+  resolution: "@types/node@npm:20.11.16"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: ffe143dd5e52d0d29f5bcea165b752c5355eaff8b6b933441108b540419e14c0c7e0e7912783e914125ab957e30db93f9c827e8dd437ec7e5f03def995e9a5e6
+  checksum: 751f50ec5c9332b11515e82fe37c71479ac4449b711280aa3c7910edf67b1e3f5ac00041512add543f9a892096a68356406998bf02a2c809a73d176c44c28414
   languageName: node
   linkType: hard
 
@@ -2600,14 +2600,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.2.48":
-  version: 18.2.48
-  resolution: "@types/react@npm:18.2.48"
+"@types/react@npm:*, @types/react@npm:^18.2.51":
+  version: 18.2.51
+  resolution: "@types/react@npm:18.2.51"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 2e56ea6bd821ae96bd943f727a59d85384eaf5f8a3e6fce4fa1d34453e32d8eedda742432b3857fa0de7a4214bf84ce4239757eb52918e76452c00384731e585
+  checksum: af2935027172ea40695b90b02e98520a097160fa8517f6022e2e2cf8518017e0b84991cc34ee8d72cd91dcb7c5404784d4bada7a4836edf2727c3d6703c16ff8
   languageName: node
   linkType: hard
 
@@ -5009,16 +5009,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^28.2.0":
-  version: 28.2.0
-  resolution: "electron@npm:28.2.0"
+"electron@npm:^28.2.1":
+  version: 28.2.1
+  resolution: "electron@npm:28.2.1"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^18.11.18"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 500ffceee47b4b077f0f053ebd33e54c07364cb49c7264e5305123989f81efdab0b9d3e4d7b21257e35cf2d7dd9aaf4407e2d646da43f4154c57f39782d35d32
+  checksum: e70cb983ba8cdae661eae7695e213f189d7f12002ed05727c1f74a498f58e60b471708ec4fb41dcc0b15b1b86d2b7afc9b5de1172d12e53b692ad725d07b0a52
   languageName: node
   linkType: hard
 
@@ -8256,6 +8256,13 @@ __metadata:
   version: 3.0.0
   resolution: "lodash._reinterpolate@npm:3.0.0"
   checksum: 06d2d5f33169604fa5e9f27b6067ed9fb85d51a84202a656901e5ffb63b426781a601508466f039c720af111b0c685d12f1a5c14ff8df5d5f27e491e562784b2
+  languageName: node
+  linkType: hard
+
+"lodash.debounce@npm:^4.0.8":
+  version: 4.0.8
+  resolution: "lodash.debounce@npm:4.0.8"
+  checksum: cd0b2819786e6e80cb9f5cda26b1a8fc073daaf04e48d4cb462fa4663ec9adb3a5387aa22d7129e48eed1afa05b482e2a6b79bfc99b86886364449500cbb00fd
   languageName: node
   linkType: hard
 
@@ -13006,13 +13013,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"usehooks-ts@npm:2.10.0":
-  version: 2.10.0
-  resolution: "usehooks-ts@npm:2.10.0"
+"usehooks-ts@npm:2.12.1":
+  version: 2.12.1
+  resolution: "usehooks-ts@npm:2.12.1"
+  dependencies:
+    lodash.debounce: "npm:^4.0.8"
   peerDependencies:
-    react: ^16.8.0  || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
-  checksum: 35dfc898c3b593817a11eb4aa1e8b9e3d28f0250df497196a29255fbb49a8a21a4281aeeae2679ff3b462c6845a01f3c0b5d40b2cb4b4425e01860ebd5a920af
+    react: ^16.8.0  || ^17 || ^18
+  checksum: 7665ec1ce56bcb5d92bd317fb3c97e6e57e91a7ff98c6a60a0a9b4fc21bd0ea9320778178d89dcaabdc295a318c08f019ae8d80d9e9b477ace9745e030dde421
   languageName: node
   linkType: hard
 

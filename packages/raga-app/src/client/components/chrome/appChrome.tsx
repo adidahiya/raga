@@ -28,8 +28,7 @@ export default function AppChrome() {
           // Use createRoot() instead of ReactDOM.render(). This can be deleted after
           // a future Blueprint version uses createRoot() for Toasters by default.
           domRenderer: (toaster, containerElement) => {
-            // HACKHACK: type cast due to Blueprint bug, see https://github.com/palantir/blueprint/pull/6689
-            createRoot(containerElement as Element | DocumentFragment).render(toaster);
+            createRoot(containerElement).render(toaster);
           },
         },
       ),

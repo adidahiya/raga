@@ -1,4 +1,4 @@
-import { Classes, FocusStyleManager, HotkeysProvider, OverlaysProvider } from "@blueprintjs/core";
+import { BlueprintProvider, Classes, FocusStyleManager } from "@blueprintjs/core";
 import { createLogWriter } from "@roarr/browser-log-writer";
 import { call, main } from "effection";
 import { StrictMode } from "react";
@@ -23,13 +23,11 @@ await main(function* () {
   }
   const root = createRoot(domNode);
   root.render(
-    <OverlaysProvider>
-      <HotkeysProvider dialogProps={{ className: Classes.DARK }}>
-        <StrictMode>
-          <App />
-        </StrictMode>
-      </HotkeysProvider>
-    </OverlaysProvider>,
+    <BlueprintProvider hotkeysProviderDialogProps={{ className: Classes.DARK }}>
+      <StrictMode>
+        <App />
+      </StrictMode>
+    </BlueprintProvider>,
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
