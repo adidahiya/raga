@@ -1,5 +1,5 @@
 import { call, type Operation } from "effection";
-import { debounce } from "radash";
+import { throttle } from "radash";
 import { Roarr as log } from "roarr";
 import type WaveSurfer from "wavesurfer.js";
 
@@ -7,9 +7,13 @@ import { type AppStoreSliceCreator } from "../zustandUtils";
 
 export interface AudioPlayerState {
   audioIsPlaying: boolean;
+  /** range: [0, 1] */
   audioVolume: number;
+  /** milliseconds */
   audioCurrentTimeMs: number;
+  /** milliseconds */
   audioDuration: number;
+  /** range: [0, 1] */
   audioPlaybackRate: number;
   waveSurfer: WaveSurfer | undefined;
 }
@@ -78,18 +82,32 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
       );
     }
 
-    // debounce the timeupdate event so we don't spam the store with updates
+    const audioDuration = selectedTrackDef?.["Total Time"];
+
+    // throttle the "timeupdate" event handler so we don't spam the store with updates
     waveSurfer.on(
       "timeupdate",
-      debounce({ delay: 100 }, (currentTimeSeconds: number) => {
-        set({ audioCurrentTimeMs: Math.floor(currentTimeSeconds * 1000) });
+      throttle({ interval: 100 }, (currentTimeSeconds: number) => {
+        const audioCurrentTimeMs = Math.trunc(currentTimeSeconds * 1000);
+        set({ audioCurrentTimeMs });
+
+        const audioCompletionThresholdMs = 100;
+        if (
+          audioDuration !== undefined &&
+          Math.abs(audioCurrentTimeMs - audioDuration) < audioCompletionThresholdMs
+        ) {
+          // be kind, rewind
+          set({ audioCurrentTimeMs: 0, audioIsPlaying: false });
+          waveSurfer.stop();
+          waveSurfer.seekTo(0);
+        }
       }),
     );
 
     set({
       audioIsPlaying: false,
       audioCurrentTimeMs: 0,
-      audioDuration: selectedTrackDef?.["Total Time"],
+      audioDuration,
       waveSurfer,
     });
   },
