@@ -32,6 +32,7 @@ export default function useAudioPlayerHotkeys() {
         combo: "space",
         label: "Play/Pause audio",
         onKeyDown: isPlaying ? pause : handlePlay,
+        preventDefault: true,
       },
       {
         global: true,

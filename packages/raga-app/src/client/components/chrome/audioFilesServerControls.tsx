@@ -23,9 +23,13 @@ export default function AudioFilesServerControls() {
   const status = appStore.use.audioFilesServerStatus();
   const isLibraryWriting = appStore.use.libraryWriteState() === "busy";
   const rootFolder = appStore.use.audioFilesRootFolder();
-  const setAudioFilesRootFolder = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    appStore.use.setAudioTracksRootFolder()(event.target.value);
-  }, []);
+  const setAudioFilesRootFolder = appStore.use.setAudioTracksRootFolder();
+  const handleRootFolderInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setAudioFilesRootFolder(event.target.value);
+    },
+    [setAudioFilesRootFolder],
+  );
   const pingServer = appStore.use.pingAudioFilesServer();
 
   // TODO: move this to some kind of zustand store subscription, it doesn't need to be in a React component
@@ -39,7 +43,7 @@ export default function AudioFilesServerControls() {
         <ControlGroup fill={true}>
           <InputGroup
             value={rootFolder}
-            onChange={setAudioFilesRootFolder}
+            onChange={handleRootFolderInputChange}
             intent={status === "failed" ? "danger" : status === "started" ? "success" : undefined}
             style={{ minWidth: 300 }}
           />

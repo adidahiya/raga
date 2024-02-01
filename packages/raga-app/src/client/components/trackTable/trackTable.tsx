@@ -1,10 +1,9 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Colors } from "@blueprintjs/core";
+import { Classes, Colors, Utils } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
-  Body,
   Cell,
   type Data,
   type ExtendedNode,
@@ -24,12 +23,13 @@ import type {
 import { Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/react/shallow";
 
 import { ClientErrors } from "../../../common/errorMessages";
 import { getTrackFileType } from "../../../common/trackUtils";
+import { stopPropagation } from "../../common/reactUtils";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
@@ -37,6 +37,9 @@ import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
+
+// INTERFACES
+// -------------------------------------------------------------------------------------------------
 
 export interface TrackTableProps {
   playlistId: string;
@@ -47,29 +50,11 @@ interface TrackDefinitionNode extends TrackDefinition {
   indexInPlaylist: number;
 }
 
+// CONFIGURATION
+// -------------------------------------------------------------------------------------------------
+
 // TODO: make track table row height configurable
 const ROW_HEIGHT = 24;
-
-/** Gets the list of track definitions for the given playlist as react-table-library data notes */
-function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> {
-  const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
-  if (trackDefs === undefined) {
-    throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
-  }
-
-  // filter out duplicates since a track may appear multiple times in a playlist
-  // (this is more common in playlist folders which aggregate playlists)
-  return useMemo(
-    () => ({
-      nodes: unique(trackDefs, (d) => d["Track ID"]).map((d, indexInPlaylist) => ({
-        ...d,
-        id: d["Track ID"],
-        indexInPlaylist,
-      })),
-    }),
-    [trackDefs],
-  );
-}
 
 // HACKHACK: do not use `{ TrackDefinition } from "@adahiya/raga-lib"` values for this because that import
 // causes our fluent-ffmepg resolution alias (defined in `vite.main.config.mjs`) to be insufficient; we cannot
@@ -100,7 +85,7 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
     ),
 };
 
-const sortOptionsIcon: SortOptionsIcon = {
+const sortIcon: SortOptionsIcon = {
   iconDefault: <ExpandAll />,
   iconDown: <ChevronDown />,
   iconUp: <ChevronUp />,
@@ -108,26 +93,16 @@ const sortOptionsIcon: SortOptionsIcon = {
 
 // TODO: show singleton ContextMenuPopover on row click
 
+// COMPONENTS
+// -------------------------------------------------------------------------------------------------
+
 export default function TrackTable({ playlistId }: TrackTableProps) {
   const selectedTrackId = appStore.use.selectedTrackId();
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
   const trackDefNodes = useTrackDefinitionNodes(playlistId);
 
   const numTracksInPlaylist = trackDefNodes.nodes.length;
-  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
-  const analyzeColumnWidth = 90;
-  const bpmColumnWidth = 60;
-  const ratingColumnWidth = 100;
-  const fileTypeColumnWidth = 90;
-
-  const theme = useTheme([
-    {
-      Table: `
-        flex: 1;
-        --data-table-library_grid-template-columns: ${indexColumnWidth}px ${analyzeColumnWidth}px ${bpmColumnWidth}px repeat(2, minmax(40px, 1fr)) ${ratingColumnWidth}px ${fileTypeColumnWidth}px;
-      `,
-    },
-  ]);
+  const theme = useTableLibraryTheme(numTracksInPlaylist);
 
   const handleSortChange = useCallback((_action: Action, state: State) => {
     log.debug(`[client] sorted track table: ${JSON.stringify(state)}`);
@@ -142,7 +117,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
     [playlistId, setSelectedTrackId],
   );
 
-  const sort = useSort(trackDefNodes, { onChange: handleSortChange }, { sortFns });
+  const sort = useSort(trackDefNodes, { onChange: handleSortChange }, { sortFns, sortIcon });
 
   const select = useRowSelect(trackDefNodes, {
     state: { id: selectedTrackId },
@@ -154,7 +129,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
       <Table
         data={trackDefNodes}
         theme={theme}
-        layout={{ isDiv: true, fixedHeader: true }}
+        layout={{ isDiv: true, fixedHeader: true, custom: true }}
         sort={sort}
         select={select}
       >
@@ -188,7 +163,6 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           stiff={true}
           pinLeft={true}
           sortKey={TrackPropertySortKey.INDEX}
-          sortIcon={sortOptionsIcon}
         >
           <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>#</span>
         </HeaderCellSort>
@@ -204,7 +178,6 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           className={styles.headerCell}
           stiff={true}
           sortKey={TrackPropertySortKey.BPM}
-          sortIcon={sortOptionsIcon}
         >
           <div className={styles.bpmColumnHeader}>
             <span>BPM</span>{" "}
@@ -215,7 +188,6 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           className={styles.headerCell}
           resize={defaultResizer}
           sortKey={TrackPropertySortKey.NAME}
-          sortIcon={sortOptionsIcon}
         >
           Name
         </HeaderCellSort>
@@ -223,7 +195,6 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           className={styles.headerCell}
           resize={defaultResizer}
           sortKey={TrackPropertySortKey.ARTIST}
-          sortIcon={sortOptionsIcon}
         >
           Artist
         </HeaderCellSort>
@@ -231,7 +202,6 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           className={styles.headerCell}
           stiff={true}
           sortKey={TrackPropertySortKey.RATING}
-          sortIcon={sortOptionsIcon}
         >
           Rating
         </HeaderCellSort>
@@ -240,7 +210,6 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           stiff={true}
           pinRight={true}
           sortKey={TrackPropertySortKey.FILETYPE}
-          sortIcon={sortOptionsIcon}
         >
           File Type
         </HeaderCellSort>
@@ -282,10 +251,52 @@ function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
   return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={fileType} />;
 }
 
-/**
- * Stop propagation of click events on interactive cells which should not trigger a change in the
- * currently selected track.
- */
-function stopPropagation(event: React.SyntheticEvent) {
-  event.stopPropagation();
+// HOOKS
+// -------------------------------------------------------------------------------------------------
+
+/** Gets the list of track definitions for the given playlist as react-table-library data notes */
+function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> {
+  const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
+  if (trackDefs === undefined) {
+    throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
+  }
+
+  // filter out duplicates since a track may appear multiple times in a playlist
+  // (this is more common in playlist folders which aggregate playlists)
+  return useMemo(
+    () => ({
+      nodes: unique(trackDefs, (d) => d["Track ID"]).map((d, indexInPlaylist) => ({
+        ...d,
+        id: d["Track ID"],
+        indexInPlaylist,
+      })),
+    }),
+    [trackDefs],
+  );
+}
+
+/** Configures CSS grid styles. */
+function useTableLibraryTheme(numTracksInPlaylist: number) {
+  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
+  const analyzeColumnWidth = 90;
+  const bpmColumnWidth = 60;
+  const ratingColumnWidth = 100;
+  const fileTypeColumnWidth = 90;
+
+  const gridTemplateColumns = [
+    `${indexColumnWidth}px`,
+    `${analyzeColumnWidth}px`,
+    `${bpmColumnWidth}px`,
+    `repeat(2, minmax(40px, 1fr))`,
+    `${ratingColumnWidth}px`,
+    `${fileTypeColumnWidth}px`,
+  ];
+  return useTheme([
+    {
+      Table: `
+        flex: 1;
+        --data-table-library_grid-template-columns: ${gridTemplateColumns.join(" ")};
+      `,
+    },
+  ]);
 }
