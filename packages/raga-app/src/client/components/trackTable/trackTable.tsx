@@ -16,9 +16,12 @@ import {
 import { useTheme } from "@table-library/react-table-library/theme";
 import type {
   Action,
+  Select,
+  Sort,
   SortFn,
   SortOptionsIcon,
   State,
+  Theme,
 } from "@table-library/react-table-library/types";
 import { Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
@@ -97,33 +100,10 @@ const sortIcon: SortOptionsIcon = {
 // -------------------------------------------------------------------------------------------------
 
 export default function TrackTable({ playlistId }: TrackTableProps) {
-  const selectedTrackId = appStore.use.selectedTrackId();
-  const setSelectedTrackId = appStore.use.setSelectedTrackId();
   const trackDefNodes = useTrackDefinitionNodes(playlistId);
-
   const numTracksInPlaylist = trackDefNodes.nodes.length;
-
-  const theme = useTableLibraryTheme(numTracksInPlaylist);
-
-  const handleSortChange = useCallback((_action: Action, state: State) => {
-    log.debug(`[client] sorted track table: ${JSON.stringify(state)}`);
-  }, []);
-
-  const handleSelectChange = useCallback(
-    (_action: Action, state: State) => {
-      // TODO: better typedef for `state`
-      log.debug(`[client] selected track ${state.id} in current playlist ${playlistId}`);
-      setSelectedTrackId(state.id);
-    },
-    [playlistId, setSelectedTrackId],
-  );
-
-  const sort = useSort(trackDefNodes, { onChange: handleSortChange }, { sortFns, sortIcon });
-
-  const select = useRowSelect(trackDefNodes, {
-    state: { id: selectedTrackId },
-    onChange: handleSelectChange,
-  });
+  const theme = useTableTheme(numTracksInPlaylist);
+  const { select, sort } = useTableInteractions({ playlistId });
 
   const table = (
     <Table
@@ -150,9 +130,9 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
     </div>
   );
 }
-TrackTable.displayName = "TrackTableNext";
+TrackTable.displayName = "TrackTable";
 
-const defaultResizer = {
+const RESIZER_OPTIONS = {
   minWidth: 50,
   resizerHighlight: Colors.DARK_GRAY5,
   resizerWidth: 8,
@@ -191,14 +171,14 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
         </HeaderCellSort>
         <HeaderCellSort
           className={styles.headerCell}
-          resize={defaultResizer}
+          resize={RESIZER_OPTIONS}
           sortKey={TrackPropertySortKey.NAME}
         >
           Name
         </HeaderCellSort>
         <HeaderCellSort
           className={styles.headerCell}
-          resize={defaultResizer}
+          resize={RESIZER_OPTIONS}
           sortKey={TrackPropertySortKey.ARTIST}
         >
           Artist
@@ -306,7 +286,7 @@ function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> 
 }
 
 /** Configures CSS grid styles. */
-function useTableLibraryTheme(numTracksInPlaylist: number) {
+function useTableTheme(numTracksInPlaylist: number): Theme {
   const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
@@ -329,4 +309,35 @@ function useTableLibraryTheme(numTracksInPlaylist: number) {
       `,
     },
   ]);
+}
+
+function useTableInteractions({ playlistId }: TrackTableProps): {
+  sort: Sort<TrackDefinitionNode>;
+  select: Select<TrackDefinitionNode>;
+} {
+  const selectedTrackId = appStore.use.selectedTrackId();
+  const setSelectedTrackId = appStore.use.setSelectedTrackId();
+  const trackDefNodes = useTrackDefinitionNodes(playlistId);
+
+  const handleSortChange = useCallback((_action: Action, state: State) => {
+    log.debug(`[client] sorted track table: ${JSON.stringify(state)}`);
+  }, []);
+
+  const handleSelectChange = useCallback(
+    (_action: Action, state: State) => {
+      // TODO: better typedef for `state`
+      log.debug(`[client] selected track ${state.id} in current playlist ${playlistId}`);
+      setSelectedTrackId(state.id);
+    },
+    [playlistId, setSelectedTrackId],
+  );
+
+  const sort = useSort(trackDefNodes, { onChange: handleSortChange }, { sortFns, sortIcon });
+
+  const select = useRowSelect(trackDefNodes, {
+    state: { id: selectedTrackId },
+    onChange: handleSelectChange,
+  });
+
+  return useMemo(() => ({ sort, select }), [sort, select]);
 }
