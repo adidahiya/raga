@@ -1,0 +1,18 @@
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/Archivo.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Archivo Italic";
+  src: url("/fonts/Archivo-Italic.ttf") format("truetype");
+}
+
+body,
+button {
+  font-family: "Archivo";
+}
+
+em {
+  font-family: "Archivo Italic";
+}

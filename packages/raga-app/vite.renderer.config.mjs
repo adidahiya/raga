@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config
 export default defineConfig({
   plugins: [react()],
+  publicDir: "./src/client/assets",
   build: {
     target: "esnext",
   },
