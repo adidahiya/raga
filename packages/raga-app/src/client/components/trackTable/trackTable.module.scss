@@ -25,6 +25,7 @@
 
     &:global(.row-select-single-selected) {
       background-color: bp.$blue1;
+      font-weight: 600; // override react-table-library default which sets '800'
 
       &:hover {
         background-color: bp.$blue2;
