@@ -26,10 +26,11 @@ import type {
 import { Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/react/shallow";
 
+import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
 import { getTrackFileType } from "../../../common/trackUtils";
 import { stopPropagation } from "../../common/reactUtils";
@@ -40,6 +41,7 @@ import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
+import useTrackTableHotkeys from "./useTrackTableHotkeys";
 
 // INTERFACES
 // -------------------------------------------------------------------------------------------------
@@ -55,9 +57,6 @@ interface TrackDefinitionNode extends TrackDefinition {
 
 // CONFIGURATION
 // -------------------------------------------------------------------------------------------------
-
-// TODO: make track table row height configurable
-const ROW_HEIGHT = 24;
 
 // HACKHACK: do not use `{ TrackDefinition } from "@adahiya/raga-lib"` values for this because that import
 // causes our fluent-ffmepg resolution alias (defined in `vite.main.config.mjs`) to be insufficient; we cannot
@@ -105,6 +104,13 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const theme = useTableTheme(numTracksInPlaylist);
   const { select, sort } = useTableInteractions({ playlistId });
 
+  const containerElement = useRef<HTMLDivElement>(null);
+  const playlistTrackIds = useMemo(
+    () => trackDefNodes.nodes.map((d) => d.id),
+    [trackDefNodes.nodes],
+  );
+  useTrackTableHotkeys({ containerElement, playlistTrackIds });
+
   const table = (
     <Table
       data={trackDefNodes}
@@ -116,7 +122,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
       {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
         <Virtualized
           tableList={trackNodes}
-          rowHeight={ROW_HEIGHT}
+          rowHeight={TRACK_TABLE_ROW_HEIGHT}
           header={() => <TrackTableHeader playlistId={playlistId} />}
           body={(item) => <TrackTableRow item={item} playlistId={playlistId} />}
         />
@@ -125,7 +131,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   );
 
   return (
-    <div className={styles.trackTableContainer}>
+    <div className={styles.trackTableContainer} ref={containerElement}>
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
     </div>
   );
@@ -212,7 +218,12 @@ function TrackTableRow({
   // N.B. key must include the playlist ID because there is row information which changes as we navigate
   // through different playlists (like the index column)
   return (
-    <Row className={styles.row} item={track} key={`${playlistId}-${track.id}`}>
+    <Row
+      className={styles.row}
+      item={track}
+      key={`${playlistId}-${track.id}`}
+      data-track-id={track.id}
+    >
       <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
       <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
         <AnalyzeSingleTrackButton trackDef={track} />

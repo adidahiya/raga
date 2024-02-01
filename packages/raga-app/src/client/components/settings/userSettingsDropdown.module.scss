@@ -13,10 +13,10 @@ $popover-padding: 10px;
   padding: $popover-padding;
 
   .divider {
-    margin: 0 -$popover-padding;
+    margin: 0 (-$popover-padding);
   }
 
-  .#{bp.$ns}-form-group.#{bp.$ns}-inline {
+  :global(.#{bp.$ns}-form-group.#{bp.$ns}-inline) {
     align-items: center;
   }
 }

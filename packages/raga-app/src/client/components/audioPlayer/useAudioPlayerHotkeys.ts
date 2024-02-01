@@ -29,6 +29,7 @@ export default function useAudioPlayerHotkeys() {
     () => [
       {
         global: true,
+        group: "Audio Player",
         combo: "space",
         label: "Play/Pause audio",
         onKeyDown: isPlaying ? pause : handlePlay,
@@ -36,24 +37,28 @@ export default function useAudioPlayerHotkeys() {
       },
       {
         global: true,
+        group: "Audio Player",
         combo: "arrowleft",
         label: "Seek backward 10s",
         onKeyDown: seekBackwardTen,
       },
       {
         global: true,
+        group: "Audio Player",
         combo: "cmd+arrowleft",
         label: "Seek backward 30s",
         onKeyDown: seekBackwardThirty,
       },
       {
         global: true,
+        group: "Audio Player",
         combo: "arrowright",
         label: "Seek forward 10s",
         onKeyDown: seekForwardTen,
       },
       {
         global: true,
+        group: "Audio Player",
         combo: "cmd+arrowright",
         label: "Seek forward 30s",
         onKeyDown: seekForwardThirty,
