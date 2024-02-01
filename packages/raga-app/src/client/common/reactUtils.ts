@@ -1,6 +1,5 @@
 /**
- * Stop propagation of click events on interactive cells which should not trigger a change in the
- * currently selected track.
+ * Stop propagation of a React event up the component tree.
  */
 export function stopPropagation(event: React.SyntheticEvent) {
   event.stopPropagation();
