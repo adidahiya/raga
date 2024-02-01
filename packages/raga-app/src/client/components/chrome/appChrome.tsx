@@ -43,7 +43,7 @@ export default function AppChrome() {
   return (
     <div className={styles.appChrome}>
       <div className={styles.appChromeLeft}>
-        <H4>Music Library App</H4>
+        <H4>Raga</H4>
         {isLibraryLoaded && (
           <>
             <Divider />
