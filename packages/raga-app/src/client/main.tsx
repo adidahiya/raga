@@ -1,7 +1,7 @@
 import { BlueprintProvider, Classes, FocusStyleManager } from "@blueprintjs/core";
 import { createLogWriter } from "@roarr/browser-log-writer";
 import { call, main } from "effection";
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { INSTALL_REACT_DEVELOPER_TOOLS } from "../common/constants";
@@ -22,11 +22,12 @@ await main(function* () {
     throw new Error(ClientErrors.APP_RENDER_FAILED);
   }
   const root = createRoot(domNode);
+  // HACKHACK: StrictMode disabled due to Blueprint bug https://github.com/palantir/blueprint/issues/5503
   root.render(
     <BlueprintProvider hotkeysProviderDialogProps={{ className: Classes.DARK }}>
-      <StrictMode>
-        <App />
-      </StrictMode>
+      {/* <StrictMode> */}
+      <App />
+      {/* </StrictMode> */}
     </BlueprintProvider>,
   );
 

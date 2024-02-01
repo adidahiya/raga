@@ -41,6 +41,7 @@ import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
+import useTrackTableContextMenu from "./useTrackTableContextMenu";
 import useTrackTableHotkeys from "./useTrackTableHotkeys";
 
 // INTERFACES
@@ -109,7 +110,15 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
     () => trackDefNodes.nodes.map((d) => d.id),
     [trackDefNodes.nodes],
   );
+
+  // TODO: both of these interactions are currently buggy if any sorting is applied to the table.
+  // We need to react to sort changes and create an updated list of track definitions we can send to
+  // the hotkeys and context menu interaction hooks.
   useTrackTableHotkeys({ containerElement, playlistTrackIds });
+  const { contextMenuPopover, handleContextMenu } = useTrackTableContextMenu({
+    containerElement,
+    trackDefs: trackDefNodes.nodes,
+  });
 
   const table = (
     <Table
@@ -131,8 +140,13 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   );
 
   return (
-    <div className={styles.trackTableContainer} ref={containerElement}>
+    <div
+      className={styles.trackTableContainer}
+      ref={containerElement}
+      onContextMenu={handleContextMenu}
+    >
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
+      {contextMenuPopover}
     </div>
   );
 }
@@ -209,20 +223,24 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   );
 }
 
-function TrackTableRow({
-  item: track,
-  playlistId,
-}: { item: ExtendedNode<TrackDefinitionNode> } & Pick<TrackTableProps, "playlistId">) {
+interface TrackTableRowProps
+  extends TrackTableProps,
+    Pick<React.HTMLAttributes<HTMLDivElement>, "onContextMenu"> {
+  item: ExtendedNode<TrackDefinitionNode>;
+}
+
+// N.B. we cannot wrap this in a standard Blueprint ContextMenu because `<Row>` does not use forwardRef
+const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
 
-  // N.B. key must include the playlist ID because there is row information which changes as we navigate
-  // through different playlists (like the index column)
   return (
     <Row
       className={styles.row}
-      item={track}
-      key={`${playlistId}-${track.id}`}
       data-track-id={track.id}
+      item={track}
+      // N.B. key must include the playlist ID because there is row information which changes as we navigate
+      // through different playlists (like the index column)
+      key={`${playlistId}-${track.id}`}
     >
       <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
       <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
@@ -239,7 +257,8 @@ function TrackTableRow({
       </Cell>
     </Row>
   );
-}
+};
+TrackTableRow.displayName = "TrackTableRow";
 
 function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
   const isReadyForAnalysis = useIsTrackReadyForAnalysis(track["Track ID"]);

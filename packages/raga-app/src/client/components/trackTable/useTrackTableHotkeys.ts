@@ -3,6 +3,7 @@ import { useCallback, useMemo } from "react";
 
 import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { appStore } from "../../store/appStore";
+import { getTableScrollingContainer } from "./trackTableDOMUtils";
 
 export interface UseTrackTableHotkeysOptions {
   containerElement: React.RefObject<HTMLElement>;
@@ -26,8 +27,7 @@ export default function useTrackTableHotkeys({
     }
 
     const indexOfTrackInPlaylist = playlistTrackIds.indexOf(selectedTrackId);
-    const bodyElement = containerElement.current.querySelector("[data-table-library_body");
-    const scrollingContainer = bodyElement?.parentElement?.parentElement;
+    const scrollingContainer = getTableScrollingContainer(containerElement.current);
     if (scrollingContainer == null || indexOfTrackInPlaylist < 0) {
       return;
     }
