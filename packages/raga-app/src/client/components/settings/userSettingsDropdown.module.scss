@@ -1,14 +1,24 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
-.container {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-  align-items: center;
+.userSettingsDropdown {
+  display: inline-flex;
 }
 
+$popover-padding: 10px;
+
 .popover {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: $popover-padding;
+  padding: $popover-padding;
+
+  .divider {
+    margin: 0 -$popover-padding;
+  }
+
+  .#{bp.$ns}-form-group.#{bp.$ns}-inline {
+    align-items: center;
+  }
 }
 
 .validIcon {

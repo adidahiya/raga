@@ -8,11 +8,13 @@ export interface PreviouslyUsedLibrary {
 }
 
 export interface UserSettingsState {
+  fontWeight: "light" | "regular";
   previouslyUsedLibraries: Set<PreviouslyUsedLibrary>;
   userEmail: string | undefined;
 }
 
 export interface UserSettingsActions {
+  setFontWeight: (fontWeight: "light" | "regular") => void;
   setUserEmail: (userEmail: string | undefined) => void;
   saveCurrentLibraryPath: (filePath: string) => void;
   clearPreviouslyUsedLibraries: () => void;
@@ -21,9 +23,15 @@ export interface UserSettingsActions {
 export const createUserSettingsSlice: AppStoreSliceCreator<
   UserSettingsState & UserSettingsActions
 > = (set, get) => ({
+  fontWeight: "light",
+
   previouslyUsedLibraries: new Set<PreviouslyUsedLibrary>(),
 
   userEmail: undefined,
+
+  setFontWeight: (fontWeight) => {
+    set({ fontWeight });
+  },
 
   setUserEmail: (userEmail: string | undefined) => {
     set({ userEmail });

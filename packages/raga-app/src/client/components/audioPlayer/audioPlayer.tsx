@@ -28,7 +28,10 @@ export function AudioPlayer() {
             <TrackBPMOverlay trackDef={selectedTrack} />
           </div>
         ) : (
-          <NonIdealState className={styles.nonIdealState} description="No track selected" />
+          <NonIdealState
+            className={styles.nonIdealState}
+            description={<em>No track selected</em>}
+          />
         )
       ) : (
         <NonIdealState

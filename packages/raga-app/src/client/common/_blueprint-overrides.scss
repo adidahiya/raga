@@ -37,8 +37,14 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
     }
 }
 
-.#{bp.$ns}-section.#{bp.$ns}-compact .#{bp.$ns}-section-card.#{bp.$ns}-padded {
-  padding: 10px 15px;
+.#{bp.$ns}-section.#{bp.$ns}-compact {
+  .#{bp.$ns}-section-header {
+    padding: 0 10px;
+  }
+
+  .#{bp.$ns}-section-card.#{bp.$ns}-padded {
+    padding: 10px 15px;
+  }
 }
 
 .#{bp.$ns}-form-group,
