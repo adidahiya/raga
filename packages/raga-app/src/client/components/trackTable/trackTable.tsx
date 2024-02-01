@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Colors } from "@blueprintjs/core";
+import { Classes, Colors, NonIdealState } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
@@ -102,6 +102,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const trackDefNodes = useTrackDefinitionNodes(playlistId);
 
   const numTracksInPlaylist = trackDefNodes.nodes.length;
+
   const theme = useTableLibraryTheme(numTracksInPlaylist);
 
   const handleSortChange = useCallback((_action: Action, state: State) => {
@@ -124,24 +125,28 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
     onChange: handleSelectChange,
   });
 
+  const table = (
+    <Table
+      data={trackDefNodes}
+      layout={{ isDiv: true, fixedHeader: true, custom: true }}
+      select={select}
+      sort={sort}
+      theme={theme}
+    >
+      {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
+        <Virtualized
+          tableList={trackNodes}
+          rowHeight={ROW_HEIGHT}
+          header={() => <TrackTableHeader playlistId={playlistId} />}
+          body={(item) => <TrackTableRow item={item} playlistId={playlistId} />}
+        />
+      )}
+    </Table>
+  );
+
   return (
     <div className={styles.trackTableContainer}>
-      <Table
-        data={trackDefNodes}
-        layout={{ isDiv: true, fixedHeader: true, custom: true }}
-        select={select}
-        sort={sort}
-        theme={theme}
-      >
-        {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
-          <Virtualized
-            tableList={trackNodes}
-            rowHeight={ROW_HEIGHT}
-            header={() => <TrackTableHeader playlistId={playlistId} />}
-            body={(item) => <TrackTableRow item={item} playlistId={playlistId} />}
-          />
-        )}
-      </Table>
+      {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
     </div>
   );
 }
@@ -249,6 +254,31 @@ function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
   const isReadyForAnalysis = useIsTrackReadyForAnalysis(track["Track ID"]);
   const fileType = getTrackFileType(track);
   return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={fileType} />;
+}
+
+function TrackTableEmpty({ playlistId }: TrackTableProps) {
+  const libraryPlaylists = appStore.use.libraryPlaylists();
+  if (libraryPlaylists === undefined) {
+    throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
+  }
+
+  const playlistDef = libraryPlaylists[playlistId];
+
+  return (
+    <div className={styles.trackTableEmpty}>
+      <NonIdealState
+        title={`No tracks found in playlist "${playlistDef?.Name}"`}
+        action={
+          <p>
+            <em>
+              Raga does not currently support playlist editing. You may add tracks to this playlist
+              in Swinsian and re-import your library.
+            </em>
+          </p>
+        }
+      />
+    </div>
+  );
 }
 
 // HOOKS
