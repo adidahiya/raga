@@ -2,7 +2,15 @@ import { join, resolve } from "node:path";
 import { platform } from "node:process";
 
 import { cyan } from "ansis";
-import { app, BrowserWindow, ipcMain, shell, type UtilityProcess, utilityProcess } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  screen,
+  shell,
+  type UtilityProcess,
+  utilityProcess,
+} from "electron";
 
 import { DEBUG } from "./common/constants";
 import {
@@ -26,10 +34,15 @@ export const log = createScopedLogger("main", cyan);
 let mainWindow: BrowserWindow | null = null;
 let serverProcess: UtilityProcess | null = null;
 
+const MAX_INITIAL_WINDOW_WIDTH = 2000;
+const MAX_INITIAL_WINDOW_HEIGHT = 1200;
+
 const createWindow = async () => {
   // if (INSTALL_REACT_DEVELOPER_TOOLS) {
   //     await installReactDevTools();
   // }
+
+  const primaryDisplay = screen.getPrimaryDisplay();
 
   // N.B. Vite still makes assumptions about Electron not supporting ESM (which was true until v28),
   // so we cannot yet fully migrate to make this package a "type": "module" package. For now, we
@@ -37,8 +50,8 @@ const createWindow = async () => {
   // load the preload & server scripts, as well as the index.html file.
   // See https://github.com/electron/forge/issues/3439
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: Math.min(MAX_INITIAL_WINDOW_WIDTH, primaryDisplay.workAreaSize.width),
+    height: Math.min(MAX_INITIAL_WINDOW_HEIGHT, primaryDisplay.workAreaSize.height),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
