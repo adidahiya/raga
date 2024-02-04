@@ -30,6 +30,7 @@
     "date-fns": "^3.3.1",
     "effection": "^3.0.2",
     "electron-squirrel-startup": "^1.0.0",
+    "framer-motion": "^11.0.3",
     "immer": "^10.0.3",
     "milliparsec": "^2.3.0",
     "node-taglib-sharp": "^5.2.3",
