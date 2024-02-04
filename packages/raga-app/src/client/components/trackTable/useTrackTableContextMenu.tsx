@@ -11,7 +11,7 @@ import { getTableScrollingContainer } from "./trackTableDOMUtils";
 
 export interface UseTrackTableContextMenuOptions {
   containerElement: React.RefObject<HTMLElement>;
-  trackDefs: TrackDefinition[];
+  sortedTrackDefs: TrackDefinition[];
 }
 
 export interface UseTrackTableContextMenuReturnValue {
@@ -21,7 +21,7 @@ export interface UseTrackTableContextMenuReturnValue {
 
 export default function useTrackTableContextMenu({
   containerElement,
-  trackDefs,
+  sortedTrackDefs,
 }: UseTrackTableContextMenuOptions): UseTrackTableContextMenuReturnValue {
   const isContextMenuOpen = useBoolean(false);
   const [targetOffset, setTargetOffset] = useState<Offset>({ left: 0, top: 0 });
@@ -54,7 +54,7 @@ export default function useTrackTableContextMenu({
         containerTopOffset -
         TRACK_TABLE_HEADER_HEIGHT;
       const trackIndex = Math.floor(topOffsetInList / TRACK_TABLE_ROW_HEIGHT);
-      setActiveTrackDef(trackDefs[trackIndex]);
+      setActiveTrackDef(sortedTrackDefs[trackIndex]);
 
       isContextMenuOpen.setTrue();
       setTargetOffset({
@@ -62,7 +62,7 @@ export default function useTrackTableContextMenu({
         top: event.clientY,
       });
     },
-    [containerElement, isContextMenuOpen, trackDefs],
+    [containerElement, isContextMenuOpen, sortedTrackDefs],
   );
 
   return {

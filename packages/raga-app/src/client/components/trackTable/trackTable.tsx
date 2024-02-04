@@ -16,8 +16,6 @@ import {
 import { useTheme } from "@table-library/react-table-library/theme";
 import type {
   Action,
-  Select,
-  Sort,
   SortFn,
   SortOptionsIcon,
   State,
@@ -26,7 +24,7 @@ import type {
 import { Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/react/shallow";
 
@@ -103,21 +101,16 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const trackDefNodes = useTrackDefinitionNodes(playlistId);
   const numTracksInPlaylist = trackDefNodes.nodes.length;
   const theme = useTableTheme(numTracksInPlaylist);
-  const { select, sort } = useTableInteractions({ playlistId });
-
   const containerElement = useRef<HTMLDivElement>(null);
-  const playlistTrackIds = useMemo(
-    () => trackDefNodes.nodes.map((d) => d.id),
-    [trackDefNodes.nodes],
-  );
 
-  // TODO: both of these interactions are currently buggy if any sorting is applied to the table.
-  // We need to react to sort changes and create an updated list of track definitions we can send to
-  // the hotkeys and context menu interaction hooks.
-  useTrackTableHotkeys({ containerElement, playlistTrackIds });
+  // N.B. table interaction hooks need to the list of tracks with the current sort order applied
+  // so that they can locate rows correctly in 2D space
+  const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, trackDefNodes);
+  const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
+  useTrackTableHotkeys({ containerElement, sortedTrackIds });
   const { contextMenuPopover, handleContextMenu } = useTrackTableContextMenu({
     containerElement,
-    trackDefs: trackDefNodes.nodes,
+    sortedTrackDefs,
   });
 
   const table = (
@@ -341,17 +334,26 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   ]);
 }
 
-function useTableInteractions({ playlistId }: TrackTableProps): {
-  sort: Sort<TrackDefinitionNode>;
-  select: Select<TrackDefinitionNode>;
-} {
+function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefinitionNode>) {
   const selectedTrackId = appStore.use.selectedTrackId();
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
-  const trackDefNodes = useTrackDefinitionNodes(playlistId);
+  const [sortedTrackDefs, setSortedTrackDefs] = useState(trackDefNodes.nodes);
 
-  const handleSortChange = useCallback((_action: Action, state: State) => {
-    log.debug(`[client] sorted track table: ${JSON.stringify(state)}`);
-  }, []);
+  const handleSortChange = useCallback(
+    (_action: Action, state: State) => {
+      const { sortKey, reverse } = state as { sortKey: TrackPropertySortKey; reverse: boolean };
+      log.debug(
+        `[client] sorted track table by '${sortKey}' column (${reverse ? "descending" : "ascending"})`,
+      );
+      // N.B. need to copy the array since `sortFns` do sorting in place
+      const sortedTrackDefs = sortFns[sortKey](
+        trackDefNodes.nodes.slice(),
+      ) as TrackDefinitionNode[];
+      const newSortedTrackDefs = reverse ? sortedTrackDefs.reverse() : sortedTrackDefs;
+      setSortedTrackDefs(newSortedTrackDefs);
+    },
+    [trackDefNodes.nodes],
+  );
 
   const handleSelectChange = useCallback(
     (_action: Action, state: State) => {
@@ -369,5 +371,5 @@ function useTableInteractions({ playlistId }: TrackTableProps): {
     onChange: handleSelectChange,
   });
 
-  return useMemo(() => ({ sort, select }), [sort, select]);
+  return useMemo(() => ({ select, sort, sortedTrackDefs }), [sort, select, sortedTrackDefs]);
 }

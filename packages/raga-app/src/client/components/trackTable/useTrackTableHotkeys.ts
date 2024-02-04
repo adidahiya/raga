@@ -7,7 +7,7 @@ import { getTableScrollingContainer } from "./trackTableDOMUtils";
 
 export interface UseTrackTableHotkeysOptions {
   containerElement: React.RefObject<HTMLElement>;
-  playlistTrackIds: number[];
+  sortedTrackIds: number[];
 }
 
 // we should have a bit of buffer from the top and bottom of the table body when bringing the selected track into view
@@ -15,7 +15,7 @@ const VERTICAL_SCROLL_BUFFER = 40;
 
 export default function useTrackTableHotkeys({
   containerElement,
-  playlistTrackIds,
+  sortedTrackIds,
 }: UseTrackTableHotkeysOptions) {
   const selectedTrackId = appStore.use.selectedTrackId();
 
@@ -26,7 +26,8 @@ export default function useTrackTableHotkeys({
       return;
     }
 
-    const indexOfTrackInPlaylist = playlistTrackIds.indexOf(selectedTrackId);
+    console.log("************ NEW HOTKEY HANDLER");
+    const indexOfTrackInPlaylist = sortedTrackIds.indexOf(selectedTrackId);
     const scrollingContainer = getTableScrollingContainer(containerElement.current);
     if (scrollingContainer == null || indexOfTrackInPlaylist < 0) {
       return;
@@ -45,7 +46,7 @@ export default function useTrackTableHotkeys({
         behavior: "smooth",
       });
     }
-  }, [containerElement, playlistTrackIds, selectedTrackId]);
+  }, [containerElement, sortedTrackIds, selectedTrackId]);
 
   const hotkeyConfig = useMemo(
     () => [
