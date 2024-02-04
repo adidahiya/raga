@@ -11,6 +11,8 @@ import { appStore } from "../../store/appStore";
 import AnalyzeSingleTrackButton from "../trackTable/analyzeSingleTrackButton";
 import styles from "./trackBPMOverlay.module.scss";
 
+const SLIDER_TRANSITION = { type: "tween", duration: 0.2, ease: "easeInOut" };
+
 export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
   const playbackRate = appStore.use.audioPlaybackRate();
   const setPlaybackRate = debounce({ delay: 5 }, appStore.use.setAudioPlaybackRate());
@@ -28,7 +30,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
         onDoubleClick={handleDoubleClick}
         animate={{ opacity: 1, width: isTempoSliderOpen ? "auto" : 0 }}
         initial={{ opacity: 0 }}
-        transition={{ type: "tween", when: "afterChildren", duration: 0.2, ease: "easeInOut" }}
+        transition={SLIDER_TRANSITION}
         layout={true}
       >
         <AnimatePresence>
@@ -38,12 +40,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
               initial={{ opacity: 0, scaleX: 0.5 }}
               animate={{ opacity: 1, scaleX: 1 }}
               exit={{ opacity: 0, scaleX: 0.5, transition: { delay: 0, duration: 0.1 } }}
-              transition={{
-                type: "tween",
-                delay: 0.05,
-                duration: 0.2,
-                ease: "easeInOut",
-              }}
+              transition={{ ...SLIDER_TRANSITION, delay: 0.05 }}
             >
               <TrackTempoSlider />
             </motion.div>

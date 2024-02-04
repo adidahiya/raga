@@ -16,6 +16,7 @@ import { useTheme } from "@table-library/react-table-library/theme";
 import { CellTree, TreeExpandClickTypes, useTree } from "@table-library/react-table-library/tree";
 import type { Action, State, TreeOptionsIcon } from "@table-library/react-table-library/types";
 import classNames from "classnames";
+import { motion } from "framer-motion";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -154,6 +155,34 @@ function PlaylistTableRow({ playlist }: { playlist: ExtendedNode<PlaylistDefinit
   );
 }
 PlaylistTableRow.displayName = "PlaylistTableRow";
+
+// TODO: keep animation or delete this wrapper component
+// TODO: exit animation
+function _PlaylistTableRowAnimationWrapper({
+  children,
+  playlist,
+}: {
+  children: React.ReactNode;
+  playlist: ExtendedNode<PlaylistDefinitionNode>;
+}) {
+  // clamp num siblings to 100
+  const numSiblings = Math.min((playlist.parentNode?.nodes?.length ?? 1) - 1, 100);
+  // interpolate from 0.5 (for 1 sibling) to 0.1 (for 100 siblings)
+  const transitionDuration = 0.5 + (0.1 - 0.5) * (numSiblings / 100);
+
+  // TODO: exit animation
+  return (
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0.2, y: -100 }}
+      transition={{ duration: transitionDuration }}
+      exit={{ opacity: 0, y: -10 }}
+      style={{ zIndex: 100 - (playlist.treeXLevel ?? 0) }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 // HOOKS
 // -------------------------------------------------------------------------------------------------

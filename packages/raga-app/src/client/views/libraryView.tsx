@@ -73,7 +73,7 @@ function Library() {
         <AudioPlayer />
       </div>
       <PanelGroup direction="horizontal">
-        <Panel className={styles.librarySidebar} defaultSize={20} minSize={20}>
+        <Panel className={styles.librarySidebar} defaultSize={20} minSize={20} maxSize={40}>
           <PlaylistTable headerHeight={headerHeight} />
           <LibrarySidebarFooter />
         </Panel>
