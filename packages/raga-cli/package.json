@@ -27,7 +27,7 @@
     "@types/node": "^20.11.16",
     "@types/prompts": "^2.4.9",
     "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.0-beta"
   },
   "engines": {
     "node": ">=18.18"
