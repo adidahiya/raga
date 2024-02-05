@@ -10807,12 +10807,12 @@ __metadata:
   linkType: hard
 
 "react-resizable-panels@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "react-resizable-panels@npm:2.0.2"
+  version: 2.0.3
+  resolution: "react-resizable-panels@npm:2.0.3"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/8e863f5e40756247ea3781bdbd77ae6ca573324186977fa84235b25af9ee019b97c9fe27a4f3b2351fa0af5e8f2a0f3d2ee8b504b88800c2bfb62e5f6e9de49b
+  checksum: 10/460ffffe776a490b0603fde0594877b2d9f1c3280eca0079dedc520c7a9e07ab5dcb2cd266013407e5a2a4828d27890f14623d4c51e8604a77c249a771043314
   languageName: node
   linkType: hard
 
