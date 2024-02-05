@@ -1,22 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
 import { Classes } from "@blueprintjs/core";
-import { ChevronDown, ChevronRight } from "@blueprintjs/icons";
-import { useRowSelect } from "@table-library/react-table-library/select";
-import {
-  Body,
-  type Data,
-  type ExtendedNode,
-  Header,
-  HeaderCell,
-  HeaderRow,
-  Row,
-  Table,
-} from "@table-library/react-table-library/table";
-import { useTheme } from "@table-library/react-table-library/theme";
-import { CellTree, TreeExpandClickTypes, useTree } from "@table-library/react-table-library/tree";
-import type { Action, State, TreeOptionsIcon } from "@table-library/react-table-library/types";
 import classNames from "classnames";
-import { motion } from "framer-motion";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -24,171 +8,49 @@ import { formatStatNumber } from "../../../common/format";
 import { appStore } from "../../store/appStore";
 import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
 import styles from "./playlistTable.module.scss";
-
-// INTERFACES
-// -------------------------------------------------------------------------------------------------
-
-export interface PlaylistTableProps {
-  headerHeight: number;
-  /** @default false */
-  showItemCounts?: boolean;
-  /** @default false */
-  showFooter?: boolean;
-}
-
-interface PlaylistDefinitionNode extends PlaylistDefinition {
-  id: string;
-  /** Child nodes of this one. `null` if this is a leaf node. */
-  nodes: PlaylistDefinitionNode[] | null;
-}
-
-// CONFIGURATION
-// -------------------------------------------------------------------------------------------------
-
-const treeIcon: TreeOptionsIcon<PlaylistDefinitionNode> = {
-  iconRight: <ChevronRight />,
-  iconDown: <ChevronDown />,
-};
+import type { TreeNode } from "./tree";
+import UncontrolledTree from "./tree";
 
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-export default function PlaylistTable(props: PlaylistTableProps) {
+export default function PlaylistTable() {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
-  const playlistDefNodes = usePlaylistDefNodes();
-  const theme = useTheme([]);
-
-  const selectedPlaylistPath = useSelectedPlaylistPath();
-  const treeSelectionState = useMemo(() => ({ ids: selectedPlaylistPath }), [selectedPlaylistPath]);
-  const handleTreeChange = useCallback((_action: Action, _state: State) => {
-    // TODO
-  }, []);
-  const tree = useTree(
-    playlistDefNodes,
-    { state: treeSelectionState, onChange: handleTreeChange },
-    { clickType: TreeExpandClickTypes.ButtonClick, treeIcon },
-  );
-
+  const playlistDefNodes = usePlaylistTreeNodes();
   const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
-  const handleSelectChange = useCallback(
-    (action: Action, state: State) => {
-      // TODO: better typedef for `state`
-      log.debug(`[client] selected playlist ${state.id}`);
-      if (state.id != null) {
-        setSelectedPlaylistId(state.id);
-      }
+
+  const handleSelect = useCallback(
+    (node: TreeNode<PlaylistDefinition>) => {
+      log.debug(`[client] selected playlist ${node.id}: '${node.data.Name}'`);
+      setSelectedPlaylistId(node.id);
     },
     [setSelectedPlaylistId],
   );
-  const select = useRowSelect(playlistDefNodes, {
-    onChange: handleSelectChange,
-  });
 
   return (
     <div className={styles.playlistTableContainer}>
-      <Table
-        className={styles.table}
-        data={playlistDefNodes}
-        layout={{ isDiv: true, fixedHeader: true }}
-        select={select}
-        theme={theme}
-        tree={tree}
-      >
-        {(nodes: ExtendedNode<PlaylistDefinitionNode>[]) => (
-          <>
-            <Header className={styles.header}>
-              <HeaderRow className={styles.row}>
-                <HeaderCell className={styles.headerCell}>
-                  Playlists{" "}
-                  <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
-                    ({formatStatNumber(numTotalPlaylists)})
-                  </span>
-                </HeaderCell>
-              </HeaderRow>
-            </Header>
-            <Body
-              className={styles.body}
-              // HACKHACK: magic number
-              style={{ maxHeight: `calc(100vh - ${props.headerHeight + 164}px)` }}
-            >
-              {nodes.map((playlist) => (
-                <PlaylistTableRow playlist={playlist} key={playlist.id} />
-              ))}
-            </Body>
-          </>
-        )}
-      </Table>
+      <div className={styles.header}>
+        Playlists{" "}
+        <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+          ({formatStatNumber(numTotalPlaylists)})
+        </span>
+      </div>
+      <div className={styles.body}>
+        <UncontrolledTree
+          className={Classes.COMPACT}
+          nodes={playlistDefNodes}
+          onSelect={handleSelect}
+        />
+      </div>
     </div>
-  );
-}
-PlaylistTable.displayName = "PlaylistTable";
-PlaylistTable.defaultProps = {
-  showHeader: true,
-  showItemCounts: false,
-  showFooter: false,
-};
-
-function PlaylistTableRow({ playlist }: { playlist: ExtendedNode<PlaylistDefinitionNode> }) {
-  const selectedPlaylistId = appStore.use.selectedPlaylistId();
-  const selectedPlaylistPath = useSelectedPlaylistPath();
-  const isRowInSelectedPlaylistPath = selectedPlaylistPath.includes(playlist.id);
-  const isRowSelected = playlist.id === selectedPlaylistId;
-
-  return (
-    <Row
-      className={classNames(styles.row, {
-        [styles.selectedPath]: isRowInSelectedPlaylistPath && !isRowSelected,
-        [styles.selected]: isRowSelected,
-      })}
-      item={playlist}
-      key={playlist.id}
-    >
-      <CellTree
-        style={{ height: "24px" }}
-        className={styles.cell}
-        treeIcon={treeIcon}
-        item={playlist}
-      >
-        {playlist.Name}
-      </CellTree>
-    </Row>
-  );
-}
-PlaylistTableRow.displayName = "PlaylistTableRow";
-
-// TODO: keep animation or delete this wrapper component
-// TODO: exit animation
-function _PlaylistTableRowAnimationWrapper({
-  children,
-  playlist,
-}: {
-  children: React.ReactNode;
-  playlist: ExtendedNode<PlaylistDefinitionNode>;
-}) {
-  // clamp num siblings to 100
-  const numSiblings = Math.min((playlist.parentNode?.nodes?.length ?? 1) - 1, 100);
-  // interpolate from 0.5 (for 1 sibling) to 0.1 (for 100 siblings)
-  const transitionDuration = 0.5 + (0.1 - 0.5) * (numSiblings / 100);
-
-  // TODO: exit animation
-  return (
-    <motion.div
-      animate={{ opacity: 1, y: 0 }}
-      initial={{ opacity: 0.2, y: -100 }}
-      transition={{ duration: transitionDuration }}
-      exit={{ opacity: 0, y: -10 }}
-      style={{ zIndex: 100 - (playlist.treeXLevel ?? 0) }}
-    >
-      {children}
-    </motion.div>
   );
 }
 
 // HOOKS
 // -------------------------------------------------------------------------------------------------
 
-/** Gets the list of playlist definitions in the music library as react-table-library data nodes */
-function usePlaylistDefNodes(): Data<PlaylistDefinitionNode> {
+/** Gets the list of playlist definitions in the music library as tree data nodes */
+function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
   const { Playlists: playlistDefs } = useLibraryOrThrow();
 
   const folderChildrenByParentId = useMemo<PartialRecord<string, PlaylistDefinition[]>>(
@@ -213,58 +75,31 @@ function usePlaylistDefNodes(): Data<PlaylistDefinitionNode> {
     [folderChildrenByParentId],
   );
 
-  const recursivelyGetFolderChildern: (playlistId: string) => PlaylistDefinitionNode[] | null =
-    useCallback(
-      (playlistId: string) =>
-        playlistIsFolderWithChildren(playlistId)
-          ? folderChildrenByParentId[playlistId]!.map((def) => ({
-              ...def,
-              id: def["Playlist Persistent ID"],
-              nodes: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
-            }))
-          : null,
-      [folderChildrenByParentId, playlistIsFolderWithChildren],
-    );
+  const recursivelyGetFolderChildern: (
+    playlistId: string,
+  ) => TreeNode<PlaylistDefinition>[] | undefined = useCallback(
+    (playlistId: string) =>
+      playlistIsFolderWithChildren(playlistId)
+        ? folderChildrenByParentId[playlistId]!.map((def) => ({
+            data: def,
+            id: def["Playlist Persistent ID"],
+            label: def.Name,
+            childNodes: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
+          }))
+        : undefined,
+    [folderChildrenByParentId, playlistIsFolderWithChildren],
+  );
 
-  return useMemo<Data<PlaylistDefinitionNode>>(
-    () => ({
-      nodes: playlistDefs
+  return useMemo<TreeNode<PlaylistDefinition>[]>(
+    () =>
+      playlistDefs
         .filter((p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined)
         .map((d) => ({
-          ...d,
+          data: d,
           id: d["Playlist Persistent ID"],
-          nodes: recursivelyGetFolderChildern(d["Playlist Persistent ID"]),
+          label: d.Name,
+          childNodes: recursivelyGetFolderChildern(d["Playlist Persistent ID"]),
         })),
-    }),
     [playlistDefs, recursivelyGetFolderChildern],
   );
-}
-
-/** @returns a list of the persistent playlist IDs which form the tree path to the currently selected playlist */
-function useSelectedPlaylistPath() {
-  const libraryPlaylists = appStore.use.libraryPlaylists();
-  const selectedPlaylistId = appStore.use.selectedPlaylistId();
-
-  return useMemo(() => {
-    if (libraryPlaylists === undefined || selectedPlaylistId === undefined) {
-      return [];
-    }
-
-    const path = [selectedPlaylistId];
-    let currentPlaylistId = selectedPlaylistId;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
-    while (true) {
-      const currentPlaylist = libraryPlaylists[currentPlaylistId];
-      if (currentPlaylist === undefined) {
-        break;
-      }
-      const parentId = currentPlaylist["Parent Persistent ID"];
-      if (parentId === undefined) {
-        break;
-      }
-      path.unshift(parentId);
-      currentPlaylistId = parentId;
-    }
-    return path;
-  }, [libraryPlaylists, selectedPlaylistId]);
 }

@@ -3,51 +3,19 @@
 
 .playlistTableContainer {
   padding-left: 1px; // allows border from container element to show
-  // absolute positioning is a bit ugly, but it works based on this example:
-  // https://react-table-library.com/?path=%2Fdocs%2Ffeatures-fixed-header--in-flex-container
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: $sidebar-footer-height + 1px; // space for footer + border
+  padding-bottom: $sidebar-footer-height + 1px; // space for footer + border
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  .table {
-    align-content: start;
-    flex: 1;
-  }
+.header {
+  line-height: $small-button-height - 1px; // subtract 1px for border width
+  padding: $table-cell-padding;
+  border-bottom: solid 1px bp.$pt-dark-divider-white;
+  flex-grow: 0;
+}
 
-  .headerCell {
-    line-height: $small-button-height - 1px; // subtract 1px for border width
-    padding: $table-cell-padding;
-    border-bottom: solid 1px bp.$pt-dark-divider-white;
-  }
-
-  .row {
-    background: bp.$dark-gray2;
-
-    &.selectedPath {
-      background-color: darken(bp.$blue1, 15%);
-    }
-
-    &.selected {
-      background-color: bp.$blue1;
-      font-weight: normal;
-    }
-  }
-
-  .cell {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    padding: $table-cell-padding;
-  }
-
-  .footerRow {
-    background: none;
-  }
-
-  .footerCell {
-    border-top: solid 1px bp.$pt-dark-divider-white;
-    padding: $table-cell-padding;
-  }
+.body {
+  overflow-y: auto;
 }
