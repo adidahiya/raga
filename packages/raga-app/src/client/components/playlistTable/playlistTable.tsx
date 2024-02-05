@@ -7,9 +7,8 @@ import { Roarr as log } from "roarr";
 import { formatStatNumber } from "../../../common/format";
 import { appStore } from "../../store/appStore";
 import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
+import Tree, { type TreeNode } from "../common/tree";
 import styles from "./playlistTable.module.scss";
-import type { TreeNode } from "./tree";
-import UncontrolledTree from "./tree";
 
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
@@ -36,11 +35,7 @@ export default function PlaylistTable() {
         </span>
       </div>
       <div className={styles.body}>
-        <UncontrolledTree
-          className={Classes.COMPACT}
-          nodes={playlistDefNodes}
-          onSelect={handleSelect}
-        />
+        <Tree compact={true} nodes={playlistDefNodes} onSelect={handleSelect} />
       </div>
     </div>
   );
