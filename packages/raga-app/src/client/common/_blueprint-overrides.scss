@@ -37,6 +37,7 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
     }
 }
 
+// more compact section
 .#{bp.$ns}-section.#{bp.$ns}-compact {
   .#{bp.$ns}-section-header {
     padding: 0 10px;
@@ -47,6 +48,7 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
   }
 }
 
+// remove unnecessary margins on form elements
 .#{bp.$ns}-form-group,
 .#{bp.$ns}-control {
   margin: 0;
@@ -54,4 +56,23 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
 
 .#{bp.$ns}-slider {
   min-width: 100px;
+}
+
+// add support for compact tree
+.#{bp.$ns}-tree.#{bp.$ns}-compact {
+  .#{bp.$ns}-tree-node-content {
+    height: 24px;
+  }
+
+  .#{bp.$ns}-tree-node-caret {
+    padding: 4px;
+    margin-right: 3px;
+    min-width: 24px;
+  }
+
+  .#{bp.$ns}-dark & {
+    .#{bp.$ns}-tree-node-caret:hover {
+      color: bp.$white;
+    }
+  }
 }

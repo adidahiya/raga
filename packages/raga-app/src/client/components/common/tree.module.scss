@@ -1,0 +1,25 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.node {
+  &.selectedPath {
+    > :global(.#{bp.$ns}-tree-node-content) {
+      background-color: darken(bp.$pt-intent-primary, 15%);
+    }
+
+    &:global(.#{bp.$ns}-tree-node-selected) > :global(.#{bp.$ns}-tree-node-content) {
+      background-color: bp.$pt-intent-primary;
+    }
+  }
+}
+
+:global(.#{bp.$ns}-dark) .node {
+  &.selectedPath {
+    > :global(.#{bp.$ns}-tree-node-content) {
+      background-color: darken(bp.$blue1, 15%);
+    }
+
+    &:global(.#{bp.$ns}-tree-node-selected) > :global(.#{bp.$ns}-tree-node-content) {
+      background-color: bp.$blue1;
+    }
+  }
+}

@@ -26,7 +26,6 @@ export default function useTrackTableHotkeys({
       return;
     }
 
-    console.log("************ NEW HOTKEY HANDLER");
     const indexOfTrackInPlaylist = sortedTrackIds.indexOf(selectedTrackId);
     const scrollingContainer = getTableScrollingContainer(containerElement.current);
     if (scrollingContainer == null || indexOfTrackInPlaylist < 0) {
