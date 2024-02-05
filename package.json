@@ -6,16 +6,18 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn lerna run build",
+    "build": "nx run-many -t build",
     "check-format": "prettier --check \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
-    "check-lint": "yarn lerna run check-lint",
-    "check-types": "yarn lerna run check-types",
-    "clean": "yarn lerna run clean",
-    "dist": "yarn lerna run dist",
+    "check-lint": "nx run-many -t check-lint",
+    "check-types": "nx run-many -t check-types",
+    "clean": "nx run-many -t clean",
+    "dist": "nx run-many -t dist",
     "fix-format": "prettier --write \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
-    "fix-lint": "yarn lerna run lint-fix"
+    "fix-lint": "nx run-many -t lint-fix"
   },
   "devDependencies": {
+    "@lerna-lite/cli": "^3.2.1",
+    "@lerna-lite/version": "^3.2.1",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "@yarnpkg/types": "^4.0.0",
@@ -24,7 +26,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "lerna": "^8.0.2",
+    "nx": "^18.0.1",
     "prettier": "^3.2.4"
   },
   "engines": {
