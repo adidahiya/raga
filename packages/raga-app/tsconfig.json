@@ -8,6 +8,6 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "sourceMap": false,
-  },
+    "sourceMap": false
+  }
 }
