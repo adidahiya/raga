@@ -10468,11 +10468,11 @@ __metadata:
   linkType: hard
 
 "prettier@npm:^3.2.4":
-  version: 3.2.4
-  resolution: "prettier@npm:3.2.4"
+  version: 3.2.5
+  resolution: "prettier@npm:3.2.5"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10/e2b735d0552501b3a7ac8bd3ba3b6de2920bb35bd4cd02d08cb9057ebe3e96d83b9a7e4b903d987b7530a50223b12c74d107c154337236ae2c68156ba1e65cd2
+  checksum: 10/d509f9da0b70e8cacc561a1911c0d99ec75117faed27b95cc8534cb2349667dee6351b0ca83fa9d5703f14127faa52b798de40f5705f02d843da133fc3aa416a
   languageName: node
   linkType: hard
 
@@ -12815,12 +12815,12 @@ __metadata:
   linkType: hard
 
 "typescript@npm:^5.4.0-beta":
-  version: 5.4.0-dev.20240202
-  resolution: "typescript@npm:5.4.0-dev.20240202"
+  version: 5.4.0-dev.20240205
+  resolution: "typescript@npm:5.4.0-dev.20240205"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/065f0763a7e0880d13f9819f3504e906fca3264aecae919de31ac99f443c4655f6dc6ffb9921401fcb20cf32255dbd7b44c236224ffec0fa7be35f27a247b24b
+  checksum: 10/b28256bf0d699f6f62f3f5e1750859a0d8464409c6ea242a0a09c8ef84721bc33db6596a3349d2c3f6b0673ac02dc398fbd9f0aeada992e4746dbb21ed64b9d7
   languageName: node
   linkType: hard
 
@@ -12835,12 +12835,12 @@ __metadata:
   linkType: hard
 
 "typescript@patch:typescript@npm%3A^5.4.0-beta#optional!builtin<compat/typescript>":
-  version: 5.4.0-dev.20240202
-  resolution: "typescript@patch:typescript@npm%3A5.4.0-dev.20240202#optional!builtin<compat/typescript>::version=5.4.0-dev.20240202&hash=d69c25"
+  version: 5.4.0-dev.20240205
+  resolution: "typescript@patch:typescript@npm%3A5.4.0-dev.20240205#optional!builtin<compat/typescript>::version=5.4.0-dev.20240205&hash=d69c25"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/36f54818ab2694b170551eb884f07a39d1f9251390128145fcf005837ffc60bc63a3b7720877dcf0c98b76ccc633aa1aa05b552db851ff3f18da6fdefb2bc71d
+  checksum: 10/d7cdf491090d31fb53d293c7a620a64ef85166750d38f652e7bc04fcb44686a5904f03f26177f8ab9fb0d11bc306d5ba9b0f945992e9d2668896dd0144257e6d
   languageName: node
   linkType: hard
 
