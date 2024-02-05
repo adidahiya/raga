@@ -1,7 +1,7 @@
 {
   "name": "@adahiya/raga-app",
   "productName": "raga-app",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "description": "UI for running music library management",
   "main": ".vite/build/main.js",
