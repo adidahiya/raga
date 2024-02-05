@@ -74,10 +74,17 @@ Getting started:
 
 - `corepack enable` - configures the Yarn package manager
 
-Dev tasks
+Dev tasks:
 
 - `yarn build` - builds TypeScript sources and bundles up the Electron app
 - `yarn dist` - creates the Electron app distributable package
+
+Releasing
+
+- `yarn lerna version` - bumps package version numbers
+- `yarn build && yarn dist` - builds sources, bundles app, produces distributable package
+- [Draft a new GitHub release](https://github.com/adidahiya/raga/releases/new)
+- Upload the binaries produced in `packages/raga-app/out/` to the GitHub release
 
 ## About
 

@@ -13,13 +13,14 @@ updates:
     groups:
       build-tooling:
         patterns:
+          - "@lerna-lite/*"
           - "@typescript-eslint/*"
           - "@yarnpkg/*"
           - "autoprefixer"
           - "eslint-*"
           - "eslint"
-          - "lerna"
           - "npm-run-all"
+          - "nx"
           - "postcss-*"
           - "postcss"
           - "prettier"
@@ -49,3 +50,8 @@ updates:
           - "react-test-renderer"
           - "react-testing-library"
           - "react-transition-group"
+      node-server:
+        patterns:
+          - "@tinyhttp/*"
+          - "milliparsec"
+          - "sirv"

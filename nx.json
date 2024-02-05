@@ -1,0 +1,41 @@
+{
+  "affected": {
+    "defaultBase": "main"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default"
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/lib"],
+      "cache": true
+    },
+    "check-lint": {
+      "dependsOn": ["^compile"],
+      "cache": true
+    },
+    "check-types": {
+      "dependsOn": ["^compile"],
+      "cache": true
+    },
+    "dev": {
+      "dependsOn": ["^compile"]
+    },
+    "dist": {
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["^compile"]
+    }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "default": ["{projectRoot}/src/**/*", "sharedGlobals"],
+    "sharedGlobals": [],
+    "production": ["default"]
+  }
+}
