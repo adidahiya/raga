@@ -144,8 +144,10 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
 
       try {
         const res = yield* convertTrackToMP3Request(serverBaseURL, trackDef);
+        const responseText = yield* call(res.text());
+
         if (res.ok) {
-          const outputFilePath = yield* call(res.text());
+          const outputFilePath = responseText;
           log.debug(
             `[client] Successfully converted track ${trackID} to MP3 at: ${outputFilePath}`,
           );
@@ -159,7 +161,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
 
           return convertedFileURL;
         } else {
-          log.error(`[client] Failed to convert ${trackDef.Location} to MP3: ${res.statusText}`);
+          log.error(`[client] Failed to convert ${trackDef.Location} to MP3: ${responseText}`);
         }
       } catch (e) {
         log.error(

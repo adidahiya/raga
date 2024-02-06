@@ -1,7 +1,7 @@
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import { serializeError } from "serialize-error";
 
-import { log } from "./serverLogger";
+import { log } from "./common/serverLogger";
 
 export async function installReactDevTools() {
   try {

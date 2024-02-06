@@ -23,7 +23,7 @@ import {
 } from "../common/events";
 import { type AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
 import { computeLibraryMetadata } from "./libraryMeta/computeLibraryMetadata";
-import { log } from "./serverLogger";
+import { log } from "./common/serverLogger";
 import { writeAudioFileTag } from "./writeAudioFileTag";
 
 let library: SwinsianLibraryPlist | undefined;

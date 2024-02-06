@@ -21,7 +21,6 @@ __metadata:
     "@blueprintjs/icons": "npm:^5.7.1"
     "@blueprintjs/node-build-scripts": "npm:^9.2.0"
     "@electron-forge/cli": "npm:^7.2.0"
-    "@electron-forge/maker-deb": "npm:^7.2.0"
     "@electron-forge/maker-rpm": "npm:^7.2.0"
     "@electron-forge/maker-squirrel": "npm:^7.2.0"
     "@electron-forge/maker-zip": "npm:^7.2.0"
@@ -30,21 +29,20 @@ __metadata:
     "@roarr/browser-log-writer": "npm:^1.3.0"
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
-    "@types/command-exists": "npm:^1.2.3"
+    "@types/app-root-dir": "npm:^0.1.4"
     "@types/node": "npm:^20.11.16"
     "@types/react": "npm:^18.2.51"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.18"
     "@vitejs/plugin-react": "npm:^4.2.1"
     ansis: "npm:^2.1.0"
+    app-root-dir: "npm:^1.0.2"
     classnames: "npm:^2.5.1"
-    command-exists: "npm:^1.2.9"
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.3.1"
     effection: "npm:^3.0.2"
     electron: "npm:^28.2.1"
     electron-devtools-installer: "npm:^3.2.0"
-    electron-squirrel-startup: "npm:^1.0.0"
     eslint: "npm:^8.56.0"
     framer-motion: "npm:^11.0.3"
     immer: "npm:^10.0.3"
@@ -586,20 +584,6 @@ __metadata:
     fs-extra: "npm:^10.0.0"
     which: "npm:^2.0.2"
   checksum: 10/e0054c248acd7845a0ddd2f1b4856cd3648f72fdde6330ecc795619826197016f3c0fbf26d9b05b32ea1106a49dcf0b66e20431386847d400ddbd925db01cd64
-  languageName: node
-  linkType: hard
-
-"@electron-forge/maker-deb@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@electron-forge/maker-deb@npm:7.2.0"
-  dependencies:
-    "@electron-forge/maker-base": "npm:7.2.0"
-    "@electron-forge/shared-types": "npm:7.2.0"
-    electron-installer-debian: "npm:^3.2.0"
-  dependenciesMeta:
-    electron-installer-debian:
-      optional: true
-  checksum: 10/45036af3ad2743245c3de347a9c7d8dc338d330ba19a234fb0e6fe06a8d44d7bdf6e1e4ca78e55b58d0acb004cc793f452596ca534f24547f7521daa0479e0ed
   languageName: node
   linkType: hard
 
@@ -2320,6 +2304,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/app-root-dir@npm:^0.1.4":
+  version: 0.1.4
+  resolution: "@types/app-root-dir@npm:0.1.4"
+  checksum: 10/3c3569facaec129d96a3129134f890a1130824c2ecc91a787f8bfb0fef77c910fadc259b7539120e2b4bc741718cb9a47164a90fa64c2957780e6e2289573abb
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -2370,13 +2361,6 @@ __metadata:
     "@types/node": "npm:*"
     "@types/responselike": "npm:^1.0.0"
   checksum: 10/159f9fdb2a1b7175eef453ae2ced5ea04c0d2b9610cc9ccd9f9abb066d36dacb1f37acd879ace10ad7cbb649490723feb396fb7307004c9670be29636304b988
-  languageName: node
-  linkType: hard
-
-"@types/command-exists@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "@types/command-exists@npm:1.2.3"
-  checksum: 10/c90ed5f3c36d2ed5cb390d1a2e7263daabdeb18a2e20eb71bef83b0823980ee81ca773417b4d8a50fc61ede274b96d30f9b3ab836e1ecebfba5df27677cfc5fc
   languageName: node
   linkType: hard
 
@@ -2989,6 +2973,13 @@ __metadata:
     normalize-path: "npm:^3.0.0"
     picomatch: "npm:^2.0.4"
   checksum: 10/3e044fd6d1d26545f235a9fe4d7a534e2029d8e59fa7fd9f2a6eb21230f6b5380ea1eaf55136e60cbf8e613544b3b766e7a6fa2102e2a3a117505466e3025dc2
+  languageName: node
+  linkType: hard
+
+"app-root-dir@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "app-root-dir@npm:1.0.2"
+  checksum: 10/d4b1653fc60b6465b982bf5a88b12051ed2d807d70609386a809306e1c636496f53522d61fa30f9f98c71aaae34f34e1651889cf17d81a44e3dafd2859d495ad
   languageName: node
   linkType: hard
 
@@ -3912,13 +3903,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"command-exists@npm:^1.2.9":
-  version: 1.2.9
-  resolution: "command-exists@npm:1.2.9"
-  checksum: 10/46fb3c4d626ca5a9d274f8fe241230817496abc34d12911505370b7411999e183c11adff7078dd8a03ec4cf1391290facda40c6a4faac8203ae38c985eaedd63
-  languageName: node
-  linkType: hard
-
 "commander@npm:^2.19.0":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
@@ -4812,24 +4796,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-installer-debian@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "electron-installer-debian@npm:3.2.0"
-  dependencies:
-    "@malept/cross-spawn-promise": "npm:^1.0.0"
-    debug: "npm:^4.1.1"
-    electron-installer-common: "npm:^0.10.2"
-    fs-extra: "npm:^9.0.0"
-    get-folder-size: "npm:^2.0.1"
-    lodash: "npm:^4.17.4"
-    word-wrap: "npm:^1.2.3"
-    yargs: "npm:^16.0.2"
-  bin:
-    electron-installer-debian: src/cli.js
-  conditions: (os=darwin | os=linux)
-  languageName: node
-  linkType: hard
-
 "electron-installer-redhat@npm:^3.2.0":
   version: 3.4.0
   resolution: "electron-installer-redhat@npm:3.4.0"
@@ -4844,15 +4810,6 @@ __metadata:
   bin:
     electron-installer-redhat: src/cli.js
   conditions: (os=darwin | os=linux)
-  languageName: node
-  linkType: hard
-
-"electron-squirrel-startup@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "electron-squirrel-startup@npm:1.0.0"
-  dependencies:
-    debug: "npm:^2.2.0"
-  checksum: 10/7618cd2ba8de141e89f5ce37b8f2bc442d5c0200845536123493ad278c50d560a7af0570c076092e43a6638f73ff383ab8d2ce88b11d99f8eafb5b08f9db1da8
   languageName: node
   linkType: hard
 
@@ -6130,13 +6087,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gar@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "gar@npm:1.0.4"
-  checksum: 10/6b1010b5c17056526298734bfa08716f111cd023394dbe32496841e2f7b0dfe9e742b8ddb56103c0867f2ae80f5f069262916e5398ac982467be4da240ba7bb9
-  languageName: node
-  linkType: hard
-
 "gauge@npm:^4.0.3":
   version: 4.0.4
   resolution: "gauge@npm:4.0.4"
@@ -6180,18 +6130,6 @@ __metadata:
   version: 2.0.5
   resolution: "get-caller-file@npm:2.0.5"
   checksum: 10/b9769a836d2a98c3ee734a88ba712e62703f1df31b94b784762c433c27a386dd6029ff55c2a920c392e33657d80191edbf18c61487e198844844516f843496b9
-  languageName: node
-  linkType: hard
-
-"get-folder-size@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "get-folder-size@npm:2.0.1"
-  dependencies:
-    gar: "npm:^1.0.4"
-    tiny-each-async: "npm:2.0.3"
-  bin:
-    get-folder-size: bin/get-folder-size
-  checksum: 10/d29167b779f43841dbf13af9399ea86f1ca46d289c55211ac01b6081bbedf0be99ccfdc32d3ca1c23299418d72d4ee426ca994aa31f5ed9d71515567faf150e6
   languageName: node
   linkType: hard
 
@@ -7997,7 +7935,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.4":
+"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10/c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532
@@ -11893,13 +11831,6 @@ __metadata:
   version: 4.0.1
   resolution: "timed-out@npm:4.0.1"
   checksum: 10/d52648e5fc0ebb0cae1633737a1db1b7cb464d5d43d754bd120ddebd8067a1b8f42146c250d8cfb9952183b7b0f341a99fc71b59c52d659218afae293165004f
-  languageName: node
-  linkType: hard
-
-"tiny-each-async@npm:2.0.3":
-  version: 2.0.3
-  resolution: "tiny-each-async@npm:2.0.3"
-  checksum: 10/f9588bc2ff6ffd0426cd3cadb7b458b9e35c96a568b1e35baa5645151ff795953dac6a9e0b7a3c88d1733f959bcddb69680c201667fcdcc59d62b419979d0f62
   languageName: node
   linkType: hard
 

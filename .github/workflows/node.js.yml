@@ -29,10 +29,6 @@ jobs:
       - run: yarn format-check
       - name: Install Deno
         run: curl -fsSL https://deno.land/install.sh | sh
-      - name: Install @electron-forge/maker-deb Linux dependencies
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y dpkg fakeroot
       - name: Build CLI and App distributions
         run: |
           export PATH="$DENO_INSTALL_PATH/bin:$PATH"

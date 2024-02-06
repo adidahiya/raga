@@ -1,6 +1,6 @@
 import { ServerEventChannel } from "./common/events";
 import { initAppServer } from "./server/appServer";
-import { log } from "./server/serverLogger";
+import { log } from "./server/common/serverLogger";
 
 // HACKHACK: we can't use top-level await until we migrate to ESM, which is currently blocked by
 // electron-vite support. Also, effection's main() function isn't running correctly for some reason,

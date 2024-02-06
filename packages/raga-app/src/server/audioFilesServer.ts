@@ -14,7 +14,7 @@ import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
 import { type AudioFilesServerStartedEventPayload } from "../common/events";
 import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";
-import { log } from "./serverLogger";
+import { log } from "./common/serverLogger";
 
 let audioFilesServer: AudioFilesServer | undefined;
 
