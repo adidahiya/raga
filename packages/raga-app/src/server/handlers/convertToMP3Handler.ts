@@ -45,7 +45,7 @@ export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Ha
 
     if (!isFfmpegAvailable) {
       // 501 means server does not support the requested functionality, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
-      res.status(501).send(ServerErrors.FFMPEG_NOT_INSTALLED);
+      res.status(501).send(ServerErrors.FFMPEG_UNAVAILABLE);
       return;
     }
 

@@ -1,12 +1,12 @@
 import { existsSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 
-import appRootDir from "app-root-dir";
 import ffmpeg from "fluent-ffmpeg";
 
+import { appPath } from "./appPath";
 import { log } from "./serverLogger";
 
-const ffmpegPath = resolve(join(appRootDir.get(), "bin", "ffmpeg"));
+const ffmpegPath = join(appPath, "bin", "ffmpeg-darwin-arm64");
 export const isFfmpegAvailable = existsSync(ffmpegPath);
 
 if (isFfmpegAvailable) {

@@ -13,8 +13,9 @@ import { withTimeout } from "../common/asyncUtils";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
 import { type AudioFilesServerStartedEventPayload } from "../common/events";
-import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";
+import ffmpeg from "./common/ffmpeg";
 import { log } from "./common/serverLogger";
+import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";
 
 let audioFilesServer: AudioFilesServer | undefined;
 
@@ -67,7 +68,7 @@ function* createAudioFileConverterAndInitServer(
   validateRootFolderOrThrow(options.audioFilesRootFolder);
 
   log.debug(`Initializing audio files converter...`);
-  const converter = new AudioFileConverter();
+  const converter = new AudioFileConverter({ ffmpeg });
   const app = initServerApp(converter, options);
 
   const httpServer = yield* waitForHTTPServerToStart(app);
