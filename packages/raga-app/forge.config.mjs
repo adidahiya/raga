@@ -8,6 +8,15 @@ export default {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],
     },
+    {
+      name: "@electron-forge/maker-deb",
+      config: {
+        options: {
+          genericName: "Raga",
+          bin: "raga-app",
+        },
+      },
+    },
   ],
   plugins: [
     {
