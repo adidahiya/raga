@@ -69,8 +69,6 @@ export default function UncontrolledTree<T extends object>({
           });
         }
 
-        console.log(draft);
-
         if (newSelected) {
           // apply our 'selected path' class at each level of the path
           for (let i = 0; i < nodePath.length; i++) {

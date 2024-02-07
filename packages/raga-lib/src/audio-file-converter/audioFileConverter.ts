@@ -42,7 +42,11 @@ export interface MP3ConversionOptions {
 export default class AudioFileConverter {
   public temporaryOutputDir: string;
 
-  constructor() {
+  private get ffmpeg() {
+    return this.options.ffmpeg ?? ffmpeg;
+  }
+
+  constructor(private options: { ffmpeg?: typeof ffmpeg }) {
     // N.B. the `tempy` package is not compatible with Vite for some strange reason, so we
     // create temp directories ourself with built-in Node.js APIs
     const tempDir = join(tmpdir(), LIB_PACKAGE_NAME, "converted");
@@ -99,7 +103,7 @@ export default class AudioFileConverter {
 
     return new Promise<string>((resolve, reject) => {
       console.time(`convertAudioFileToMP3`);
-      ffmpeg(inputFileStream)
+      this.ffmpeg(inputFileStream)
         .audioCodec(codec)
         .audioBitrate(bitrate)
         .audioFrequency(sampleRate)

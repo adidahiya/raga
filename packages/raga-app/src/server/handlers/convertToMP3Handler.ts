@@ -3,14 +3,13 @@ import { fileURLToPath } from "node:url";
 
 import type { AudioFileConverter } from "@adahiya/raga-lib";
 import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
-import { sync as commandExistsSync } from "command-exists";
 import { action, type Operation, run, suspend } from "effection";
-import ffmpeg from "fluent-ffmpeg";
 import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
 import type { ConvertTrackToMP3RequestBody } from "../../common/api/audioFilesServerAPI";
 import { ServerErrors } from "../../common/errorMessages";
-import { log } from "../serverLogger";
+import ffmpeg, { isFfmpegAvailable } from "../common/ffmpeg";
+import { log } from "../common/serverLogger";
 
 export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Handler {
   return async (
@@ -44,10 +43,9 @@ export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Ha
       return;
     }
 
-    const ffmpegExists = commandExistsSync("ffmpeg");
-    if (!ffmpegExists) {
+    if (!isFfmpegAvailable) {
       // 501 means server does not support the requested functionality, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
-      res.status(501).send(ServerErrors.FFMPEG_NOT_INSTALLED);
+      res.status(501).send(ServerErrors.FFMPEG_UNAVAILABLE);
       return;
     }
 
