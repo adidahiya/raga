@@ -1,8 +1,4 @@
-import {
-  installExtension,
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} from "electron-extension-installer";
+import { installExtension, REACT_DEVELOPER_TOOLS } from "electron-extension-installer";
 import { serializeError } from "serialize-error";
 
 import { log } from "./common/serverLogger";
@@ -12,7 +8,7 @@ import { log } from "./common/serverLogger";
 // This version of the installer ("electron-extension-installer") downloads an older version of React devtools.
 export async function installReactDevTools() {
   try {
-    await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
+    await installExtension([REACT_DEVELOPER_TOOLS], {
       loadExtensionOptions: {
         allowFileAccess: true,
       },
