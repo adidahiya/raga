@@ -41,7 +41,7 @@ __metadata:
     date-fns: "npm:^3.3.1"
     effection: "npm:^3.0.2"
     electron: "npm:^28.2.2"
-    electron-devtools-installer: "npm:^3.2.0"
+    electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.56.0"
     framer-motion: "npm:^11.0.3"
     immer: "npm:^10.0.3"
@@ -2397,6 +2397,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jszip@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@types/jszip@npm:3.4.1"
+  dependencies:
+    jszip: "npm:*"
+  checksum: 10/e779a531fadfc2152233b71055cb67d21e8a8c6bbc6e94ffc5d186bc3fea6a66294c3efa87314339a9fd4b17fe9cb65cacd6c60d14db1d9487f8b9ae17d03255
+  languageName: node
+  linkType: hard
+
 "@types/keyv@npm:^3.1.1, @types/keyv@npm:^3.1.4":
   version: 3.1.4
   resolution: "@types/keyv@npm:3.1.4"
@@ -4747,15 +4756,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-devtools-installer@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "electron-devtools-installer@npm:3.2.0"
+"electron-extension-installer@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "electron-extension-installer@npm:1.2.0"
   dependencies:
-    rimraf: "npm:^3.0.2"
-    semver: "npm:^7.2.1"
-    tslib: "npm:^2.1.0"
-    unzip-crx-3: "npm:^0.2.0"
-  checksum: 10/e48390567f7344a0aa3a184413064ea366992fc1f0d247177bfe4f6c4b732ee3088c9d19409156650edb2c6982b97cbf1983cfd7b486c6ee7ef314ad0cabc06e
+    "@types/jszip": "npm:^3.4.1"
+    fs-jetpack: "npm:^5.1.0"
+    jszip: "npm:^3.10.1"
+    rimraf: "npm:^5.0.0"
+  checksum: 10/ae0bede8de8f79a48c61d66c2689c826f1e1f3d453c387fb5ba42ea44315a907b5fa9bdee6457ac138e8454049929de7519eb9c6806de53577ce4aab5c10daa0
   languageName: node
   linkType: hard
 
@@ -5967,6 +5976,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-jetpack@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "fs-jetpack@npm:5.1.0"
+  dependencies:
+    minimatch: "npm:^5.1.0"
+  checksum: 10/a9b3fa798a9c8d5d1878a5856fc59cc1bdbdbd5665e9df3a464966c7c5a77aa6fe3c02c3ce5cec70481780e420b3f0779b6303fb82005a9e7a4234e1bcce03ec
+  languageName: node
+  linkType: hard
+
 "fs-minipass@npm:^2.0.0, fs-minipass@npm:^2.1.0":
   version: 2.1.0
   resolution: "fs-minipass@npm:2.1.0"
@@ -6257,7 +6275,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2, glob@npm:^10.3.10":
+"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.7":
   version: 10.3.10
   resolution: "glob@npm:10.3.10"
   dependencies:
@@ -7655,7 +7673,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jszip@npm:^3.1.0":
+"jszip@npm:*, jszip@npm:^3.10.1":
   version: 3.10.1
   resolution: "jszip@npm:3.10.1"
   dependencies:
@@ -8319,7 +8337,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^5.0.1":
+"minimatch@npm:^5.0.1, minimatch@npm:^5.1.0":
   version: 5.1.6
   resolution: "minimatch@npm:5.1.6"
   dependencies:
@@ -8454,7 +8472,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^0.5.1, mkdirp@npm:~0.5.1":
+"mkdirp@npm:^1.0.3, mkdirp@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "mkdirp@npm:1.0.4"
+  bin:
+    mkdirp: bin/cmd.js
+  checksum: 10/d71b8dcd4b5af2fe13ecf3bd24070263489404fe216488c5ba7e38ece1f54daf219e72a833a3a2dc404331e870e9f44963a33399589490956bff003a3404d3b2
+  languageName: node
+  linkType: hard
+
+"mkdirp@npm:~0.5.1":
   version: 0.5.6
   resolution: "mkdirp@npm:0.5.6"
   dependencies:
@@ -8462,15 +8489,6 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 10/0c91b721bb12c3f9af4b77ebf73604baf350e64d80df91754dc509491ae93bf238581e59c7188360cec7cb62fc4100959245a42cfe01834efedc5e9d068376c2
-  languageName: node
-  linkType: hard
-
-"mkdirp@npm:^1.0.3, mkdirp@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "mkdirp@npm:1.0.4"
-  bin:
-    mkdirp: bin/cmd.js
-  checksum: 10/d71b8dcd4b5af2fe13ecf3bd24070263489404fe216488c5ba7e38ece1f54daf219e72a833a3a2dc404331e870e9f44963a33399589490956bff003a3404d3b2
   languageName: node
   linkType: hard
 
@@ -10630,6 +10648,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rimraf@npm:^5.0.0":
+  version: 5.0.5
+  resolution: "rimraf@npm:5.0.5"
+  dependencies:
+    glob: "npm:^10.3.7"
+  bin:
+    rimraf: dist/esm/bin.mjs
+  checksum: 10/a612c7184f96258b7d1328c486b12ca7b60aa30e04229a08bbfa7e964486deb1e9a1b52d917809311bdc39a808a4055c0f950c0280fba194ba0a09e6f0d404f6
+  languageName: node
+  linkType: hard
+
 "roarr@npm:^2.15.3":
   version: 2.15.4
   resolution: "roarr@npm:2.15.4"
@@ -12181,17 +12210,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unzip-crx-3@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "unzip-crx-3@npm:0.2.0"
-  dependencies:
-    jszip: "npm:^3.1.0"
-    mkdirp: "npm:^0.5.1"
-    yaku: "npm:^0.16.6"
-  checksum: 10/fcc381e9dda6fa7c3e99d285bcc87baffd9010b0dd0927027799c2a17fab9873417323d164d93ff6babe6bb757a8d5d266e891040f4364b9989e2608465545fe
-  languageName: node
-  linkType: hard
-
 "unzip-response@npm:^2.0.1":
   version: 2.0.1
   resolution: "unzip-response@npm:2.0.1"
@@ -12844,13 +12862,6 @@ __metadata:
   version: 5.0.8
   resolution: "y18n@npm:5.0.8"
   checksum: 10/5f1b5f95e3775de4514edbb142398a2c37849ccfaf04a015be5d75521e9629d3be29bd4432d23c57f37e5b61ade592fb0197022e9993f81a06a5afbdcda9346d
-  languageName: node
-  linkType: hard
-
-"yaku@npm:^0.16.6":
-  version: 0.16.7
-  resolution: "yaku@npm:0.16.7"
-  checksum: 10/13de5e1249e1299f67fef0c39153fcf1be8ddc89ce4b8c99951bbf4fe67d7803cd0c2001fbfec35af9338a894e0bf58db8ee4bf33d06752b5d66090c32a6fd3e
   languageName: node
   linkType: hard
 

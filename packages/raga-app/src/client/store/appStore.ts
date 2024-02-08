@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { LOCAL_STORAGE_KEY } from "../../common/constants";
@@ -49,15 +49,18 @@ export type AppStore = AppState & AppActions;
 export const useAppStore = create<AppStore>()(
   // persist app store to localStorage, see https://docs.pmnd.rs/zustand/integrations/persisting-store-data
   persist(
-    immer((...args) => ({
-      // store is split into slices, see https://docs.pmnd.rs/zustand/guides/slices-pattern
-      ...createAppOverlaysSlice(...args),
-      ...createAudioFilesServerSlice(...args),
-      ...createLibrarySlice(...args),
-      ...createAudioAnalyzerSlice(...args),
-      ...createAudioPlayerSlice(...args),
-      ...createUserSettingsSlice(...args),
-    })),
+    // enable Redux devtools support, see https://github.com/pmndrs/zustand?tab=readme-ov-file#redux-devtools
+    devtools(
+      immer((...args) => ({
+        // store is split into slices, see https://docs.pmnd.rs/zustand/guides/slices-pattern
+        ...createAppOverlaysSlice(...args),
+        ...createAudioFilesServerSlice(...args),
+        ...createLibrarySlice(...args),
+        ...createAudioAnalyzerSlice(...args),
+        ...createAudioPlayerSlice(...args),
+        ...createUserSettingsSlice(...args),
+      })),
+    ),
     {
       name: `${LOCAL_STORAGE_KEY}-appStore`,
       version: 0,
