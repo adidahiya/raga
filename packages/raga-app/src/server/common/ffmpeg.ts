@@ -9,11 +9,13 @@ import { log } from "./serverLogger";
 const ffmpegPath = join(appPath, "bin", "ffmpeg-darwin-arm64");
 export const isFfmpegAvailable = existsSync(ffmpegPath);
 
+log.debug(`Attempting to use ffmpeg from path '${ffmpegPath}' ...`);
+
 if (isFfmpegAvailable) {
-  log.debug(`Using ffmpeg from ${ffmpegPath}`);
+  log.debug(`Found ffmpeg ✅`);
   ffmpeg.setFfmpegPath(ffmpegPath);
 } else {
-  log.error("ffmpeg is not available");
+  log.error(`ffmpeg is not available ❌`);
 }
 
 export default ffmpeg;
