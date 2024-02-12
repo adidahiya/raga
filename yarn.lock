@@ -10205,12 +10205,14 @@ __metadata:
   linkType: hard
 
 "react-resizable-panels@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "react-resizable-panels@npm:2.0.3"
+  version: 2.0.5
+  resolution: "react-resizable-panels@npm:2.0.5"
+  dependencies:
+    stacking-order: "npm:^1"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/460ffffe776a490b0603fde0594877b2d9f1c3280eca0079dedc520c7a9e07ab5dcb2cd266013407e5a2a4828d27890f14623d4c51e8604a77c249a771043314
+  checksum: 10/3ce5884574310e75ebc7f38100af91d7a09b6cc9a8a0853d217da860ed5dbb8e331efafb63645b52da6257f46fc0fd6647b1c9a36a39423426bb40af424fb709
   languageName: node
   linkType: hard
 
@@ -11319,6 +11321,13 @@ __metadata:
   version: 0.1.8
   resolution: "stable@npm:0.1.8"
   checksum: 10/2ff482bb100285d16dd75cd8f7c60ab652570e8952c0bfa91828a2b5f646a0ff533f14596ea4eabd48bb7f4aeea408dce8f8515812b975d958a4cc4fa6b9dfeb
+  languageName: node
+  linkType: hard
+
+"stacking-order@npm:^1":
+  version: 1.0.1
+  resolution: "stacking-order@npm:1.0.1"
+  checksum: 10/f1dfc1d3743dc8b212e50ca5700c301851696d607e91475e0540fcfc2101a4c0872d74566a3026e28444a6e10ba42e3419dbac094631590c92223f395db2ed07
   languageName: node
   linkType: hard
 
