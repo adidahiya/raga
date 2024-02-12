@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Button, Classes, Slider } from "@blueprintjs/core";
+import { Button, Classes, Slider, Tooltip } from "@blueprintjs/core";
 import { CaretLeft } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
@@ -47,17 +47,24 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
           )}
         </AnimatePresence>
       </motion.div>
-      <Button
-        className={styles.tempoSliderToggleButton}
-        outlined={true}
-        small={true}
-        icon={
-          <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
-            <CaretLeft />
-          </motion.span>
-        }
-        onClick={toggleTempoSlider}
-      />
+      <Tooltip
+        compact={true}
+        content={isTempoSliderOpen ? "Hide BPM slider" : "Show BPM adjustment slider"}
+        hoverOpenDelay={500}
+        placement="bottom"
+      >
+        <Button
+          className={styles.tempoSliderToggleButton}
+          outlined={true}
+          small={true}
+          icon={
+            <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
+              <CaretLeft />
+            </motion.span>
+          }
+          onClick={toggleTempoSlider}
+        />
+      </Tooltip>
       <span className={Classes.TEXT_MUTED}>BPM: </span>
       {trackDef.BPM !== undefined ? (
         <span
