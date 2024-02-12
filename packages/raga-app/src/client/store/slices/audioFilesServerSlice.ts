@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { call, type Operation } from "effection";
+import { call, type Operation, run } from "effection";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";
 
@@ -14,6 +14,7 @@ import {
   ClientEventChannel,
   ServerEventChannel,
 } from "../../../common/events";
+import getAllConvertedMP3sRequest from "../requestFactories/allConvertedMP3sRequest";
 import convertTrackToMP3Request from "../requestFactories/convertTrackToMP3Request";
 import pingRequest from "../requestFactories/pingRequest";
 import type { AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
@@ -50,6 +51,7 @@ export interface AudioFilesServerActions {
 
   // complex server actions
   convertTrackToMP3: (trackDef: TrackDefinition) => Operation<string | undefined>;
+  getConvertedMP3s: () => Operation<void>;
 }
 
 export const createAudioFilesServerSlice: AppStoreSliceCreator<
@@ -132,6 +134,23 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
     },
 
     /**
+     * Update the record of converted MP3 file URLs from the audio files server
+     */
+    getConvertedMP3s: function* (): Operation<void> {
+      const res = yield* getAllConvertedMP3sRequest(serverBaseURL);
+      if (res.ok) {
+        const convertedFilePaths: Record<string, string> = yield* call(res.json());
+        const audioConvertedFileURLs: Record<number, string> = {};
+        for (const [trackID, filePath] of Object.entries(convertedFilePaths)) {
+          audioConvertedFileURLs[parseInt(trackID, 10)] = `${serverBaseURL}${
+            ServerRoutes.GET_CONVERTED_MP3
+          }/${encodeURIComponent(filePath)}`;
+        }
+        set({ audioConvertedFileURLs });
+      }
+    },
+
+    /**
      * @returns the URL of the converted MP3 file, or undefined if unsuccessful
      */
     convertTrackToMP3: function* (trackDef: TrackDefinition): Operation<string | undefined> {
@@ -187,16 +206,6 @@ function initAudioFilesServer(set: AppStoreSet) {
       ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
       (_event, data) => {
         set((state) => {
-          if (
-            state.audioFilesConverterTemporaryFolder !== data?.audioConverterTemporaryFolder &&
-            Object.entries(state.audioConvertedFileURLs).length > 0
-          ) {
-            // we may receive a new temporary folder from the server (typically after an OS restart)
-            log.debug(
-              `[client] server returned a new temporary folder for converted audio files; clearing local cache of converted file URLs`,
-            );
-            state.audioConvertedFileURLs = {};
-          }
           state.toaster?.show({
             message: `Audio files server started at ${state.audioFilesRootFolder}`,
             intent: "success",
@@ -204,6 +213,11 @@ function initAudioFilesServer(set: AppStoreSet) {
           });
           state.audioFilesConverterTemporaryFolder = data?.audioConverterTemporaryFolder;
           state.audioFilesServerStatus = "started";
+
+          // Fetch the list of previously-converted MP3s from the audio files server. We rely on the server for this
+          // information (rather than caching it) so that we know the files are guaranteed to exist on disk and
+          // they have not been cleaned up by some OS process.
+          void run(state.getConvertedMP3s);
         });
       },
     );

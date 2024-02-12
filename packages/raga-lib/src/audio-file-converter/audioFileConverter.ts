@@ -1,6 +1,6 @@
-import { createReadStream, existsSync, mkdirSync } from "node:fs";
+import { createReadStream, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, dirname, extname, join } from "node:path";
+import { basename, dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import ffmpeg from "fluent-ffmpeg";
@@ -59,6 +59,29 @@ export default class AudioFileConverter {
     }
 
     this.temporaryOutputDir = tempDir;
+  }
+
+  /**
+   * Returns a record of all the converted MP3 file locations (keyed by track ID) in the temporary output directory.
+   */
+  public getAllConvertedMP3s(): Record<string, string> {
+    if (!existsSync(this.temporaryOutputDir)) {
+      return {};
+    }
+
+    const convertedMP3s: Record<string, string> = {};
+    const trackDirs = readdirSync(this.temporaryOutputDir);
+    for (const trackDir of trackDirs) {
+      // dir name is like "track-id-123"
+      const trackID = trackDir.split("-")[2];
+      const resolvedTrackDir = resolve(this.temporaryOutputDir, trackDir);
+      // just take the first MP3 file in the dir, it's very unlikely that there are multiple
+      // TODO: consider picking the most recently modified file
+      const mp3File = readdirSync(resolvedTrackDir).filter((f) => f.endsWith(".mp3"))[0];
+      convertedMP3s[trackID] = join(this.temporaryOutputDir, trackDir, mp3File);
+    }
+
+    return convertedMP3s;
   }
 
   /**

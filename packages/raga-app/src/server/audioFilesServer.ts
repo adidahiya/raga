@@ -1,10 +1,11 @@
 import { once } from "node:events";
-import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { type Server } from "node:http";
 import { env } from "node:process";
 
 import { AudioFileConverter } from "@adahiya/raga-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
+import {} from "@tinyhttp/send";
 import { call, type Operation, run } from "effection";
 import sirv from "sirv";
 
@@ -105,6 +106,9 @@ function initServerApp(converter: AudioFileConverter, options: AudioFilesServerO
     }
   }
 
+  /**
+   * Returns the requested MP3 file from disk, if it exists.
+   */
   function handleGetConvertedMP3FileRequest(req: Request, res: Response) {
     const filepath = decodeURIComponent(req.params.filepath);
     const fileExists = existsSync(filepath);
@@ -114,18 +118,21 @@ function initServerApp(converter: AudioFileConverter, options: AudioFilesServerO
       return;
     }
 
-    const fileStat = statSync(filepath);
-    const fileStream = createReadStream(filepath);
-    res.status(200).header({
-      "Content-Type": "audio/mpeg",
-      "Content-Length": fileStat.size,
-    });
-    fileStream.pipe(res);
+    res.status(200).sendFile(filepath);
+  }
+
+  /**
+   * Requests the record of all previously converted MP3 files on disk from the audio file converter.
+   */
+  function handleGetAllConvertedMP3s(_req: Request, res: Response) {
+    const allConvertedMP3s = converter.getAllConvertedMP3s();
+    res.status(200).json(allConvertedMP3s);
   }
 
   return app
     .get(ServerRoutes.GET_PING, handlePingRequest)
     .get(`${ServerRoutes.GET_CONVERTED_MP3}/:filepath`, handleGetConvertedMP3FileRequest)
+    .get(ServerRoutes.GET_ALL_CONVERTED_MP3S, handleGetAllConvertedMP3s)
     .post(ServerRoutes.POST_CONVERT_TO_MP3, getConvertToMP3RequestHandler(converter))
     .use(staticServerMiddleware);
 }

@@ -11,6 +11,8 @@ enableMapSet();
 const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
   "audioCurrentTimeMs",
   "audioDuration",
+  // the record of converted file URLs is not always reliable; we should re-fetch it from the server on startup
+  "audioConvertedFileURLs",
   "audioIsPlaying",
   "audioPlaybackRate",
   "analyzerStatus",
