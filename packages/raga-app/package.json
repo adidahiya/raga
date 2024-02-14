@@ -28,7 +28,7 @@
     "classnames": "^2.5.1",
     "date-fns": "^3.3.1",
     "effection": "^3.0.2",
-    "framer-motion": "^11.0.3",
+    "framer-motion": "^11.0.5",
     "immer": "^10.0.3",
     "milliparsec": "^2.3.0",
     "node-taglib-sharp": "^5.2.3",
@@ -36,7 +36,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-resizable-panels": "^2.0.3",
+    "react-resizable-panels": "^2.0.8",
     "roarr": "^7.21.0",
     "serialize-error": "^11.0.3",
     "sirv": "^2.0.4",
@@ -65,7 +65,7 @@
     "react-devtools": "^5.0.0",
     "sass": "^1.70.0",
     "typescript": "^5.4.0-beta",
-    "vite": "^5.1.1"
+    "vite": "^5.1.2"
   },
   "keywords": [],
   "author": {
