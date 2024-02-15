@@ -26,6 +26,8 @@ export type LibraryLoadingState = "none" | "loading" | "loaded" | "error";
 export type libraryWriteState = "none" | "ready" | "busy";
 
 export interface LibraryState {
+  /** A track may be "active" in the table through right-click (context menu) or arrow key interactions */
+  activeTrackId: number | undefined;
   library: SwinsianLibraryPlist | undefined;
   libraryLoadingState: LibraryLoadingState;
   libraryWriteState: libraryWriteState;
@@ -34,6 +36,7 @@ export interface LibraryState {
   libraryInputFilepath: string | undefined;
   libraryOutputFilepath: string | undefined;
   selectedPlaylistId: string | undefined;
+  /** A track may be "selected" by left-clicking on it */
   selectedTrackId: number | undefined;
 }
 
@@ -50,6 +53,7 @@ export interface LibraryActions {
   getSelectedTrackDef: () => SwinsianTrackDefinition | undefined;
 
   // actions - simple setters
+  setActiveTrackId: (activeTrackId: number | undefined) => void;
   setLibraryPlist: (libraryPlist: SwinsianLibraryPlist | undefined) => void;
   setLibraryInputFilepath: (libraryFilepath: string | undefined) => void;
   setLibraryOutputFilepath: (libraryFilepath: string | undefined) => void;
@@ -62,6 +66,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   set,
   get,
 ) => ({
+  activeTrackId: undefined,
   library: undefined,
   libraryInputFilepath: undefined,
   libraryOutputFilepath: undefined,
@@ -85,6 +90,9 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   },
 
   // simple setters
+  setActiveTrackId: (activeTrackId) => {
+    set({ activeTrackId });
+  },
   setSelectedPlaylistId: (selectedPlaylistId: string | undefined) => {
     set({ selectedPlaylistId });
   },

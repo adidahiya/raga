@@ -53,7 +53,6 @@ export default function UncontrolledTree<T extends object>({
   onSelect,
   ...treeProps
 }: UncontrolledTreeProps<T>) {
-  // Warning: doing a bit of state mutation here before we've wrapped the nodes in Immer, might want to revisit this decision
   const nodesWithClassNames = useMemo(() => mapEachNode<T>(nodes, applyDefaultClassNames), [nodes]);
   const [nodesWithTreeState, setNodes] = useImmer<TreeNode<T>[]>(nodesWithClassNames);
 

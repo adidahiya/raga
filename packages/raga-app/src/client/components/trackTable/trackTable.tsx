@@ -24,7 +24,7 @@ import type {
 import { Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/react/shallow";
 
@@ -225,10 +225,11 @@ interface TrackTableRowProps
 // N.B. we cannot wrap this in a standard Blueprint ContextMenu because `<Row>` does not use forwardRef
 const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+  const activeTrackId = appStore.use.activeTrackId();
 
   return (
     <Row
-      className={styles.row}
+      className={classNames(styles.row, { [styles.rowActive]: activeTrackId === track.id })}
       data-track-id={track.id}
       item={track}
       // N.B. key must include the playlist ID because there is row information which changes as we navigate
@@ -338,6 +339,10 @@ function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefin
   const selectedTrackId = appStore.use.selectedTrackId();
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
   const [sortedTrackDefs, setSortedTrackDefs] = useState(trackDefNodes.nodes);
+
+  useEffect(() => {
+    setSortedTrackDefs(trackDefNodes.nodes);
+  }, [trackDefNodes.nodes]);
 
   const handleSortChange = useCallback(
     (_action: Action, state: State) => {

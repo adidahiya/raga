@@ -1,12 +1,12 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { ContextMenuPopover, Menu, MenuItem } from "@blueprintjs/core";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Roarr as log } from "roarr";
+import { ContextMenuPopover } from "@blueprintjs/core";
+import { useCallback, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 
 import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
-import { ClientEventChannel } from "../../../common/events";
 import type { Offset } from "../../common/types";
+import { appStore } from "../../store/appStore";
+import TrackRowContextMenu from "./trackRowContextMenu";
 import { getTableScrollingContainer } from "./trackTableDOMUtils";
 
 export interface UseTrackTableContextMenuOptions {
@@ -27,16 +27,7 @@ export default function useTrackTableContextMenu({
   const [targetOffset, setTargetOffset] = useState<Offset>({ left: 0, top: 0 });
   // "active" for the context menu means the track that was right-clicked
   const [activeTrackDef, setActiveTrackDef] = useState<TrackDefinition | undefined>(undefined);
-
-  const contextMenuPopover = (
-    <ContextMenuPopover
-      content={<TrackRowContextMenu track={activeTrackDef} />}
-      isOpen={isContextMenuOpen.value}
-      targetOffset={targetOffset}
-      onClose={isContextMenuOpen.setFalse}
-      isDarkTheme={true}
-    />
-  );
+  const setActiveTrackId = appStore.use.setActiveTrackId();
 
   const handleContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -54,43 +45,36 @@ export default function useTrackTableContextMenu({
         containerTopOffset -
         TRACK_TABLE_HEADER_HEIGHT;
       const trackIndex = Math.floor(topOffsetInList / TRACK_TABLE_ROW_HEIGHT);
-      setActiveTrackDef(sortedTrackDefs[trackIndex]);
+      const newActiveTrackDef = sortedTrackDefs[trackIndex] as TrackDefinition | undefined;
 
-      isContextMenuOpen.setTrue();
+      setActiveTrackDef(newActiveTrackDef);
+      setActiveTrackId(newActiveTrackDef?.["Track ID"]);
+      isContextMenuOpen.setValue(newActiveTrackDef !== undefined);
       setTargetOffset({
         left: event.clientX,
         top: event.clientY,
       });
     },
-    [containerElement, isContextMenuOpen, sortedTrackDefs],
+    [containerElement, isContextMenuOpen, setActiveTrackId, sortedTrackDefs],
+  );
+
+  const handleClose = useCallback(() => {
+    isContextMenuOpen.setFalse();
+    setActiveTrackId(undefined);
+  }, [isContextMenuOpen, setActiveTrackId]);
+
+  const contextMenuPopover = (
+    <ContextMenuPopover
+      content={<TrackRowContextMenu track={activeTrackDef} />}
+      isOpen={isContextMenuOpen.value}
+      targetOffset={targetOffset}
+      onClose={handleClose}
+      isDarkTheme={true}
+    />
   );
 
   return {
     handleContextMenu,
     contextMenuPopover,
   };
-}
-
-function TrackRowContextMenu({ track }: { track: TrackDefinition | undefined }) {
-  const handleOpenFile = useCallback(() => {
-    if (track === undefined) {
-      return;
-    }
-
-    const filepath = decodeURIComponent(track.Location.replace("file://", ""));
-    log.debug(`[client] Opening file at path: '${filepath}'`);
-    window.api.send(ClientEventChannel.OPEN_FILE_LOCATION, { filepath });
-  }, [track]);
-
-  // we manually implement autoFocus here ContextMenuPopover does not support the `autoFocus` prop
-  const containerElement = useRef<HTMLUListElement>(null);
-  useEffect(() => {
-    containerElement.current?.focus();
-  });
-
-  return (
-    <Menu tabIndex={0} ulRef={containerElement}>
-      <MenuItem text="Reveal in Finder" onClick={handleOpenFile} />
-    </Menu>
-  );
 }
