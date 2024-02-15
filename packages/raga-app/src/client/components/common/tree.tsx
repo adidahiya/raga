@@ -1,6 +1,6 @@
 import { Classes, Tree, type TreeNodeInfo } from "@blueprintjs/core";
 import classNames from "classnames";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useImmer } from "use-immer";
 
 import styles from "./tree.module.scss";
@@ -8,10 +8,11 @@ import styles from "./tree.module.scss";
 // INTERFACES
 // -------------------------------------------------------------------------------------------------
 
-export interface TreeNode<T> extends Omit<TreeNodeInfo<T>, "hasCaret" | "isSelected"> {
+export interface TreeNode<T> extends TreeNodeInfo<T> {
   childNodes?: TreeNode<T>[];
   data: T;
   id: string;
+  parentId: string | undefined;
 }
 
 export interface UncontrolledTreeProps<T> {
@@ -20,6 +21,9 @@ export interface UncontrolledTreeProps<T> {
 
   /** Whether to use compact styles. */
   compact?: boolean;
+
+  /** ID of the initially selected node. */
+  defaultSelectedNodeId?: string;
 
   /** Tree data nodes. */
   nodes: TreeNode<T>[];
@@ -43,13 +47,34 @@ export interface UncontrolledTreeProps<T> {
  */
 export default function UncontrolledTree<T extends object>({
   compact,
+  defaultSelectedNodeId,
   nodes,
   onChange,
   onSelect,
   ...treeProps
 }: UncontrolledTreeProps<T>) {
-  const nodesWithDefaultClassNames = mapEachNode<T>(nodes, applyDefaultClassNames);
-  const [nodesWithTreeState, setNodes] = useImmer<TreeNodeInfo<T>[]>(nodesWithDefaultClassNames);
+  // Warning: doing a bit of state mutation here before we've wrapped the nodes in Immer, might want to revisit this decision
+  const nodesWithClassNames = useMemo(() => mapEachNode<T>(nodes, applyDefaultClassNames), [nodes]);
+  const [nodesWithTreeState, setNodes] = useImmer<TreeNode<T>[]>(nodesWithClassNames);
+
+  // set the intially selected node and expand its parent nodes, only once on component mount
+  useEffect(() => {
+    if (defaultSelectedNodeId !== undefined) {
+      setNodes((draft) => {
+        const selectedNode = getNodeWithId(draft, defaultSelectedNodeId);
+
+        if (selectedNode !== undefined) {
+          selectedNode.isSelected = true;
+
+          let currentNodeInSelectionPath = getNodeWithId(draft, selectedNode.parentId);
+          while (currentNodeInSelectionPath !== undefined) {
+            currentNodeInSelectionPath.isExpanded = true;
+            currentNodeInSelectionPath = getNodeWithId(draft, currentNodeInSelectionPath.parentId);
+          }
+        }
+      });
+    }
+  }, [defaultSelectedNodeId, setNodes]);
 
   const handleNodeClick = useCallback(
     (node: TreeNodeInfo<T>, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -151,6 +176,7 @@ function forEachNode<T>(
   }
 }
 
+/** Invokes the given callback on a node at the specified path */
 function forNodeAtPath(
   nodes: TreeNodeInfo[],
   path: NodePath,
@@ -159,11 +185,30 @@ function forNodeAtPath(
   callback(Tree.nodeFromPath(path, nodes));
 }
 
-function mapEachNode<T>(
-  nodes: TreeNodeInfo<T>[],
-  callback: (node: TreeNodeInfo<T>) => TreeNodeInfo<T>,
-) {
-  return nodes.map((node: TreeNodeInfo<T>): TreeNodeInfo<T> => {
+/** Gets the node with a specified ID in the tree */
+function getNodeWithId<T>(
+  nodes: TreeNode<T>[] | undefined,
+  id: string | undefined,
+): TreeNode<T> | undefined {
+  if (nodes === undefined || id === undefined) {
+    return;
+  }
+
+  for (const node of nodes) {
+    if (node.id === id) {
+      return node;
+    }
+    const childNode = getNodeWithId(node.childNodes, id);
+    if (childNode !== undefined) {
+      return childNode;
+    }
+  }
+
+  return undefined;
+}
+
+function mapEachNode<T>(nodes: TreeNode<T>[], callback: (node: TreeNode<T>) => TreeNode<T>) {
+  return nodes.map((node: TreeNode<T>): TreeNode<T> => {
     const newNode = callback(node);
     return {
       ...newNode,
@@ -173,7 +218,7 @@ function mapEachNode<T>(
   });
 }
 
-function applyDefaultClassNames<T>(node: TreeNodeInfo<T>) {
+function applyDefaultClassNames<T>(node: TreeNode<T>) {
   return {
     ...node,
     className: classNames(node.className, styles.node),

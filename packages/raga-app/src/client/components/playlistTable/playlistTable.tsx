@@ -16,6 +16,7 @@ import styles from "./playlistTable.module.scss";
 export default function PlaylistTable() {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
+  const selectedPlaylistId = appStore.use.selectedPlaylistId();
   const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
 
   const handleSelect = useCallback(
@@ -35,7 +36,12 @@ export default function PlaylistTable() {
         </span>
       </div>
       <div className={styles.body}>
-        <Tree compact={true} nodes={playlistDefNodes} onSelect={handleSelect} />
+        <Tree
+          compact={true}
+          defaultSelectedNodeId={selectedPlaylistId}
+          nodes={playlistDefNodes}
+          onSelect={handleSelect}
+        />
       </div>
     </div>
   );
@@ -70,17 +76,20 @@ function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
     [folderChildrenByParentId],
   );
 
-  const recursivelyGetFolderChildern: (
+  const recursivelyGetFolderChildren: (
     playlistId: string,
   ) => TreeNode<PlaylistDefinition>[] | undefined = useCallback(
     (playlistId: string) =>
       playlistIsFolderWithChildren(playlistId)
-        ? folderChildrenByParentId[playlistId]!.map((def) => ({
-            data: def,
-            id: def["Playlist Persistent ID"],
-            label: def.Name,
-            childNodes: recursivelyGetFolderChildern(def["Playlist Persistent ID"]),
-          }))
+        ? folderChildrenByParentId[playlistId]!.map(
+            (def: PlaylistDefinition): TreeNode<PlaylistDefinition> => ({
+              childNodes: recursivelyGetFolderChildren(def["Playlist Persistent ID"]),
+              data: def,
+              id: def["Playlist Persistent ID"],
+              label: def.Name,
+              parentId: def["Parent Persistent ID"],
+            }),
+          )
         : undefined,
     [folderChildrenByParentId, playlistIsFolderWithChildren],
   );
@@ -90,11 +99,12 @@ function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
       playlistDefs
         .filter((p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined)
         .map((d) => ({
+          childNodes: recursivelyGetFolderChildren(d["Playlist Persistent ID"]),
           data: d,
           id: d["Playlist Persistent ID"],
           label: d.Name,
-          childNodes: recursivelyGetFolderChildern(d["Playlist Persistent ID"]),
+          parentId: d["Parent Persistent ID"],
         })),
-    [playlistDefs, recursivelyGetFolderChildern],
+    [playlistDefs, recursivelyGetFolderChildren],
   );
 }
