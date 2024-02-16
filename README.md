@@ -1,4 +1,4 @@
-# raga
+# raga [![CircleCI](https://dl.circleci.com/status-badge/img/gh/adidahiya/raga/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/adidahiya/raga/tree/main)
 
 > Tools for managing a large digital music library, designed for DJs
 
