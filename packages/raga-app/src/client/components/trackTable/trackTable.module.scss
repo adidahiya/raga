@@ -34,7 +34,7 @@
 
     &.rowActive {
       // N.B. it would be great to style the active row here, but this element has no box in the DOM;
-      // its parent div has the box which takes up correct space, so we need to add a border shadow there
+      // its parent div has the box which takes up correct space, so we a border shadow there instead
     }
   }
 
@@ -76,6 +76,12 @@
         box-shadow: inset 0 0 0 1px bp.$blue1;
       }
     }
+  }
+}
+
+.trackTable {
+  &.contextMenuIsOpen {
+    user-select: none;
   }
 }
 

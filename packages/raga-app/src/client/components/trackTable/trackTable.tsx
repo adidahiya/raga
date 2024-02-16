@@ -108,13 +108,14 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, trackDefNodes);
   const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
   useTrackTableHotkeys({ containerElement, sortedTrackIds });
-  const { contextMenuPopover, handleContextMenu } = useTrackTableContextMenu({
+  const { contextMenuPopover, handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
     containerElement,
     sortedTrackDefs,
   });
 
   const table = (
     <Table
+      className={classNames(styles.trackTable, { [styles.contextMenuIsOpen]: isContextMenuOpen })}
       data={trackDefNodes}
       layout={{ isDiv: true, fixedHeader: true, custom: true }}
       select={select}

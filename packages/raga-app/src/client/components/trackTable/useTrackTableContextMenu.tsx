@@ -16,6 +16,7 @@ export interface UseTrackTableContextMenuOptions {
 
 export interface UseTrackTableContextMenuReturnValue {
   handleContextMenu: React.MouseEventHandler<HTMLElement>;
+  isContextMenuOpen: boolean;
   contextMenuPopover: React.ReactElement;
 }
 
@@ -75,6 +76,7 @@ export default function useTrackTableContextMenu({
 
   return {
     handleContextMenu,
+    isContextMenuOpen: isContextMenuOpen.value,
     contextMenuPopover,
   };
 }
