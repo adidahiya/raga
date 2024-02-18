@@ -44,7 +44,7 @@
     "usehooks-ts": "2.14.0",
     "wavesurfer.js": "^7.7.3",
     "web-audio-beat-detector": "^8.2.4",
-    "zustand": "^4.5.0"
+    "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@blueprintjs/node-build-scripts": "^9.2.0",
@@ -54,7 +54,7 @@
     "@electron-forge/plugin-vite": "^7.2.0",
     "@types/app-root-dir": "^0.1.4",
     "@types/node": "^20.11.19",
-    "@types/react": "^18.2.55",
+    "@types/react": "^18.2.56",
     "@types/react-devtools": "^3.6.2",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
@@ -63,7 +63,7 @@
     "electron-extension-installer": "^1.2.0",
     "eslint": "^8.56.0",
     "react-devtools": "^5.0.0",
-    "sass": "^1.70.0",
+    "sass": "^1.71.0",
     "typescript": "^5.4.0-beta",
     "vite": "^5.1.3"
   },
