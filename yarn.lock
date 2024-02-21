@@ -40,7 +40,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.3.1"
     effection: "npm:^3.0.3"
-    electron: "npm:^28.2.3"
+    electron: "npm:^29.0.0"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.56.0"
     framer-motion: "npm:^11.0.5"
@@ -2429,7 +2429,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.11.19":
+"@types/node@npm:*, @types/node@npm:^20.11.19, @types/node@npm:^20.9.0":
   version: 20.11.19
   resolution: "@types/node@npm:20.11.19"
   dependencies:
@@ -2442,15 +2442,6 @@ __metadata:
   version: 16.18.76
   resolution: "@types/node@npm:16.18.76"
   checksum: 10/554eb4b94b6ac4cfdf1a12f446399c5f60723c46f7d0227c04e1f6b8578a2ae26e8132bb6e05f7dbc9460a85c166bd241b2390d80b814bd3b68ceb5e52478b5d
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^18.11.18":
-  version: 18.19.10
-  resolution: "@types/node@npm:18.19.10"
-  dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10/95795b1aee78f2ca364caa14aeec6d793581be2d228e0293180ef1fe700fc3af12aa28afe94ee042d794c60ba51dbf7ac94fbfa074dba35512812f5f5ed506a7
   languageName: node
   linkType: hard
 
@@ -4827,16 +4818,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^28.2.3":
-  version: 28.2.3
-  resolution: "electron@npm:28.2.3"
+"electron@npm:^29.0.0":
+  version: 29.0.0
+  resolution: "electron@npm:29.0.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
-    "@types/node": "npm:^18.11.18"
+    "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/c3dad3752798412a21f213a7b4e703a31bc55ab97ecc5a90411c0b2fdc4a6cd21a918d3377b73eb45b565dab09f26c304fcf54ef4a2d50f567b5b96291cdfc78
+  checksum: 10/e8f6732caedf574aeb8273d5965f69a4ad52c0969ce8f45b03795046a56aefaceadb916d52501288fe2b36219017f0fb8c788965315f49a89e2a38d4c773fdce
   languageName: node
   linkType: hard
 
