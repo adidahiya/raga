@@ -38,18 +38,13 @@ const createWindow = async () => {
 
   const primaryDisplay = screen.getPrimaryDisplay();
 
-  // N.B. Vite still makes assumptions about Electron not supporting ESM (which was true until v28),
-  // so we cannot yet fully migrate to make this package a "type": "module" package. For now, we
-  // still rely on transpilation to CommonJS so that we can use globals like __dirname below to
-  // load the preload & server scripts, as well as the index.html file.
-  // See https://github.com/electron/forge/issues/3439
   mainWindow = new BrowserWindow({
     width: Math.min(MAX_INITIAL_WINDOW_WIDTH, primaryDisplay.workAreaSize.width),
     height: Math.min(MAX_INITIAL_WINDOW_HEIGHT, primaryDisplay.workAreaSize.height),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
-      preload: join(__dirname, "preload.js"),
+      preload: join(import.meta.dirname, "preload.js"),
       webSecurity: false,
     },
   });
@@ -58,12 +53,14 @@ const createWindow = async () => {
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     await mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    await mainWindow.loadFile(join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    await mainWindow.loadFile(
+      join(import.meta.dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
+    );
   }
 
   log.debug(`initializing server process...`);
   // Note that server.ts must be configured as an electron-forge Vite entry point to get transpiled adjacent to this module
-  serverProcess = utilityProcess.fork(resolve(__dirname, "./server.js"), [], {
+  serverProcess = utilityProcess.fork(resolve(import.meta.dirname, "./server.js"), [], {
     serviceName: "server",
     stdio: "inherit",
   });
