@@ -5,6 +5,7 @@
   "private": true,
   "description": "UI for running music library management",
   "type": "module",
+  "main": ".vite/build/main.js",
   "scripts": {
     "build": "electron-forge package",
     "check-lint": "eslint .",
