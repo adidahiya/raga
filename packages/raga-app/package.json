@@ -33,7 +33,7 @@
     "immer": "^10.0.3",
     "milliparsec": "^2.3.0",
     "node-taglib-sharp": "^5.2.3",
-    "radash": "^11.0.0",
+    "radash": "^12.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
@@ -42,7 +42,7 @@
     "serialize-error": "^11.0.3",
     "sirv": "^2.0.4",
     "use-immer": "^0.9.0",
-    "usehooks-ts": "2.14.0",
+    "usehooks-ts": "2.15.1",
     "wavesurfer.js": "^7.7.3",
     "web-audio-beat-detector": "^8.2.4",
     "zustand": "^4.5.1"
