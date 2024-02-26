@@ -47,7 +47,7 @@ __metadata:
     immer: "npm:^10.0.3"
     milliparsec: "npm:^2.3.0"
     node-taglib-sharp: "npm:^5.2.3"
-    radash: "npm:^11.0.0"
+    radash: "npm:^12.0.0"
     react: "npm:^18.2.0"
     react-devtools: "npm:^5.0.0"
     react-dom: "npm:^18.2.0"
@@ -10036,10 +10036,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"radash@npm:^11.0.0":
-  version: 11.0.0
-  resolution: "radash@npm:11.0.0"
-  checksum: 10/95e9bf6ce882644770fab183810fdef89164782723dc0f7ebf8a9978d52ac48b1db03ffedbf4a3e64e994d9468e2dd9a8353daef74ab8b1cf07a96682516f00b
+"radash@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "radash@npm:12.0.0"
+  checksum: 10/8df1795211b1cd3d495de5586451ca6ffdd9514c2f916a7d61223b1a9ab5f418cf731941f8f1b5f9898c6577ff888c3bea395a8d7926cbdaf2444642fae44122
   languageName: node
   linkType: hard
 
