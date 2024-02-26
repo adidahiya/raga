@@ -29,8 +29,8 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.11.19"
-    "@types/react": "npm:^18.2.57"
+    "@types/node": "npm:^20.11.20"
+    "@types/react": "npm:^18.2.58"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.2.19"
     "@vitejs/plugin-react": "npm:^4.2.1"
@@ -40,10 +40,10 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.3.1"
     effection: "npm:^3.0.3"
-    electron: "npm:^29.0.0"
+    electron: "npm:^29.0.1"
     electron-extension-installer: "npm:^1.2.0"
-    eslint: "npm:^8.56.0"
-    framer-motion: "npm:^11.0.5"
+    eslint: "npm:^8.57.0"
+    framer-motion: "npm:^11.0.6"
     immer: "npm:^10.0.3"
     milliparsec: "npm:^2.3.0"
     node-taglib-sharp: "npm:^5.2.3"
@@ -52,7 +52,7 @@ __metadata:
     react-devtools: "npm:^5.0.0"
     react-dom: "npm:^18.2.0"
     react-dropzone: "npm:^14.2.3"
-    react-resizable-panels: "npm:^2.0.9"
+    react-resizable-panels: "npm:^2.0.11"
     roarr: "npm:^7.21.0"
     sass: "npm:^1.71.1"
     serialize-error: "npm:^11.0.3"
@@ -60,7 +60,7 @@ __metadata:
     typescript: "npm:^5.4.0-beta"
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:2.15.1"
-    vite: "npm:^5.1.3"
+    vite: "npm:^5.1.4"
     wavesurfer.js: "npm:^7.7.3"
     web-audio-beat-detector: "npm:^8.2.4"
     zustand: "npm:^4.5.1"
@@ -73,10 +73,10 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.11.19"
+    "@types/node": "npm:^20.11.20"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.1"
-    eslint: "npm:^8.56.0"
+    eslint: "npm:^8.57.0"
     minimist: "npm:^1.2.8"
     prompts: "npm:^2.4.2"
     typescript: "npm:^5.4.0-beta"
@@ -91,12 +91,12 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.11.19"
+    "@types/node": "npm:^20.11.20"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^2.3.0"
     dedent: "npm:^1.5.1"
-    eslint: "npm:^8.56.0"
+    eslint: "npm:^8.57.0"
     fluent-ffmpeg: "npm:^2.1.2"
     html-entities: "npm:^2.4.0"
     npm-run-all: "npm:^4.1.5"
@@ -2429,7 +2429,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.11.19, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.11.20, @types/node@npm:^20.9.0":
   version: 20.11.20
   resolution: "@types/node@npm:20.11.20"
   dependencies:
@@ -2509,7 +2509,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.2.57":
+"@types/react@npm:*, @types/react@npm:^18.2.58":
   version: 18.2.58
   resolution: "@types/react@npm:18.2.58"
   dependencies:
@@ -4818,16 +4818,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^29.0.0":
-  version: 29.0.0
-  resolution: "electron@npm:29.0.0"
+"electron@npm:^29.0.1":
+  version: 29.0.1
+  resolution: "electron@npm:29.0.1"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/e8f6732caedf574aeb8273d5965f69a4ad52c0969ce8f45b03795046a56aefaceadb916d52501288fe2b36219017f0fb8c788965315f49a89e2a38d4c773fdce
+  checksum: 10/3b3b8359d1fa261988954b9a73205cc081b582a715f01935fe339a6da83147f29b2c554d8186e1ae674ea3e72bf09b3c3bcc8492e3d738770fcccc10d64915d5
   languageName: node
   linkType: hard
 
@@ -5302,7 +5302,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.56.0":
+"eslint@npm:^8.56.0, eslint@npm:^8.57.0":
   version: 8.57.0
   resolution: "eslint@npm:8.57.0"
   dependencies:
@@ -5887,9 +5887,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.0.5":
-  version: 11.0.5
-  resolution: "framer-motion@npm:11.0.5"
+"framer-motion@npm:^11.0.6":
+  version: 11.0.6
+  resolution: "framer-motion@npm:11.0.6"
   dependencies:
     "@emotion/is-prop-valid": "npm:^0.8.2"
     tslib: "npm:^2.4.0"
@@ -5904,7 +5904,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/29621cf15aa0c33030898733bbe76a012e237b47f57d29d0f6953c1f5ca2b761bb9d106136cc9e30191bf5c31d467d74321c8ac1c2c9d8e0077f9bd28587b10d
+  checksum: 10/f18f5d40045029238b9d05e646ff950856bc7d0b0d9210fca59e8419c7e42eabf96e4481f8a753c13a13f306626515d8bf746e456d8d246df2060b02ab320926
   languageName: node
   linkType: hard
 
@@ -8931,7 +8931,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nx@npm:18.0.5, nx@npm:^18.0.4":
+"nx@npm:18.0.5, nx@npm:^18.0.5":
   version: 18.0.5
   resolution: "nx@npm:18.0.5"
   dependencies:
@@ -10195,13 +10195,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^2.0.9":
-  version: 2.0.9
-  resolution: "react-resizable-panels@npm:2.0.9"
+"react-resizable-panels@npm:^2.0.11":
+  version: 2.0.11
+  resolution: "react-resizable-panels@npm:2.0.11"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/8ed947936efee0af09390c1e38bc22a3b7c4018aab9246ffa097124e5022195754933c1c37283e41d9ac64107f016e902b78e48c49f21bdbf2e593b217c84471
+  checksum: 10/ecfe740418f4e4c63f34eb2227de24931706e12f76023e8193a320577e2c59f89e28a4affb4a763d5c6b31db4356fa036c76d84b2e2ef96abec16fe6d9949626
   languageName: node
   linkType: hard
 
@@ -10751,12 +10751,12 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^7.0.2"
     "@typescript-eslint/parser": "npm:^7.0.2"
     "@yarnpkg/types": "npm:^4.0.0"
-    eslint: "npm:^8.56.0"
+    eslint: "npm:^8.57.0"
     eslint-plugin-eslint-comments: "npm:^3.2.0"
     eslint-plugin-react: "npm:^7.33.2"
     eslint-plugin-react-hooks: "npm:^4.6.0"
     eslint-plugin-simple-import-sort: "npm:^12.0.0"
-    nx: "npm:^18.0.4"
+    nx: "npm:^18.0.5"
     prettier: "npm:^3.2.5"
   languageName: unknown
   linkType: soft
@@ -12433,7 +12433,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.1.3":
+"vite@npm:^5.1.4":
   version: 5.1.4
   resolution: "vite@npm:5.1.4"
   dependencies:
