@@ -57,22 +57,3 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
 .#{bp.$ns}-slider {
   min-width: 100px;
 }
-
-// add support for compact tree
-.#{bp.$ns}-tree.#{bp.$ns}-compact {
-  .#{bp.$ns}-tree-node-content {
-    height: 24px;
-  }
-
-  .#{bp.$ns}-tree-node-caret {
-    padding: 4px;
-    margin-right: 3px;
-    min-width: 24px;
-  }
-
-  .#{bp.$ns}-dark & {
-    .#{bp.$ns}-tree-node-caret:hover {
-      color: bp.$white;
-    }
-  }
-}

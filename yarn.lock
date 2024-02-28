@@ -17,9 +17,9 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.9.1"
-    "@blueprintjs/icons": "npm:^5.7.1"
-    "@blueprintjs/node-build-scripts": "npm:^9.2.0"
+    "@blueprintjs/core": "npm:^5.10.0"
+    "@blueprintjs/icons": "npm:^5.8.0"
+    "@blueprintjs/node-build-scripts": "npm:^9.2.1"
     "@electron-forge/cli": "npm:^7.2.0"
     "@electron-forge/maker-deb": "npm:^7.2.0"
     "@electron-forge/maker-zip": "npm:^7.2.0"
@@ -388,21 +388,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/colors@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@blueprintjs/colors@npm:5.1.0"
+"@blueprintjs/colors@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "@blueprintjs/colors@npm:5.1.1"
   dependencies:
     tslib: "npm:~2.6.2"
-  checksum: 10/7d1e1aecde307c02673146fe1be2b7b8dc3b33f3077f89b188ad2c41cdd2ecdbc00042a57757e6dca94c0fc7134f99683a09e15654ed7ac5260eae777860a170
+  checksum: 10/dd86c18ca265f5ac04da4df0a17bcd738cc5cde1b83e52fa9c670edce0d9f914e764727170cba7fb7f10612548b64008b3d98bfea5e2297b7e47d54ca92f4f36
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.9.1":
-  version: 5.9.1
-  resolution: "@blueprintjs/core@npm:5.9.1"
+"@blueprintjs/core@npm:^5.10.0":
+  version: 5.10.0
+  resolution: "@blueprintjs/core@npm:5.10.0"
   dependencies:
-    "@blueprintjs/colors": "npm:^5.1.0"
-    "@blueprintjs/icons": "npm:^5.7.1"
+    "@blueprintjs/colors": "npm:^5.1.1"
+    "@blueprintjs/icons": "npm:^5.8.0"
     "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
     normalize.css: "npm:^8.0.1"
@@ -421,13 +421,13 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10/bda26c0dabb7ef9e57ec577d8b2474dc2077747a7cd74603751bd4eb8a7527a3ea5bb4cf7df2a6fa7cad64c77eea8e0cdf37a3ebc338575d496b7cb624863963
+  checksum: 10/d59819d38e6c5b955e84bf26bd1481f2ff665f741ea974f4aa855e48813ff0737290f5ca5dbfa5925d0e23ada8079520c9abc4b1243ad58782a29e11944509ae
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.7.1":
-  version: 5.7.1
-  resolution: "@blueprintjs/icons@npm:5.7.1"
+"@blueprintjs/icons@npm:^5.8.0":
+  version: 5.8.0
+  resolution: "@blueprintjs/icons@npm:5.8.0"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -439,13 +439,13 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/e7345efab3764f6b0e307f3067c806eab294722a6d690aebf7fce5f2bb3916ed247a4adb3eb043e329da1bbbadd700e3f01297986992ed3fe4b2532394573a41
+  checksum: 10/ff18a84052b2dbcb422350f7a24b83ceb7e29e557d8e477b59e22837f3d75f26176569eef193580be4b3ec726743bc1a20ebb9ee79bc45bf88780b3e4579caed
   languageName: node
   linkType: hard
 
-"@blueprintjs/node-build-scripts@npm:^9.2.0":
-  version: 9.2.0
-  resolution: "@blueprintjs/node-build-scripts@npm:9.2.0"
+"@blueprintjs/node-build-scripts@npm:^9.2.1":
+  version: 9.2.1
+  resolution: "@blueprintjs/node-build-scripts@npm:9.2.1"
   dependencies:
     autoprefixer: "npm:^10.4.17"
     chokidar: "npm:^3.5.3"
@@ -480,7 +480,7 @@ __metadata:
     generate-css-variables: ./generate-css-variables.mjs
     sass-compile: ./sass-compile.mjs
     sass-lint: ./sass-lint.mjs
-  checksum: 10/0baf7f0d82f35eb575818afb5dd21ae8bc4da14c946cd9b7fd25374cd28194fd19c04fe50908902d0da26a1aa4e3162e14a29c8dede1d6f38094d02ea9bd0fc5
+  checksum: 10/a0e62b1a638b128616cceab404f1b57e113913ef329b329b2b38106e0ea03ed94c73a87bd61b5a8cd3dba7d134683e0f9f2d818a98879c11c3b2b73805b9a507
   languageName: node
   linkType: hard
 
