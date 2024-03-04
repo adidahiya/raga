@@ -17,14 +17,14 @@
     "ansis": "^2.3.0",
     "dedent": "^1.5.1",
     "fluent-ffmpeg": "^2.1.2",
-    "html-entities": "^2.4.0",
+    "html-entities": "^2.5.2",
     "plist": "^3.1.0",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
     "@types/dedent": "^0.7.2",
     "@types/fluent-ffmpeg": "^2.1.24",
-    "@types/node": "^20.11.22",
+    "@types/node": "^20.11.24",
     "@types/plist": "^3.0.5",
     "@types/prompts": "^2.4.9",
     "eslint": "^8.57.0",

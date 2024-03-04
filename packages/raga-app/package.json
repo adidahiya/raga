@@ -28,7 +28,7 @@
     "classnames": "^2.5.1",
     "date-fns": "^3.3.1",
     "effection": "^3.0.3",
-    "framer-motion": "^11.0.6",
+    "framer-motion": "^11.0.8",
     "immer": "^10.0.3",
     "milliparsec": "^2.3.0",
     "node-taglib-sharp": "^5.2.3",
@@ -36,7 +36,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-resizable-panels": "^2.0.11",
+    "react-resizable-panels": "^2.0.12",
     "roarr": "^7.21.0",
     "serialize-error": "^11.0.3",
     "sirv": "^2.0.4",
@@ -44,7 +44,7 @@
     "usehooks-ts": "2.15.1",
     "wavesurfer.js": "^7.7.3",
     "web-audio-beat-detector": "^8.2.4",
-    "zustand": "^4.5.1"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@blueprintjs/node-build-scripts": "^9.2.1",
@@ -53,8 +53,8 @@
     "@electron-forge/maker-zip": "^7.2.0",
     "@electron-forge/plugin-vite": "^7.2.0",
     "@types/app-root-dir": "^0.1.4",
-    "@types/node": "^20.11.22",
-    "@types/react": "^18.2.60",
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.61",
     "@types/react-devtools": "^3.6.2",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
