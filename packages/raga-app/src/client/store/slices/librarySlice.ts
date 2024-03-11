@@ -9,7 +9,6 @@ import { Roarr as log } from "roarr";
 import {
   DEBUG,
   LOAD_SWINSIAN_LIBRARY_TIMEOUT,
-  WRITE_AUDIO_FILE_TAG_TIMEOUT,
   WRITE_MODIFIED_LIBRARY_TIMEOUT,
 } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
@@ -18,7 +17,6 @@ import {
   type LoadedSwinsianLibraryEventPayload,
   type LoadSwinsianLibraryOptions,
   ServerEventChannel,
-  type WriteAudioFileTagOptions,
 } from "../../../common/events";
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
@@ -127,7 +125,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set({ selectedTrackId });
   },
   setTrackRating: function* (trackID, ratingOutOf100) {
-    const { getTrackDef, userEmail } = get();
+    const { getTrackDef, writeAudioFileTag } = get();
     const trackDef = getTrackDef(trackID);
 
     if (trackDef === undefined) {
@@ -135,20 +133,10 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       return;
     }
 
-    window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
-      fileLocation: trackDef.Location,
-      tagName: "Rating",
-      userEmail,
-      value: ratingOutOf100,
-    } satisfies WriteAudioFileTagOptions);
+    yield* writeAudioFileTag(trackDef, "Rating", ratingOutOf100);
 
-    yield* call(
-      window.api.waitForResponse(
-        ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
-        WRITE_AUDIO_FILE_TAG_TIMEOUT,
-      ),
-    );
     log.info(`[client] completed updating Rating for track ${trackID}`);
+
     set((state) => {
       state.library!.Tracks[trackID].Rating = ratingOutOf100;
       state.libraryWriteState = "ready"; // needs to be written to disk

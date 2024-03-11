@@ -47,13 +47,13 @@ export interface AudioFilesServerStartOptions {
   audioFilesRootFolder: string;
 }
 
-type SupportedTagName = "BPM" | "Rating";
+export type SupportedTagName = "BPM" | "Rating";
 
 export interface WriteAudioFileTagOptions {
   fileLocation: string;
   tagName: SupportedTagName;
   userEmail: string | undefined;
-  value: string | number;
+  value: string | number | undefined;
 }
 
 export interface WriteModifiedLibraryOptions {
