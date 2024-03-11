@@ -8,11 +8,14 @@ import { withTimeout } from "../../../common/asyncUtils";
 import {
   AUDIO_FILES_SERVER_PING_TIMEOUT,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
+  WRITE_AUDIO_FILE_TAG_TIMEOUT,
 } from "../../../common/constants";
 import {
   type AudioFilesServerStartedEventPayload,
   ClientEventChannel,
   ServerEventChannel,
+  type SupportedTagName,
+  type WriteAudioFileTagOptions,
 } from "../../../common/events";
 import getAllConvertedMP3sRequest from "../requestFactories/allConvertedMP3sRequest";
 import convertTrackToMP3Request from "../requestFactories/convertTrackToMP3Request";
@@ -52,11 +55,16 @@ export interface AudioFilesServerActions {
   // complex server actions
   convertTrackToMP3: (trackDef: TrackDefinition) => Operation<string | undefined>;
   getConvertedMP3s: () => Operation<void>;
+  writeAudioFileTag: (
+    trackDef: TrackDefinition,
+    tagName: SupportedTagName,
+    newValue: string | number | undefined,
+  ) => Operation<void>;
 }
 
 export const createAudioFilesServerSlice: AppStoreSliceCreator<
   AudioFilesServerState & AudioFilesServerActions
-> = (set) => {
+> = (set, get) => {
   return {
     audioFilesRootFolder: "",
     audioFilesServerStatus: "stopped",
@@ -191,6 +199,40 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
       }
 
       return undefined;
+    },
+
+    writeAudioFileTag: function* (trackDef, tagName, newValue): Operation<void> {
+      const { userEmail } = get();
+      const trackID = trackDef["Track ID"];
+
+      window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
+        fileLocation: trackDef.Location,
+        tagName,
+        userEmail,
+        value: newValue,
+      } satisfies WriteAudioFileTagOptions);
+
+      try {
+        yield* call(
+          window.api.waitForResponse(
+            ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+            WRITE_AUDIO_FILE_TAG_TIMEOUT,
+          ),
+        );
+
+        log.info(`[client] completed updating BPM for track ${trackID}`);
+
+        set((state) => {
+          if (tagName === "BPM") {
+            state.library!.Tracks[trackID].BPM = newValue as number | undefined;
+          } else {
+            state.library!.Tracks[trackID].Rating = newValue as number | undefined;
+          }
+          state.libraryWriteState = "ready"; // needs to be written to disk
+        });
+      } catch (e) {
+        log.error(`[client] Failed to write audio file tag: ${(e as Error).message}`);
+      }
     },
   };
 };

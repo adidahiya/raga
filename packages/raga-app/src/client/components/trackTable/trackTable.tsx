@@ -37,6 +37,7 @@ import { appStore, useAppStore } from "../../store/appStore";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
+import EditableTrackBPM from "./editableTrackBPM";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
 import useTrackTableContextMenu from "./useTrackTableContextMenu";
@@ -241,7 +242,9 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
       <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
         <AnalyzeSingleTrackButton trackDef={track} />
       </Cell>
-      <Cell className={styles.bpmCell}>{track.BPM}</Cell>
+      <Cell className={styles.bpmCell}>
+        <EditableTrackBPM trackDef={track} />
+      </Cell>
       <Cell>{track.Name}</Cell>
       <Cell>{track.Artist}</Cell>
       <Cell onClick={stopPropagation}>

@@ -1,0 +1,53 @@
+.value {
+  // matches input padding
+  padding-right: 8px;
+}
+
+.editInput {
+  display: none;
+
+  input {
+    font-size: 14px;
+    text-align: right;
+  }
+}
+
+.editButton {
+  display: none;
+  margin-right: 2px;
+}
+
+.spinner {
+  margin-right: 8px;
+}
+
+.editableOnHover {
+  display: flex;
+  justify-content: flex-end;
+
+  &:not(.isEditing) {
+    &:hover {
+      .value {
+        display: none;
+      }
+
+      .editButton {
+        display: block;
+      }
+    }
+  }
+
+  &.isEditing {
+    .value {
+      display: none;
+    }
+
+    .editButton {
+      display: none;
+    }
+
+    .editInput {
+      display: block;
+    }
+  }
+}
