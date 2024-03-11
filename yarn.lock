@@ -29,27 +29,27 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.11.24"
-    "@types/react": "npm:^18.2.61"
+    "@types/node": "npm:^20.11.25"
+    "@types/react": "npm:^18.2.64"
     "@types/react-devtools": "npm:^3.6.2"
-    "@types/react-dom": "npm:^18.2.19"
+    "@types/react-dom": "npm:^18.2.21"
     "@vitejs/plugin-react": "npm:^4.2.1"
     ansis: "npm:^2.3.0"
     app-root-dir: "npm:^1.0.2"
     classnames: "npm:^2.5.1"
     cross-env: "npm:^7.0.3"
-    date-fns: "npm:^3.3.1"
+    date-fns: "npm:^3.4.0"
     effection: "npm:^3.0.3"
     electron: "npm:^29.0.1"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.57.0"
     framer-motion: "npm:^11.0.8"
-    immer: "npm:^10.0.3"
+    immer: "npm:^10.0.4"
     milliparsec: "npm:^2.3.0"
     node-taglib-sharp: "npm:^5.2.3"
-    radash: "npm:^12.0.0"
+    radash: "npm:^12.1.0"
     react: "npm:^18.2.0"
-    react-devtools: "npm:^5.0.0"
+    react-devtools: "npm:^5.0.2"
     react-dom: "npm:^18.2.0"
     react-dropzone: "npm:^14.2.3"
     react-resizable-panels: "npm:^2.0.12"
@@ -57,12 +57,12 @@ __metadata:
     sass: "npm:^1.71.1"
     serialize-error: "npm:^11.0.3"
     sirv: "npm:^2.0.4"
-    typescript: "npm:^5.4.0-beta"
+    typescript: "npm:^5.4.2"
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:3.0.1"
-    vite: "npm:^5.1.4"
-    wavesurfer.js: "npm:^7.7.3"
-    web-audio-beat-detector: "npm:^8.2.4"
+    vite: "npm:^5.1.5"
+    wavesurfer.js: "npm:^7.7.4"
+    web-audio-beat-detector: "npm:^8.2.6"
     zustand: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
@@ -73,13 +73,13 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.11.24"
+    "@types/node": "npm:^20.11.25"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.1"
     eslint: "npm:^8.57.0"
     minimist: "npm:^1.2.8"
     prompts: "npm:^2.4.2"
-    typescript: "npm:^5.4.0-beta"
+    typescript: "npm:^5.4.2"
   bin:
     raga-cli: bin/cli.sh
   languageName: unknown
@@ -91,7 +91,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.11.24"
+    "@types/node": "npm:^20.11.25"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^2.3.0"
@@ -102,7 +102,7 @@ __metadata:
     npm-run-all: "npm:^4.1.5"
     plist: "npm:^3.1.0"
     prompts: "npm:^2.4.2"
-    typescript: "npm:^5.4.0-beta"
+    typescript: "npm:^5.4.2"
   languageName: unknown
   linkType: soft
 
@@ -339,12 +339,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.23.9
-  resolution: "@babel/runtime@npm:7.23.9"
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.24.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+  version: 7.24.0
+  resolution: "@babel/runtime@npm:7.24.0"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 10/9a520fe1bf72249f7dd60ff726434251858de15cccfca7aa831bd19d0d3fb17702e116ead82724659b8da3844977e5e13de2bae01eb8a798f2823a669f122be6
+  checksum: 10/8d32c7e116606ea322b89f9fde8ffae6be9503b549dc0d0abb38bd9dc26e87469b9fb7a66964cc089ee558fd0a97d304fb0a3cfec140694764fb0d71b6a6f5e4
   languageName: node
   linkType: hard
 
@@ -1471,7 +1471,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/cli@npm:3.3.1, @lerna-lite/cli@npm:^3.3.0":
+"@lerna-lite/cli@npm:3.3.1, @lerna-lite/cli@npm:^3.3.1":
   version: 3.3.1
   resolution: "@lerna-lite/cli@npm:3.3.1"
   dependencies:
@@ -1548,7 +1548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/version@npm:^3.3.0":
+"@lerna-lite/version@npm:^3.3.1":
   version: 3.3.1
   resolution: "@lerna-lite/version@npm:3.3.1"
   dependencies:
@@ -2095,13 +2095,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sindresorhus/merge-streams@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@sindresorhus/merge-streams@npm:1.0.0"
-  checksum: 10/453c2a28164113a5ec4fd23ba636e291a4112f6ee9e91cd5476b9a96e0fc9ee5ff40d405fe81bbf284c9773b7ed718a3a0f31df7895a0efd413b1f9775d154fe
-  languageName: node
-  linkType: hard
-
 "@sindresorhus/merge-streams@npm:^2.1.0":
   version: 2.3.0
   resolution: "@sindresorhus/merge-streams@npm:2.3.0"
@@ -2436,7 +2429,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.11.24, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.11.25, @types/node@npm:^20.9.0":
   version: 20.11.25
   resolution: "@types/node@npm:20.11.25"
   dependencies:
@@ -2507,7 +2500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.2.19":
+"@types/react-dom@npm:^18.2.21":
   version: 18.2.21
   resolution: "@types/react-dom@npm:18.2.21"
   dependencies:
@@ -2516,7 +2509,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.2.61":
+"@types/react@npm:*, @types/react@npm:^18.2.64":
   version: 18.2.64
   resolution: "@types/react@npm:18.2.64"
   dependencies:
@@ -2559,7 +2552,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^7.1.0":
+"@typescript-eslint/eslint-plugin@npm:^7.1.1":
   version: 7.1.1
   resolution: "@typescript-eslint/eslint-plugin@npm:7.1.1"
   dependencies:
@@ -2584,7 +2577,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^7.1.0":
+"@typescript-eslint/parser@npm:^7.1.1":
   version: 7.1.1
   resolution: "@typescript-eslint/parser@npm:7.1.1"
   dependencies:
@@ -3225,13 +3218,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"automation-events@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "automation-events@npm:7.0.0"
+"automation-events@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "automation-events@npm:7.0.1"
   dependencies:
-    "@babel/runtime": "npm:^7.23.9"
+    "@babel/runtime": "npm:^7.24.0"
     tslib: "npm:^2.6.2"
-  checksum: 10/00c6d5bad081e30667ca0dd94336332fc25ae3187494cfe8375f0b4e919e5ea5cc4dfbabe25d5178819add4864ae4e021c334efeadd18cb2c325acc0ad99de1a
+  checksum: 10/e517f237ae2b679b43f76da10adfc1c0374a1a047731d8d3962e73cc0e97223e5a4b3343424393037802772d3b175d80a49c86d10d42246608865b98cc021cda
   languageName: node
   linkType: hard
 
@@ -4372,10 +4365,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "date-fns@npm:3.3.1"
-  checksum: 10/98231936765dfb6fc6897676319b500a06a39f051b2c3ecbdd541a07ce9b1344b770277b8bfb1049fb7a2f70bf365ac8e6f1e2bb452b10e1a8101d518ca7f95d
+"date-fns@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "date-fns@npm:3.4.0"
+  checksum: 10/38932c99ad28a69a18bd9e2331d0c86a46146d3e9efc92cbc612400a075785231c3271822948eb0377db738fa8a583aa4782d8246a939fe6f188727ea9323c29
   languageName: node
   linkType: hard
 
@@ -5659,13 +5652,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-unique-numbers@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "fast-unique-numbers@npm:9.0.0"
+"fast-unique-numbers@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "fast-unique-numbers@npm:9.0.1"
   dependencies:
-    "@babel/runtime": "npm:^7.23.9"
+    "@babel/runtime": "npm:^7.24.0"
     tslib: "npm:^2.6.2"
-  checksum: 10/8eec1e83c3eb7f81782a7fdaf0166329e50cab839d3a136aa2d0272b585bffbef62848712a6040fa0d0160fc5626c164f482f4c4cde6ecde199aac0e89c1d741
+  checksum: 10/9792ce1b6a72e1da2d255e4e45e4a94827faa97eba50defb05fd99da599360eb74bf2257dea275cd6d751796b1e10cb5d56a10fa66dd1b4d5a3007023d484d8a
   languageName: node
   linkType: hard
 
@@ -6474,21 +6467,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "globby@npm:14.0.0"
-  dependencies:
-    "@sindresorhus/merge-streams": "npm:^1.0.0"
-    fast-glob: "npm:^3.3.2"
-    ignore: "npm:^5.2.4"
-    path-type: "npm:^5.0.0"
-    slash: "npm:^5.1.0"
-    unicorn-magic: "npm:^0.1.0"
-  checksum: 10/6e7d84bbc69d8d21a07507af090998c6546c385702a350ff14f6fb08207f90ed40bd41c7b19c11a23851c3b86666e79503373e0f8b400a91a29b13952b1e960c
-  languageName: node
-  linkType: hard
-
-"globby@npm:^14.0.1":
+"globby@npm:^14.0.0, globby@npm:^14.0.1":
   version: 14.0.1
   resolution: "globby@npm:14.0.1"
   dependencies:
@@ -6876,10 +6855,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:^10.0.3":
-  version: 10.0.3
-  resolution: "immer@npm:10.0.3"
-  checksum: 10/0be07be2f278bd1988112613648e0cf9a64fc316d5b4817f273b519fbfed0f1714275b041911f0b8c560c199b2e3430824ce620c23262c96c9d4efc9909ff1cc
+"immer@npm:^10.0.4":
+  version: 10.0.4
+  resolution: "immer@npm:10.0.4"
+  checksum: 10/c1196783cf18e836527f970e45dc88e5472756401831e94d494ca5fd00ab7b39de3156f50505908207e7efe59ac23244d2cde0bd0cff791de7e23709771757e6
   languageName: node
   linkType: hard
 
@@ -9011,7 +8990,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nx@npm:18.0.8, nx@npm:^18.0.6":
+"nx@npm:18.0.8, nx@npm:^18.0.8":
   version: 18.0.8
   resolution: "nx@npm:18.0.8"
   dependencies:
@@ -10123,10 +10102,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"radash@npm:^12.0.0":
-  version: 12.0.0
-  resolution: "radash@npm:12.0.0"
-  checksum: 10/8df1795211b1cd3d495de5586451ca6ffdd9514c2f916a7d61223b1a9ab5f418cf731941f8f1b5f9898c6577ff888c3bea395a8d7926cbdaf2444642fae44122
+"radash@npm:^12.1.0":
+  version: 12.1.0
+  resolution: "radash@npm:12.1.0"
+  checksum: 10/4add14a04b5a82811f2d18d3d3b9244c1f08bfc0ee4cec8093040077ad5bc82884f63c29952a3b29f424ef1f2188475b2d5c6005d9620c9f200378e6cfdcb2f6
   languageName: node
   linkType: hard
 
@@ -10189,29 +10168,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-devtools-core@npm:5.0.0":
-  version: 5.0.0
-  resolution: "react-devtools-core@npm:5.0.0"
+"react-devtools-core@npm:5.0.2":
+  version: 5.0.2
+  resolution: "react-devtools-core@npm:5.0.2"
   dependencies:
     shell-quote: "npm:^1.6.1"
     ws: "npm:^7"
-  checksum: 10/193dd9fe2f2ef80f0655a8e4ecc7517a8f5d19ee0d379d3f8277f47eee21424ecfa4bdbb89b21b1917eb03055730a247d2e1ff6ec27b8497ea7903b5c3a8aa4c
+  checksum: 10/f0f1541776341fdeb6f44d5aabf2d0f2841d2cfd4ae885042db3ead6dd8ee52a944171585fd8ace7a766fdedbc855f0bcca585d4cca4f7add38d892750f59711
   languageName: node
   linkType: hard
 
-"react-devtools@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "react-devtools@npm:5.0.0"
+"react-devtools@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "react-devtools@npm:5.0.2"
   dependencies:
     cross-spawn: "npm:^5.0.1"
     electron: "npm:^23.1.2"
     ip: "npm:^1.1.4"
     minimist: "npm:^1.2.3"
-    react-devtools-core: "npm:5.0.0"
+    react-devtools-core: "npm:5.0.2"
     update-notifier: "npm:^2.1.0"
   bin:
     react-devtools: bin.js
-  checksum: 10/5a7e0c3804ee8815dff46050ead4bbba63e0bbfda841f63e64c5e919b1cd10bbdd23b4fdf66dc704fad18bf6f652b440ca3dead814d62481374d743d562f1866
+  checksum: 10/255e0fd39f0e24b1c799d1ff9520cbea3d342d2f26eb31ce21afc1c8b00c7c7ba15a68cfeb63bf6f6a1fece2989fb60b2c51a23aa112b3c939f36724fc755c7b
   languageName: node
   linkType: hard
 
@@ -10834,17 +10813,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
-    "@lerna-lite/cli": "npm:^3.3.0"
-    "@lerna-lite/version": "npm:^3.3.0"
-    "@typescript-eslint/eslint-plugin": "npm:^7.1.0"
-    "@typescript-eslint/parser": "npm:^7.1.0"
+    "@lerna-lite/cli": "npm:^3.3.1"
+    "@lerna-lite/version": "npm:^3.3.1"
+    "@typescript-eslint/eslint-plugin": "npm:^7.1.1"
+    "@typescript-eslint/parser": "npm:^7.1.1"
     "@yarnpkg/types": "npm:^4.0.0"
     eslint: "npm:^8.57.0"
     eslint-plugin-eslint-comments: "npm:^3.2.0"
     eslint-plugin-react: "npm:^7.34.0"
     eslint-plugin-react-hooks: "npm:^4.6.0"
     eslint-plugin-simple-import-sort: "npm:^12.0.0"
-    nx: "npm:^18.0.6"
+    nx: "npm:^18.0.8"
     prettier: "npm:^3.2.5"
   languageName: unknown
   linkType: soft
@@ -11403,14 +11382,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"standardized-audio-context@npm:^25.3.64":
-  version: 25.3.64
-  resolution: "standardized-audio-context@npm:25.3.64"
+"standardized-audio-context@npm:^25.3.66":
+  version: 25.3.66
+  resolution: "standardized-audio-context@npm:25.3.66"
   dependencies:
-    "@babel/runtime": "npm:^7.23.9"
-    automation-events: "npm:^7.0.0"
+    "@babel/runtime": "npm:^7.24.0"
+    automation-events: "npm:^7.0.1"
     tslib: "npm:^2.6.2"
-  checksum: 10/b05544d1795c834178e3f609c82d0373af58840f79c06c425701a083b7105c13e089b1370a63d5dcf071ea89ada257c7633d4da77c2fd41c66f2334344b6a62a
+  checksum: 10/0c92781390e03e3bc2e4e89cc2c4bb9ff587aba6d661c509b7cb8e048ffb6e2522a2247c89855dce28114dbbe3e67f0bec967e8801f525eee238bfcd231e3bb1
   languageName: node
   linkType: hard
 
@@ -12141,7 +12120,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.4.0-beta":
+"typescript@npm:^5.4.2":
   version: 5.4.2
   resolution: "typescript@npm:5.4.2"
   bin:
@@ -12161,7 +12140,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.4.0-beta#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.4.2#optional!builtin<compat/typescript>":
   version: 5.4.2
   resolution: "typescript@patch:typescript@npm%3A5.4.2#optional!builtin<compat/typescript>::version=5.4.2&hash=d69c25"
   bin:
@@ -12528,7 +12507,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.1.4":
+"vite@npm:^5.1.5":
   version: 5.1.5
   resolution: "vite@npm:5.1.5"
   dependencies:
@@ -12577,7 +12556,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.7.3":
+"wavesurfer.js@npm:^7.7.4":
   version: 7.7.4
   resolution: "wavesurfer.js@npm:7.7.4"
   checksum: 10/925a45035061693c95f2dc2c30f6bd38b67b7bb2de2d9ab6d12e923ed3cf05f9a542bcb970d4449a3bd6399b93f3b84747339e34fdcb2d4b233b6cd6dd08be49
@@ -12593,38 +12572,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-broker@npm:^4.1.3":
-  version: 4.1.3
-  resolution: "web-audio-beat-detector-broker@npm:4.1.3"
+"web-audio-beat-detector-broker@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "web-audio-beat-detector-broker@npm:4.1.5"
   dependencies:
-    "@babel/runtime": "npm:^7.23.9"
-    fast-unique-numbers: "npm:^9.0.0"
-    standardized-audio-context: "npm:^25.3.64"
+    "@babel/runtime": "npm:^7.24.0"
+    fast-unique-numbers: "npm:^9.0.1"
+    standardized-audio-context: "npm:^25.3.66"
     tslib: "npm:^2.6.2"
-    web-audio-beat-detector-worker: "npm:^5.2.48"
-  checksum: 10/d5376146fb72591b4751e24cbf2119d008e92e410f211510a8a3c3a8b638b64acc4f6ca1a3699c59e45c59b0af2afad7f5907c77696f6c8db0f6e994b360aef1
+    web-audio-beat-detector-worker: "npm:^5.2.49"
+  checksum: 10/3b4dbef88d97313299019e1ff0621255a7f61b13bf8a42b20fb9e30f5a01c40f4591a7c907925261072df22a720005b5a7614783c086750f952a9b3f11ebba7e
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-worker@npm:^5.2.48":
-  version: 5.2.48
-  resolution: "web-audio-beat-detector-worker@npm:5.2.48"
+"web-audio-beat-detector-worker@npm:^5.2.49":
+  version: 5.2.49
+  resolution: "web-audio-beat-detector-worker@npm:5.2.49"
   dependencies:
-    "@babel/runtime": "npm:^7.23.9"
+    "@babel/runtime": "npm:^7.24.0"
     tslib: "npm:^2.6.2"
-  checksum: 10/3a11ef6bf2f65ed36f482d955a5fb2d218a2c7c3f96de68d0ee84247973765804b266e248f284f9eefab48ba7328ea112a24fd07a178d87290b90868500f391c
+  checksum: 10/85117301ec328b7b4f5843e0ea1b539abc90d1b968bf1cc104787847e50306373cbf538b577ea4a9dc2ee60db6f92d5233a75bafe00309a637c9fa744003571e
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector@npm:^8.2.4":
-  version: 8.2.4
-  resolution: "web-audio-beat-detector@npm:8.2.4"
+"web-audio-beat-detector@npm:^8.2.6":
+  version: 8.2.6
+  resolution: "web-audio-beat-detector@npm:8.2.6"
   dependencies:
-    "@babel/runtime": "npm:^7.23.9"
+    "@babel/runtime": "npm:^7.24.0"
     tslib: "npm:^2.6.2"
-    web-audio-beat-detector-broker: "npm:^4.1.3"
-    web-audio-beat-detector-worker: "npm:^5.2.48"
-  checksum: 10/e847cbf5daa397de81de27dce64a57e1a68b60af29537f79a7b0b7d61fa3ad4cfc64437bd166abdfeeaee43d8f2c83869c1ceaf8a136156f8dd63c5a9054f1ff
+    web-audio-beat-detector-broker: "npm:^4.1.5"
+    web-audio-beat-detector-worker: "npm:^5.2.49"
+  checksum: 10/538fa81ac25ddd7abe4c835dd037a12d01565411353b3b6bcc9769d8fa650add89a3eaee53d375c94ee07118d719aa04f52533b336445587c007e25510b6398d
   languageName: node
   linkType: hard
 
