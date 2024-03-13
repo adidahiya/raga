@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type ffmpegNS from "fluent-ffmpeg";
+import ffmpeg from "fluent-ffmpeg";
 
 import {
   DEFAULT_AUDIO_SAMPLE_RATE,
@@ -13,6 +13,11 @@ import {
 import { LibErrors } from "../common/errrorMessages.js";
 import type { BasicTrackDefinition } from "../models/tracks.js";
 import { log } from "../utils/log.js";
+
+interface FfmpegAsConstructor {
+  // eslint-disable-next-line @typescript-eslint/prefer-function-type
+  new (input: NodeJS.ReadableStream): ffmpeg.FfmpegCommand;
+}
 
 export interface MP3ConversionOptions {
   /** @default 320 */
@@ -42,13 +47,14 @@ export interface MP3ConversionOptions {
 export default class AudioFileConverter {
   public temporaryOutputDir: string;
 
-  private defaultFfmpeg: typeof ffmpegNS.FfmpegCommand | undefined;
-
-  private get ffmpeg() {
-    return this.options.ffmpeg ?? this.defaultFfmpeg;
+  // HACKHACK: our ES module fork has a different shape than @types/fluent-ffmpeg. The `new` keyword
+  // is now required to create an Ffmpeg instance in our fork, but not in the original package.
+  private get ffmpeg(): FfmpegAsConstructor {
+    return (this.options.ffmpeg ?? ffmpeg) as unknown as FfmpegAsConstructor;
   }
 
-  constructor(private options: { ffmpeg?: typeof ffmpegNS.FfmpegCommand }) {
+  // constructor(private options: { ffmpeg?: typeof ffmpegNS.FfmpegCommand }) {
+  constructor(private options: { ffmpeg?: typeof ffmpeg }) {
     // N.B. the `tempy` package is not compatible with Vite for some strange reason, so we
     // create temp directories ourself with built-in Node.js APIs
     const tempDir = join(tmpdir(), LIB_PACKAGE_NAME, "converted");
@@ -61,11 +67,6 @@ export default class AudioFileConverter {
     }
 
     this.temporaryOutputDir = tempDir;
-
-    // HACKHACK: our ES module fork has a different shape than @types/fluent-ffmpeg
-    void import("fluent-ffmpeg").then((ffmpeg) => {
-      this.defaultFfmpeg = ffmpeg as unknown as typeof ffmpegNS.FfmpegCommand;
-    });
   }
 
   /**
@@ -131,16 +132,7 @@ export default class AudioFileConverter {
       }
     }
 
-    if (this.ffmpeg === undefined) {
-      return Promise.reject(new Error("ffmpeg is not available"));
-    }
-
     return new Promise<string>((resolve, reject) => {
-      if (this.ffmpeg === undefined) {
-        reject(new Error("ffmpeg is not available"));
-        return;
-      }
-
       console.time(`convertAudioFileToMP3`);
       new this.ffmpeg(inputFileStream)
         .audioCodec(codec)

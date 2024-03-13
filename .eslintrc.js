@@ -43,13 +43,13 @@ module.exports = {
   overrides: [
     {
       extends: ["plugin:@typescript-eslint/disable-type-checked"],
-      files: ["./**/*.js", "./**/*.mjs"],
+      files: ["./**/*.js", "./**/*.mjs", "./**/*.cjs"],
       parserOptions: {
         project: undefined,
       },
     },
     {
-      files: ["./**/.eslintrc.js", "./**/vite.*.mjs"],
+      files: ["./**/.eslintrc.js", "./**/.eslintrc.cjs", "./**/vite.*.mjs"],
       env: {
         node: true,
       },

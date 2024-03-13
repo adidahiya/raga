@@ -78,16 +78,16 @@ const MP3_CODECS = ["libmp3lame", "libshine"] as const;
  */
 function getBestAvailableMP3Codec(): Operation<string | undefined> {
   return action<string | undefined>(function* (resolve, reject) {
-    /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
     ffmpeg.getAvailableCodecs((err, codecs) => {
+      /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
       if (err != null) {
         reject(err);
       } else {
         const codec = MP3_CODECS.find((c) => codecs[c]);
         resolve(codec);
       }
+      /* eslint-enable @typescript-eslint/no-unnecessary-condition */
     });
-    /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
     yield* suspend();
   });

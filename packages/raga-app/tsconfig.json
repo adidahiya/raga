@@ -1,6 +1,6 @@
 {
   "extends": "../../config/tsconfig.base.json",
-  "include": ["src", "vite.*.config.ts", "forge.env.d.ts"],
+  "include": ["src", "vite.*.config.ts", "forge.env.d.ts", "custom-types.d.ts"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["dom", "es2020"],
