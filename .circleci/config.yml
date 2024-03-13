@@ -8,21 +8,21 @@ aliases:
     name: Save node_modules cache
     paths:
       - node_modules
-    key: yarn-packages-{{ checksum "yarn.lock" }}
+    key: yarn-packages-macos-{{ checksum "yarn.lock" }}
 
   - &restore-node-modules-cache
     name: Restore node_modules cache
-    key: yarn-packages-{{ checksum "yarn.lock" }}
+    key: yarn-packages-macos-{{ checksum "yarn.lock" }}
 
   - &save-yarn-cache
     name: Save yarnpkg cache
     paths:
       - .yarn/cache
-    key: yarn-cache-v1
+    key: yarn-cache-macos-v1
 
   - &restore-yarn-cache
     name: Restore yarnpkg cache
-    key: yarn-cache-v1
+    key: yarn-cache-macos-v1
 
 jobs:
   checkout-code:
