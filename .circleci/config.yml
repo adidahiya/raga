@@ -29,6 +29,8 @@ jobs:
     docker: *docker-node-image
     steps:
       - checkout
+      - run: git submodule init
+      - run: git submodule update
       - restore_cache: *restore-yarn-cache
       - restore_cache: *restore-node-modules-cache
       - run: sudo corepack enable
