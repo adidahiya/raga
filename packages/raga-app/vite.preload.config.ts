@@ -13,6 +13,7 @@ export default defineConfig((env) => {
         // Preload scripts may contain Web assets, so use the `build.rollupOptions.input` instead `build.lib.entry`.
         input: forgeConfigSelf.entry!,
         output: {
+          // electron-forge uses require() to load the preload script, so this must be CommonJS
           format: "cjs",
           // It should not be split chunks.
           inlineDynamicImports: true,
@@ -21,7 +22,6 @@ export default defineConfig((env) => {
           assetFileNames: "[name].[ext]",
         },
       },
-      // target: "esnext",
     },
     plugins: [pluginHotRestart("reload")],
   };
