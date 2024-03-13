@@ -1,3 +1,5 @@
+// N.B. module type augmentation only works as intended here if we use inline import type syntax.
+
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 export {}; // Make this a module

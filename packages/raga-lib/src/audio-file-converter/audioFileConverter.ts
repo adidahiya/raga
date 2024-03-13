@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import ffmpeg from "fluent-ffmpeg";
+import type ffmpegNS from "fluent-ffmpeg";
 
 import {
   DEFAULT_AUDIO_SAMPLE_RATE,
@@ -42,11 +42,13 @@ export interface MP3ConversionOptions {
 export default class AudioFileConverter {
   public temporaryOutputDir: string;
 
+  private defaultFfmpeg: typeof ffmpegNS.FfmpegCommand | undefined;
+
   private get ffmpeg() {
-    return this.options.ffmpeg ?? ffmpeg;
+    return this.options.ffmpeg ?? this.defaultFfmpeg;
   }
 
-  constructor(private options: { ffmpeg?: typeof ffmpeg }) {
+  constructor(private options: { ffmpeg?: typeof ffmpegNS.FfmpegCommand }) {
     // N.B. the `tempy` package is not compatible with Vite for some strange reason, so we
     // create temp directories ourself with built-in Node.js APIs
     const tempDir = join(tmpdir(), LIB_PACKAGE_NAME, "converted");
@@ -59,6 +61,11 @@ export default class AudioFileConverter {
     }
 
     this.temporaryOutputDir = tempDir;
+
+    // HACKHACK: our ES module fork has a different shape than @types/fluent-ffmpeg
+    void import("fluent-ffmpeg").then((ffmpeg) => {
+      this.defaultFfmpeg = ffmpeg as unknown as typeof ffmpegNS.FfmpegCommand;
+    });
   }
 
   /**
@@ -124,9 +131,18 @@ export default class AudioFileConverter {
       }
     }
 
+    if (this.ffmpeg === undefined) {
+      return Promise.reject(new Error("ffmpeg is not available"));
+    }
+
     return new Promise<string>((resolve, reject) => {
+      if (this.ffmpeg === undefined) {
+        reject(new Error("ffmpeg is not available"));
+        return;
+      }
+
       console.time(`convertAudioFileToMP3`);
-      this.ffmpeg(inputFileStream)
+      new this.ffmpeg(inputFileStream)
         .audioCodec(codec)
         .audioBitrate(bitrate)
         .audioFrequency(sampleRate)

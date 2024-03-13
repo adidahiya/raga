@@ -18,7 +18,6 @@ export default defineConfig((env) => {
       rollupOptions: {
         external,
       },
-      // target: "esnext",
     },
     plugins: [pluginHotRestart("restart")],
     define,

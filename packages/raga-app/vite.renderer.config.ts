@@ -16,7 +16,7 @@ export default defineConfig((env) => {
     base: "./",
     build: {
       outDir: `.vite/renderer/${name}`,
-      // target: "esnext",
+      target: "esnext",
     },
     css: {
       preprocessorOptions: {
