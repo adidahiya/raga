@@ -11,6 +11,7 @@ export const isFfmpegAvailable = existsSync(localFfmpegPath);
 
 export const ffmpegInfo: any = {
   appPath,
+  dirname: import.meta.dirname,
 };
 
 try {

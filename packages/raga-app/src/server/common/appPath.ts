@@ -1,12 +1,13 @@
-import { basename, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 
-import appRootDir from "app-root-dir";
-
-const rootDir = appRootDir.get();
+import { findUpSync } from "find-up";
 
 // The "electron" module is not available in the server utility process, so we must get the app path ourselves
-export const appPath = resolve(
-  // N.B. "app-root-dir" returns a path inside the .vite/ folder in the forge-packaged distribution,
-  // so we must go up one level in that case.
-  basename(rootDir) === ".vite" ? join(rootDir, "..") : rootDir,
-);
+
+const rootDir = findUpSync(".vite", { cwd: import.meta.dirname, type: "directory" });
+
+if (rootDir === undefined) {
+  throw new Error("[server] Could not find the root directory of the app");
+}
+
+export const appPath = resolve(join(rootDir, ".."));
