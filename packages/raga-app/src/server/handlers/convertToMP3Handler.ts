@@ -8,7 +8,7 @@ import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
 import type { ConvertTrackToMP3RequestBody } from "../../common/api/audioFilesServerAPI";
 import { ServerErrors } from "../../common/errorMessages";
-import ffmpeg, { isFfmpegAvailable } from "../common/ffmpeg";
+import ffmpeg, { ffmpegInfo, isFfmpegAvailable } from "../common/ffmpeg";
 import { log } from "../common/serverLogger";
 
 export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Handler {
@@ -45,7 +45,8 @@ export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Ha
 
     if (!isFfmpegAvailable) {
       // 501 means server does not support the requested functionality, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
-      res.status(501).send(ServerErrors.FFMPEG_UNAVAILABLE);
+      res.status(501).send(JSON.stringify(ffmpegInfo));
+      // res.status(501).send(ServerErrors.FFMPEG_UNAVAILABLE);
       return;
     }
 
