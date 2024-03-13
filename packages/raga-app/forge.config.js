@@ -1,3 +1,7 @@
+import { copyFileSync, mkdirSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { cwd } from "node:process";
+
 export default {
   packagerConfig: {
     executableName: "raga-app",
@@ -8,16 +12,20 @@ export default {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],
     },
-    {
-      name: "@electron-forge/maker-deb",
-      config: {
-        options: {
-          genericName: "Raga",
-          bin: "raga-app",
-        },
-      },
-    },
   ],
+  hooks: {
+    packageAfterCopy: async (_forgeConfig, buildPath, _electronVersion, _platform, _arch) => {
+      // HACKHACK: manually copy bin/ folder to the build path since `assetsInclude` stopped working in electron-forge v7.3.0
+      // we should definitely consider migrating to electron-builder... this is getting tedious 🙁
+      const binFilesToCopy = readdirSync(join(cwd(), "bin"));
+      if (binFilesToCopy.length > 0) {
+        mkdirSync(join(buildPath, "bin"), { recursive: true });
+        for (const file of binFilesToCopy) {
+          copyFileSync(join(cwd(), "bin", file), join(buildPath, "bin", file));
+        }
+      }
+    },
+  },
   plugins: [
     {
       name: "@electron-forge/plugin-vite",

@@ -8,6 +8,8 @@ export default defineConfig((env) => {
   const { forgeConfigSelf } = forgeEnv;
   const define = getBuildDefine(forgeEnv);
   const config: UserConfig = {
+    // HACKHACK: assetsInclude doesn't seem to work in electron-forge v7.3.x, so we manually copy over
+    // the binaries in this directory in the `packageAfterCopy` hook, see forge.config.js
     assetsInclude: ["./bin/*"],
     build: {
       lib: {

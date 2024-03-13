@@ -49,7 +49,7 @@ module.exports = {
       },
     },
     {
-      files: ["./**/.eslintrc.js", "./**/.eslintrc.cjs", "./**/vite.*.mjs"],
+      files: ["./**/.eslintrc.js", "./**/.eslintrc.cjs", "./**/vite.*.mjs", "forge.config.js"],
       env: {
         node: true,
       },
