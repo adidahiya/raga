@@ -97,7 +97,7 @@ __metadata:
     ansis: "npm:^2.3.0"
     dedent: "npm:^1.5.1"
     eslint: "npm:^8.57.0"
-    fluent-ffmpeg: "file:../../../node-fluent-ffmpeg"
+    fluent-ffmpeg: "file:../../submodules/node-fluent-ffmpeg"
     html-entities: "npm:^2.5.2"
     npm-run-all: "npm:^4.1.5"
     plist: "npm:^3.1.0"
@@ -5656,13 +5656,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fluent-ffmpeg@file:../../../node-fluent-ffmpeg::locator=%40adahiya%2Fraga-lib%40workspace%3Apackages%2Fraga-lib":
+"fluent-ffmpeg@file:../../submodules/node-fluent-ffmpeg::locator=%40adahiya%2Fraga-lib%40workspace%3Apackages%2Fraga-lib":
   version: 2.1.2
-  resolution: "fluent-ffmpeg@file:../../../node-fluent-ffmpeg#../../../node-fluent-ffmpeg::hash=a8751d&locator=%40adahiya%2Fraga-lib%40workspace%3Apackages%2Fraga-lib"
+  resolution: "fluent-ffmpeg@file:../../submodules/node-fluent-ffmpeg#../../submodules/node-fluent-ffmpeg::hash=e3d6ea&locator=%40adahiya%2Fraga-lib%40workspace%3Apackages%2Fraga-lib"
   dependencies:
     async: "npm:^0.2.9"
     which: "npm:^1.1.1"
-  checksum: 10/af4afd4c3bfa288d4f038ebb3095b65498ca5e1eae9baf8ef0fd6b9f66f9de8f45b307da907a9616da7099389a86e11eb07696a7efc9bc704bb617ef61330cb9
+  checksum: 10/1057e5f2e02deaa608b1b70ac70c46a49b033e709edb5f4a7b9269aa04282b9120ef3e6ad60d3eef5ab73b2b20d1562862acce28992854aaaf36e04daf260d20
   languageName: node
   linkType: hard
 
