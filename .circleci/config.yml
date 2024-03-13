@@ -1,8 +1,8 @@
 version: 2.1
 
 aliases:
-  - &docker-node-image
-    - image: cimg/node:20.11
+  - &macos-env
+    xcode: 15.3.0
 
   - &save-node-modules-cache
     name: Save node_modules cache
@@ -26,7 +26,7 @@ aliases:
 
 jobs:
   checkout-code:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - run: git submodule init
@@ -42,7 +42,7 @@ jobs:
           paths: [packages/*/node_modules]
 
   build:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -56,7 +56,7 @@ jobs:
             - packages/*/dist
 
   check-format:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -65,7 +65,7 @@ jobs:
       - run: yarn check-format
 
   check-lint:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -74,7 +74,7 @@ jobs:
       - run: yarn check-lint
 
   check-types:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -83,7 +83,7 @@ jobs:
       - run: yarn check-types
 
   dist:
-    docker: *docker-node-image
+    macos: *macos-env
     environment:
     steps:
       - checkout
