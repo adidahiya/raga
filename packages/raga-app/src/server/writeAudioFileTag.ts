@@ -32,10 +32,10 @@ export function writeAudioFileTag({
 
   switch (tagName) {
     case "BPM":
-      file.tag.beatsPerMinute = numericValue;
+      file.tag.beatsPerMinute = numericValue ?? 0;
       break;
     case "Rating":
-      writeRatingTag(file, numericValue, userEmail);
+      writeRatingTag(file, numericValue ?? 0, userEmail);
   }
 
   file.save();

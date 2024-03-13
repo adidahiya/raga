@@ -1,18 +1,12 @@
-import { call, type Operation, run, useAbortSignal } from "effection";
+import { type Operation, run, useAbortSignal } from "effection";
 import { Roarr as log } from "roarr";
 
 import { withTimeout } from "../../../common/asyncUtils";
 import {
   ANALYZE_AUDIO_FILE_TIMEOUT,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
-  WRITE_AUDIO_FILE_TAG_TIMEOUT,
 } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
-import {
-  ClientEventChannel,
-  ServerEventChannel,
-  type WriteAudioFileTagOptions,
-} from "../../../common/events";
 import { analyzeBPM } from "../../audio/bpm";
 import { loadAudioBuffer, type LoadAudioBufferOptions } from "../../audio/buffer";
 import { isTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
@@ -110,7 +104,7 @@ function* analyzeTrackOrThrow(
   get: AppStoreGet,
   { force = false, trackID }: AnalyzeTrackOptions,
 ) {
-  const { audioConvertedFileURLs, audioFilesRootFolder, getTrackDef, userEmail } = get();
+  const { audioConvertedFileURLs, audioFilesRootFolder, getTrackDef, writeAudioFileTag } = get();
   const trackDef = getTrackDef(trackID);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const signal = yield* useAbortSignal();
@@ -140,27 +134,8 @@ function* analyzeTrackOrThrow(
     throw new Error(ClientErrors.analyzeTrackFailed(trackID, e as Error));
   }
 
-  window.api.send(ClientEventChannel.WRITE_AUDIO_FILE_TAG, {
-    fileLocation: trackDef.Location,
-    tagName: "BPM",
-    userEmail,
-    value: bpm,
-  } satisfies WriteAudioFileTagOptions);
-
   try {
-    yield* call(
-      window.api.waitForResponse(
-        ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
-        WRITE_AUDIO_FILE_TAG_TIMEOUT,
-      ),
-    );
-
-    log.info(`[client] completed updating BPM for track ${trackID}`);
-
-    set((state) => {
-      state.library!.Tracks[trackID].BPM = bpm!;
-      state.libraryWriteState = "ready"; // needs to be written to disk
-    });
+    yield* writeAudioFileTag(trackDef, "BPM", bpm);
   } finally {
     set({ analyzerStatus: "ready" });
   }

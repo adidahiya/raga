@@ -1,4 +1,4 @@
-import { Classes, Tree, type TreeNodeInfo } from "@blueprintjs/core";
+import { Tree, type TreeNodeInfo, type TreeProps } from "@blueprintjs/core";
 import classNames from "classnames";
 import { useCallback, useEffect, useMemo } from "react";
 import { useImmer } from "use-immer";
@@ -15,12 +15,9 @@ export interface TreeNode<T> extends TreeNodeInfo<T> {
   parentId: string | undefined;
 }
 
-export interface UncontrolledTreeProps<T> {
+export interface UncontrolledTreeProps<T> extends Omit<TreeProps<T>, "contents"> {
   /** Optional classes for the container element. */
   className?: string;
-
-  /** Whether to use compact styles. */
-  compact?: boolean;
 
   /** ID of the initially selected node. */
   defaultSelectedNodeId?: string;
@@ -46,7 +43,6 @@ export interface UncontrolledTreeProps<T> {
  * immutable state management.
  */
 export default function UncontrolledTree<T extends object>({
-  compact,
   defaultSelectedNodeId,
   nodes,
   onChange,
@@ -144,9 +140,6 @@ export default function UncontrolledTree<T extends object>({
   return (
     <Tree
       {...treeProps}
-      className={classNames(treeProps.className, {
-        [Classes.COMPACT]: compact,
-      })}
       contents={nodesWithTreeState}
       onNodeClick={handleNodeClick}
       onNodeCollapse={handleNodeCollapse}

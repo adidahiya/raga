@@ -1,7 +1,7 @@
 {
   "name": "root",
   "private": true,
-  "packageManager": "yarn@4.1.0",
+  "packageManager": "yarn@4.1.1",
   "workspaces": [
     "packages/*"
   ],
@@ -16,17 +16,17 @@
     "fix-lint": "nx run-many -t lint-fix"
   },
   "devDependencies": {
-    "@lerna-lite/cli": "^3.3.0",
-    "@lerna-lite/version": "^3.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
+    "@lerna-lite/cli": "^3.3.1",
+    "@lerna-lite/version": "^3.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
     "@yarnpkg/types": "^4.0.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
-    "nx": "^18.0.4",
+    "nx": "^18.0.8",
     "prettier": "^3.2.5"
   },
   "engines": {

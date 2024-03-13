@@ -14,5 +14,7 @@ module.exports = {
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
+    // unnecessary with TypeScript
+    "react/prop-types": "off",
   },
 };
