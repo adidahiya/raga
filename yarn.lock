@@ -40,7 +40,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.4.0"
     effection: "npm:^3.0.3"
-    electron: "npm:^29.0.1"
+    electron: "npm:^29.1.2"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.57.0"
     framer-motion: "npm:^11.0.8"
@@ -60,7 +60,7 @@ __metadata:
     typescript: "npm:^5.4.2"
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:3.0.1"
-    vite: "npm:^5.1.5"
+    vite: "npm:^5.1.6"
     wavesurfer.js: "npm:^7.7.4"
     web-audio-beat-detector: "npm:^8.2.6"
     zustand: "npm:^4.5.2"
@@ -4716,16 +4716,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^29.0.1":
-  version: 29.0.1
-  resolution: "electron@npm:29.0.1"
+"electron@npm:^29.1.2":
+  version: 29.1.2
+  resolution: "electron@npm:29.1.2"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/3b3b8359d1fa261988954b9a73205cc081b582a715f01935fe339a6da83147f29b2c554d8186e1ae674ea3e72bf09b3c3bcc8492e3d738770fcccc10d64915d5
+  checksum: 10/d99241c178655679e63ddaac513b48f44eb8696d296197b593fa95f65cc14e1ac00a4e2def05eeade93bed890e73ad7d66c318256d8c47f34cd580b773d6602d
   languageName: node
   linkType: hard
 
@@ -12255,9 +12255,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.1.5":
-  version: 5.1.5
-  resolution: "vite@npm:5.1.5"
+"vite@npm:^5.1.6":
+  version: 5.1.6
+  resolution: "vite@npm:5.1.6"
   dependencies:
     esbuild: "npm:^0.19.3"
     fsevents: "npm:~2.3.3"
@@ -12291,7 +12291,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/ada0a9138ca541723008ee261d80a97f6b70173508ded0f87834e2142660f45dff9801d143551aa3a8979ed446f0aec71ae114ab3ae978b3fbd5cf1f8c4bc331
+  checksum: 10/f48073e93ead62fa58034398442de4517c824b3e50184f8b4059fb24077a26f2c04e910e29d7fb7ec51ea53eb61b9c7d94d56b14a38851de80c67480094cc79d
   languageName: node
   linkType: hard
 
