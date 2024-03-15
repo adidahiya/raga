@@ -1,0 +1,3 @@
+[submodule "submodules/node-fluent-ffmpeg"]
+	path = submodules/node-fluent-ffmpeg
+	url = git@github.com:adidahiya/node-fluent-ffmpeg.git

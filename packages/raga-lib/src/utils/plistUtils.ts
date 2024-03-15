@@ -1,22 +1,22 @@
 import { readFileSync } from "node:fs";
 
-import { build, parse, type PlistObject } from "plist";
+import plist from "plist";
 
 import { log } from "./log.js";
 import { collapsePropertiesIntoSingleLine } from "./xmlUtils.js";
 
-export function loadPlistFile(path: string): PlistObject {
+export function loadPlistFile(path: string): plist.PlistObject {
   log.info(`Loading library at ${path}`);
   log.time(`loadPlistFile`);
   const plistContents = readFileSync(path, { encoding: "utf8" });
-  const parsedPlist = parse(plistContents) as PlistObject;
+  const parsedPlist = plist.parse(plistContents) as plist.PlistObject;
   log.timeEnd(`loadPlistFile`);
   return parsedPlist;
 }
 
 export function buildPlistOutput(library: object): string {
   log.time(`buildPlistOutput`);
-  let output = build(library as PlistObject, {
+  let output = plist.build(library as plist.PlistObject, {
     pretty: true,
     indent: "	",
   });

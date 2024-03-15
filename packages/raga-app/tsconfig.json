@@ -1,9 +1,9 @@
 {
   "extends": "../../config/tsconfig.base.json",
-  "include": ["src"],
+  "include": ["src", "vite.*.config.ts", "forge.env.d.ts", "custom-types.d.ts"],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": ["dom", "es5", "es2015", "es2016", "es2017", "es2018", "es2019", "es2020"],
+    "lib": ["dom", "es2020"],
     // HACKHACK due to https://github.com/table-library/react-table-library/issues/145
     "skipLibCheck": true,
     "module": "ESNext",

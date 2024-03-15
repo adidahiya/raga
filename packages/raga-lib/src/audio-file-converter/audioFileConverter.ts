@@ -14,6 +14,11 @@ import { LibErrors } from "../common/errrorMessages.js";
 import type { BasicTrackDefinition } from "../models/tracks.js";
 import { log } from "../utils/log.js";
 
+interface FfmpegAsConstructor {
+  // eslint-disable-next-line @typescript-eslint/prefer-function-type
+  new (input: NodeJS.ReadableStream): ffmpeg.FfmpegCommand;
+}
+
 export interface MP3ConversionOptions {
   /** @default 320 */
   bitrate?: number;
@@ -42,10 +47,13 @@ export interface MP3ConversionOptions {
 export default class AudioFileConverter {
   public temporaryOutputDir: string;
 
-  private get ffmpeg() {
-    return this.options.ffmpeg ?? ffmpeg;
+  // HACKHACK: our ES module fork has a different shape than @types/fluent-ffmpeg. The `new` keyword
+  // is now required to create an Ffmpeg instance in our fork, but not in the original package.
+  private get ffmpeg(): FfmpegAsConstructor {
+    return (this.options.ffmpeg ?? ffmpeg) as unknown as FfmpegAsConstructor;
   }
 
+  // constructor(private options: { ffmpeg?: typeof ffmpegNS.FfmpegCommand }) {
   constructor(private options: { ffmpeg?: typeof ffmpeg }) {
     // N.B. the `tempy` package is not compatible with Vite for some strange reason, so we
     // create temp directories ourself with built-in Node.js APIs
@@ -126,7 +134,7 @@ export default class AudioFileConverter {
 
     return new Promise<string>((resolve, reject) => {
       console.time(`convertAudioFileToMP3`);
-      this.ffmpeg(inputFileStream)
+      new this.ffmpeg(inputFileStream)
         .audioCodec(codec)
         .audioBitrate(bitrate)
         .audioFrequency(sampleRate)

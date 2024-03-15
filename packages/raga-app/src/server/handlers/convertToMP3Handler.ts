@@ -8,7 +8,7 @@ import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
 import type { ConvertTrackToMP3RequestBody } from "../../common/api/audioFilesServerAPI";
 import { ServerErrors } from "../../common/errorMessages";
-import ffmpeg, { isFfmpegAvailable } from "../common/ffmpeg";
+import ffmpeg, { ffmpegInfo, isFfmpegAvailable } from "../common/ffmpeg";
 import { log } from "../common/serverLogger";
 
 export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Handler {
@@ -45,7 +45,8 @@ export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Ha
 
     if (!isFfmpegAvailable) {
       // 501 means server does not support the requested functionality, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
-      res.status(501).send(ServerErrors.FFMPEG_UNAVAILABLE);
+      res.status(501).send(JSON.stringify(ffmpegInfo));
+      // res.status(501).send(ServerErrors.FFMPEG_UNAVAILABLE);
       return;
     }
 
@@ -78,16 +79,16 @@ const MP3_CODECS = ["libmp3lame", "libshine"] as const;
  */
 function getBestAvailableMP3Codec(): Operation<string | undefined> {
   return action<string | undefined>(function* (resolve, reject) {
-    /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
     ffmpeg.getAvailableCodecs((err, codecs) => {
+      /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
       if (err != null) {
         reject(err);
       } else {
         const codec = MP3_CODECS.find((c) => codecs[c]);
         resolve(codec);
       }
+      /* eslint-enable @typescript-eslint/no-unnecessary-condition */
     });
-    /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
     yield* suspend();
   });

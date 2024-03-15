@@ -1,6 +1,7 @@
 node_modules/
 data/
 lib/
+dist/
 .cache/
 .DS_Store
 .*.un~

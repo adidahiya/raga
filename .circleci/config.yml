@@ -1,34 +1,36 @@
 version: 2.1
 
 aliases:
-  - &docker-node-image
-    - image: cimg/node:20.11
+  - &macos-env
+    xcode: 15.3.0
 
   - &save-node-modules-cache
     name: Save node_modules cache
     paths:
       - node_modules
-    key: yarn-packages-{{ checksum "yarn.lock" }}
+    key: yarn-packages-macos-{{ checksum "yarn.lock" }}
 
   - &restore-node-modules-cache
     name: Restore node_modules cache
-    key: yarn-packages-{{ checksum "yarn.lock" }}
+    key: yarn-packages-macos-{{ checksum "yarn.lock" }}
 
   - &save-yarn-cache
     name: Save yarnpkg cache
     paths:
       - .yarn/cache
-    key: yarn-cache-v1
+    key: yarn-cache-macos-v1
 
   - &restore-yarn-cache
     name: Restore yarnpkg cache
-    key: yarn-cache-v1
+    key: yarn-cache-macos-v1
 
 jobs:
   checkout-code:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
+      - run: git submodule init
+      - run: git submodule update
       - restore_cache: *restore-yarn-cache
       - restore_cache: *restore-node-modules-cache
       - run: sudo corepack enable
@@ -40,7 +42,7 @@ jobs:
           paths: [packages/*/node_modules]
 
   build:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -54,7 +56,7 @@ jobs:
             - packages/*/dist
 
   check-format:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -63,7 +65,7 @@ jobs:
       - run: yarn check-format
 
   check-lint:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -72,7 +74,7 @@ jobs:
       - run: yarn check-lint
 
   check-types:
-    docker: *docker-node-image
+    macos: *macos-env
     steps:
       - checkout
       - restore_cache: *restore-node-modules-cache
@@ -81,15 +83,10 @@ jobs:
       - run: yarn check-types
 
   dist:
-    docker: *docker-node-image
+    macos: *macos-env
     environment:
     steps:
       - checkout
-      - run:
-          name: Install @electron-forge/maker-deb Linux dependencies
-          command: |
-            sudo apt-get update -y
-            sudo apt-get install -y dpkg fakeroot
       - restore_cache: *restore-node-modules-cache
       - attach_workspace: { at: "." }
       - run: sudo corepack enable
@@ -97,7 +94,8 @@ jobs:
           name: Install Deno & set $BASH_ENV
           command: |
             curl -fsSL https://deno.land/install.sh | sh
-            echo 'export DENO_INSTALL="/home/circleci/.deno"' >> "$BASH_ENV"
+            echo 'export HOME_DIR=$(dirname "$CIRCLE_WORKING_DIRECTORY")' >> "$BASH_ENV"
+            echo 'export DENO_INSTALL="$HOME_DIR/.deno"' >> "$BASH_ENV"
             echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> "$BASH_ENV"
       - run:
           name: Build CLI and App distributions
