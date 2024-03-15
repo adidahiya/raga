@@ -38,6 +38,7 @@ import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import EditableTrackBPM from "./editableTrackBPM";
+import TrackDateAddedText from "./trackDateAddedText";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
 import useTrackTableContextMenu from "./useTrackTableContextMenu";
@@ -62,13 +63,14 @@ interface TrackDefinitionNode extends TrackDefinition {
 // causes our fluent-ffmepg resolution alias (defined in `vite.main.config.mjs`) to be insufficient; we cannot
 // configure how raga-lib's CJS dependencies are resolved
 const enum TrackPropertySortKey {
+  ARTIST = "artist",
+  BPM = "bpm",
+  DATE_ADDED = "dateAdded",
+  FILESOURCE = "filesource",
+  FILETYPE = "filetype",
   INDEX = "index",
   NAME = "name",
-  ARTIST = "artist",
-  FILETYPE = "filetype",
-  FILESOURCE = "filesource",
   RATING = "rating",
-  BPM = "bpm",
 }
 
 const sortFns: Record<TrackPropertySortKey, SortFn> = {
@@ -89,6 +91,10 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
   [TrackPropertySortKey.FILESOURCE]: (array) =>
     (array as TrackDefinitionNode[]).sort((a, b) =>
       getTrackFileSource(a).localeCompare(getTrackFileSource(b)),
+    ),
+  [TrackPropertySortKey.DATE_ADDED]: (array) =>
+    (array as TrackDefinitionNode[]).sort(
+      (a, b) => (a["Date Added"]?.getTime() ?? 0) - (b["Date Added"]?.getTime() ?? 0),
     ),
 };
 
@@ -220,10 +226,17 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
         <HeaderCellSort
           className={styles.headerCell}
           stiff={true}
-          pinRight={true}
           sortKey={TrackPropertySortKey.FILESOURCE}
         >
           Source
+        </HeaderCellSort>
+        <HeaderCellSort
+          className={styles.headerCell}
+          stiff={true}
+          pinRight={true}
+          sortKey={TrackPropertySortKey.DATE_ADDED}
+        >
+          Date Added
         </HeaderCellSort>
       </HeaderRow>
     </Header>
@@ -267,6 +280,9 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
       </Cell>
       <Cell>
         <TrackFileSourceCell track={track} />
+      </Cell>
+      <Cell>
+        <TrackDateAddedText track={track} />
       </Cell>
     </Row>
   );
@@ -351,6 +367,7 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   const ratingColumnWidth = 100;
   const fileTypeColumnWidth = 90;
   const fileSourceColumnWidth = 100;
+  const dateAddedColumnWidth = 100;
 
   const gridTemplateColumns = [
     `${indexColumnWidth}px`,
@@ -360,6 +377,7 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
     `${ratingColumnWidth}px`,
     `${fileTypeColumnWidth}px`,
     `${fileSourceColumnWidth}px`,
+    `${dateAddedColumnWidth}px`,
   ];
   return useTheme([
     {
