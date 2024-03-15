@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Colors, NonIdealState } from "@blueprintjs/core";
+import { Classes, Colors, NonIdealState, Tag } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
@@ -30,7 +30,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
-import { getTrackFileType } from "../../../common/trackUtils";
+import { AudioFileSource, getTrackFileSource, getTrackFileType } from "../../../common/trackUtils";
 import { stopPropagation } from "../../common/reactUtils";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
@@ -66,6 +66,7 @@ const enum TrackPropertySortKey {
   NAME = "name",
   ARTIST = "artist",
   FILETYPE = "filetype",
+  FILESOURCE = "filesource",
   RATING = "rating",
   BPM = "bpm",
 }
@@ -84,6 +85,10 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
   [TrackPropertySortKey.FILETYPE]: (array) =>
     (array as TrackDefinitionNode[]).sort((a, b) =>
       (getTrackFileType(a) ?? "").localeCompare(getTrackFileType(b) ?? ""),
+    ),
+  [TrackPropertySortKey.FILESOURCE]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) =>
+      getTrackFileSource(a).localeCompare(getTrackFileSource(b)),
     ),
 };
 
@@ -208,10 +213,17 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
         <HeaderCellSort
           className={styles.headerCell}
           stiff={true}
-          pinRight={true}
           sortKey={TrackPropertySortKey.FILETYPE}
         >
           File Type
+        </HeaderCellSort>
+        <HeaderCellSort
+          className={styles.headerCell}
+          stiff={true}
+          pinRight={true}
+          sortKey={TrackPropertySortKey.FILESOURCE}
+        >
+          Source
         </HeaderCellSort>
       </HeaderRow>
     </Header>
@@ -253,6 +265,9 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
       <Cell>
         <TrackFileTypeCell track={track} />
       </Cell>
+      <Cell>
+        <TrackFileSourceCell track={track} />
+      </Cell>
     </Row>
   );
 };
@@ -262,6 +277,21 @@ function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
   const isReadyForAnalysis = useIsTrackReadyForAnalysis(track["Track ID"]);
   const fileType = getTrackFileType(track);
   return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={fileType} />;
+}
+
+function TrackFileSourceCell({ track }: { track: TrackDefinition }) {
+  const fileSource = getTrackFileSource(track);
+  const intent =
+    fileSource === AudioFileSource.BANDCAMP
+      ? "primary"
+      : fileSource === AudioFileSource.SOULSEEK
+        ? "success"
+        : "none";
+  return (
+    <Tag fill={true} minimal={true} intent={intent} style={{ textAlign: "center" }}>
+      {fileSource}
+    </Tag>
+  );
 }
 
 function TrackTableEmpty({ playlistId }: TrackTableProps) {
@@ -320,6 +350,7 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   const bpmColumnWidth = 60;
   const ratingColumnWidth = 100;
   const fileTypeColumnWidth = 90;
+  const fileSourceColumnWidth = 100;
 
   const gridTemplateColumns = [
     `${indexColumnWidth}px`,
@@ -328,6 +359,7 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
     `repeat(2, minmax(40px, 1fr))`,
     `${ratingColumnWidth}px`,
     `${fileTypeColumnWidth}px`,
+    `${fileSourceColumnWidth}px`,
   ];
   return useTheme([
     {

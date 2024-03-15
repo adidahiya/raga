@@ -19,3 +19,20 @@ export function getTrackFileType(trackDef: TrackDefinition): AudioFileType | und
 
   return undefined;
 }
+
+// TODO: make these user-configurable?
+export const enum AudioFileSource {
+  SOULSEEK = "soulseek",
+  BANDCAMP = "bandcamp",
+  OTHER = "other",
+}
+
+export function getTrackFileSource(trackDef: TrackDefinition): AudioFileSource {
+  if (trackDef.Location.includes("soulseek")) {
+    return AudioFileSource.SOULSEEK;
+  } else if (trackDef.Location.includes("bandcamp")) {
+    return AudioFileSource.BANDCAMP;
+  }
+
+  return AudioFileSource.OTHER;
+}
