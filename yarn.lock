@@ -2430,18 +2430,18 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^20.11.27, @types/node@npm:^20.9.0":
-  version: 20.11.27
-  resolution: "@types/node@npm:20.11.27"
+  version: 20.11.28
+  resolution: "@types/node@npm:20.11.28"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10/4be53485d499dd7c7896190e76a0ce1f6c6917d1f4d0b4b240b3670160fcbc548daed32beaac0fc92429b37dbeaa2496fc56f460acaab969bddb77394318a89b
+  checksum: 10/b03f69213ac6e7cd5f7efa86139f24e23ff70a12fed04adeac5413b62d6982343ce94906f74c401c5afefda48d36ae0efd6a575240996b15a5cf80b456ab4221
   languageName: node
   linkType: hard
 
 "@types/node@npm:^16.11.26":
-  version: 16.18.87
-  resolution: "@types/node@npm:16.18.87"
-  checksum: 10/c21b2d9b11c12f285b7d81a84b6103dc7a270cb28b495a3afe2d7bdcb21b27598e6821c6f01f04d8497fd4b766a3c8fda0092a360871fc8a32ae0240e422a5b5
+  version: 16.18.89
+  resolution: "@types/node@npm:16.18.89"
+  checksum: 10/b412f78cd52c6640a215838aae5f69adc8ce1bcc30e61d8c2437a384478dcd7e182e802a85ed18b23fb99dd337821ed67846579b1db828f2e99144195a0ee23b
   languageName: node
   linkType: hard
 
@@ -2510,13 +2510,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^18.2.65":
-  version: 18.2.65
-  resolution: "@types/react@npm:18.2.65"
+  version: 18.2.66
+  resolution: "@types/react@npm:18.2.66"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/8022689f6c68e76b5e7b3c95af794fb3d128d5b2ccac408adaa80b117724c48b04dd4a2750e5c2ca29cd70ac7719b4ed5c5b1c12cb739d6f1d52188c09fb3060
+  checksum: 10/8a82bda6c254681536fa8348dc15d52345d8203d5d322406feef865f74ebfe2475ebde0be4e2f9a18ffbb587dac946dfb5d0974b598779ff282259aff7e8209a
   languageName: node
   linkType: hard
 
