@@ -25,7 +25,7 @@ import type { AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
 export type AudioFilesServerStatus = "stopped" | "starting" | "started" | "failed";
 
 // TODO: better server URL
-const serverBaseURL = `http://localhost:${DEFAULT_AUDIO_FILES_SERVER_PORT}`;
+const serverBaseURL = `http://localhost:${DEFAULT_AUDIO_FILES_SERVER_PORT.toString()}`;
 
 export interface AudioFilesServerState {
   audioFilesRootFolder: string;
@@ -165,7 +165,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
       const trackID = trackDef["Track ID"];
 
       log.debug(
-        `[client] Initiating request to convert track ${trackID} to MP3, this may take a few seconds...`,
+        `[client] Initiating request to convert track ${trackID.toString()} to MP3, this may take a few seconds...`,
       );
       set({ audioFilesConverterIsBusy: true });
 
@@ -176,7 +176,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
         if (res.ok) {
           const outputFilePath = responseText;
           log.debug(
-            `[client] Successfully converted track ${trackID} to MP3 at: ${outputFilePath}`,
+            `[client] Successfully converted track ${trackID.toString()} to MP3 at: ${outputFilePath}`,
           );
 
           const convertedFileURL = `${serverBaseURL}${
@@ -220,7 +220,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
           ),
         );
 
-        log.info(`[client] completed updating BPM for track ${trackID}`);
+        log.info(`[client] completed updating BPM for track ${trackID.toString()}`);
 
         set((state) => {
           if (tagName === "BPM") {

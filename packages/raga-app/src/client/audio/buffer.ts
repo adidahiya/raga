@@ -29,7 +29,7 @@ export function getAudioFileURL({
     // serverRootFolder is expected to have a trailing slash
     return fileOrResourceURL.replace(
       `file://${serverRootFolder}`,
-      `http://localhost:${serverPort}/`,
+      `http://localhost:${serverPort.toString()}/`,
     );
   }
   return fileOrResourceURL;

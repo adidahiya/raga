@@ -97,25 +97,25 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   setLibraryPlist: (libraryPlist) => {
     set({ library: libraryPlist });
   },
-  setLibraryInputFilepath: (libraryFilepath) => {
+  setLibraryInputFilepath: (newInputFilepath) => {
     set((state) => {
-      state.libraryInputFilepath = libraryFilepath;
+      state.libraryInputFilepath = newInputFilepath;
 
-      if (state.libraryOutputFilepath === undefined) {
+      if (state.libraryOutputFilepath === undefined && newInputFilepath !== undefined) {
         // place the output adjacent to the input file by default
-        const inputFolder = libraryFilepath?.split("/").slice(0, -1).join("/");
+        const inputFolder = newInputFilepath.split("/").slice(0, -1).join("/");
         state.libraryOutputFilepath = `${inputFolder}/ModifiedLibrary.xml`;
       }
     });
 
-    if (libraryFilepath !== undefined) {
+    if (newInputFilepath !== undefined) {
       // Important: don't call other state-mutating functions inside a producer, otherwise we may
       // persist stale state to localStorage
-      get().saveCurrentLibraryPath(libraryFilepath);
+      get().saveCurrentLibraryPath(newInputFilepath);
     }
   },
-  setLibraryOutputFilepath: (libraryFilepath) => {
-    set({ libraryOutputFilepath: libraryFilepath });
+  setLibraryOutputFilepath: (newOutputFilepath) => {
+    set({ libraryOutputFilepath: newOutputFilepath });
   },
   setSelectedTrackId: (selectedTrackId) => {
     // TODO: figure out the right time to unload the old wavesurfer instance... if we do it too
@@ -135,7 +135,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
 
     yield* writeAudioFileTag(trackDef, "Rating", ratingOutOf100);
 
-    log.info(`[client] completed updating Rating for track ${trackID}`);
+    log.info(`[client] completed updating Rating for track ${trackID.toString()}`);
 
     set((state) => {
       state.library!.Tracks[trackID].Rating = ratingOutOf100;
@@ -168,7 +168,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (trackDef === undefined) {
           log.trace(
-            `[client] previous selectedTrackId '${selectedTrackId}' does not exist in current library`,
+            `[client] previous selectedTrackId '${selectedTrackId.toString()}' does not exist in current library`,
           );
           set({ selectedTrackId: undefined });
         }

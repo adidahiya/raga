@@ -261,7 +261,7 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
       item={track}
       // N.B. key must include the playlist ID because there is row information which changes as we navigate
       // through different playlists (like the index column)
-      key={`${playlistId}-${track.id}`}
+      key={`${playlistId}-${track.id.toString()}`}
     >
       <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
       <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
@@ -320,17 +320,21 @@ function TrackTableEmpty({ playlistId }: TrackTableProps) {
 
   return (
     <div className={styles.trackTableEmpty}>
-      <NonIdealState
-        title={`No tracks found in playlist "${playlistDef?.Name}"`}
-        action={
-          <p>
-            <em>
-              Raga does not currently support playlist editing. You may add tracks to this playlist
-              in Swinsian and re-import your library.
-            </em>
-          </p>
-        }
-      />
+      {playlistDef === undefined ? (
+        <NonIdealState title={`No playlist selected`} />
+      ) : (
+        <NonIdealState
+          title={`No tracks found in playlist "${playlistDef.Name}"`}
+          action={
+            <p>
+              <em>
+                Raga does not currently support playlist editing. You may add tracks to this
+                playlist in Swinsian and re-import your library.
+              </em>
+            </p>
+          }
+        />
+      )}
     </div>
   );
 }
@@ -370,14 +374,14 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   const dateAddedColumnWidth = 100;
 
   const gridTemplateColumns = [
-    `${indexColumnWidth}px`,
-    `${analyzeColumnWidth}px`,
-    `${bpmColumnWidth}px`,
+    `${indexColumnWidth.toString()}px`,
+    `${analyzeColumnWidth.toString()}px`,
+    `${bpmColumnWidth.toString()}px`,
     `repeat(2, minmax(40px, 1fr))`,
-    `${ratingColumnWidth}px`,
-    `${fileTypeColumnWidth}px`,
-    `${fileSourceColumnWidth}px`,
-    `${dateAddedColumnWidth}px`,
+    `${ratingColumnWidth.toString()}px`,
+    `${fileTypeColumnWidth.toString()}px`,
+    `${fileSourceColumnWidth.toString()}px`,
+    `${dateAddedColumnWidth.toString()}px`,
   ];
   return useTheme([
     {
@@ -417,7 +421,7 @@ function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefin
   const handleSelectChange = useCallback(
     (_action: Action, state: State) => {
       // TODO: better typedef for `state`
-      log.debug(`[client] selected track ${state.id} in current playlist ${playlistId}`);
+      log.debug(`[client] selected track ${state.id as string} in current playlist ${playlistId}`);
       setSelectedTrackId(state.id);
     },
     [playlistId, setSelectedTrackId],

@@ -78,7 +78,7 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
 
     if (selectedTrackDef !== undefined) {
       log.debug(
-        `[client] created new waveSurfer instance for track ${selectedTrackDef["Track ID"]} (location: ${selectedTrackDef.Location}))`,
+        `[client] created new waveSurfer instance for track ${selectedTrackDef["Track ID"].toString()} (location: ${selectedTrackDef.Location}))`,
       );
     }
 
@@ -142,7 +142,7 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
     seekToProgress = Math.min(seekToProgress, 1);
     seekToProgress = Math.max(0, seekToProgress);
 
-    log.trace(`[client] seeking to ${Math.round(seekToProgress * 100)}% of track`);
+    log.trace(`[client] seeking to ${Math.round(seekToProgress * 100).toString()}% of track`);
     waveSurfer.seekTo(seekToProgress);
   },
 });

@@ -87,7 +87,9 @@ function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLib
 
 function handleWriteAudioFileTag(options: WriteAudioFileTagOptions) {
   writeAudioFileTag(options);
-  log.debug(`Wrote ${options.tagName}: ${options.value} tag to ${options.fileLocation}`);
+  log.debug(
+    `Wrote ${options.tagName}: ${options.value?.toString() ?? "undefined"} tag to ${options.fileLocation}`,
+  );
   process.parentPort.postMessage({
     channel: ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
   });

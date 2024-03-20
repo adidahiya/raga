@@ -43,7 +43,9 @@ export default function useSelectedTrackFileURL() {
           }),
         );
       } else if (existingConvertedFileURL !== undefined) {
-        log.debug(`[client] Using already-converted file for track ${trackDef["Track ID"]}`);
+        log.debug(
+          `[client] Using already-converted file for track ${trackDef["Track ID"].toString()}`,
+        );
         setSelectedFileURL(existingConvertedFileURL);
       } else {
         const convertedTrackURL = yield* convertTrackToMP3(trackDef);

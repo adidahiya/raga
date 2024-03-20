@@ -23,6 +23,6 @@ export function reEncodeHtmlEntities(xmlString: string): string {
       return "'";
     }
     const charCode = decodeEntity(entity).charCodeAt(0);
-    return `&#${charCode};`;
+    return `&#${charCode.toString()};`;
   });
 }

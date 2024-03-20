@@ -149,10 +149,8 @@ export default class AudioFileConverter {
 
   /** @throws if unable to create output dir */
   private createTempOutputDirForTrack(trackDef: BasicTrackDefinition): string {
-    const outputDir = join(this.temporaryOutputDir, `track-id-${trackDef["Track ID"]}`);
-    mkdirSync(join(this.temporaryOutputDir, `track-id-${trackDef["Track ID"]}`), {
-      recursive: true,
-    });
+    const outputDir = join(this.temporaryOutputDir, `track-id-${trackDef["Track ID"].toString()}`);
+    mkdirSync(outputDir, { recursive: true });
     if (!existsSync(outputDir)) {
       throw new Error(LibErrors.TEMP_DIR_UNAVAILABLE);
     }

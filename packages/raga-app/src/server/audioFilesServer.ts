@@ -146,7 +146,7 @@ function* waitForHTTPServerToStart(app: App, timeoutMs = 1_000): Operation<Serve
       return newServer;
     }),
     timeoutMs,
-    `Audio files server failed to start after ${timeoutMs}ms`,
+    `Audio files server failed to start after ${timeoutMs.toString()}ms`,
   );
 }
 

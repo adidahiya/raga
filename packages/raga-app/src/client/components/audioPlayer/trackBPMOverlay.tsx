@@ -119,7 +119,7 @@ function formatAdjustedBPM(bpm: number, playbackRate: number) {
 }
 
 function renderTempoSliderLabel(value: number) {
-  return `${value > 0 ? "+" : ""}${value}%`;
+  return `${value > 0 ? "+" : ""}${value.toString()}%`;
 }
 
 function roundToNearestTenth(value: number) {

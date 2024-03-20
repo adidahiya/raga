@@ -114,7 +114,7 @@ function* analyzeTrackOrThrow(
   }
 
   if (trackDef.BPM !== undefined && !force) {
-    log.debug(`[client] skipping analysis of track ${trackID}`);
+    log.debug(`[client] skipping analysis of track ${trackID.toString()}`);
     return;
   }
 
