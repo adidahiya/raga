@@ -5940,8 +5940,8 @@ __metadata:
   linkType: hard
 
 "framer-motion@npm:^11.0.18":
-  version: 11.0.18
-  resolution: "framer-motion@npm:11.0.18"
+  version: 11.0.24
+  resolution: "framer-motion@npm:11.0.24"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -5955,7 +5955,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/a74a64d2510a4c45cdfea33e00ec597f84b2f17d68225074e622fb6be4b45deb8d927b2b1c783ff5d403c6a03b3fee04a3634c951403f06011e9a0f6c82c5219
+  checksum: 10/b2bccbbd4cb362d8c73cce8b3d744257ba8648fc053ae60478fd70db6de0e01829e453cf4b016bb36303a91d85dad80fdcaa9ab5e3905e6bba741a2d1fb479f0
   languageName: node
   linkType: hard
 
