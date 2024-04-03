@@ -398,11 +398,11 @@ __metadata:
   linkType: hard
 
 "@blueprintjs/core@npm:^5.10.0":
-  version: 5.10.0
-  resolution: "@blueprintjs/core@npm:5.10.0"
+  version: 5.10.1
+  resolution: "@blueprintjs/core@npm:5.10.1"
   dependencies:
     "@blueprintjs/colors": "npm:^5.1.1"
-    "@blueprintjs/icons": "npm:^5.8.0"
+    "@blueprintjs/icons": "npm:^5.9.0"
     "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
     normalize.css: "npm:^8.0.1"
@@ -421,13 +421,13 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10/d59819d38e6c5b955e84bf26bd1481f2ff665f741ea974f4aa855e48813ff0737290f5ca5dbfa5925d0e23ada8079520c9abc4b1243ad58782a29e11944509ae
+  checksum: 10/93bc33b23cb5eff6e1cbffd343d9fc920e0c1fd0863d438a20b6ebb9ea4bcb7fe86d4eb2ab59a6206c068f1d0ea02f131de1aeca3a4eb4cf9c383e5215f55d1a
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.8.0":
-  version: 5.8.0
-  resolution: "@blueprintjs/icons@npm:5.8.0"
+"@blueprintjs/icons@npm:^5.8.0, @blueprintjs/icons@npm:^5.9.0":
+  version: 5.9.0
+  resolution: "@blueprintjs/icons@npm:5.9.0"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -439,7 +439,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/ff18a84052b2dbcb422350f7a24b83ceb7e29e557d8e477b59e22837f3d75f26176569eef193580be4b3ec726743bc1a20ebb9ee79bc45bf88780b3e4579caed
+  checksum: 10/ee85e155ba390ea1a3033592ec9bcfa8a6608499f6573371308ed82799b83838711be67d10ee0357ef644c189d81d32db8e31fcd1f7d84d1705dc39ae6658fa3
   languageName: node
   linkType: hard
 
