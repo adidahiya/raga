@@ -1,5 +1,13 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Colors, NonIdealState, Tag } from "@blueprintjs/core";
+import {
+  Button,
+  Classes,
+  Colors,
+  FormGroup,
+  InputGroup,
+  NonIdealState,
+  Tag,
+} from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
@@ -103,6 +111,8 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const theme = useTableTheme(numTracksInPlaylist);
   const containerElement = useRef<HTMLDivElement>(null);
 
+  // TODO: filter trackDefNodes based on TrackTableFilterBar input value
+
   // N.B. table interaction hooks need to the list of tracks with the current sort order applied
   // so that they can locate rows correctly in 2D space
   const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, trackDefNodes);
@@ -139,12 +149,50 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
       ref={containerElement}
       onContextMenu={handleContextMenu}
     >
+      <TrackTableFilterBar />
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
       {contextMenuPopover}
     </div>
   );
 }
 TrackTable.displayName = "TrackTable";
+
+function TrackTableFilterBar() {
+  const isVisible = appStore.use.trackTableFilterVisible();
+  const setIsVisible = appStore.use.setTrackTableFilterVisible();
+
+  const inputElement = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isVisible) {
+      inputElement.current?.focus();
+    }
+  }, [isVisible]);
+
+  const hideTableFilterBar = useCallback(() => {
+    setIsVisible(false);
+  }, [setIsVisible]);
+
+  return (
+    <div className={classNames(styles.tableFilter, { [styles.tableFilterVisible]: isVisible })}>
+      <FormGroup className={Classes.TEXT_SMALL} inline={true} label="Filter table">
+        <InputGroup
+          inputRef={inputElement}
+          type="search"
+          small={true}
+          placeholder="Search track names, artists, albums..."
+        />
+      </FormGroup>
+      <Button
+        className={styles.tableFilterHideButton}
+        onClick={hideTableFilterBar}
+        small={true}
+        minimal={true}
+        icon={<ChevronUp />}
+      />
+    </div>
+  );
+}
 
 const RESIZER_OPTIONS = {
   minWidth: 50,
