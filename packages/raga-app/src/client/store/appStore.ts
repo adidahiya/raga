@@ -26,6 +26,11 @@ import {
 } from "./slices/audioPlayerSlice";
 import { createLibrarySlice, type LibraryActions, type LibraryState } from "./slices/librarySlice";
 import {
+  createTrackTableSlice,
+  type TrackTableActions,
+  type TrackTableState,
+} from "./slices/trackTableSlice";
+import {
   createUserSettingsSlice,
   type UserSettingsActions,
   type UserSettingsState,
@@ -37,12 +42,14 @@ export type AppState = AudioFilesServerState &
   LibraryState &
   AudioAnalyzerState &
   AudioPlayerState &
+  TrackTableState &
   UserSettingsState;
 export type AppActions = AudioFilesServerActions &
   AppOverlaysActions &
   LibraryActions &
   AudioAnalyzerActions &
   AudioPlayerActions &
+  TrackTableActions &
   UserSettingsActions;
 export type AppStore = AppState & AppActions;
 
@@ -56,6 +63,7 @@ export const useAppStore = create<AppStore>()(
       ...createLibrarySlice(...args),
       ...createAudioAnalyzerSlice(...args),
       ...createAudioPlayerSlice(...args),
+      ...createTrackTableSlice(...args),
       ...createUserSettingsSlice(...args),
     })),
     {
