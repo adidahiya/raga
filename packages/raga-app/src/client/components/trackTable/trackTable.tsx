@@ -32,8 +32,10 @@ import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
 import { AudioFileSource, getTrackFileSource, getTrackFileType } from "../../../common/trackUtils";
 import { stopPropagation } from "../../common/reactUtils";
+import { TrackPropertySortKey } from "../../common/trackPropertySortKey";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
+import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
@@ -58,20 +60,6 @@ interface TrackDefinitionNode extends TrackDefinition {
 
 // CONFIGURATION
 // -------------------------------------------------------------------------------------------------
-
-// HACKHACK: do not use `{ TrackDefinition } from "@adahiya/raga-lib"` values for this because that import
-// causes our fluent-ffmepg resolution alias (defined in `vite.main.config.mjs`) to be insufficient; we cannot
-// configure how raga-lib's CJS dependencies are resolved
-const enum TrackPropertySortKey {
-  ARTIST = "artist",
-  BPM = "bpm",
-  DATE_ADDED = "dateAdded",
-  FILESOURCE = "filesource",
-  FILETYPE = "filetype",
-  INDEX = "index",
-  NAME = "name",
-  RATING = "rating",
-}
 
 const sortFns: Record<TrackPropertySortKey, SortFn> = {
   [TrackPropertySortKey.INDEX]: (array) =>
@@ -396,26 +384,27 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
 function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefinitionNode>) {
   const selectedTrackId = appStore.use.selectedTrackId();
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
+  const trackTableSort = appStore.use.trackTableSort();
+  const setTrackTableSort = appStore.use.setTrackTableSort();
   const [sortedTrackDefs, setSortedTrackDefs] = useState(trackDefNodes.nodes);
 
+  // react to changes in track list and sort column (as well as initial sort column read from local storage)
   useEffect(() => {
-    setSortedTrackDefs(trackDefNodes.nodes);
-  }, [trackDefNodes.nodes]);
+    const { sortKey, reverse } = trackTableSort;
+    // N.B. need to copy the array since `sortFns` do sorting in place
+    const sortedTrackDefs = sortFns[sortKey](trackDefNodes.nodes.slice()) as TrackDefinitionNode[];
+    setSortedTrackDefs(reverse ? sortedTrackDefs.reverse() : sortedTrackDefs);
+  }, [trackDefNodes.nodes, trackTableSort]);
 
   const handleSortChange = useCallback(
     (_action: Action, state: State) => {
-      const { sortKey, reverse } = state as { sortKey: TrackPropertySortKey; reverse: boolean };
+      const { sortKey, reverse } = state as TrackTableSortState;
       log.debug(
         `[client] sorted track table by '${sortKey}' column (${reverse ? "descending" : "ascending"})`,
       );
-      // N.B. need to copy the array since `sortFns` do sorting in place
-      const sortedTrackDefs = sortFns[sortKey](
-        trackDefNodes.nodes.slice(),
-      ) as TrackDefinitionNode[];
-      const newSortedTrackDefs = reverse ? sortedTrackDefs.reverse() : sortedTrackDefs;
-      setSortedTrackDefs(newSortedTrackDefs);
+      setTrackTableSort({ sortKey, reverse });
     },
-    [trackDefNodes.nodes],
+    [setTrackTableSort],
   );
 
   const handleSelectChange = useCallback(
@@ -427,7 +416,11 @@ function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefin
     [playlistId, setSelectedTrackId],
   );
 
-  const sort = useSort(trackDefNodes, { onChange: handleSortChange }, { sortFns, sortIcon });
+  const sort = useSort(
+    trackDefNodes,
+    { state: trackTableSort, onChange: handleSortChange },
+    { sortFns, sortIcon },
+  );
 
   const select = useRowSelect(trackDefNodes, {
     state: { id: selectedTrackId },
