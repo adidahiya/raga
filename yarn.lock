@@ -59,7 +59,7 @@ __metadata:
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.4.3"
     use-immer: "npm:^0.9.0"
-    usehooks-ts: "npm:3.0.2"
+    usehooks-ts: "npm:3.1.0"
     vite: "npm:^5.2.8"
     wavesurfer.js: "npm:^7.7.7"
     web-audio-beat-detector: "npm:^8.2.7"
@@ -12419,14 +12419,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"usehooks-ts@npm:3.0.2":
-  version: 3.0.2
-  resolution: "usehooks-ts@npm:3.0.2"
+"usehooks-ts@npm:3.1.0":
+  version: 3.1.0
+  resolution: "usehooks-ts@npm:3.1.0"
   dependencies:
     lodash.debounce: "npm:^4.0.8"
   peerDependencies:
     react: ^16.8.0  || ^17 || ^18
-  checksum: 10/0c8880702c0a306d5481a3968282dc04495e9f51198085ffb3976e069a7e77b2dc82e3f14b74e080a20f0267cb46805d835a8c7ee728335ff26f024aa8e79c42
+  checksum: 10/6aef8affd3c053a3040b7421816dab85eb21601c5203496a705bafc32eb973fb519a2b0ddda527962e361d248f3a1c49df130620efe871c8f89e897451ed1cc7
   languageName: node
   linkType: hard
 
