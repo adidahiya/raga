@@ -18,16 +18,16 @@
   },
   "dependencies": {
     "@adahiya/raga-lib": "workspace:^",
-    "dedent": "^1.5.1",
+    "dedent": "^1.5.3",
     "minimist": "^1.2.8",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
     "@types/dedent": "^0.7.2",
-    "@types/node": "^20.12.3",
+    "@types/node": "^20.12.7",
     "@types/prompts": "^2.4.9",
     "eslint": "^8.57.0",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=18.18"
