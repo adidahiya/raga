@@ -2,6 +2,7 @@ import type { TrackDefinition } from "@adahiya/raga-lib";
 import {
   Button,
   Classes,
+  Collapse,
   Colors,
   FormGroup,
   InputGroup,
@@ -174,7 +175,7 @@ function TrackTableFilterBar() {
   }, [setIsVisible]);
 
   return (
-    <div className={classNames(styles.tableFilter, { [styles.tableFilterVisible]: isVisible })}>
+    <Collapse isOpen={isVisible} className={styles.tableFilter}>
       <FormGroup className={Classes.TEXT_SMALL} inline={true} label="Filter table">
         <InputGroup
           inputRef={inputElement}
@@ -190,7 +191,7 @@ function TrackTableFilterBar() {
         minimal={true}
         icon={<ChevronUp />}
       />
-    </div>
+    </Collapse>
   );
 }
 

@@ -86,15 +86,14 @@
 }
 
 .tableFilter {
-  height: 30px;
-  display: flex;
-  padding: 4px 6px;
-  justify-content: flex-end;
-  border-bottom: solid 1px bp.$pt-dark-divider-white;
-  gap: 5px;
+  max-height: 30px;
 
-  &:not(.tableFilterVisible) {
-    display: none;
+  :global(.#{bp.$ns}-collapse-body) {
+    border-bottom: solid 1px bp.$pt-dark-divider-white;
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+    padding: 4px 6px;
   }
 
   :global(.#{bp.$ns}-form-group.#{bp.$ns}-inline) {
