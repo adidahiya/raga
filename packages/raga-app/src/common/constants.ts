@@ -23,3 +23,4 @@ export const SHOW_TRACK_TABLE_CONTEXT_MENU: boolean = true;
 // TODO: make track table row height configurable
 export const TRACK_TABLE_ROW_HEIGHT = 24;
 export const TRACK_TABLE_HEADER_HEIGHT = TRACK_TABLE_ROW_HEIGHT + 1; // add a pixel for border
+export const TRACK_TABLE_FILTER_BAR_HEIGHT = 30;

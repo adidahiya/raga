@@ -3,7 +3,11 @@ import { ContextMenuPopover } from "@blueprintjs/core";
 import { useCallback, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 
-import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
+import {
+  TRACK_TABLE_FILTER_BAR_HEIGHT,
+  TRACK_TABLE_HEADER_HEIGHT,
+  TRACK_TABLE_ROW_HEIGHT,
+} from "../../../common/constants";
 import type { Offset } from "../../common/types";
 import { appStore } from "../../store/appStore";
 import TrackRowContextMenu from "./trackRowContextMenu";
@@ -24,6 +28,7 @@ export default function useTrackTableContextMenu({
   containerElement,
   sortedTrackDefs,
 }: UseTrackTableContextMenuOptions): UseTrackTableContextMenuReturnValue {
+  const isTableFilterVisible = appStore.use.trackTableFilterVisible();
   const isContextMenuOpen = useBoolean(false);
   const [targetOffset, setTargetOffset] = useState<Offset>({ left: 0, top: 0 });
   // "active" for the context menu means the track that was right-clicked
@@ -44,7 +49,8 @@ export default function useTrackTableContextMenu({
         scrollingContainer.scrollTop +
         event.clientY -
         containerTopOffset -
-        TRACK_TABLE_HEADER_HEIGHT;
+        TRACK_TABLE_HEADER_HEIGHT -
+        (isTableFilterVisible ? TRACK_TABLE_FILTER_BAR_HEIGHT : 0);
       const trackIndex = Math.floor(topOffsetInList / TRACK_TABLE_ROW_HEIGHT);
       const newActiveTrackDef = sortedTrackDefs[trackIndex] as TrackDefinition | undefined;
 
@@ -56,7 +62,7 @@ export default function useTrackTableContextMenu({
         top: event.clientY,
       });
     },
-    [containerElement, isContextMenuOpen, setActiveTrackId, sortedTrackDefs],
+    [containerElement, isContextMenuOpen, isTableFilterVisible, setActiveTrackId, sortedTrackDefs],
   );
 
   const handleClose = useCallback(() => {

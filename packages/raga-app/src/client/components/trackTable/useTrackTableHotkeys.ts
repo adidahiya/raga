@@ -3,6 +3,7 @@ import { useCallback, useMemo } from "react";
 
 import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { appStore } from "../../store/appStore";
+import styles from "./trackTable.module.scss";
 import { getTableScrollingContainer } from "./trackTableDOMUtils";
 
 export interface UseTrackTableHotkeysOptions {
@@ -17,7 +18,9 @@ export default function useTrackTableHotkeys({
   containerElement,
   sortedTrackIds,
 }: UseTrackTableHotkeysOptions) {
+  const trackTableFilterVisible = appStore.use.trackTableFilterVisible();
   const selectedTrackId = appStore.use.selectedTrackId();
+  const setTrackTableFilterVisible = appStore.use.setTrackTableFilterVisible();
 
   // N.B. it would be nice to use `Element.scrollIntoView()` here, but that doesn't work nicely with virtualized lists
   // see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -47,6 +50,19 @@ export default function useTrackTableHotkeys({
     }
   }, [containerElement, sortedTrackIds, selectedTrackId]);
 
+  const handleTableSearch = useCallback(() => {
+    if (trackTableFilterVisible) {
+      // focus the filter search input
+      const filterSearchInput = document.querySelector<HTMLInputElement>(
+        `.${styles.tableFilter} input[type='search']`,
+      );
+      filterSearchInput?.focus();
+    } else {
+      // make the search input visible
+      setTrackTableFilterVisible(true);
+    }
+  }, [setTrackTableFilterVisible, trackTableFilterVisible]);
+
   const hotkeyConfig = useMemo(
     () => [
       {
@@ -56,8 +72,15 @@ export default function useTrackTableHotkeys({
         label: "Scroll to selected track",
         onKeyDown: handleScrollToSelectedTrack,
       },
+      {
+        global: true,
+        group: "Track Browser",
+        combo: "cmd+f",
+        label: "Filter track table",
+        onKeyDown: handleTableSearch,
+      },
     ],
-    [handleScrollToSelectedTrack],
+    [handleScrollToSelectedTrack, handleTableSearch],
   );
 
   return useHotkeys(hotkeyConfig);
