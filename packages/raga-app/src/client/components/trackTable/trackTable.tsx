@@ -101,22 +101,40 @@ const sortIcon: SortOptionsIcon = {
   iconUp: <ChevronUp />,
 };
 
-// TODO: show singleton ContextMenuPopover on row click
-
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
 export default function TrackTable({ playlistId }: TrackTableProps) {
-  const trackDefNodes = useTrackDefinitionNodes(playlistId);
-  const numTracksInPlaylist = trackDefNodes.nodes.length;
+  const allTrackDefNodes = useTrackDefinitionNodes(playlistId);
+  const numTracksInPlaylist = allTrackDefNodes.nodes.length;
   const theme = useTableTheme(numTracksInPlaylist);
   const containerElement = useRef<HTMLDivElement>(null);
 
-  // TODO: filter trackDefNodes based on TrackTableFilterBar input value
+  // filter trackDefNodes based on filterQuery value
+  const [filterQuery, setFilterQuery] = useState<string>("");
+  const clearFilterQuery = useCallback(() => {
+    setFilterQuery("");
+  }, []);
+  const filteredTrackDefNodes = useMemo(() => {
+    if (filterQuery.trim() === "") {
+      return allTrackDefNodes;
+    }
+
+    return {
+      nodes: allTrackDefNodes.nodes.filter((track) => {
+        const query = filterQuery.toLowerCase();
+        return (
+          (track.Name ?? "").toLowerCase().includes(query) ||
+          (track.Artist ?? "").toLowerCase().includes(query) ||
+          (track.Album ?? "").toLowerCase().includes(query)
+        );
+      }),
+    };
+  }, [filterQuery, allTrackDefNodes]);
 
   // N.B. table interaction hooks need to the list of tracks with the current sort order applied
   // so that they can locate rows correctly in 2D space
-  const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, trackDefNodes);
+  const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, filteredTrackDefNodes);
   const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
   useTrackTableHotkeys({ containerElement, sortedTrackIds });
   const { contextMenuPopover, handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
@@ -127,7 +145,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const table = (
     <Table
       className={classNames(styles.trackTable, { [styles.contextMenuIsOpen]: isContextMenuOpen })}
-      data={trackDefNodes}
+      data={filteredTrackDefNodes}
       layout={{ isDiv: true, fixedHeader: true, custom: true }}
       select={select}
       sort={sort}
@@ -150,7 +168,11 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
       ref={containerElement}
       onContextMenu={handleContextMenu}
     >
-      <TrackTableFilterBar />
+      <TrackTableFilterBar
+        query={filterQuery}
+        onClose={clearFilterQuery}
+        onQueryChange={setFilterQuery}
+      />
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
       {contextMenuPopover}
     </div>
@@ -158,7 +180,13 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
 }
 TrackTable.displayName = "TrackTable";
 
-function TrackTableFilterBar() {
+interface TrackTableFilterBarProps {
+  query: string;
+  onClose?: () => void;
+  onQueryChange: (query: string) => void;
+}
+
+function TrackTableFilterBar({ query, onClose, onQueryChange }: TrackTableFilterBarProps) {
   const isVisible = appStore.use.trackTableFilterVisible();
   const setIsVisible = appStore.use.setTrackTableFilterVisible();
 
@@ -172,7 +200,15 @@ function TrackTableFilterBar() {
 
   const hideTableFilterBar = useCallback(() => {
     setIsVisible(false);
-  }, [setIsVisible]);
+    onClose?.();
+  }, [onClose, setIsVisible]);
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onQueryChange(e.target.value);
+    },
+    [onQueryChange],
+  );
 
   return (
     <Collapse isOpen={isVisible} className={styles.tableFilter}>
@@ -182,6 +218,8 @@ function TrackTableFilterBar() {
           type="search"
           small={true}
           placeholder="Search track names, artists, albums..."
+          value={query}
+          onChange={handleInputChange}
         />
       </FormGroup>
       <Button
