@@ -31,6 +31,8 @@ export interface LibraryState {
   libraryWriteState: libraryWriteState;
   /** Augmentation of MusicLibraryPlaylist which keeps a record of Playlist persistent ID -> definition */
   libraryPlaylists: PartialRecord<string, PlaylistDefinition> | undefined;
+  /** Augmentation of MusicLibraryPlaylist which keeps a record of track ID -> list of playlists IDs in which it appears */
+  libraryPlaylistsContainingTrack: PartialRecord<number, string[]>;
   libraryInputFilepath: string | undefined;
   libraryOutputFilepath: string | undefined;
   selectedPlaylistId: string | undefined;
@@ -70,6 +72,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   libraryOutputFilepath: undefined,
   libraryLoadingState: "none",
   libraryPlaylists: undefined,
+  libraryPlaylistsContainingTrack: {},
   libraryWriteState: "none",
   selectedPlaylistId: undefined,
   selectedTrackId: undefined,
@@ -184,6 +187,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         state.libraryLoadingState = "loaded";
         state.library = data!.library;
         state.libraryPlaylists = getLibraryPlaylists(data!.library);
+        state.libraryPlaylistsContainingTrack = getLibraryPlaylistsContainingTrack(data!.library);
       });
     } catch (e) {
       set({ libraryLoadingState: "error" });
@@ -255,4 +259,29 @@ function getLibraryPlaylists(
     libraryPlaylists[playlist["Playlist Persistent ID"]] = playlist;
   }
   return libraryPlaylists;
+}
+
+function getLibraryPlaylistsContainingTrack(
+  libraryPlist: SwinsianLibraryPlist,
+): PartialRecord<number, string[]> {
+  const libraryPlaylistsContainingTrack: PartialRecord<number, string[]> = {};
+  for (const playlist of libraryPlist.Playlists) {
+    if (
+      playlist.Master === true ||
+      playlist.Name === "Music" ||
+      playlist["Parent Persistent ID"] === undefined
+    ) {
+      // skip master playlists
+      continue;
+    }
+
+    for (const item of playlist["Playlist Items"]) {
+      const trackID = item["Track ID"];
+      if (libraryPlaylistsContainingTrack[trackID] === undefined) {
+        libraryPlaylistsContainingTrack[trackID] = [];
+      }
+      libraryPlaylistsContainingTrack[trackID]!.push(playlist["Playlist Persistent ID"]);
+    }
+  }
+  return libraryPlaylistsContainingTrack;
 }
