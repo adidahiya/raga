@@ -1,14 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import {
-  Button,
-  Classes,
-  Collapse,
-  Colors,
-  FormGroup,
-  InputGroup,
-  NonIdealState,
-  Tag,
-} from "@blueprintjs/core";
+import { Classes, Colors, NonIdealState, Tag } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
@@ -52,6 +43,7 @@ import EditableTrackBPM from "./editableTrackBPM";
 import TrackDateAddedText from "./trackDateAddedText";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
+import { TrackTableFilterBar } from "./trackTableFilterBar";
 import useTrackTableContextMenu from "./useTrackTableContextMenu";
 import useTrackTableHotkeys from "./useTrackTableHotkeys";
 
@@ -179,59 +171,6 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   );
 }
 TrackTable.displayName = "TrackTable";
-
-interface TrackTableFilterBarProps {
-  query: string;
-  onClose?: () => void;
-  onQueryChange: (query: string) => void;
-}
-
-function TrackTableFilterBar({ query, onClose, onQueryChange }: TrackTableFilterBarProps) {
-  const isVisible = appStore.use.trackTableFilterVisible();
-  const setIsVisible = appStore.use.setTrackTableFilterVisible();
-
-  const inputElement = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isVisible) {
-      inputElement.current?.focus();
-    }
-  }, [isVisible]);
-
-  const hideTableFilterBar = useCallback(() => {
-    setIsVisible(false);
-    onClose?.();
-  }, [onClose, setIsVisible]);
-
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      onQueryChange(e.target.value);
-    },
-    [onQueryChange],
-  );
-
-  return (
-    <Collapse isOpen={isVisible} className={styles.tableFilter}>
-      <FormGroup className={Classes.TEXT_SMALL} inline={true} label="Filter table">
-        <InputGroup
-          inputRef={inputElement}
-          type="search"
-          small={true}
-          placeholder="Search track names, artists, albums..."
-          value={query}
-          onChange={handleInputChange}
-        />
-      </FormGroup>
-      <Button
-        className={styles.tableFilterHideButton}
-        onClick={hideTableFilterBar}
-        small={true}
-        minimal={true}
-        icon={<ChevronUp />}
-      />
-    </Collapse>
-  );
-}
 
 const RESIZER_OPTIONS = {
   minWidth: 50,

@@ -18,8 +18,6 @@ export const WRITE_MODIFIED_LIBRARY_TIMEOUT = 20_000;
 export const ANALYZE_AUDIO_FILE_TIMEOUT = 4_000;
 
 // UI settings
-// eslint-disable-next-line @typescript-eslint/no-inferrable-types
-export const SHOW_TRACK_TABLE_CONTEXT_MENU: boolean = true;
 // TODO: make track table row height configurable
 export const TRACK_TABLE_ROW_HEIGHT = 24;
 export const TRACK_TABLE_HEADER_HEIGHT = TRACK_TABLE_ROW_HEIGHT + 1; // add a pixel for border
