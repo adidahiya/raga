@@ -14,7 +14,7 @@
     "publish-npm": "npm publish --access public"
   },
   "dependencies": {
-    "ansis": "^3.1.0",
+    "ansis": "^3.1.1",
     "dedent": "^1.5.3",
     "fluent-ffmpeg": "^2.1.2",
     "html-entities": "^2.5.2",
