@@ -53,7 +53,7 @@ export default function AudioFilesServerControls() {
     </div>
   );
 
-  const buttonText =
+  const statusText =
     status === "failed"
       ? "Failed"
       : status === "starting"
@@ -61,7 +61,7 @@ export default function AudioFilesServerControls() {
         : status === "started"
           ? "Running"
           : "Not running";
-  const buttonIcon =
+  const statusIcon =
     status === "failed"
       ? "error"
       : status === "starting"
@@ -69,7 +69,7 @@ export default function AudioFilesServerControls() {
         : status === "started"
           ? "tick"
           : undefined;
-  const buttonIntent =
+  const statusIntent =
     status === "failed" ? "danger" : status === "started" ? "success" : undefined;
 
   return (
@@ -84,10 +84,10 @@ export default function AudioFilesServerControls() {
         <Button
           small={true}
           minimal={true}
-          text={buttonText}
-          icon={buttonIcon}
+          text={statusText}
+          icon={statusIcon}
           rightIcon="caret-down"
-          intent={buttonIntent}
+          intent={statusIntent}
         />
       </Popover>
     </div>

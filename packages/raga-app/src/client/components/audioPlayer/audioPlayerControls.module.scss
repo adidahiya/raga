@@ -7,16 +7,6 @@
   align-items: center;
 }
 
-.nowPlaying {
-  text-align: right;
-  max-width: calc(100vw - 880px);
-}
-
-.timeProgress {
-  // fixed width to avoid shifting during playback
-  width: 80px;
-}
-
 .volumeSlider {
   position: relative;
   width: 150px;

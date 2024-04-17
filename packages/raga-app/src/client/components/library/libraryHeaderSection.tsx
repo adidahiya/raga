@@ -1,7 +1,7 @@
 import { type Props, Section } from "@blueprintjs/core";
 
-import LibraryIOActions from "./libraryIOActions";
-import LibraryLastModifiedText from "./libraryLastModifiedText";
+import { AudioPlayerControls } from "../audioPlayer/audioPlayerControls";
+import { AudioPlayerNowPlaying } from "../audioPlayer/audioPlayerNowPlaying";
 
 export type LibraryHeaderSectionProps = Props;
 
@@ -10,9 +10,8 @@ export default function LibraryHeaderSection(props: LibraryHeaderSectionProps) {
     <Section
       className={props.className}
       compact={true}
-      title="Library"
-      subtitle={<LibraryLastModifiedText />}
-      rightElement={<LibraryIOActions />}
+      title={<AudioPlayerNowPlaying />}
+      rightElement={<AudioPlayerControls />}
     />
   );
 }

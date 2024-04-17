@@ -4,11 +4,11 @@ import { createRoot } from "react-dom/client";
 
 import { useTaskEffect } from "../../hooks";
 import { appStore } from "../../store/appStore";
-import { AudioPlayerControls } from "../audioPlayer/audioPlayerControls";
 import UserSettingsDropdown from "../settings/userSettingsDropdown";
 import styles from "./appChrome.module.scss";
 import AudioAnalyzerStatus from "./audioAnalyzerStatus";
 import AudioFilesServerControls from "./audioFilesServerControls";
+import LibraryControls from "./libraryControls";
 
 export default function AppChrome() {
   const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
@@ -58,7 +58,9 @@ export default function AppChrome() {
         <Divider />
         <UserSettingsDropdown />
       </div>
-      <AudioPlayerControls />
+      <div className={styles.appChromeRight}>
+        <LibraryControls />
+      </div>
     </div>
   );
 }

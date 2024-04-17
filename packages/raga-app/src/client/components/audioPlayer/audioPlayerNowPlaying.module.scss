@@ -1,0 +1,18 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.nowPlaying {
+  text-align: right;
+  max-width: calc(100vw - 880px);
+}
+
+.timeProgress {
+  // fixed width to avoid shifting during playback
+  width: 80px;
+}
