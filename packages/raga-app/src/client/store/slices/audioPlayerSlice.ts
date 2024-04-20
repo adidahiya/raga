@@ -7,8 +7,6 @@ import { type AppStoreSliceCreator } from "../zustandUtils";
 
 export interface AudioPlayerState {
   audioIsPlaying: boolean;
-  /** range: [0, 1] */
-  audioVolume: number;
   /** milliseconds */
   audioCurrentTimeMs: number;
   /** milliseconds */
@@ -33,7 +31,6 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
   get,
 ) => ({
   audioIsPlaying: false,
-  audioVolume: 1,
   audioCurrentTimeMs: 0,
   audioDuration: 0,
   audioPlaybackRate: 1,
@@ -55,7 +52,6 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
       return;
     }
     waveSurfer.setVolume(volume);
-    set({ audioVolume: volume });
   },
 
   setAudioPlaybackRate: (audioPlaybackRate) => {

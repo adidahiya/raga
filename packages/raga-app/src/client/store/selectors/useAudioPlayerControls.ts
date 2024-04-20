@@ -1,3 +1,5 @@
+import { debounce } from "radash";
+
 import { useAppStore } from "../appStore";
 import type { AudioPlayerActions, AudioPlayerState } from "../slices/audioPlayerSlice";
 
@@ -9,7 +11,6 @@ export interface AudioPlayerControls {
   play: AudioPlayerActions["audioPlay"];
   seek: AudioPlayerActions["audioSeek"];
   setVolume: AudioPlayerActions["setAudioVolume"];
-  volume: AudioPlayerState["audioVolume"];
 }
 
 export const useAudioPlayerControls: () => AudioPlayerControls = () =>
@@ -20,6 +21,5 @@ export const useAudioPlayerControls: () => AudioPlayerControls = () =>
     pause: state.audioPause,
     play: state.audioPlay,
     seek: state.audioSeek,
-    setVolume: state.setAudioVolume,
-    volume: state.audioVolume,
+    setVolume: debounce({ delay: 100 }, state.setAudioVolume),
   }));
