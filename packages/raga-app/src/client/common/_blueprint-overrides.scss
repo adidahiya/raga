@@ -8,10 +8,14 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
   }
 }
 
-// darker dark theme
+// darker dark theme, other fixes
 .#{bp.$ns}-dark {
   .#{bp.$ns}-card {
     background-color: bp.$dark-gray2;
+  }
+
+  .#{bp.$ns}-form-group .#{bp.$ns}-form-group-sub-label {
+    color: bp.$pt-dark-text-color-muted;
   }
 }
 

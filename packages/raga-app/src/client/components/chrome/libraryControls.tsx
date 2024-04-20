@@ -22,6 +22,7 @@ import styles from "./libraryControls.module.scss";
 import LibraryLastModifiedText from "./libraryLastModifiedText";
 
 export default function LibraryControls() {
+  const toaster = appStore.use.toaster();
   const isLibraryLoaded = appStore.use.libraryLoadingState() !== "none";
   const libraryInputFilepath = appStore.use.libraryInputFilepath();
   const libraryOutputFilepath = appStore.use.libraryOutputFilepath();
@@ -43,17 +44,53 @@ export default function LibraryControls() {
     [libraryInputFilepath, loadLibrary],
   );
 
-  const handleLoadFromDisk = useOperationCallback(
-    function* () {
-      if (libraryInputFilepath === undefined) {
-        return;
-      }
-      yield* loadLibrary({ filepath: libraryInputFilepath, reloadFromDisk: true });
-    },
-    [libraryInputFilepath, loadLibrary],
-  );
+  const confirmedLoadFromDisk = useOperationCallback(function* () {
+    if (libraryInputFilepath === undefined) {
+      return;
+    }
+    yield* loadLibrary({ filepath: libraryInputFilepath, reloadFromDisk: true });
+  });
 
-  const handleSelectNewLibrary = unloadSwinsianLibrary;
+  const handleLoadFromDisk = useCallback(() => {
+    if (libraryInputFilepath === undefined) {
+      return;
+    }
+
+    if (libraryWriteState === "ready") {
+      toaster?.show({
+        intent: "warning",
+        message:
+          "There are changes which have not been written to disk, are you sure you want to reload?",
+        action: {
+          icon: "tick",
+          text: "Confirm reload",
+          onClick: confirmedLoadFromDisk,
+        },
+      });
+      return;
+    }
+
+    confirmedLoadFromDisk();
+  }, [confirmedLoadFromDisk, libraryInputFilepath, libraryWriteState, toaster]);
+
+  const handleSelectNewLibrary = useCallback(() => {
+    if (libraryWriteState === "ready") {
+      toaster?.show({
+        intent: "warning",
+        message:
+          "There are changes which have not been written to disk, are you sure you want to unload this library?",
+        action: {
+          icon: "tick",
+          text: "Confirm unload",
+          onClick: unloadSwinsianLibrary,
+        },
+      });
+      return;
+    }
+
+    unloadSwinsianLibrary();
+  }, [libraryWriteState, toaster, unloadSwinsianLibrary]);
+
   const handleOutputFilepathInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setLibraryOutputFilepath(event.target.value);
@@ -63,7 +100,11 @@ export default function LibraryControls() {
 
   const libraryOutputMenu = (
     <Menu>
-      <FormGroup label="Output file" className={styles.outputFilepath}>
+      <FormGroup
+        label="Output file"
+        className={styles.outputFilepath}
+        subLabel="Location of the Music.app/Rekordbox compatible XML file"
+      >
         <FileInput text={libraryOutputFilepath} onInputChange={handleOutputFilepathInputChange} />
       </FormGroup>
       <MenuItem
@@ -71,14 +112,6 @@ export default function LibraryControls() {
         text="Export library for Rekordbox"
         onClick={handleWriteModifiedLibrary}
       />
-      <MenuDivider />
-      <MenuItem
-        icon="reset"
-        text={`${isLibraryLoaded ? "Reload" : "Load"} library`}
-        onClick={handleLoad}
-      />
-      <MenuItem icon="floppy-disk" text="Reload from disk" onClick={handleLoadFromDisk} />
-      <MenuItem icon="folder-open" text="Select new library..." onClick={handleSelectNewLibrary} />
     </Menu>
   );
 
@@ -122,7 +155,6 @@ export default function LibraryControls() {
           />
         </Popover>
         <Divider className={styles.divider} />
-        {/* <Button icon="floppy-disk" rightIcon="caret-down" minimal={true} small={true} /> */}
 
         <Tooltip
           placement="bottom-end"
