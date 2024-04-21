@@ -3,8 +3,8 @@ import { useCallback, useMemo } from "react";
 
 import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { appStore } from "../../store/appStore";
-import styles from "./trackTable.module.scss";
 import { getTableScrollingContainer } from "./trackTableDOMUtils";
+import styles from "./trackTableFilterBar.module.scss";
 
 export interface UseTrackTableHotkeysOptions {
   containerElement: React.RefObject<HTMLElement>;
