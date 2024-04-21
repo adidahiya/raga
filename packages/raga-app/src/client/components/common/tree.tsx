@@ -1,4 +1,4 @@
-import { Tree, type TreeNodeInfo, type TreeProps } from "@blueprintjs/core";
+import { Tree, type TreeNodeInfo, type TreeProps, usePrevious } from "@blueprintjs/core";
 import classNames from "classnames";
 import { useCallback, useEffect, useMemo } from "react";
 import { useImmer } from "use-immer";
@@ -15,15 +15,15 @@ export interface TreeNode<T> extends TreeNodeInfo<T> {
   parentId: string | undefined;
 }
 
-export interface UncontrolledTreeProps<T> extends Omit<TreeProps<T>, "contents"> {
+export interface ControlledTreeProps<T> extends Omit<TreeProps<T>, "contents"> {
   /** Optional classes for the container element. */
   className?: string;
 
-  /** ID of the initially selected node. */
-  defaultSelectedNodeId?: string;
-
   /** Tree data nodes. */
   nodes: TreeNode<T>[];
+
+  /** ID of the selected node. */
+  selectedNodeId?: string;
 
   /** Callback invoked when a node is selected. */
   onSelect?: (node: TreeNode<T>, nodePath: NodePath) => void;
@@ -42,26 +42,41 @@ export interface UncontrolledTreeProps<T> extends Omit<TreeProps<T>, "contents">
  * Augment Blueprint's Tree component (purely presentational, fully controlled) with Immer-based
  * immutable state management.
  */
-export default function UncontrolledTree<T extends object>({
-  defaultSelectedNodeId,
+export default function ControlledTree<T extends object>({
+  selectedNodeId,
   nodes,
   onChange,
   onSelect,
   ...treeProps
-}: UncontrolledTreeProps<T>) {
+}: ControlledTreeProps<T>) {
   const nodesWithClassNames = useMemo(() => mapEachNode<T>(nodes, applyDefaultClassNames), [nodes]);
   const [nodesWithTreeState, setNodes] = useImmer<TreeNode<T>[]>(nodesWithClassNames);
 
+  const prevSelectedNodeId = usePrevious(selectedNodeId);
+
   // set the intially selected node and expand its parent nodes, only once on component mount
   useEffect(() => {
-    if (defaultSelectedNodeId !== undefined) {
+    if (selectedNodeId !== undefined) {
       setNodes((draft) => {
-        const selectedNode = getNodeWithId(draft, defaultSelectedNodeId);
+        const previouslySelectedNode = getNodeWithId(draft, prevSelectedNodeId);
+        const newlySelectedNode = getNodeWithId(draft, selectedNodeId);
 
-        if (selectedNode !== undefined) {
-          selectedNode.isSelected = true;
+        // deselect previous node, collapse all parents in its path
+        if (previouslySelectedNode !== undefined) {
+          previouslySelectedNode.isSelected = false;
 
-          let currentNodeInSelectionPath = getNodeWithId(draft, selectedNode.parentId);
+          let currentNodeInSelectionPath = getNodeWithId(draft, previouslySelectedNode.parentId);
+          while (currentNodeInSelectionPath !== undefined) {
+            currentNodeInSelectionPath.isExpanded = false;
+            currentNodeInSelectionPath = getNodeWithId(draft, currentNodeInSelectionPath.parentId);
+          }
+        }
+
+        // select new node, expand all parents in its path
+        if (newlySelectedNode !== undefined) {
+          newlySelectedNode.isSelected = true;
+
+          let currentNodeInSelectionPath = getNodeWithId(draft, newlySelectedNode.parentId);
           while (currentNodeInSelectionPath !== undefined) {
             currentNodeInSelectionPath.isExpanded = true;
             currentNodeInSelectionPath = getNodeWithId(draft, currentNodeInSelectionPath.parentId);
@@ -69,7 +84,7 @@ export default function UncontrolledTree<T extends object>({
         }
       });
     }
-  }, [defaultSelectedNodeId, setNodes]);
+  }, [prevSelectedNodeId, selectedNodeId, setNodes]);
 
   const handleNodeClick = useCallback(
     (node: TreeNodeInfo<T>, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -147,7 +162,7 @@ export default function UncontrolledTree<T extends object>({
     />
   );
 }
-UncontrolledTree.displayName = "UncontrolledTree";
+ControlledTree.displayName = "ControlledTree";
 
 // TREE MANIPULATION UTILITIES
 // -------------------------------------------------------------------------------------------------

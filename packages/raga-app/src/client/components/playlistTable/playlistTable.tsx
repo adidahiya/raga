@@ -19,9 +19,6 @@ export default function PlaylistTable() {
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
   const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
 
-  // TODO: scroll to active playlist when `selectedPlaylistId` changes due to an external update
-  // (for example, when a playlist is selected from the track table context menu)
-
   const handleSelect = useCallback(
     (node: TreeNode<PlaylistDefinition>) => {
       log.debug(`[client] selected playlist ${node.id}: '${node.data.Name}'`);
@@ -41,8 +38,7 @@ export default function PlaylistTable() {
       <div className={styles.body}>
         <Tree
           compact={true}
-          key={selectedPlaylistId} // re-render when selected playlist changes due to external update outside of this component
-          defaultSelectedNodeId={selectedPlaylistId}
+          selectedNodeId={selectedPlaylistId}
           nodes={playlistDefNodes}
           onSelect={handleSelect}
         />

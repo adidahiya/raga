@@ -266,11 +266,7 @@ function getLibraryPlaylistsContainingTrack(
 ): PartialRecord<number, string[]> {
   const libraryPlaylistsContainingTrack: PartialRecord<number, string[]> = {};
   for (const playlist of libraryPlist.Playlists) {
-    if (
-      playlist.Master === true ||
-      playlist.Name === "Music" ||
-      playlist["Parent Persistent ID"] === undefined
-    ) {
+    if (playlist.Master === true || playlist.Name === "Music") {
       // skip master playlists
       continue;
     }
