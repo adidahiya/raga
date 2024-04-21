@@ -11,7 +11,7 @@
 
 .header {
   line-height: $small-button-height - 1px; // subtract 1px for border width
-  padding: $table-cell-padding;
+  padding: $table-header-padding;
   border-bottom: solid 1px bp.$pt-dark-divider-white;
   flex-grow: 0;
 }
