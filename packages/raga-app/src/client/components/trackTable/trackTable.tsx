@@ -39,7 +39,7 @@ import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
-import EditableTrackBPM from "./editableTrackBPM";
+import EditableTrackTagValue from "./editableTrackTagValue";
 import TrackDateAddedText from "./trackDateAddedText";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
@@ -282,10 +282,14 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
         <AnalyzeSingleTrackButton trackDef={track} />
       </Cell>
       <Cell className={styles.bpmCell}>
-        <EditableTrackBPM trackDef={track} />
+        <EditableTrackTagValue tagName="BPM" trackDef={track} />
       </Cell>
-      <Cell>{track.Name}</Cell>
-      <Cell>{track.Artist}</Cell>
+      <Cell>
+        <EditableTrackTagValue tagName="Title" trackDef={track} />
+      </Cell>
+      <Cell>
+        <EditableTrackTagValue tagName="Artist" trackDef={track} />
+      </Cell>
       <Cell onClick={stopPropagation}>
         <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
       </Cell>
