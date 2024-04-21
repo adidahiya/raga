@@ -220,13 +220,27 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
           ),
         );
 
-        log.info(`[client] completed updating BPM for track ${trackID.toString()}`);
+        log.info(`[client] completed updating '${tagName}' tag for track ${trackID.toString()}`);
 
         set((state) => {
-          if (tagName === "BPM") {
-            state.library!.Tracks[trackID].BPM = newValue as number | undefined;
-          } else {
-            state.library!.Tracks[trackID].Rating = newValue as number | undefined;
+          switch (tagName) {
+            case "BPM":
+              state.library!.Tracks[trackID].BPM = newValue as number | undefined;
+              break;
+            case "Rating":
+              state.library!.Tracks[trackID].Rating = newValue as number | undefined;
+              break;
+            case "Artist":
+              state.library!.Tracks[trackID].Artist = newValue as string | undefined;
+              break;
+            case "Album":
+              state.library!.Tracks[trackID].Album = newValue as string | undefined;
+              break;
+            case "Title":
+              state.library!.Tracks[trackID].Name = newValue as string | undefined;
+              break;
+            default:
+              return;
           }
           state.libraryWriteState = "ready"; // needs to be written to disk
         });

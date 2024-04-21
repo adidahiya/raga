@@ -36,6 +36,25 @@ export function writeAudioFileTag({
       break;
     case "Rating":
       writeRatingTag(file, numericValue ?? 0, userEmail);
+      break;
+    case "Title":
+      if (!isString(value)) {
+        throw new Error(`Invalid value for '${tagName}' tag: ${value?.toString() ?? "undefined"}`);
+      }
+      file.tag.title = value;
+      break;
+    case "Album":
+      if (!isString(value)) {
+        throw new Error(`Invalid value for '${tagName}' tag: ${value?.toString() ?? "undefined"}`);
+      }
+      file.tag.album = value;
+      break;
+    case "Artist":
+      if (!isString(value)) {
+        throw new Error(`Invalid value for '${tagName}' tag: ${value?.toString() ?? "undefined"}`);
+      }
+      file.tag.performers = [value];
+      break;
   }
 
   file.save();
