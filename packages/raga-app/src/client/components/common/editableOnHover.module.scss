@@ -7,7 +7,7 @@
 .editInput {
   display: none;
 
-  input {
+  :global(.#{bp.$ns}-input-group.#{bp.$ns}-small) input {
     font-size: 14px;
   }
 }

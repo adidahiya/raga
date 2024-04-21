@@ -45,6 +45,10 @@
 
   .headerCell {
     padding: 2px 4px;
+
+    &.editableColumn {
+      padding-left: 10px;
+    }
   }
 
   [role="gridcell"] {

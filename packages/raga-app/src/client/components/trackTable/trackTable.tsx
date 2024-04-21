@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Colors, NonIdealState, Tag } from "@blueprintjs/core";
+import { Classes, Colors, NonIdealState, Tag, Tooltip } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
@@ -210,14 +210,14 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           </div>
         </HeaderCellSort>
         <HeaderCellSort
-          className={styles.headerCell}
+          className={classNames(styles.headerCell, styles.editableColumn)}
           resize={RESIZER_OPTIONS}
           sortKey={TrackPropertySortKey.NAME}
         >
           Name
         </HeaderCellSort>
         <HeaderCellSort
-          className={styles.headerCell}
+          className={classNames(styles.headerCell, styles.editableColumn)}
           resize={RESIZER_OPTIONS}
           sortKey={TrackPropertySortKey.ARTIST}
         >
@@ -250,7 +250,9 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           pinRight={true}
           sortKey={TrackPropertySortKey.DATE_ADDED}
         >
-          Date Added
+          <Tooltip content="Date added" placement="bottom" compact={true}>
+            <span>Date</span>
+          </Tooltip>
         </HeaderCellSort>
       </HeaderRow>
     </Header>
@@ -386,10 +388,10 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
-  const ratingColumnWidth = 100;
-  const fileTypeColumnWidth = 90;
-  const fileSourceColumnWidth = 100;
-  const dateAddedColumnWidth = 100;
+  const ratingColumnWidth = 90;
+  const fileTypeColumnWidth = 80;
+  const fileSourceColumnWidth = 80;
+  const dateAddedColumnWidth = 80;
 
   const gridTemplateColumns = [
     `${indexColumnWidth.toString()}px`,
