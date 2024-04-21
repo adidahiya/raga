@@ -7,6 +7,7 @@
 .starEmpty,
 .starFilled {
   filter: saturate(50%);
+  cursor: pointer;
 }
 
 .starFilled {
