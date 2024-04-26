@@ -25,6 +25,7 @@ import {
   createAudioPlayerSlice,
 } from "./slices/audioPlayerSlice";
 import { createLibrarySlice, type LibraryActions, type LibraryState } from "./slices/librarySlice";
+import { createSidebarSlice, type SidebarActions, type SidebarState } from "./slices/sidebarSlice";
 import {
   createTrackTableSlice,
   type TrackTableActions,
@@ -42,6 +43,7 @@ export type AppState = AudioFilesServerState &
   LibraryState &
   AudioAnalyzerState &
   AudioPlayerState &
+  SidebarState &
   TrackTableState &
   UserSettingsState;
 export type AppActions = AudioFilesServerActions &
@@ -49,6 +51,7 @@ export type AppActions = AudioFilesServerActions &
   LibraryActions &
   AudioAnalyzerActions &
   AudioPlayerActions &
+  SidebarActions &
   TrackTableActions &
   UserSettingsActions;
 export type AppStore = AppState & AppActions;
@@ -63,6 +66,7 @@ export const useAppStore = create<AppStore>()(
       ...createLibrarySlice(...args),
       ...createAudioAnalyzerSlice(...args),
       ...createAudioPlayerSlice(...args),
+      ...createSidebarSlice(...args),
       ...createTrackTableSlice(...args),
       ...createUserSettingsSlice(...args),
     })),
