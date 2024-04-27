@@ -26,6 +26,7 @@ import classNames from "classnames";
 import { unique } from "radash";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
+import { useResizeObserver } from "usehooks-ts";
 import { useShallow } from "zustand/react/shallow";
 
 import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
@@ -134,6 +135,19 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
     sortedTrackDefs,
   });
 
+  const setTrackTablePanelWidth = appStore.use.setTrackTablePanelWidth();
+  const handleTrackTableResize = useCallback(
+    (size: { width: number | undefined }) => {
+      setTrackTablePanelWidth(size.width);
+    },
+    [setTrackTablePanelWidth],
+  );
+
+  useResizeObserver({
+    ref: containerElement,
+    onResize: handleTrackTableResize,
+  });
+
   const table = (
     <Table
       className={classNames(styles.trackTable, { [styles.contextMenuIsOpen]: isContextMenuOpen })}
@@ -180,6 +194,8 @@ const RESIZER_OPTIONS = {
 
 function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+  const disabledColumns = useDisabledColumns();
+
   return (
     <Header className={styles.header}>
       <HeaderRow className={styles.headerRow}>
@@ -227,6 +243,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           className={styles.headerCell}
           stiff={true}
           sortKey={TrackPropertySortKey.RATING}
+          hide={disabledColumns.rating}
         >
           Rating
         </HeaderCellSort>
@@ -241,6 +258,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           className={styles.headerCell}
           stiff={true}
           sortKey={TrackPropertySortKey.FILESOURCE}
+          hide={disabledColumns.filesource}
         >
           Source
         </HeaderCellSort>
@@ -269,6 +287,7 @@ interface TrackTableRowProps
 const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const activeTrackId = appStore.use.activeTrackId();
+  const disabledColumns = useDisabledColumns();
 
   return (
     <Row
@@ -292,15 +311,19 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
       <Cell>
         <EditableTrackTagValue tagName="Artist" trackDef={track} />
       </Cell>
-      <Cell onClick={stopPropagation}>
-        <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
-      </Cell>
+      {disabledColumns.rating ? null : (
+        <Cell onClick={stopPropagation}>
+          <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
+        </Cell>
+      )}
       <Cell>
         <TrackFileTypeCell track={track} />
       </Cell>
-      <Cell>
-        <TrackFileSourceCell track={track} />
-      </Cell>
+      {disabledColumns.filesource ? null : (
+        <Cell>
+          <TrackFileSourceCell track={track} />
+        </Cell>
+      )}
       <Cell>
         <TrackDateAddedText track={track} />
       </Cell>
@@ -383,9 +406,21 @@ function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> 
   );
 }
 
+/** Determines which track table columns should be hidden according to responsive design constraints */
+function useDisabledColumns(): PartialRecord<TrackPropertySortKey, boolean> {
+  const trackTablePanelWidth = appStore.use.trackTablePanelWidth() ?? 9999;
+
+  return useMemo(() => {
+    return {
+      [TrackPropertySortKey.RATING]: trackTablePanelWidth < 700,
+      [TrackPropertySortKey.FILESOURCE]: trackTablePanelWidth < 650,
+    };
+  }, [trackTablePanelWidth]);
+}
+
 /** Configures CSS grid styles. */
 function useTableTheme(numTracksInPlaylist: number): Theme {
-  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
+  const indexColumnWidth = Math.ceil(Math.log10(numTracksInPlaylist) * 10 + 15);
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
   const ratingColumnWidth = 90;
@@ -393,16 +428,19 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   const fileSourceColumnWidth = 80;
   const dateAddedColumnWidth = 80;
 
+  const disabledColumns = useDisabledColumns();
+
   const gridTemplateColumns = [
     `${indexColumnWidth.toString()}px`,
     `${analyzeColumnWidth.toString()}px`,
     `${bpmColumnWidth.toString()}px`,
     `repeat(2, minmax(40px, 1fr))`,
-    `${ratingColumnWidth.toString()}px`,
+    disabledColumns.rating ? undefined : `${ratingColumnWidth.toString()}px`,
     `${fileTypeColumnWidth.toString()}px`,
-    `${fileSourceColumnWidth.toString()}px`,
+    disabledColumns.filesource ? undefined : `${fileSourceColumnWidth.toString()}px`,
     `${dateAddedColumnWidth.toString()}px`,
-  ];
+  ].filter((value) => !!value);
+
   return useTheme([
     {
       Table: `
