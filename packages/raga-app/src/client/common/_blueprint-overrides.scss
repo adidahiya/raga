@@ -8,10 +8,14 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
   }
 }
 
-// darker dark theme
+// darker dark theme, other fixes
 .#{bp.$ns}-dark {
   .#{bp.$ns}-card {
     background-color: bp.$dark-gray2;
+  }
+
+  .#{bp.$ns}-form-group .#{bp.$ns}-form-group-sub-label {
+    color: bp.$pt-dark-text-color-muted;
   }
 }
 
@@ -56,4 +60,23 @@ table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
 
 .#{bp.$ns}-slider {
   min-width: 100px;
+}
+
+// more compact tree (horizontal padding)
+.#{bp.$ns}-tree.#{bp.$ns}-compact {
+  .#{bp.$ns}-tree-node-content-1 {
+    padding-left: 20px;
+  }
+
+  .#{bp.$ns}-tree-node-content-2 {
+    padding-left: 40px;
+  }
+
+  .#{bp.$ns}-tree-node-content-3 {
+    padding-left: 60px;
+  }
+
+  .#{bp.$ns}-tree-node-content-4 {
+    padding-left: 80px;
+  }
 }

@@ -5,7 +5,8 @@ import { useMemo } from "react";
 import { formatAudioDuration } from "../../../common/format";
 import { appStore } from "../../store/appStore";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
-import styles from "./audioPlayerControls.module.scss";
+import TrackRatingStars from "../trackTable/trackRatingStars";
+import styles from "./audioPlayerNowPlaying.module.scss";
 import useAudioPlayerHotkeys from "./useAudioPlayerHotkeys";
 
 export function AudioPlayerNowPlaying() {
@@ -31,6 +32,9 @@ export function AudioPlayerNowPlaying() {
         <span className={Classes.TEXT_MUTED}> &ndash; </span>
         <strong>{selectedTrack.Name}</strong>
       </Text>
+      <div>
+        <TrackRatingStars trackID={selectedTrack["Track ID"]} rating={selectedTrack.Rating} />
+      </div>
       <div className={classNames(styles.timeProgress, Classes.TEXT_MUTED)}>
         {formattedCurrentTime} / {formattedDuration}
       </div>

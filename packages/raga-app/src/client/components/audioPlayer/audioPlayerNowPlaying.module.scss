@@ -3,13 +3,12 @@
 .container {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 20px;
   align-items: center;
 }
 
 .nowPlaying {
-  text-align: right;
-  max-width: calc(100vw - 880px);
+  max-width: calc(100vw - 480px);
 }
 
 .timeProgress {

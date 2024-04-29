@@ -5,7 +5,6 @@ import { env } from "node:process";
 
 import { AudioFileConverter } from "@adahiya/raga-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
-import {} from "@tinyhttp/send";
 import { call, type Operation, run } from "effection";
 import sirv from "sirv";
 

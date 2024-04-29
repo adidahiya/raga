@@ -1,5 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { Classes } from "@blueprintjs/core";
+import { Button, Classes, Collapse } from "@blueprintjs/core";
+import { CaretDown, CaretUp } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
@@ -16,11 +17,12 @@ import styles from "./playlistTable.module.scss";
 export default function PlaylistTable() {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
+
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
   const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
 
-  // TODO: scroll to active playlist when `selectedPlaylistId` changes due to an external update
-  // (for example, when a playlist is selected from the track table context menu)
+  const isPlaylistTreeExpanded = appStore.use.isPlaylistTreeExpanded();
+  const togglePlaylistTreeExpanded = appStore.use.togglePlaylistTreeExpanded();
 
   const handleSelect = useCallback(
     (node: TreeNode<PlaylistDefinition>) => {
@@ -33,19 +35,30 @@ export default function PlaylistTable() {
   return (
     <div className={styles.playlistTableContainer}>
       <div className={styles.header}>
-        Playlists{" "}
-        <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
-          ({formatStatNumber(numTotalPlaylists)})
-        </span>
+        <div className={styles.headerContent}>
+          <span>
+            Playlists{" "}
+            <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+              ({formatStatNumber(numTotalPlaylists)})
+            </span>
+          </span>
+          <Button
+            minimal={true}
+            small={true}
+            icon={isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+            onClick={togglePlaylistTreeExpanded}
+          />
+        </div>
       </div>
       <div className={styles.body}>
-        <Tree
-          compact={true}
-          key={selectedPlaylistId} // re-render when selected playlist changes due to external update outside of this component
-          defaultSelectedNodeId={selectedPlaylistId}
-          nodes={playlistDefNodes}
-          onSelect={handleSelect}
-        />
+        <Collapse isOpen={isPlaylistTreeExpanded} className={styles.treeCollapse}>
+          <Tree
+            compact={true}
+            selectedNodeId={selectedPlaylistId}
+            nodes={playlistDefNodes}
+            onSelect={handleSelect}
+          />
+        </Collapse>
       </div>
     </div>
   );

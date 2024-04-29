@@ -1,12 +1,13 @@
 .trackRatingStars {
   display: inline-flex;
   flex-direction: row;
-  gap: 2px;
+  gap: 1px;
 }
 
 .starEmpty,
 .starFilled {
   filter: saturate(50%);
+  cursor: pointer;
 }
 
 .starFilled {

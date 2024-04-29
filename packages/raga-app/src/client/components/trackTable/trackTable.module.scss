@@ -1,4 +1,5 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+@import "../../common/variables";
 
 .trackTableContainer {
   height: 100%;
@@ -43,14 +44,25 @@
   }
 
   .headerCell {
-    padding: 2px 4px;
+    padding: $table-header-padding;
+
+    &.editableColumn {
+      padding-left: 10px;
+    }
   }
 
   [role="gridcell"] {
-    padding: 2px 4px;
+    padding: $table-cell-padding;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    > div {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
   }
 
   [role="row"] {

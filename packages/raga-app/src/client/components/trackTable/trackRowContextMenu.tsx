@@ -11,6 +11,7 @@ import styles from "./trackRowContextMenu.module.scss";
 export default function TrackRowContextMenu({ track }: { track: TrackDefinition | undefined }) {
   const libraryPlaylists = appStore.use.libraryPlaylists();
   const libraryPlaylistsContainingTrack = appStore.use.libraryPlaylistsContainingTrack();
+  const selectedPlaylistId = appStore.use.selectedPlaylistId();
 
   const handleOpenFile = useCallback(() => {
     if (track === undefined) {
@@ -35,11 +36,13 @@ export default function TrackRowContextMenu({ track }: { track: TrackDefinition 
   const playlistsContainingThisTrack = libraryPlaylistsContainingTrack[track["Track ID"]];
   const showInPlaylistItems =
     playlistsContainingThisTrack === undefined ||
-    playlistsContainingThisTrack.length === 0 ? undefined : (
+    playlistsContainingThisTrack.size === 0 ? undefined : (
       <MenuItem text="Show in playlist" icon={<Property />}>
-        {playlistsContainingThisTrack.map((playlistID) => (
-          <ShowTrackInPlaylistMenuItem key={playlistID} playlistID={playlistID} />
-        ))}
+        {[...playlistsContainingThisTrack]
+          .filter((playlistID) => playlistID !== selectedPlaylistId)
+          .map((playlistID) => (
+            <ShowTrackInPlaylistMenuItem key={playlistID} playlistID={playlistID} />
+          ))}
       </MenuItem>
     );
 

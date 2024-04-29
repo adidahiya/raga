@@ -46,8 +46,8 @@ function InteractiveStar({ isFilled, ratingOutOf100, trackID }: InteractiveStarP
   );
 
   return isFilled ? (
-    <Star className={styles.starFilled} onClick={handleClick} color={Colors.GOLD4} />
+    <Star className={styles.starFilled} onClick={handleClick} color={Colors.GOLD4} size={14} />
   ) : (
-    <StarEmpty className={styles.starEmpty} onClick={handleClick} color={Colors.GOLD4} />
+    <StarEmpty className={styles.starEmpty} onClick={handleClick} color={Colors.GOLD4} size={14} />
   );
 }

@@ -9,11 +9,15 @@ import styles from "./editableOnHover.module.scss";
 interface EditableOnHoverProps<T> {
   value: T | undefined;
   onChangeOperation: (newValue: T | undefined) => Operation<void>;
+  textAlign?: "left" | "right";
+  showGradient?: boolean;
 }
 
 export default function EditableOnHover<T extends string | number>({
   value,
   onChangeOperation,
+  textAlign = "left",
+  showGradient = true,
 }: EditableOnHoverProps<T>) {
   const valueType = typeof value;
   const [isEditing, setIsEditing] = useState(false);
@@ -43,6 +47,8 @@ export default function EditableOnHover<T extends string | number>({
 
   const handleInputKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      event.currentTarget.blur();
+    } else if (event.key === "Escape") {
       event.currentTarget.blur();
     }
   }, []);
@@ -80,13 +86,16 @@ export default function EditableOnHover<T extends string | number>({
           inputRef={inputRef}
         />
       </div>
-      <Button
-        className={styles.editButton}
-        minimal={true}
-        text="Edit"
-        onClick={handleEditClick}
-        small={true}
-      />
+      <div className={styles.editButtonContainer}>
+        {showGradient && <div className={styles.editButtonGradient} />}
+        <Button
+          className={styles.editButton}
+          minimal={true}
+          text="Edit"
+          onClick={handleEditClick}
+          small={true}
+        />
+      </div>
     </>
   );
 
@@ -95,6 +104,9 @@ export default function EditableOnHover<T extends string | number>({
       className={classNames(styles.editableOnHover, {
         [styles.isEditing]: isEditing,
         [styles.isLoading]: isLoading,
+        [styles.alignLeft]: textAlign === "left",
+        [styles.alignRight]: textAlign === "right",
+        [styles.showGradient]: showGradient,
       })}
     >
       {isLoading ? <Spinner className={styles.spinner} size={16} /> : valueAndEditableContent}

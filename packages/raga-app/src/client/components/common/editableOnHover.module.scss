@@ -1,19 +1,37 @@
+@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+
 .value {
-  // matches input padding
-  padding-right: 8px;
+  padding-block: 2px;
 }
 
 .editInput {
   display: none;
 
-  input {
+  :global(.#{bp.$ns}-input-group.#{bp.$ns}-small) input {
     font-size: 14px;
-    text-align: right;
   }
 }
 
-.editButton {
+.editButtonContainer {
   display: none;
+  position: absolute;
+  right: 0;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.editButtonGradient {
+  top: 0;
+  height: 100%;
+  width: 100px;
+  right: 0;
+  position: absolute;
+  background: linear-gradient(90deg, rgba(bp.$dark-gray1, 0) 0%, rgba(bp.$dark-gray1, 1) 80%);
+}
+
+.editButton {
+  position: relative; // allows stacking above gradient element
   margin-right: 2px;
 }
 
@@ -22,17 +40,43 @@
 }
 
 .editableOnHover {
+  height: 100%;
   display: flex;
-  justify-content: flex-end;
+  position: relative;
+
+  &.alignLeft {
+    justify-content: flex-start;
+
+    .value {
+      // matches input padding
+      padding-left: 8px;
+    }
+  }
+
+  &.alignRight {
+    justify-content: flex-end;
+
+    .value {
+      // matches input padding
+      padding-right: 8px;
+    }
+
+    .editInput input {
+      text-align: right;
+    }
+  }
 
   &:not(.isEditing) {
     &:hover {
-      .value {
-        display: none;
+      &:not(.showGradient) {
+        // when we are not showing the gradient overlay over the value, we must hide it in the hover state
+        .value {
+          display: none;
+        }
       }
 
-      .editButton {
-        display: block;
+      .editButtonContainer {
+        display: flex;
       }
     }
   }
@@ -42,12 +86,13 @@
       display: none;
     }
 
-    .editButton {
+    .editButtonContainer {
       display: none;
     }
 
     .editInput {
       display: block;
+      width: 100%;
     }
   }
 }

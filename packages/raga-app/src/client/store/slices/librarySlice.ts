@@ -32,7 +32,7 @@ export interface LibraryState {
   /** Augmentation of MusicLibraryPlaylist which keeps a record of Playlist persistent ID -> definition */
   libraryPlaylists: PartialRecord<string, PlaylistDefinition> | undefined;
   /** Augmentation of MusicLibraryPlaylist which keeps a record of track ID -> list of playlists IDs in which it appears */
-  libraryPlaylistsContainingTrack: PartialRecord<number, string[]>;
+  libraryPlaylistsContainingTrack: PartialRecord<number, Set<string>>;
   libraryInputFilepath: string | undefined;
   libraryOutputFilepath: string | undefined;
   selectedPlaylistId: string | undefined;
@@ -95,7 +95,8 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set({ activeTrackId });
   },
   setSelectedPlaylistId: (selectedPlaylistId: string | undefined) => {
-    set({ selectedPlaylistId });
+    // ensure that playlist tree is expanded when switching playlists
+    set({ selectedPlaylistId, isPlaylistTreeExpanded: true });
   },
   setLibraryPlist: (libraryPlist) => {
     set({ library: libraryPlist });
@@ -263,14 +264,10 @@ function getLibraryPlaylists(
 
 function getLibraryPlaylistsContainingTrack(
   libraryPlist: SwinsianLibraryPlist,
-): PartialRecord<number, string[]> {
-  const libraryPlaylistsContainingTrack: PartialRecord<number, string[]> = {};
+): PartialRecord<number, Set<string>> {
+  const libraryPlaylistsContainingTrack: PartialRecord<number, Set<string>> = {};
   for (const playlist of libraryPlist.Playlists) {
-    if (
-      playlist.Master === true ||
-      playlist.Name === "Music" ||
-      playlist["Parent Persistent ID"] === undefined
-    ) {
+    if (playlist.Master === true || playlist.Name === "Music") {
       // skip master playlists
       continue;
     }
@@ -278,9 +275,9 @@ function getLibraryPlaylistsContainingTrack(
     for (const item of playlist["Playlist Items"]) {
       const trackID = item["Track ID"];
       if (libraryPlaylistsContainingTrack[trackID] === undefined) {
-        libraryPlaylistsContainingTrack[trackID] = [];
+        libraryPlaylistsContainingTrack[trackID] = new Set<string>();
       }
-      libraryPlaylistsContainingTrack[trackID]!.push(playlist["Playlist Persistent ID"]);
+      libraryPlaylistsContainingTrack[trackID]!.add(playlist["Playlist Persistent ID"]);
     }
   }
   return libraryPlaylistsContainingTrack;
