@@ -29,7 +29,7 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.12.7"
+    "@types/node": "npm:^20.12.8"
     "@types/react": "npm:^18.3.1"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.3.0"
@@ -40,10 +40,10 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.6.0"
     effection: "npm:^3.0.3"
-    electron: "npm:^29.3.1"
+    electron: "npm:^29.3.2"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.57.0"
-    framer-motion: "npm:^11.1.7"
+    framer-motion: "npm:^11.1.8"
     immer: "npm:^10.1.1"
     milliparsec: "npm:^2.3.0"
     node-taglib-sharp: "npm:^5.2.3"
@@ -54,15 +54,15 @@ __metadata:
     react-dropzone: "npm:^14.2.3"
     react-resizable-panels: "npm:^2.0.19"
     roarr: "npm:^7.21.1"
-    sass: "npm:^1.75.0"
+    sass: "npm:^1.76.0"
     serialize-error: "npm:^11.0.3"
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.4.5"
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:3.1.0"
-    vite: "npm:^5.2.10"
-    wavesurfer.js: "npm:^7.7.11"
-    web-audio-beat-detector: "npm:^8.2.9"
+    vite: "npm:^5.2.11"
+    wavesurfer.js: "npm:^7.7.13"
+    web-audio-beat-detector: "npm:^8.2.10"
     zustand: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
@@ -73,7 +73,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.12.7"
+    "@types/node": "npm:^20.12.8"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.3"
     eslint: "npm:^8.57.0"
@@ -91,7 +91,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.12.7"
+    "@types/node": "npm:^20.12.8"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^3.2.0"
@@ -339,16 +339,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.24.4
-  resolution: "@babel/runtime@npm:7.24.4"
-  dependencies:
-    regenerator-runtime: "npm:^0.14.0"
-  checksum: 10/8ec8ce2c145bc7e31dd39ab66df124f357f65c11489aefacb30f431bae913b9aaa66aa5efe5321ea2bf8878af3fcee338c87e7599519a952e3a6f83aa1b03308
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.24.5":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.24.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.24.5
   resolution: "@babel/runtime@npm:7.24.5"
   dependencies:
@@ -2466,7 +2457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.12.7, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.12.8, @types/node@npm:^20.9.0":
   version: 20.12.8
   resolution: "@types/node@npm:20.12.8"
   dependencies:
@@ -4877,16 +4868,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^29.3.1":
-  version: 29.3.1
-  resolution: "electron@npm:29.3.1"
+"electron@npm:^29.3.2":
+  version: 29.3.2
+  resolution: "electron@npm:29.3.2"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/186bba581280ecc82799f81322d79a4c5bc34fc5dfe989fe5e4f1e69d87d047d283634ed1384fc11202f7987ed3e9d0ad097905f02535891aeb37881df3e1e5c
+  checksum: 10/e850dbb3fc55b6e2c0c3cae91f36c077d140d1f5e867db96274604be3c5138bc30adc89545cdf90cf20c030cd7ccc18ba1e9f2cf40eca2b5d78b1365929bc0e2
   languageName: node
   linkType: hard
 
@@ -5970,9 +5961,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.1.7":
-  version: 11.1.7
-  resolution: "framer-motion@npm:11.1.7"
+"framer-motion@npm:^11.1.8":
+  version: 11.1.8
+  resolution: "framer-motion@npm:11.1.8"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -5986,7 +5977,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/b3bc5ac1c41fa3646b86f1855317cd7c9ebbc576667e1b29c283ab95dca7bcda6c3b0ad392645d12779b5bc340e816cef405574fbb757ba44a0517b2527fe30f
+  checksum: 10/aa2632363cc35c790f0328d3e159e292eedd40718cb366be2f0c9228806f867a9bbe8d98d72ec416558fbc6af7826f7bf0784386d70bd22fee5c3d55395b4540
   languageName: node
   linkType: hard
 
@@ -10993,16 +10984,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.70.0, sass@npm:^1.75.0":
-  version: 1.75.0
-  resolution: "sass@npm:1.75.0"
+"sass@npm:^1.70.0, sass@npm:^1.76.0":
+  version: 1.76.0
+  resolution: "sass@npm:1.76.0"
   dependencies:
     chokidar: "npm:>=3.0.0 <4.0.0"
     immutable: "npm:^4.0.0"
     source-map-js: "npm:>=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 10/9f2d1b5adfe0b008e7062ef2f42fd9b26672e39e36ef3d234166636a4082d1f66c01804070e4e07b50ec872cdd9485ccf10fae8f87b3c00b9de6400c6e73efe8
+  checksum: 10/f30e057617813b1253001b44f231c0a7667b624b06188f480fbb2c1ad073a5c302de3539078cb8af112e0d1fca7fbfd292d5e0dd816e9bfa493d3bce89ca8522
   languageName: node
   linkType: hard
 
@@ -12596,9 +12587,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.2.10":
-  version: 5.2.10
-  resolution: "vite@npm:5.2.10"
+"vite@npm:^5.2.11":
+  version: 5.2.11
+  resolution: "vite@npm:5.2.11"
   dependencies:
     esbuild: "npm:^0.20.1"
     fsevents: "npm:~2.3.3"
@@ -12632,7 +12623,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/a0c4ac7b95e9a2a59f4e73e5b42a63f33569f5ec505af9dd019f19ff419fd20d66ad9aad6708987d4da173d485358f0024f410af78ac97cf5c92a38f8c96c451
+  checksum: 10/ee0ad038f0831c9514796522deb1e2dcb84bc311abbccb77e4b12216d37fc9559137f4f1b8e75187d51007b954e845c6518e36ee3acac2e2a2789c1181ebb16c
   languageName: node
   linkType: hard
 
@@ -12645,10 +12636,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.7.11":
-  version: 7.7.11
-  resolution: "wavesurfer.js@npm:7.7.11"
-  checksum: 10/3a162a8b20d9915d1f7bffde59a1d8c58c87695c33945324012a8c381389bf774546e43e1729f99437daa6f57bab088c7c1c31567a105265f17d59759078e349
+"wavesurfer.js@npm:^7.7.13":
+  version: 7.7.13
+  resolution: "wavesurfer.js@npm:7.7.13"
+  checksum: 10/feb5dff93ce750dbd853ce930fe7509292397de65f4d61225ec9335654c0fac6dfd5331ff900e06a1dd0a515f035ffc72598755a0a8e262328a21423ada8e83b
   languageName: node
   linkType: hard
 
@@ -12684,7 +12675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector@npm:^8.2.9":
+"web-audio-beat-detector@npm:^8.2.10":
   version: 8.2.10
   resolution: "web-audio-beat-detector@npm:8.2.10"
   dependencies:

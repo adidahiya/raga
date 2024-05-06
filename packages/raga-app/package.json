@@ -28,7 +28,7 @@
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
     "effection": "^3.0.3",
-    "framer-motion": "^11.1.7",
+    "framer-motion": "^11.1.8",
     "immer": "^10.1.1",
     "milliparsec": "^2.3.0",
     "node-taglib-sharp": "^5.2.3",
@@ -42,8 +42,8 @@
     "sirv": "^2.0.4",
     "use-immer": "^0.9.0",
     "usehooks-ts": "3.1.0",
-    "wavesurfer.js": "^7.7.11",
-    "web-audio-beat-detector": "^8.2.9",
+    "wavesurfer.js": "^7.7.13",
+    "web-audio-beat-detector": "^8.2.10",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
@@ -53,19 +53,19 @@
     "@electron-forge/maker-zip": "^7.2.0",
     "@electron-forge/plugin-vite": "^7.2.0",
     "@types/app-root-dir": "^0.1.4",
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.8",
     "@types/react": "^18.3.1",
     "@types/react-devtools": "^3.6.2",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
     "cross-env": "^7.0.3",
-    "electron": "^29.3.1",
+    "electron": "^29.3.2",
     "electron-extension-installer": "^1.2.0",
     "eslint": "^8.57.0",
     "react-devtools": "^5.1.0",
-    "sass": "^1.75.0",
+    "sass": "^1.76.0",
     "typescript": "^5.4.5",
-    "vite": "^5.2.10"
+    "vite": "^5.2.11"
   },
   "keywords": [],
   "author": {
