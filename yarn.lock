@@ -339,12 +339,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.24.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.24.4
   resolution: "@babel/runtime@npm:7.24.4"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
   checksum: 10/8ec8ce2c145bc7e31dd39ab66df124f357f65c11489aefacb30f431bae913b9aaa66aa5efe5321ea2bf8878af3fcee338c87e7599519a952e3a6f83aa1b03308
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.24.5":
+  version: 7.24.5
+  resolution: "@babel/runtime@npm:7.24.5"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 10/e0f4f4d4503f7338749d1dd92361ad132d683bde64e6b61d6c855e100dcd01592295fcfdcc960c946b85ef7908dc2f501080da58447c05812cf3cd80c599bb62
   languageName: node
   linkType: hard
 
@@ -3238,13 +3247,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"automation-events@npm:^7.0.4":
-  version: 7.0.4
-  resolution: "automation-events@npm:7.0.4"
+"automation-events@npm:^7.0.5":
+  version: 7.0.5
+  resolution: "automation-events@npm:7.0.5"
   dependencies:
-    "@babel/runtime": "npm:^7.24.4"
+    "@babel/runtime": "npm:^7.24.5"
     tslib: "npm:^2.6.2"
-  checksum: 10/e203560b9fd0c5bae6619c7b4bd67967e916e0aa9db5abab12f2ef6e8600044cb946a27d17d1cd95bfbca861ceb96023eae477925015b113b44385fa188a094e
+  checksum: 10/82c0504e85e9e4d4cd531af364c56b4b385aecb07458b9281d4e45d3e693bd6c632ae3c5e187aa2ff1226f84049a19600ebe3d5b12b6e41dc10734ea9947c7d3
   languageName: node
   linkType: hard
 
@@ -5675,13 +5684,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-unique-numbers@npm:^9.0.4":
-  version: 9.0.4
-  resolution: "fast-unique-numbers@npm:9.0.4"
+"fast-unique-numbers@npm:^9.0.5":
+  version: 9.0.5
+  resolution: "fast-unique-numbers@npm:9.0.5"
   dependencies:
-    "@babel/runtime": "npm:^7.24.4"
+    "@babel/runtime": "npm:^7.24.5"
     tslib: "npm:^2.6.2"
-  checksum: 10/2783cf6015f448f23a7e9d9663ea7c2e830a382a51781d89e0fdfa8747ded75b60d61e6623d94d43e86c0d352a23a9ad24232eda619e94f8c650cd9a00637fba
+  checksum: 10/dbef3668c0337830ee0506371aec2440b6731f39bd770673171dc02fec98d320ef67b7e939d4aab321cb086ed89869c0388b5eb0531c36ae69ff27b157507f92
   languageName: node
   linkType: hard
 
@@ -11462,14 +11471,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"standardized-audio-context@npm:^25.3.71":
-  version: 25.3.71
-  resolution: "standardized-audio-context@npm:25.3.71"
+"standardized-audio-context@npm:^25.3.72":
+  version: 25.3.72
+  resolution: "standardized-audio-context@npm:25.3.72"
   dependencies:
-    "@babel/runtime": "npm:^7.24.4"
-    automation-events: "npm:^7.0.4"
+    "@babel/runtime": "npm:^7.24.5"
+    automation-events: "npm:^7.0.5"
     tslib: "npm:^2.6.2"
-  checksum: 10/74d69d725b1aad1e1ff62ea3943440d1c0fdb9f0552c43ef95c46b4a3c4e7ebb95850cbe477d8f35221269e8a39b53ddd73cf0e402b1a1d4ec1ac2f432005fc1
+  checksum: 10/1532a4aa8ec9a7fa0482f42e2d58a9edd23831b69b2653d00ea1983dc53951c1d5f1350ac0cda071823a19f227fee0a771052ceb683c04a8772e4e867188fe8e
   languageName: node
   linkType: hard
 
@@ -12652,38 +12661,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-broker@npm:^4.1.8":
-  version: 4.1.8
-  resolution: "web-audio-beat-detector-broker@npm:4.1.8"
+"web-audio-beat-detector-broker@npm:^4.1.9":
+  version: 4.1.9
+  resolution: "web-audio-beat-detector-broker@npm:4.1.9"
   dependencies:
-    "@babel/runtime": "npm:^7.24.4"
-    fast-unique-numbers: "npm:^9.0.4"
-    standardized-audio-context: "npm:^25.3.71"
+    "@babel/runtime": "npm:^7.24.5"
+    fast-unique-numbers: "npm:^9.0.5"
+    standardized-audio-context: "npm:^25.3.72"
     tslib: "npm:^2.6.2"
-    web-audio-beat-detector-worker: "npm:^5.2.51"
-  checksum: 10/90509475667e3afa3366a35f8ffb1aa3f8c1582f230fd43b7eb2ddd60565626caea2ed81069807b97d4b60c68a5c03aaa5ba5a073af1c91f332542a941a90278
+    web-audio-beat-detector-worker: "npm:^5.2.52"
+  checksum: 10/00f3b47310552b55da377f1e6d4b663f0b805c0360cb2194f8d7d6c77830f648a5d026daca883df55c3345b8ba419ddca35545b6c160b076e506cafb212bebdd
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-worker@npm:^5.2.51":
-  version: 5.2.51
-  resolution: "web-audio-beat-detector-worker@npm:5.2.51"
+"web-audio-beat-detector-worker@npm:^5.2.52":
+  version: 5.2.52
+  resolution: "web-audio-beat-detector-worker@npm:5.2.52"
   dependencies:
-    "@babel/runtime": "npm:^7.24.4"
+    "@babel/runtime": "npm:^7.24.5"
     tslib: "npm:^2.6.2"
-  checksum: 10/70550a6c508def129fb1d56a87a0c34e54b9c4dc3b5164a2e0c1ccde8050d1bb06ff95981a1375c4f10f2071fbc5a986e1df2526464bc280020ed5d52e0e64d5
+  checksum: 10/7846ef00ccfbf5593b7bae36674499456aaec2184849681d37c495a07a985dbdc76c1112a768919c90110cfd018ff75247c4fb8f44caa546e3e5453aad317b97
   languageName: node
   linkType: hard
 
 "web-audio-beat-detector@npm:^8.2.9":
-  version: 8.2.9
-  resolution: "web-audio-beat-detector@npm:8.2.9"
+  version: 8.2.10
+  resolution: "web-audio-beat-detector@npm:8.2.10"
   dependencies:
-    "@babel/runtime": "npm:^7.24.4"
+    "@babel/runtime": "npm:^7.24.5"
     tslib: "npm:^2.6.2"
-    web-audio-beat-detector-broker: "npm:^4.1.8"
-    web-audio-beat-detector-worker: "npm:^5.2.51"
-  checksum: 10/bb94974bc09ed22856119f65c2682db12a6748cfeffcc351354aa64b4da7d807e175bafa7bdbbc192480466e068bbfb5fd07a0d7e9304f5d13a682104ca75287
+    web-audio-beat-detector-broker: "npm:^4.1.9"
+    web-audio-beat-detector-worker: "npm:^5.2.52"
+  checksum: 10/6b76cfa7d714bd1d612151bc057537a18c04e215b839b8ca443ae2e13dbefa70ca83e683b9319de4b890e282a1a898b3293e53483c532fd8bf40e528907e479c
   languageName: node
   linkType: hard
 
