@@ -52,6 +52,7 @@
     "@electron-forge/maker-deb": "^7.2.0",
     "@electron-forge/maker-zip": "^7.2.0",
     "@electron-forge/plugin-vite": "^7.2.0",
+    "@prosopo/vite-plugin-watch-workspace": "^0.3.39",
     "@types/app-root-dir": "^0.1.4",
     "@types/node": "^20.12.8",
     "@types/react": "^18.3.1",
@@ -65,7 +66,8 @@
     "react-devtools": "^5.1.0",
     "sass": "^1.76.0",
     "typescript": "^5.4.5",
-    "vite": "^5.2.11"
+    "vite": "^5.2.11",
+    "vite-plugin-dts": "^3.9.1"
   },
   "keywords": [],
   "author": {
