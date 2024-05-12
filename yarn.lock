@@ -29,8 +29,8 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.12.8"
-    "@types/react": "npm:^18.3.1"
+    "@types/node": "npm:^20.12.11"
+    "@types/react": "npm:^18.3.2"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.3.0"
     "@vitejs/plugin-react": "npm:^4.2.1"
@@ -40,28 +40,28 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.6.0"
     effection: "npm:^3.0.3"
-    electron: "npm:^29.3.2"
+    electron: "npm:^29.3.3"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.57.0"
-    framer-motion: "npm:^11.1.8"
+    framer-motion: "npm:^11.1.9"
     immer: "npm:^10.1.1"
     milliparsec: "npm:^2.3.0"
     node-taglib-sharp: "npm:^5.2.3"
     radash: "npm:^12.1.0"
     react: "npm:^18.3.1"
-    react-devtools: "npm:^5.1.0"
+    react-devtools: "npm:^5.2.0"
     react-dom: "npm:^18.3.1"
     react-dropzone: "npm:^14.2.3"
     react-resizable-panels: "npm:^2.0.19"
     roarr: "npm:^7.21.1"
-    sass: "npm:^1.76.0"
+    sass: "npm:^1.77.1"
     serialize-error: "npm:^11.0.3"
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.4.5"
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:3.1.0"
     vite: "npm:^5.2.11"
-    wavesurfer.js: "npm:^7.7.13"
+    wavesurfer.js: "npm:^7.7.14"
     web-audio-beat-detector: "npm:^8.2.10"
     zustand: "npm:^4.5.2"
   languageName: unknown
@@ -73,7 +73,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.12.8"
+    "@types/node": "npm:^20.12.11"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.3"
     eslint: "npm:^8.57.0"
@@ -91,7 +91,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.12.8"
+    "@types/node": "npm:^20.12.11"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^3.2.0"
@@ -2457,12 +2457,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.12.8, @types/node@npm:^20.9.0":
-  version: 20.12.8
-  resolution: "@types/node@npm:20.12.8"
+"@types/node@npm:*, @types/node@npm:^20.12.11, @types/node@npm:^20.9.0":
+  version: 20.12.11
+  resolution: "@types/node@npm:20.12.11"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10/1feab4c8cb08588eea10811ed4d02485a5cde47fdf92e7b3193fc9f8ee39ea556f6e3124dc6d5378354466ed5f7e5fbe5e20f625908de40ea37560368a50f72c
+  checksum: 10/c6afe7c2c4504a4f488814d7b306ebad16bf42cbb43bf9db9fe1aed8c5fb99235593c3be5088979a64526b106cf022256688e2f002811be8273d87dc2e0d484f
   languageName: node
   linkType: hard
 
@@ -2537,13 +2537,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "@types/react@npm:18.3.1"
+"@types/react@npm:*, @types/react@npm:^18.3.2":
+  version: 18.3.2
+  resolution: "@types/react@npm:18.3.2"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/baa6b8a75c471c89ebf3477b4feab57102ced25f0c1e553dd04ef6a1f0def28d5e0172fa626a631f22e223f840b5aaa2403b2d4bb671c83c5a9d6c7ae39c7a05
+  checksum: 10/a85eed82c1009dc9d979281d9ea1f5322255003de3378390f35d897b4bdaf1d34ea748636c03e9e9b4b7cc97c2f4582993d2d60e40846226ad497d97c7d8565a
   languageName: node
   linkType: hard
 
@@ -4868,16 +4868,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^29.3.2":
-  version: 29.3.2
-  resolution: "electron@npm:29.3.2"
+"electron@npm:^29.3.3":
+  version: 29.3.3
+  resolution: "electron@npm:29.3.3"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/e850dbb3fc55b6e2c0c3cae91f36c077d140d1f5e867db96274604be3c5138bc30adc89545cdf90cf20c030cd7ccc18ba1e9f2cf40eca2b5d78b1365929bc0e2
+  checksum: 10/75502b03c6eff347eff05c42cc4241be7c6fb810698b273c36709dfa5c6362a8caac0a9619ec9a06e06745280aa16aebb83cfa3917dd26c64a36b63bc077885a
   languageName: node
   linkType: hard
 
@@ -5961,9 +5961,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.1.8":
-  version: 11.1.8
-  resolution: "framer-motion@npm:11.1.8"
+"framer-motion@npm:^11.1.9":
+  version: 11.1.9
+  resolution: "framer-motion@npm:11.1.9"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -5977,7 +5977,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/aa2632363cc35c790f0328d3e159e292eedd40718cb366be2f0c9228806f867a9bbe8d98d72ec416558fbc6af7826f7bf0784386d70bd22fee5c3d55395b4540
+  checksum: 10/fadd08af0879c7dd9abe07d6a27409bb6b657a41f0addbcc23357a09a243052e592da6a5b0b8c0e4a842b813b0bb29f3f29f54abcfa9949a81c9a00c509b1c91
   languageName: node
   linkType: hard
 
@@ -10234,29 +10234,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-devtools-core@npm:5.1.0":
-  version: 5.1.0
-  resolution: "react-devtools-core@npm:5.1.0"
+"react-devtools-core@npm:5.2.0":
+  version: 5.2.0
+  resolution: "react-devtools-core@npm:5.2.0"
   dependencies:
     shell-quote: "npm:^1.6.1"
     ws: "npm:^7"
-  checksum: 10/e5fd508a2b65772f094dec8fcff6e2637c851f7bc0c681ab3d6e1d9d9fa8b26e5027b43daf1c17511264f81f361289fa0eb32d1cf40b1d0748789ea5c8fb4fdb
+  checksum: 10/90114565c9a55e3aa5af0f68895bec2cdefa3280e31ce6304c602c063db38ff7f597babf0ca89794b0fff153f6795e2f773c891405a7065cc8a1eec87ed3d4db
   languageName: node
   linkType: hard
 
-"react-devtools@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "react-devtools@npm:5.1.0"
+"react-devtools@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "react-devtools@npm:5.2.0"
   dependencies:
     cross-spawn: "npm:^5.0.1"
     electron: "npm:^23.1.2"
     ip: "npm:^1.1.4"
     minimist: "npm:^1.2.3"
-    react-devtools-core: "npm:5.1.0"
+    react-devtools-core: "npm:5.2.0"
     update-notifier: "npm:^2.1.0"
   bin:
     react-devtools: bin.js
-  checksum: 10/fcfcdd9d0c72ebf469cfa37fc5dc7b00400cdba9af1f4a7c87dac79dcfb9f6c34422b5a42211a6cd88a69da9ff50ef9e398def51c3d64af0716ba86b96581243
+  checksum: 10/4439ca7f142f46903b890e66ba6cbadf04472f0c391847c55e19894fc9203f7308b4bacfd636679d9ccd4761615a10cdf72cf8bb31a83590331eb55ff7dc1c46
   languageName: node
   linkType: hard
 
@@ -10984,16 +10984,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.70.0, sass@npm:^1.76.0":
-  version: 1.76.0
-  resolution: "sass@npm:1.76.0"
+"sass@npm:^1.70.0, sass@npm:^1.77.1":
+  version: 1.77.1
+  resolution: "sass@npm:1.77.1"
   dependencies:
     chokidar: "npm:>=3.0.0 <4.0.0"
     immutable: "npm:^4.0.0"
     source-map-js: "npm:>=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 10/f30e057617813b1253001b44f231c0a7667b624b06188f480fbb2c1ad073a5c302de3539078cb8af112e0d1fca7fbfd292d5e0dd816e9bfa493d3bce89ca8522
+  checksum: 10/df9fdd9b729786d0f637a20c3ad65e50864c00ae92d9493ea42fd5ca80a2d0852c5d1b06da49db7e0b8066a75b593a1e34d999a3af3b1e7abb417aae0a4df75c
   languageName: node
   linkType: hard
 
@@ -12636,10 +12636,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.7.13":
-  version: 7.7.13
-  resolution: "wavesurfer.js@npm:7.7.13"
-  checksum: 10/feb5dff93ce750dbd853ce930fe7509292397de65f4d61225ec9335654c0fac6dfd5331ff900e06a1dd0a515f035ffc72598755a0a8e262328a21423ada8e83b
+"wavesurfer.js@npm:^7.7.14":
+  version: 7.7.14
+  resolution: "wavesurfer.js@npm:7.7.14"
+  checksum: 10/7780f663f4e729ea43bbf84156cf20d13ab56eaa393f0fe44d024f3a5186eabb9313d7ff5b7f41273b78e6fa1108d976bc97889f7562acf05c9935f0c2322a5f
   languageName: node
   linkType: hard
 
