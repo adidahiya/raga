@@ -95,6 +95,21 @@
   &.contextMenuIsOpen {
     user-select: none;
   }
+
+  // HACKHACK: there is a bug in the <Virtualized> component `rowHeight` prop where it does not calculate
+  // row offsets correctly when configured with different row heights (e.g. header row is taller than body rows).
+  // In order to work around this and avoid cutting off the first row in the table, we apply CSS transforms
+  // to some of the the <Virtualized> container elements (targeted using `:has` selectors).
+
+  // direct parent of header and body containers
+  div:has(> :global(.tbody)) {
+    transform: translateY(6px);
+  }
+
+  // header container
+  div:has(> :global(.thead)[role="rowgroup"]) {
+    transform: translateY(-6px);
+  }
 }
 
 .bpmColumnHeader {

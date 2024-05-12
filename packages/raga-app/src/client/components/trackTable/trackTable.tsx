@@ -21,14 +21,14 @@ import type {
   State,
   Theme,
 } from "@table-library/react-table-library/types";
-import { Virtualized } from "@table-library/react-table-library/virtualized";
+import { type RowHeight, Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/react/shallow";
 
-import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
+import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
 import { AudioFileSource, getTrackFileSource, getTrackFileType } from "../../../common/trackUtils";
 import { stopPropagation } from "../../common/reactUtils";
@@ -92,6 +92,12 @@ const sortIcon: SortOptionsIcon = {
   iconDown: <ChevronDown />,
   iconUp: <ChevronUp />,
 };
+
+// N.B. there is a bug in the <Virtualized> component `rowHeight` prop where it does not calculate
+// row offsets correctly when configured with different heights like this (e.g. header row is taller than body rows).
+// So we can't use this prop; instead we fix vertical spacing in CSS.
+const _virtualizedRowHeight: RowHeight = (_node, index) =>
+  index === 0 ? TRACK_TABLE_HEADER_HEIGHT : TRACK_TABLE_ROW_HEIGHT;
 
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
