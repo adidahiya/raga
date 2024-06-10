@@ -17,7 +17,7 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.10.2"
+    "@blueprintjs/core": "npm:^5.10.3"
     "@blueprintjs/icons": "npm:^5.9.0"
     "@blueprintjs/node-build-scripts": "npm:^9.2.1"
     "@electron-forge/cli": "npm:^7.2.0"
@@ -29,21 +29,21 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.12.11"
-    "@types/react": "npm:^18.3.2"
+    "@types/node": "npm:^20.14.2"
+    "@types/react": "npm:^18.3.3"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.3.0"
-    "@vitejs/plugin-react": "npm:^4.2.1"
+    "@vitejs/plugin-react": "npm:^4.3.1"
     ansis: "npm:^3.2.0"
     app-root-dir: "npm:^1.0.2"
     classnames: "npm:^2.5.1"
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.6.0"
     effection: "npm:^3.0.3"
-    electron: "npm:^30.0.3"
+    electron: "npm:^30.1.0"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.57.0"
-    framer-motion: "npm:^11.1.9"
+    framer-motion: "npm:^11.2.10"
     immer: "npm:^10.1.1"
     milliparsec: "npm:^2.3.0"
     node-taglib-sharp: "npm:^5.2.3"
@@ -54,14 +54,14 @@ __metadata:
     react-dropzone: "npm:^14.2.3"
     react-resizable-panels: "npm:^2.0.19"
     roarr: "npm:^7.21.1"
-    sass: "npm:^1.77.1"
+    sass: "npm:^1.77.4"
     serialize-error: "npm:^11.0.3"
     sirv: "npm:^2.0.4"
     typescript: "npm:^5.4.5"
     use-immer: "npm:^0.9.0"
     usehooks-ts: "npm:3.1.0"
-    vite: "npm:^5.2.11"
-    wavesurfer.js: "npm:^7.7.14"
+    vite: "npm:^5.2.13"
+    wavesurfer.js: "npm:^7.7.15"
     web-audio-beat-detector: "npm:^8.2.10"
     zustand: "npm:^4.5.2"
   languageName: unknown
@@ -73,7 +73,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.12.11"
+    "@types/node": "npm:^20.14.2"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.3"
     eslint: "npm:^8.57.0"
@@ -91,13 +91,13 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.12.11"
+    "@types/node": "npm:^20.14.2"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^3.2.0"
     dedent: "npm:^1.5.3"
     eslint: "npm:^8.57.0"
-    fluent-ffmpeg: "npm:^2.1.2"
+    fluent-ffmpeg: "npm:^2.1.3"
     html-entities: "npm:^2.5.2"
     npm-run-all: "npm:^4.1.5"
     plist: "npm:^3.1.0"
@@ -397,7 +397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.10.2":
+"@blueprintjs/core@npm:^5.10.3":
   version: 5.10.3
   resolution: "@blueprintjs/core@npm:5.10.3"
   dependencies:
@@ -1469,7 +1469,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/cli@npm:3.5.1, @lerna-lite/cli@npm:^3.3.3":
+"@lerna-lite/cli@npm:3.5.1, @lerna-lite/cli@npm:^3.5.1":
   version: 3.5.1
   resolution: "@lerna-lite/cli@npm:3.5.1"
   dependencies:
@@ -1546,7 +1546,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/version@npm:^3.3.3":
+"@lerna-lite/version@npm:^3.5.1":
   version: 3.5.1
   resolution: "@lerna-lite/version@npm:3.5.1"
   dependencies:
@@ -2436,7 +2436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.12.11, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.14.2, @types/node@npm:^20.9.0":
   version: 20.14.2
   resolution: "@types/node@npm:20.14.2"
   dependencies:
@@ -2516,7 +2516,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.3.2":
+"@types/react@npm:*, @types/react@npm:^18.3.3":
   version: 18.3.3
   resolution: "@types/react@npm:18.3.3"
   dependencies:
@@ -2544,7 +2544,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^7.8.0":
+"@typescript-eslint/eslint-plugin@npm:^7.12.0":
   version: 7.12.0
   resolution: "@typescript-eslint/eslint-plugin@npm:7.12.0"
   dependencies:
@@ -2567,7 +2567,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^7.8.0":
+"@typescript-eslint/parser@npm:^7.12.0":
   version: 7.12.0
   resolution: "@typescript-eslint/parser@npm:7.12.0"
   dependencies:
@@ -2669,7 +2669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:^4.2.1":
+"@vitejs/plugin-react@npm:^4.3.1":
   version: 4.3.1
   resolution: "@vitejs/plugin-react@npm:4.3.1"
   dependencies:
@@ -4861,16 +4861,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^30.0.3":
-  version: 30.0.3
-  resolution: "electron@npm:30.0.3"
+"electron@npm:^30.1.0":
+  version: 30.1.0
+  resolution: "electron@npm:30.1.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/0ef0b4cab72047df675af5a3f44cb5a32f45bbced9e92eb9049be1b37c9b85c1c657d14600dbcc2a32988df7d98a24d75f50b9e89c34142ea22fa90136bb2cdf
+  checksum: 10/f85682c89b146806de9a40aa38bd29a4ab36caf78099f92a1339f44de679e0c0c7f5975dc68ece641790e6d622e741e4d762a456bf5ab0f86abc362656fe4dbe
   languageName: node
   linkType: hard
 
@@ -5328,7 +5328,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.34.1":
+"eslint-plugin-react@npm:^7.34.2":
   version: 7.34.2
   resolution: "eslint-plugin-react@npm:7.34.2"
   dependencies:
@@ -5894,7 +5894,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fluent-ffmpeg@npm:^2.1.2":
+"fluent-ffmpeg@npm:^2.1.3":
   version: 2.1.3
   resolution: "fluent-ffmpeg@npm:2.1.3"
   dependencies:
@@ -5967,7 +5967,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.1.9":
+"framer-motion@npm:^11.2.10":
   version: 11.2.10
   resolution: "framer-motion@npm:11.2.10"
   dependencies:
@@ -9060,7 +9060,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nx@npm:19.2.2, nx@npm:^19.0.2":
+"nx@npm:19.2.2, nx@npm:^19.2.2":
   version: 19.2.2
   resolution: "nx@npm:19.2.2"
   dependencies:
@@ -10016,7 +10016,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.2.4, prettier@npm:^3.2.5":
+"prettier@npm:^3.2.4, prettier@npm:^3.3.1":
   version: 3.3.1
   resolution: "prettier@npm:3.3.1"
   bin:
@@ -10926,18 +10926,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
-    "@lerna-lite/cli": "npm:^3.3.3"
-    "@lerna-lite/version": "npm:^3.3.3"
-    "@typescript-eslint/eslint-plugin": "npm:^7.8.0"
-    "@typescript-eslint/parser": "npm:^7.8.0"
+    "@lerna-lite/cli": "npm:^3.5.1"
+    "@lerna-lite/version": "npm:^3.5.1"
+    "@typescript-eslint/eslint-plugin": "npm:^7.12.0"
+    "@typescript-eslint/parser": "npm:^7.12.0"
     "@yarnpkg/types": "npm:^4.0.0"
     eslint: "npm:^8.57.0"
     eslint-plugin-eslint-comments: "npm:^3.2.0"
-    eslint-plugin-react: "npm:^7.34.1"
+    eslint-plugin-react: "npm:^7.34.2"
     eslint-plugin-react-hooks: "npm:^4.6.2"
     eslint-plugin-simple-import-sort: "npm:^12.1.0"
-    nx: "npm:^19.0.2"
-    prettier: "npm:^3.2.5"
+    nx: "npm:^19.2.2"
+    prettier: "npm:^3.3.1"
   languageName: unknown
   linkType: soft
 
@@ -11017,7 +11017,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.70.0, sass@npm:^1.77.1":
+"sass@npm:^1.70.0, sass@npm:^1.77.4":
   version: 1.77.4
   resolution: "sass@npm:1.77.4"
   dependencies:
@@ -12624,7 +12624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.2.11":
+"vite@npm:^5.2.13":
   version: 5.2.13
   resolution: "vite@npm:5.2.13"
   dependencies:
@@ -12673,7 +12673,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.7.14":
+"wavesurfer.js@npm:^7.7.15":
   version: 7.7.15
   resolution: "wavesurfer.js@npm:7.7.15"
   checksum: 10/7519cd8fa2ac16b6496415e930362c4d4aa356ebf9b897d0aeddeaca7b0706d5a042708e8ebbb16d80a4cda5e8c90df42ea9edda38057a6558ab3a66487e0c73
