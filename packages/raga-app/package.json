@@ -61,7 +61,7 @@
     "cross-env": "^7.0.3",
     "electron": "^30.1.0",
     "electron-extension-installer": "^1.2.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.5.0",
     "react-devtools": "^5.2.0",
     "sass": "^1.77.4",
     "typescript": "^5.4.5",
