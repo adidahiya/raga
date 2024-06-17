@@ -17,17 +17,17 @@
   },
   "devDependencies": {
     "@lerna-lite/cli": "^3.5.1",
-    "@lerna-lite/version": "^3.5.1",
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "^7.12.0",
+    "@lerna-lite/version": "^3.5.2",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
     "@yarnpkg/types": "^4.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-simple-import-sort": "^12.1.0",
-    "nx": "^19.2.2",
-    "prettier": "^3.3.1"
+    "nx": "^19.3.0",
+    "prettier": "^3.3.2"
   },
   "engines": {
     "node": ">=20"
