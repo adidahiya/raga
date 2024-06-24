@@ -29,7 +29,7 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.2.3"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.14.4"
+    "@types/node": "npm:^20.14.8"
     "@types/react": "npm:^18.3.3"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.3.0"
@@ -40,7 +40,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^3.6.0"
     effection: "npm:^3.0.3"
-    electron: "npm:^30.1.1"
+    electron: "npm:^30.1.2"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^8.57.0"
     framer-motion: "npm:^11.2.10"
@@ -57,7 +57,7 @@ __metadata:
     sass: "npm:^1.77.6"
     serialize-error: "npm:^11.0.3"
     sirv: "npm:^2.0.4"
-    typescript: "npm:^5.4.5"
+    typescript: "npm:^5.5.2"
     use-immer: "npm:^0.10.0"
     usehooks-ts: "npm:3.1.0"
     vite: "npm:^5.3.1"
@@ -73,13 +73,13 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.14.4"
+    "@types/node": "npm:^20.14.8"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.3"
     eslint: "npm:^8.57.0"
     minimist: "npm:^1.2.8"
     prompts: "npm:^2.4.2"
-    typescript: "npm:^5.4.5"
+    typescript: "npm:^5.5.2"
   bin:
     raga-cli: bin/cli.sh
   languageName: unknown
@@ -91,7 +91,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.24"
-    "@types/node": "npm:^20.14.4"
+    "@types/node": "npm:^20.14.8"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^3.2.0"
@@ -102,7 +102,7 @@ __metadata:
     npm-run-all: "npm:^4.1.5"
     plist: "npm:^3.1.0"
     prompts: "npm:^2.4.2"
-    typescript: "npm:^5.4.5"
+    typescript: "npm:^5.5.2"
   languageName: unknown
   linkType: soft
 
@@ -2436,7 +2436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.14.4, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.14.8, @types/node@npm:^20.9.0":
   version: 20.14.8
   resolution: "@types/node@npm:20.14.8"
   dependencies:
@@ -4861,16 +4861,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^30.1.1":
-  version: 30.1.1
-  resolution: "electron@npm:30.1.1"
+"electron@npm:^30.1.2":
+  version: 30.1.2
+  resolution: "electron@npm:30.1.2"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/c2602c0c8a29584a6cdb2c2e861a5a6c5ccb088c831eaec49c1f8c1e80fa0724d7eb5c6e36c7fe5661ba977a8964cea7d0aa5a527465772e2062eb15a3d731df
+  checksum: 10/ab8a67ac4a318aa8a1751d561b070007001398c642f98ebf41ce98e37b4b38e0ae80c7cb5bda1603c889433235f2e0176136e4d3b0ce177ebd9d1ba79f12cdc4
   languageName: node
   linkType: hard
 
@@ -5328,7 +5328,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.34.2":
+"eslint-plugin-react@npm:^7.34.3":
   version: 7.34.3
   resolution: "eslint-plugin-react@npm:7.34.3"
   dependencies:
@@ -9060,7 +9060,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nx@npm:19.3.1, nx@npm:^19.3.0":
+"nx@npm:19.3.1, nx@npm:^19.3.1":
   version: 19.3.1
   resolution: "nx@npm:19.3.1"
   dependencies:
@@ -10933,10 +10933,10 @@ __metadata:
     "@yarnpkg/types": "npm:^4.0.0"
     eslint: "npm:^8.57.0"
     eslint-plugin-eslint-comments: "npm:^3.2.0"
-    eslint-plugin-react: "npm:^7.34.2"
+    eslint-plugin-react: "npm:^7.34.3"
     eslint-plugin-react-hooks: "npm:^4.6.2"
     eslint-plugin-simple-import-sort: "npm:^12.1.0"
-    nx: "npm:^19.3.0"
+    nx: "npm:^19.3.1"
     prettier: "npm:^3.3.2"
   languageName: unknown
   linkType: soft
@@ -12237,7 +12237,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.4.5":
+"typescript@npm:^5.5.2":
   version: 5.5.2
   resolution: "typescript@npm:5.5.2"
   bin:
@@ -12257,7 +12257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.4.5#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.5.2#optional!builtin<compat/typescript>":
   version: 5.5.2
   resolution: "typescript@patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=b45daf"
   bin:
