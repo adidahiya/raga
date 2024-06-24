@@ -69,7 +69,7 @@ function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLib
     try {
       log.debug(`Loading Swinsian library from ${filepath}...`);
       library = loadSwinsianLibrary(filepath);
-    } catch (e) {
+    } catch {
       log.error(`Could not load Swinsian library from ${filepath}`);
       return;
     }

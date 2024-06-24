@@ -77,7 +77,11 @@ export default class AudioFileConverter {
       const resolvedTrackDir = resolve(this.temporaryOutputDir, trackDir);
       // just take the first MP3 file in the dir, it's very unlikely that there are multiple
       // TODO: consider picking the most recently modified file
-      const mp3File = readdirSync(resolvedTrackDir).filter((f) => f.endsWith(".mp3"))[0];
+      const mp3File = readdirSync(resolvedTrackDir).find((f) => f.endsWith(".mp3"));
+      if (mp3File === undefined) {
+        log.error(`No converted MP3 file found in ${resolvedTrackDir}`);
+        continue;
+      }
       convertedMP3s[trackID] = join(this.temporaryOutputDir, trackDir, mp3File);
     }
 
