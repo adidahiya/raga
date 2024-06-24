@@ -229,7 +229,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         ),
       );
       set({ libraryWriteState: "none" });
-    } catch (e) {
+    } catch {
       log.error(ClientErrors.LIBRARY_WRITE_TIMED_OUT);
       set({ libraryWriteState: "ready" });
     } finally {
