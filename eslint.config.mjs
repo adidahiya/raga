@@ -1,5 +1,3 @@
-/* eslint-env node */
-
 import { fixupPluginRules } from "@eslint/compat";
 import eslint from "@eslint/js";
 import eslintCommentsPlugin from "eslint-plugin-eslint-comments";
