@@ -23,6 +23,9 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    linterOptions: {
+      reportUnusedDisableDirectives: "error",
+    },
     rules: {
       ...eslintCommentsPlugin.configs.recommended.rules,
       "@typescript-eslint/consistent-type-exports": [
@@ -43,10 +46,6 @@ export default tseslint.config(
         "error",
         { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
       ],
-      // N.B. enabling this rule here instead of `eslint --report-unused-disable-directives` so that
-      // we don't have to declare the CLI flag in every package's `package.json`. We can switch to
-      // `linterOptions.reportUnusedDisableDirectives` in ESLint v9.0
-      "eslint-comments/no-unused-disable": "error",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
     },
