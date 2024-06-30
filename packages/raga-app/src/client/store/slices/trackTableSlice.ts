@@ -9,11 +9,13 @@ export interface TrackTableSortState {
 export interface TrackTableState {
   trackTableFilterVisible: boolean;
   trackTableSort: TrackTableSortState;
+  trackTablePanelWidth: number | undefined;
 }
 
 export interface TrackTableActions {
   setTrackTableFilterVisible: (isVisible: boolean) => void;
   setTrackTableSort: (sort: TrackTableSortState) => void;
+  setTrackTablePanelWidth: (width: number | undefined) => void;
 }
 
 export const createTrackTableSlice: AppStoreSliceCreator<TrackTableState & TrackTableActions> = (
@@ -24,11 +26,17 @@ export const createTrackTableSlice: AppStoreSliceCreator<TrackTableState & Track
 
   trackTableSort: { sortKey: TrackPropertySortKey.INDEX, reverse: false },
 
+  trackTablePanelWidth: undefined,
+
   setTrackTableFilterVisible: (isVisible) => {
     set({ trackTableFilterVisible: isVisible });
   },
 
   setTrackTableSort: (newSort) => {
     set({ trackTableSort: newSort });
+  },
+
+  setTrackTablePanelWidth: (width) => {
+    set({ trackTablePanelWidth: width });
   },
 });
