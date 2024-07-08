@@ -30,7 +30,7 @@
     "effection": "^3.0.3",
     "framer-motion": "^11.2.10",
     "immer": "^10.1.1",
-    "milliparsec": "^2.3.0",
+    "milliparsec": "^3.0.0",
     "node-taglib-sharp": "^5.2.3",
     "radash": "^12.1.0",
     "react": "^18.3.1",
