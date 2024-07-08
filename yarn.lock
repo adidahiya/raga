@@ -45,7 +45,7 @@ __metadata:
     eslint: "npm:^9.5.0"
     framer-motion: "npm:^11.2.10"
     immer: "npm:^10.1.1"
-    milliparsec: "npm:^2.3.0"
+    milliparsec: "npm:^3.0.0"
     node-taglib-sharp: "npm:^5.2.3"
     radash: "npm:^12.1.0"
     react: "npm:^18.3.1"
@@ -8533,10 +8533,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"milliparsec@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "milliparsec@npm:2.3.0"
-  checksum: 10/fa7df167714f39cf9c6e6479d4c83904a6f897a2e7f2a9114efbb63ca1c07bfce825c5c0e58c2aa19ca11b72c728e86a13e92bbd081123b87c756ead191f1a0e
+"milliparsec@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "milliparsec@npm:3.0.0"
+  checksum: 10/46ae4fed90a1fb9607be956eae8a2d840bfd5808cb5e9e93d28c83693e2b618e26030306663385847892fcf59db10a74fa159fa4e3fc7a72d28e7bf2b9911c8e
   languageName: node
   linkType: hard
 
