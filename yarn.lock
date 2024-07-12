@@ -17,8 +17,8 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.10.3"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/core": "npm:^5.10.5"
+    "@blueprintjs/icons": "npm:^5.10.0"
     "@blueprintjs/node-build-scripts": "npm:^9.2.1"
     "@electron-forge/cli": "npm:^7.2.0"
     "@electron-forge/maker-deb": "npm:^7.2.0"
@@ -43,7 +43,7 @@ __metadata:
     electron: "npm:^30.2.0"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^9.6.0"
-    framer-motion: "npm:^11.2.10"
+    framer-motion: "npm:^11.3.2"
     immer: "npm:^10.1.1"
     milliparsec: "npm:^3.0.0"
     node-taglib-sharp: "npm:^5.2.3"
@@ -52,7 +52,7 @@ __metadata:
     react-devtools: "npm:^5.3.1"
     react-dom: "npm:^18.3.1"
     react-dropzone: "npm:^14.2.3"
-    react-resizable-panels: "npm:^2.0.19"
+    react-resizable-panels: "npm:^2.0.20"
     roarr: "npm:^7.21.1"
     sass: "npm:^1.77.8"
     serialize-error: "npm:^11.0.3"
@@ -61,9 +61,9 @@ __metadata:
     use-immer: "npm:^0.10.0"
     usehooks-ts: "npm:3.1.0"
     vite: "npm:^5.3.3"
-    wavesurfer.js: "npm:^7.7.15"
+    wavesurfer.js: "npm:^7.8.1"
     web-audio-beat-detector: "npm:^8.2.11"
-    zustand: "npm:^4.5.2"
+    zustand: "npm:^4.5.4"
   languageName: unknown
   linkType: soft
 
@@ -397,7 +397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.10.3":
+"@blueprintjs/core@npm:^5.10.5":
   version: 5.10.5
   resolution: "@blueprintjs/core@npm:5.10.5"
   dependencies:
@@ -425,7 +425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.10.0, @blueprintjs/icons@npm:^5.9.0":
+"@blueprintjs/icons@npm:^5.10.0":
   version: 5.10.0
   resolution: "@blueprintjs/icons@npm:5.10.0"
   dependencies:
@@ -6158,9 +6158,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.2.10":
-  version: 11.2.11
-  resolution: "framer-motion@npm:11.2.11"
+"framer-motion@npm:^11.3.2":
+  version: 11.3.2
+  resolution: "framer-motion@npm:11.3.2"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -6174,7 +6174,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/2969da7c39bbbd206d5e2cd321fcb1bf8f8c5c13706b85779c4480fa63d0429063467374b896f94c04ca2594cbff96b9845c87ba5c052d90335d52d0cb554086
+  checksum: 10/81303fc53fe436cbaeb4727bf8be6755b14e3f5c35b4b37cb1e4801b78e654dc41f19df05b9ff1a610b7fe3daa093dfff4c83e2ce3a8d24429bef4d9c7b7102a
   languageName: node
   linkType: hard
 
@@ -10610,13 +10610,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^2.0.19":
-  version: 2.0.19
-  resolution: "react-resizable-panels@npm:2.0.19"
+"react-resizable-panels@npm:^2.0.20":
+  version: 2.0.20
+  resolution: "react-resizable-panels@npm:2.0.20"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/ac283f1667d2d41da32274b10875c430acff90bef977760e9f3944452be1ebbf4d7ed8909187d5b6a921b493a0a5e6a8e6215fa3d19370a11b2ffbc1a04b7811
+  checksum: 10/6c67f93ce79c9c288a8a31c5598083692b46f423013f6a4a6e061d30c03af991e54eef3a52ee9a115a3d2b623e8a18151795553adc572c3b8df037adcc9a93b4
   languageName: node
   linkType: hard
 
@@ -12958,10 +12958,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.7.15":
-  version: 7.7.15
-  resolution: "wavesurfer.js@npm:7.7.15"
-  checksum: 10/7519cd8fa2ac16b6496415e930362c4d4aa356ebf9b897d0aeddeaca7b0706d5a042708e8ebbb16d80a4cda5e8c90df42ea9edda38057a6558ab3a66487e0c73
+"wavesurfer.js@npm:^7.8.1":
+  version: 7.8.1
+  resolution: "wavesurfer.js@npm:7.8.1"
+  checksum: 10/b8f3c853db6f7a6ae0c3cb307dd7bd8da62a2349f1d4dee8053e2665edf709cc7f332b8bef41c99fa1d0d119da7a744cfa3fc556eab9a29d04bca7ad33e69373
   languageName: node
   linkType: hard
 
@@ -13455,9 +13455,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^4.5.2":
-  version: 4.5.2
-  resolution: "zustand@npm:4.5.2"
+"zustand@npm:^4.5.4":
+  version: 4.5.4
+  resolution: "zustand@npm:4.5.4"
   dependencies:
     use-sync-external-store: "npm:1.2.0"
   peerDependencies:
@@ -13471,6 +13471,6 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 10/9e9e92ce7378c5de1d7682f4f10340a1c07a81b673ad0a125b59883a6ade3f2bf39eac6ccc5b05630f9df6ed925291f681592db59ccd3815685c2e83f67c8525
+  checksum: 10/44431b75f055c5440f47f448124f86230e1612bca8b09527890ec67a10b55f7ef9c288301f89346630552357627380c28222d933accdb55c119cf05e15f9e6cc
   languageName: node
   linkType: hard
