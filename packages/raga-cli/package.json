@@ -24,10 +24,10 @@
   },
   "devDependencies": {
     "@types/dedent": "^0.7.2",
-    "@types/node": "^20.14.8",
+    "@types/node": "^20.14.10",
     "@types/prompts": "^2.4.9",
-    "eslint": "^9.5.0",
-    "typescript": "^5.5.2"
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.3"
   },
   "engines": {
     "node": ">=18.18"
