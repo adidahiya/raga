@@ -1,7 +1,7 @@
 {
   "name": "root",
   "private": true,
-  "packageManager": "yarn@4.3.0",
+  "packageManager": "yarn@4.3.1",
   "workspaces": [
     "packages/*"
   ],
@@ -17,20 +17,20 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
-    "@eslint/js": "^9.6.0",
-    "@lerna-lite/cli": "^3.7.0",
-    "@lerna-lite/version": "^3.7.0",
+    "@eslint/js": "^9.7.0",
+    "@lerna-lite/cli": "^3.7.1",
+    "@lerna-lite/version": "^3.7.1",
     "@types/eslint__js": "^8.42.3",
     "@yarnpkg/types": "^4.0.0",
-    "eslint": "^9.6.0",
+    "eslint": "^9.7.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react": "^7.34.4",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^15.8.0",
-    "nx": "^19.4.2",
-    "prettier": "^3.3.2",
-    "typescript-eslint": "^8.0.0-alpha.41"
+    "nx": "^19.5.0",
+    "prettier": "^3.3.3",
+    "typescript-eslint": "^8.0.0-alpha.44"
   },
   "engines": {
     "node": ">=20"
