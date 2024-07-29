@@ -2392,17 +2392,17 @@ __metadata:
   linkType: hard
 
 "@tinyhttp/app@npm:^2.2.4":
-  version: 2.2.4
-  resolution: "@tinyhttp/app@npm:2.2.4"
+  version: 2.3.0
+  resolution: "@tinyhttp/app@npm:2.3.0"
   dependencies:
     "@tinyhttp/cookie": "npm:2.1.1"
-    "@tinyhttp/proxy-addr": "npm:2.1.4"
+    "@tinyhttp/proxy-addr": "npm:2.2.0"
     "@tinyhttp/req": "npm:2.2.3"
     "@tinyhttp/res": "npm:2.2.3"
     "@tinyhttp/router": "npm:2.2.2"
     header-range-parser: "npm:1.1.3"
     regexparam: "npm:^2.0.2"
-  checksum: 10/0cb62fbea92f901cbff65c5aa6a2946027e103384e64b2e3099b2e816e4c5083f3ab2d677fdf12778587a20d4d60baec5b24a47abaf91211ae927097df7922d9
+  checksum: 10/f04af69a0d9fab01dab9e6dc1be1e98654e26f31b79d5f18dd5ae616b55ccadfb1fb6b8227a531bf39a6ec5d4cb6e043d3ebd383f18675197f2f0383c547ce71
   languageName: node
   linkType: hard
 
@@ -2455,13 +2455,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tinyhttp/proxy-addr@npm:2.1.4":
-  version: 2.1.4
-  resolution: "@tinyhttp/proxy-addr@npm:2.1.4"
+"@tinyhttp/proxy-addr@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@tinyhttp/proxy-addr@npm:2.2.0"
   dependencies:
     "@tinyhttp/forwarded": "npm:2.1.1"
     ipaddr.js: "npm:^2.2.0"
-  checksum: 10/c6fbb781abe0485f20c14f8b24ece7253d3f3aa0e38be9211d5497f28cc48fe65e0361e4b7c1dd735ccea16df1ba0e319790d68e962461116c6e032194c9aa9b
+  checksum: 10/4da075a89d460d053d0dd0ff8ef8ce3da92821c9bc2ce4ff5e5de646afe321b36f19ef7ddfcba9b5ee2c6b266d4bb06a1c7e2f62045531a45851b48997a0df01
   languageName: node
   linkType: hard
 
