@@ -29,7 +29,7 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.3.1"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.14.14"
+    "@types/node": "npm:^22.1.0"
     "@types/react": "npm:^18.3.3"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.3.0"
@@ -73,7 +73,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.14.14"
+    "@types/node": "npm:^22.1.0"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.3"
     eslint: "npm:^9.8.0"
@@ -91,7 +91,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.25"
-    "@types/node": "npm:^20.14.14"
+    "@types/node": "npm:^22.1.0"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^3.3.2"
@@ -2728,7 +2728,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.14.11, @types/node@npm:^20.14.14, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.14.11, @types/node@npm:^20.9.0":
   version: 20.14.14
   resolution: "@types/node@npm:20.14.14"
   dependencies:
@@ -2741,6 +2741,15 @@ __metadata:
   version: 16.18.101
   resolution: "@types/node@npm:16.18.101"
   checksum: 10/97592d3b2e29711a2c98ca3e9f6e52c8792d57e4ad45a18d68cdd6f9386615738d476b5366169ccae38099b60f6d63d15a2a6dced8e804f70dc32cc5b8f36c0c
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^22.1.0":
+  version: 22.1.0
+  resolution: "@types/node@npm:22.1.0"
+  dependencies:
+    undici-types: "npm:~6.13.0"
+  checksum: 10/c2ac1340509646b6c673b27fae2a46e501a97e540e7221be4dd2e0be7a0f61efefb5bf3be8bedf2dbce245fa49cfc49bba77bce73fa3c4296d0d19521ced3222
   languageName: node
   linkType: hard
 
@@ -12781,6 +12790,13 @@ __metadata:
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
   checksum: 10/0097779d94bc0fd26f0418b3a05472410408877279141ded2bd449167be1aed7ea5b76f756562cb3586a07f251b90799bab22d9019ceba49c037c76445f7cddd
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.13.0":
+  version: 6.13.0
+  resolution: "undici-types@npm:6.13.0"
+  checksum: 10/da52e37cbc6da3a75da86fa08dd795ca8924430deb91005eb884b840e46e19013ccd4c1c289f70018e8cf0c338add24a500e7c3acfcd49b1ffb27ff9f91e38b9
   languageName: node
   linkType: hard
 
