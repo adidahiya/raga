@@ -87,7 +87,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   },
   getSelectedTrackDef: () => {
     const { getTrackDef, selectedTrackId } = get();
-    return selectedTrackId === undefined ? undefined : getTrackDef(selectedTrackId);
+    return selectedTrackId == null ? undefined : getTrackDef(selectedTrackId);
   },
 
   // simple setters
@@ -167,7 +167,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
 
       // validate that the currently selected track ID (possibly loaded from local storage) exists in the newly loaded library
       const { selectedTrackId } = get();
-      if (selectedTrackId !== undefined) {
+      if (selectedTrackId != null) {
         const trackDef = data!.library.Tracks[selectedTrackId];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (trackDef === undefined) {
