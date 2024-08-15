@@ -13,6 +13,7 @@ updates:
     groups:
       build-tooling:
         patterns:
+          - "@eslint/*"
           - "@lerna-lite/*"
           - "@typescript-eslint/*"
           - "@yarnpkg/*"
