@@ -53,7 +53,7 @@
     "@electron-forge/maker-zip": "^7.2.0",
     "@electron-forge/plugin-vite": "^7.2.0",
     "@types/app-root-dir": "^0.1.4",
-    "@types/node": "^20.14.14",
+    "@types/node": "^22.3.0",
     "@types/react": "^18.3.3",
     "@types/react-devtools": "^3.6.2",
     "@types/react-dom": "^18.3.0",
