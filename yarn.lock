@@ -24,7 +24,7 @@ __metadata:
     "@electron-forge/maker-deb": "npm:^7.2.0"
     "@electron-forge/maker-zip": "npm:^7.2.0"
     "@electron-forge/plugin-vite": "npm:^7.2.0"
-    "@emotion/react": "npm:^11.13.0"
+    "@emotion/react": "npm:^11.13.3"
     "@roarr/browser-log-writer": "npm:^1.3.0"
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.3.1"
@@ -43,7 +43,7 @@ __metadata:
     electron: "npm:^30.4.0"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^9.9.1"
-    framer-motion: "npm:^11.3.21"
+    framer-motion: "npm:^11.3.30"
     immer: "npm:^10.1.1"
     milliparsec: "npm:^3.0.0"
     node-taglib-sharp: "npm:^5.2.3"
@@ -52,7 +52,7 @@ __metadata:
     react-devtools: "npm:^5.3.1"
     react-dom: "npm:^18.3.1"
     react-dropzone: "npm:^14.2.3"
-    react-resizable-panels: "npm:^2.0.22"
+    react-resizable-panels: "npm:^2.1.1"
     roarr: "npm:^7.21.1"
     sass: "npm:^1.77.8"
     serialize-error: "npm:^11.0.3"
@@ -61,9 +61,9 @@ __metadata:
     use-immer: "npm:^0.10.0"
     usehooks-ts: "npm:3.1.0"
     vite: "npm:^5.4.2"
-    wavesurfer.js: "npm:^7.8.2"
-    web-audio-beat-detector: "npm:^8.2.12"
-    zustand: "npm:^4.5.4"
+    wavesurfer.js: "npm:^7.8.4"
+    web-audio-beat-detector: "npm:^8.2.13"
+    zustand: "npm:^4.5.5"
   languageName: unknown
   linkType: soft
 
@@ -958,14 +958,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.13.0":
-  version: 11.13.0
-  resolution: "@emotion/react@npm:11.13.0"
+"@emotion/react@npm:^11.13.3":
+  version: 11.13.3
+  resolution: "@emotion/react@npm:11.13.3"
   dependencies:
     "@babel/runtime": "npm:^7.18.3"
     "@emotion/babel-plugin": "npm:^11.12.0"
     "@emotion/cache": "npm:^11.13.0"
-    "@emotion/serialize": "npm:^1.3.0"
+    "@emotion/serialize": "npm:^1.3.1"
     "@emotion/use-insertion-effect-with-fallbacks": "npm:^1.1.0"
     "@emotion/utils": "npm:^1.4.0"
     "@emotion/weak-memoize": "npm:^0.4.0"
@@ -975,11 +975,11 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/3dd2b3ffac51f0fa67ef3cb85d4064fd7ddc1212b587e3b328a1eade47024690175518d63c4cbabf28afa07e29187136b26d646e395158f6574fa6321a0b68f9
+  checksum: 10/ee70d3afc2e8dd771e6fe176d27dd87a5e21a54e54d871438fd1caa5aa2312d848c6866292fdc65a6ea1c945147c8422bda2d22ed739178af9902dc86d6b298a
   languageName: node
   linkType: hard
 
-"@emotion/serialize@npm:^1.2.0, @emotion/serialize@npm:^1.3.0":
+"@emotion/serialize@npm:^1.2.0":
   version: 1.3.0
   resolution: "@emotion/serialize@npm:1.3.0"
   dependencies:
@@ -992,10 +992,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/serialize@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "@emotion/serialize@npm:1.3.1"
+  dependencies:
+    "@emotion/hash": "npm:^0.9.2"
+    "@emotion/memoize": "npm:^0.9.0"
+    "@emotion/unitless": "npm:^0.10.0"
+    "@emotion/utils": "npm:^1.4.0"
+    csstype: "npm:^3.0.2"
+  checksum: 10/4bbb9b417f88a7bb55c4ffba101e3e53059029c0258969683bb11216906e08cbd687b5674ec787ec41e5340399fb08af8881d6cf913caf8a5fdf84c4f4890f33
+  languageName: node
+  linkType: hard
+
 "@emotion/sheet@npm:^1.4.0":
   version: 1.4.0
   resolution: "@emotion/sheet@npm:1.4.0"
   checksum: 10/8ac6e9bf6b373a648f26ae7f1c24041038524f4c72f436f4f8c4761c665e58880c3229d8d89b1f7a4815dd8e5b49634d03e60187cb6f93097d7f7c1859e869d5
+  languageName: node
+  linkType: hard
+
+"@emotion/unitless@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@emotion/unitless@npm:0.10.0"
+  checksum: 10/6851c16edce01c494305f43b2cad7a26b939a821131b7c354e49b8e3b012c8810024755b0f4a03ef51117750309e55339825a97bd10411fb3687e68904769106
   languageName: node
   linkType: hard
 
@@ -6293,9 +6313,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.3.21":
-  version: 11.3.28
-  resolution: "framer-motion@npm:11.3.28"
+"framer-motion@npm:^11.3.30":
+  version: 11.3.30
+  resolution: "framer-motion@npm:11.3.30"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -6309,7 +6329,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/4c73757e9c5f0553b352d73ea3d52627388b1da29151f6f3edbdd9a030559993dab815caaf5ba2053a6e099124b32c4e1aac9cfbf9c3e80fd1195ca0615663cc
+  checksum: 10/3cb710ae8a6e54538bc7cae1ecc852487867341c5d9156d7c3a9793af7ef3d3d466babce6c70cf0ef58ff996f6ce5c35510e9af834b0064467b6a8fc523eaefa
   languageName: node
   linkType: hard
 
@@ -10701,13 +10721,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^2.0.22":
-  version: 2.0.23
-  resolution: "react-resizable-panels@npm:2.0.23"
+"react-resizable-panels@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "react-resizable-panels@npm:2.1.1"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/a36016576bf67f84fad5308f6f25176a7149bf12b9c697474dba80d40a03ab47835fbda7e1d329f70c62534e1f6773dbaeb70173ded7203036da2aae1374f653
+  checksum: 10/33d7434951504adeb4dd1e733599a3510245af210905a94fb1e84106c8701f9bd5aedf6686c131382196affdb385e0826fe5f544d229ffba18b732ee4e4fca1f
   languageName: node
   linkType: hard
 
@@ -13053,10 +13073,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.8.2":
-  version: 7.8.2
-  resolution: "wavesurfer.js@npm:7.8.2"
-  checksum: 10/be15b0bef7f6a7e52e44fa53a3666c6a3f56770fde79da679016d648ad9a2da467debbc0a2f968b5fbf0079a880aa77387d9cc1bf869b81d6a5b202335e682e8
+"wavesurfer.js@npm:^7.8.4":
+  version: 7.8.4
+  resolution: "wavesurfer.js@npm:7.8.4"
+  checksum: 10/1f673f364ff6392da5f2d3dc48624ce257359f988a13da7e1bd66766c1d3e72e2e55599c689b052c82be1219bcf8eca1a65775b36a87ac01a5be071d7eabc11d
   languageName: node
   linkType: hard
 
@@ -13092,7 +13112,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector@npm:^8.2.12":
+"web-audio-beat-detector@npm:^8.2.13":
   version: 8.2.13
   resolution: "web-audio-beat-detector@npm:8.2.13"
   dependencies:
@@ -13538,7 +13558,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^4.5.4":
+"zustand@npm:^4.5.5":
   version: 4.5.5
   resolution: "zustand@npm:4.5.5"
   dependencies:
