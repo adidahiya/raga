@@ -17,20 +17,20 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
-    "@eslint/js": "^9.8.0",
-    "@lerna-lite/cli": "^3.7.1",
-    "@lerna-lite/version": "^3.7.1",
+    "@eslint/js": "^9.9.1",
+    "@lerna-lite/cli": "^3.8.0",
+    "@lerna-lite/version": "^3.8.0",
     "@types/eslint__js": "^8.42.3",
     "@yarnpkg/types": "^4.0.0",
-    "eslint": "^9.8.0",
+    "eslint": "^9.9.1",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^15.9.0",
-    "nx": "^19.5.6",
+    "nx": "^19.6.2",
     "prettier": "^3.3.3",
-    "typescript-eslint": "^8.0.0"
+    "typescript-eslint": "^8.2.0"
   },
   "engines": {
     "node": ">=20"
