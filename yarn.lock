@@ -13072,9 +13072,9 @@ __metadata:
   linkType: hard
 
 "wavesurfer.js@npm:^7.8.2":
-  version: 7.8.2
-  resolution: "wavesurfer.js@npm:7.8.2"
-  checksum: 10/be15b0bef7f6a7e52e44fa53a3666c6a3f56770fde79da679016d648ad9a2da467debbc0a2f968b5fbf0079a880aa77387d9cc1bf869b81d6a5b202335e682e8
+  version: 7.8.4
+  resolution: "wavesurfer.js@npm:7.8.4"
+  checksum: 10/1f673f364ff6392da5f2d3dc48624ce257359f988a13da7e1bd66766c1d3e72e2e55599c689b052c82be1219bcf8eca1a65775b36a87ac01a5be071d7eabc11d
   languageName: node
   linkType: hard
 
