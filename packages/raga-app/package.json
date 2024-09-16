@@ -26,7 +26,7 @@
     "ansis": "^3.3.2",
     "app-root-dir": "^1.0.2",
     "classnames": "^2.5.1",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.0.0",
     "effection": "^3.0.3",
     "framer-motion": "^11.3.30",
     "immer": "^10.1.1",
