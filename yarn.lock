@@ -29,7 +29,7 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.3.1"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^20.16.2"
+    "@types/node": "npm:^22.7.4"
     "@types/react": "npm:^18.3.4"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.3.0"
@@ -73,7 +73,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^20.16.2"
+    "@types/node": "npm:^22.7.4"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.3"
     eslint: "npm:^9.9.1"
@@ -91,7 +91,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.26"
-    "@types/node": "npm:^20.16.2"
+    "@types/node": "npm:^22.7.4"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^3.3.2"
@@ -2715,7 +2715,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.16.2, @types/node@npm:^20.9.0":
+"@types/node@npm:^20.9.0":
   version: 20.16.2
   resolution: "@types/node@npm:20.16.2"
   dependencies:
@@ -2724,7 +2724,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.5.5":
+"@types/node@npm:^22.5.5, @types/node@npm:^22.7.4":
   version: 22.7.4
   resolution: "@types/node@npm:22.7.4"
   dependencies:
@@ -2798,12 +2798,12 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^18.3.4":
-  version: 18.3.4
-  resolution: "@types/react@npm:18.3.4"
+  version: 18.3.10
+  resolution: "@types/react@npm:18.3.10"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/359973924be42cf9e7366e1d885b28e0b3bd56d31f24458c5351af7a3f2fc070511e90d517b2195fb229146cdcb70342db6318e279c31dd5057beec1105b704e
+  checksum: 10/cdc946f15fcad62387e6485a2bbef3e45609708fd81e3ce30b03580077bb8a8a1bd0d19858d8602b33c3921bbb8907ddbc9411fd25294a2c2e944907dad8dd67
   languageName: node
   linkType: hard
 
