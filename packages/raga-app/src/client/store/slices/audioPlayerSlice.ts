@@ -1,5 +1,5 @@
 import { call, type Operation } from "effection";
-import { throttle } from "radash";
+import { debounce, throttle } from "radash";
 import { Roarr as log } from "roarr";
 import type WaveSurfer from "wavesurfer.js";
 
@@ -46,13 +46,13 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
     }
   },
 
-  setAudioVolume: (volume) => {
+  setAudioVolume: debounce({ delay: 100 }, (volume: number) => {
     const { waveSurfer } = get();
     if (waveSurfer === undefined) {
       return;
     }
     waveSurfer.setVolume(volume);
-  },
+  }),
 
   setAudioPlaybackRate: (audioPlaybackRate) => {
     const { waveSurfer } = get();

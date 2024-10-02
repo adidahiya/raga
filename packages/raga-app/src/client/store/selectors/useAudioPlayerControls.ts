@@ -1,4 +1,4 @@
-import { debounce } from "radash";
+import { useShallow } from "zustand/react/shallow";
 
 import { useAppStore } from "../appStore";
 import type { AudioPlayerActions, AudioPlayerState } from "../slices/audioPlayerSlice";
@@ -14,12 +14,14 @@ export interface AudioPlayerControls {
 }
 
 export const useAudioPlayerControls: () => AudioPlayerControls = () =>
-  useAppStore((state) => ({
-    isPlaying: state.audioIsPlaying,
-    currentTime: state.audioCurrentTimeMs,
-    duration: state.audioDuration,
-    pause: state.audioPause,
-    play: state.audioPlay,
-    seek: state.audioSeek,
-    setVolume: debounce({ delay: 100 }, state.setAudioVolume),
-  }));
+  useAppStore(
+    useShallow((state) => ({
+      isPlaying: state.audioIsPlaying,
+      currentTime: state.audioCurrentTimeMs,
+      duration: state.audioDuration,
+      pause: state.audioPause,
+      play: state.audioPlay,
+      seek: state.audioSeek,
+      setVolume: state.setAudioVolume,
+    })),
+  );
