@@ -26,7 +26,7 @@ import classNames from "classnames";
 import { unique } from "radash";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
-import { useShallow } from "zustand/react/shallow";
+import { useShallow } from "zustand/shallow";
 
 import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { ClientErrors } from "../../../common/errorMessages";
