@@ -13,6 +13,6 @@ export {
   serializeLibraryPlist,
 } from "./convert-swinsian-to-itunes-xml-library/index.js";
 export { AudioFileType } from "./models/audioFile.js";
-export * from "./models/library.js";
-export * from "./models/playlists.js";
+export type * from "./models/library.js";
+export type * from "./models/playlists.js";
 export * from "./models/tracks.js";

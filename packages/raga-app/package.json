@@ -47,25 +47,25 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@blueprintjs/node-build-scripts": "^9.2.1",
+    "@blueprintjs/node-build-scripts": "^9.2.2",
     "@electron-forge/cli": "^7.2.0",
     "@electron-forge/maker-deb": "^7.2.0",
     "@electron-forge/maker-zip": "^7.2.0",
     "@electron-forge/plugin-vite": "^7.2.0",
     "@types/app-root-dir": "^0.1.4",
-    "@types/node": "^20.16.2",
-    "@types/react": "^18.3.4",
+    "@types/node": "^20.16.10",
+    "@types/react": "^18.3.10",
     "@types/react-devtools": "^3.6.2",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.3.2",
     "cross-env": "^7.0.3",
     "electron": "^30.4.0",
     "electron-extension-installer": "^1.2.0",
-    "eslint": "^9.9.1",
+    "eslint": "^9.11.1",
     "react-devtools": "^5.3.1",
-    "sass": "^1.77.8",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.2"
+    "sass": "^1.79.4",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
   },
   "keywords": [],
   "author": {
