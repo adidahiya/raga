@@ -27,7 +27,7 @@ __metadata:
     "@emotion/react": "npm:^11.13.3"
     "@roarr/browser-log-writer": "npm:^1.3.0"
     "@table-library/react-table-library": "npm:^4.1.7"
-    "@tinyhttp/app": "npm:^2.3.1"
+    "@tinyhttp/app": "npm:^2.4.0"
     "@types/app-root-dir": "npm:^0.1.4"
     "@types/node": "npm:^20.16.10"
     "@types/react": "npm:^18.3.10"
@@ -45,7 +45,7 @@ __metadata:
     eslint: "npm:^9.11.1"
     framer-motion: "npm:^11.9.0"
     immer: "npm:^10.1.1"
-    milliparsec: "npm:^3.0.0"
+    milliparsec: "npm:^4.0.0"
     node-taglib-sharp: "npm:^5.2.3"
     radash: "npm:^12.1.0"
     react: "npm:^18.3.1"
@@ -2301,35 +2301,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tinyhttp/accepts@npm:2.2.2":
-  version: 2.2.2
-  resolution: "@tinyhttp/accepts@npm:2.2.2"
+"@tinyhttp/accepts@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@tinyhttp/accepts@npm:2.2.3"
   dependencies:
-    mime: "npm:4.0.1"
+    mime: "npm:4.0.4"
     negotiator: "npm:^0.6.3"
-  checksum: 10/b4c7e45898cb30b9d8c5cc827a8ac1065df00a207084f64c8177ca71f67c5ccaadbb3129ec5832e34caf1ddbef5cd4cb65e518321dd0b1300521b01728f05597
+  checksum: 10/30ff81dbb06bc3ee0ea6bc3ab39d647348c0303702b88687460249d23c6e9f098f9e5418db2342b101ba49a539b7ac225ac5eef7fe82c9eeacfe1e79e0c685fc
   languageName: node
   linkType: hard
 
-"@tinyhttp/app@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "@tinyhttp/app@npm:2.3.1"
+"@tinyhttp/app@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@tinyhttp/app@npm:2.4.0"
   dependencies:
     "@tinyhttp/cookie": "npm:2.1.1"
     "@tinyhttp/proxy-addr": "npm:2.2.0"
-    "@tinyhttp/req": "npm:2.2.3"
-    "@tinyhttp/res": "npm:2.2.3"
-    "@tinyhttp/router": "npm:2.2.2"
+    "@tinyhttp/req": "npm:2.2.4"
+    "@tinyhttp/res": "npm:2.2.4"
+    "@tinyhttp/router": "npm:2.2.3"
     header-range-parser: "npm:1.1.3"
     regexparam: "npm:^2.0.2"
-  checksum: 10/9d597b27c85a18ca611d66bacc69d322982958f71b4d8c7f684c370f7de8f52f72a759c8e34b3be53bb5a14484020dec31a60965452a9424b8630931adc09f72
+  checksum: 10/ffd7bc46ad33b429fb1053e484ad3ceb9c0c3e2fd011364e3eff401a2dbad974ab7a2dc600e14e8c3739ac7022370c6dc8d4bdd9ecf583dca876bdd9164a4450
   languageName: node
   linkType: hard
 
-"@tinyhttp/content-disposition@npm:2.2.1":
-  version: 2.2.1
-  resolution: "@tinyhttp/content-disposition@npm:2.2.1"
-  checksum: 10/091ef885464595ac5683ea758cce5615437abd32e8557ef89e1aa66996f8807efe5f6ea01dc8ade34a877c08e04248c248b97a808ee3ada3194f5f3614d294b7
+"@tinyhttp/content-disposition@npm:2.2.2":
+  version: 2.2.2
+  resolution: "@tinyhttp/content-disposition@npm:2.2.2"
+  checksum: 10/7239994014c5e9c328a112063a58c7939ca04b59a88e01f1f90ca1b8724f004676edc31a2fae410e39760dc85b64afb9ee05ea350ed7a7d45a8119c080db20f6
   languageName: node
   linkType: hard
 
@@ -2385,60 +2385,60 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tinyhttp/req@npm:2.2.3":
-  version: 2.2.3
-  resolution: "@tinyhttp/req@npm:2.2.3"
+"@tinyhttp/req@npm:2.2.4":
+  version: 2.2.4
+  resolution: "@tinyhttp/req@npm:2.2.4"
   dependencies:
-    "@tinyhttp/accepts": "npm:2.2.2"
-    "@tinyhttp/type-is": "npm:2.2.3"
+    "@tinyhttp/accepts": "npm:2.2.3"
+    "@tinyhttp/type-is": "npm:2.2.4"
     "@tinyhttp/url": "npm:2.1.1"
     header-range-parser: "npm:^1.1.3"
-  checksum: 10/b8e7126e3a4e3651ab12374d759bbd4660878df173ce7108e90f16cddcc55b069f3b04937964277121ce63f1c209418cc807bb8cbb37508701ae89bd0fda1cad
+  checksum: 10/8036e4050be635a03917e0ad61191f44471547964960e69926024d61012916432fbbdf1547a96066413a9f6afd73a276c5027e3507ab7cad0a8621faf8d85717
   languageName: node
   linkType: hard
 
-"@tinyhttp/res@npm:2.2.3":
-  version: 2.2.3
-  resolution: "@tinyhttp/res@npm:2.2.3"
+"@tinyhttp/res@npm:2.2.4":
+  version: 2.2.4
+  resolution: "@tinyhttp/res@npm:2.2.4"
   dependencies:
-    "@tinyhttp/content-disposition": "npm:2.2.1"
+    "@tinyhttp/content-disposition": "npm:2.2.2"
     "@tinyhttp/cookie": "npm:2.1.1"
     "@tinyhttp/cookie-signature": "npm:2.1.1"
     "@tinyhttp/encode-url": "npm:2.1.1"
-    "@tinyhttp/req": "npm:2.2.3"
-    "@tinyhttp/send": "npm:2.2.2"
+    "@tinyhttp/req": "npm:2.2.4"
+    "@tinyhttp/send": "npm:2.2.3"
     "@tinyhttp/vary": "npm:^0.1.3"
     es-escape-html: "npm:^0.1.1"
-    mime: "npm:4.0.0-beta.1"
-  checksum: 10/792969d766dc0f0050075d53197f6c7bd74496e7b37c64b307cf2349f12cdf955b57c5d5379fb1e22f34566dbc3b086f5d42a0acf0600dd20f773a346c68bc23
+    mime: "npm:4.0.4"
+  checksum: 10/d3e07c0636db237be802212b8b1cebe63a2e38e5a6a1a859ccb4a3a05ac2e39061b7fd2f4e02d195737838c237f6f6e58f89b3194a262ae4fa2999b1ba805946
   languageName: node
   linkType: hard
 
-"@tinyhttp/router@npm:2.2.2":
-  version: 2.2.2
-  resolution: "@tinyhttp/router@npm:2.2.2"
-  checksum: 10/8d48e82c2eeece7f04e4b0bb9ed82e96d3485eb8b1ce17d6ebd8f975e3b070fcd17a17d204938d567a805d8ff34dd9055893db26da7d051353f47dfd68795e6c
+"@tinyhttp/router@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@tinyhttp/router@npm:2.2.3"
+  checksum: 10/e3172ce36743c7ceab5021d85b039efc900b8ac6b448f542bafc434cd95157bae1e26ecae8186ebcdfa597535f76ea41dfd01d84ce0916b52cd8b3c6566e8078
   languageName: node
   linkType: hard
 
-"@tinyhttp/send@npm:2.2.2":
-  version: 2.2.2
-  resolution: "@tinyhttp/send@npm:2.2.2"
+"@tinyhttp/send@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@tinyhttp/send@npm:2.2.3"
   dependencies:
     "@tinyhttp/content-type": "npm:^0.1.4"
     "@tinyhttp/etag": "npm:2.1.2"
-    mime: "npm:4.0.0-beta.1"
-  checksum: 10/e7a79cc64edd418a9d0edc61265e04d7752a3ce56902e6e77d30e064bc2304be95fbfa4be834fb3e1f65484368964f6eaa01796dfe6fbc9d7c48bfcb693d1a3a
+    mime: "npm:4.0.4"
+  checksum: 10/218ab866b47b9e85ad431b523cfc605d692becdee281e43a55fa5185d7d9d203885ac4b96d2f11557cf74e43f10fc298b6224ee177823f89886dd5d3dfcaf4b7
   languageName: node
   linkType: hard
 
-"@tinyhttp/type-is@npm:2.2.3":
-  version: 2.2.3
-  resolution: "@tinyhttp/type-is@npm:2.2.3"
+"@tinyhttp/type-is@npm:2.2.4":
+  version: 2.2.4
+  resolution: "@tinyhttp/type-is@npm:2.2.4"
   dependencies:
     "@tinyhttp/content-type": "npm:^0.1.4"
-    mime: "npm:4.0.1"
-  checksum: 10/752b3611283dc3b72c5df485397cc41e2ff34649e2fc4b060245e802ddbc0912d4433a35ba63ac770184a212dd05daf1e8b5362561da3939dec52ee1e4c00bbc
+    mime: "npm:4.0.4"
+  checksum: 10/749e0c0fa498dfb23fa5b94b97617f10d99f6e3187e048c84f30aa68644e93fafc5a3b86ed16bd6f16687535f569dac9db707a85328060fe707e3a24b7d465c8
   languageName: node
   linkType: hard
 
@@ -8694,10 +8694,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"milliparsec@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "milliparsec@npm:3.0.0"
-  checksum: 10/46ae4fed90a1fb9607be956eae8a2d840bfd5808cb5e9e93d28c83693e2b618e26030306663385847892fcf59db10a74fa159fa4e3fc7a72d28e7bf2b9911c8e
+"milliparsec@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "milliparsec@npm:4.0.0"
+  checksum: 10/d8e5d5e5a01d152df9d03eb0748fb89619059600c947147ec34b8560720cef4ffa274509aa960fa172be96eb6def5985e1a263edc8eb1ee0fd4d72ae77a72b01
   languageName: node
   linkType: hard
 
@@ -8726,21 +8726,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime@npm:4.0.0-beta.1":
-  version: 4.0.0-beta.1
-  resolution: "mime@npm:4.0.0-beta.1"
+"mime@npm:4.0.4":
+  version: 4.0.4
+  resolution: "mime@npm:4.0.4"
   bin:
     mime: bin/cli.js
-  checksum: 10/a0a87ec0fc583261f077baf3d842eb6c89ca9d60c98f9d0d7756194a1889568d031aee45eaf6ed4860170abfd5e66ade49bec75b8b3fb868c3ed20e7569cea64
-  languageName: node
-  linkType: hard
-
-"mime@npm:4.0.1":
-  version: 4.0.1
-  resolution: "mime@npm:4.0.1"
-  bin:
-    mime: bin/cli.js
-  checksum: 10/4598030457488c240a4ba30561a619cfb627f96271ecced5d715eb5c44d33105e3f28d28fe46d72eeadb78d7de5aeb1f8e62d448c14b0e518a7ace76d2af5f2d
+  checksum: 10/28e41053ae09cbf4186c551d7cc3cdda10c04fdf447cfdb66db096d83279889a0e0589805b15e36c37ca8b0eedfa6317f25d0514462525271f0cffa5cb0514b4
   languageName: node
   linkType: hard
 
