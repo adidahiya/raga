@@ -17,8 +17,8 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.11.0"
-    "@blueprintjs/icons": "npm:^5.11.0"
+    "@blueprintjs/core": "npm:^5.13.0"
+    "@blueprintjs/icons": "npm:^5.13.0"
     "@blueprintjs/node-build-scripts": "npm:^9.2.2"
     "@electron-forge/cli": "npm:^7.2.0"
     "@electron-forge/maker-deb": "npm:^7.2.0"
@@ -43,7 +43,7 @@ __metadata:
     electron: "npm:^30.4.0"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^9.11.1"
-    framer-motion: "npm:^11.3.30"
+    framer-motion: "npm:^11.9.0"
     immer: "npm:^10.1.1"
     milliparsec: "npm:^3.0.0"
     node-taglib-sharp: "npm:^5.2.3"
@@ -52,7 +52,7 @@ __metadata:
     react-devtools: "npm:^5.3.1"
     react-dom: "npm:^18.3.1"
     react-dropzone: "npm:^14.2.3"
-    react-resizable-panels: "npm:^2.1.1"
+    react-resizable-panels: "npm:^2.1.4"
     roarr: "npm:^7.21.1"
     sass: "npm:^1.79.4"
     serialize-error: "npm:^11.0.3"
@@ -61,8 +61,8 @@ __metadata:
     use-immer: "npm:^0.10.0"
     usehooks-ts: "npm:3.1.0"
     vite: "npm:^5.4.8"
-    wavesurfer.js: "npm:^7.8.4"
-    web-audio-beat-detector: "npm:^8.2.13"
+    wavesurfer.js: "npm:^7.8.6"
+    web-audio-beat-detector: "npm:^8.2.14"
     zustand: "npm:^4.5.5"
   languageName: unknown
   linkType: soft
@@ -362,12 +362,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.11.0":
-  version: 5.12.0
-  resolution: "@blueprintjs/core@npm:5.12.0"
+"@blueprintjs/core@npm:^5.13.0":
+  version: 5.13.0
+  resolution: "@blueprintjs/core@npm:5.13.0"
   dependencies:
     "@blueprintjs/colors": "npm:^5.1.2"
-    "@blueprintjs/icons": "npm:^5.12.0"
+    "@blueprintjs/icons": "npm:^5.13.0"
     "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
     normalize.css: "npm:^8.0.1"
@@ -386,13 +386,13 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10/6770e9b3c532980e7ddc3a649d926eb4f71856c206c8a9a93fc285021e69737f684b85d34be25f2fb5faa2abe386031d191422b99262087a5e600cf82b71d2b1
+  checksum: 10/7298c3d264f840c68928750a5c401194cc5426ee638ca62b7ddb36694f3d3cdbfc19e20c468126344ae6c1063a5e00662a2b8852ce393cfe388859c208cc24c2
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.11.0, @blueprintjs/icons@npm:^5.12.0":
-  version: 5.12.0
-  resolution: "@blueprintjs/icons@npm:5.12.0"
+"@blueprintjs/icons@npm:^5.13.0":
+  version: 5.13.0
+  resolution: "@blueprintjs/icons@npm:5.13.0"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -404,7 +404,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/467fd840c1606a17213353f90c8f4e16cda0b0f4c9feb176bda1184a2f43228a804461f8b559ae2c88ce94dd0e23198ce1bb17a5176ef5a83250644b44d512a5
+  checksum: 10/0e962fe73412c351466dd24f3ffff4f382af8f23de9dcf1d245e71cf0d2ee1e401f767fcf36f9f6df9d604e3b4a2874f6f0ae92e489d40d3b8abddfc0c352c66
   languageName: node
   linkType: hard
 
@@ -6292,9 +6292,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.3.30":
-  version: 11.3.30
-  resolution: "framer-motion@npm:11.3.30"
+"framer-motion@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "framer-motion@npm:11.9.0"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -6308,7 +6308,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/3cb710ae8a6e54538bc7cae1ecc852487867341c5d9156d7c3a9793af7ef3d3d466babce6c70cf0ef58ff996f6ce5c35510e9af834b0064467b6a8fc523eaefa
+  checksum: 10/fa9dec871d99bd3289767eb2b1c2d4b68e142bbe3116deb6a17177c45e90d128e4184a0e96097bed15cf54d2db5c63c1ceed0b1156518e245b807ec8aa653a19
   languageName: node
   linkType: hard
 
@@ -10706,13 +10706,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^2.1.1":
-  version: 2.1.2
-  resolution: "react-resizable-panels@npm:2.1.2"
+"react-resizable-panels@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "react-resizable-panels@npm:2.1.4"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/cd97ef764cc83e51bd9a0b406c00155eee25ad4917d8b4fffbaf09e6da04571ef34ce9d9ba2733459e082960070be729584b04456c8139040cdc83e510c967f0
+  checksum: 10/3df7cafde0589d2c301108509fb29835f6daf40634d6e8592d5d2188f2f07270bfeeb4473d55b601c7d67716ded931feb84b375963400aa1730336ac6e3cd904
   languageName: node
   linkType: hard
 
@@ -13065,10 +13065,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wavesurfer.js@npm:^7.8.4":
-  version: 7.8.4
-  resolution: "wavesurfer.js@npm:7.8.4"
-  checksum: 10/1f673f364ff6392da5f2d3dc48624ce257359f988a13da7e1bd66766c1d3e72e2e55599c689b052c82be1219bcf8eca1a65775b36a87ac01a5be071d7eabc11d
+"wavesurfer.js@npm:^7.8.6":
+  version: 7.8.6
+  resolution: "wavesurfer.js@npm:7.8.6"
+  checksum: 10/00a5c30005af0eb75fec60aa93902ba21330b150b10e8f4c7be08354a51896101d1b68a1abf763795a89471c33cd042ccc458651d078cd9269e799dd92d95f9e
   languageName: node
   linkType: hard
 
@@ -13104,7 +13104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector@npm:^8.2.13":
+"web-audio-beat-detector@npm:^8.2.14":
   version: 8.2.14
   resolution: "web-audio-beat-detector@npm:8.2.14"
   dependencies:
