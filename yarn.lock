@@ -17,7 +17,7 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.13.0"
+    "@blueprintjs/core": "npm:^5.13.1"
     "@blueprintjs/icons": "npm:^5.13.0"
     "@blueprintjs/node-build-scripts": "npm:^9.2.2"
     "@electron-forge/cli": "npm:^7.5.0"
@@ -30,7 +30,7 @@ __metadata:
     "@tinyhttp/app": "npm:^2.4.0"
     "@types/app-root-dir": "npm:^0.1.4"
     "@types/node": "npm:^22.7.4"
-    "@types/react": "npm:^18.3.10"
+    "@types/react": "npm:^18.3.11"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^18.3.0"
     "@vitejs/plugin-react": "npm:^4.3.2"
@@ -43,15 +43,15 @@ __metadata:
     electron: "npm:^32.1.2"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^9.12.0"
-    framer-motion: "npm:^11.9.0"
+    framer-motion: "npm:^11.11.1"
     immer: "npm:^10.1.1"
-    milliparsec: "npm:^4.0.0"
+    milliparsec: "npm:^5.0.0"
     node-taglib-sharp: "npm:^5.2.3"
     radash: "npm:^12.1.0"
     react: "npm:^18.3.1"
     react-devtools: "npm:^5.3.1"
     react-dom: "npm:^18.3.1"
-    react-dropzone: "npm:^14.2.3"
+    react-dropzone: "npm:^14.2.9"
     react-resizable-panels: "npm:^2.1.4"
     roarr: "npm:^7.21.1"
     sass: "npm:^1.79.4"
@@ -62,7 +62,7 @@ __metadata:
     usehooks-ts: "npm:3.1.0"
     vite: "npm:^5.4.8"
     wavesurfer.js: "npm:^7.8.6"
-    web-audio-beat-detector: "npm:^8.2.14"
+    web-audio-beat-detector: "npm:^8.2.15"
     zustand: "npm:^5.0.0-rc.2"
   languageName: unknown
   linkType: soft
@@ -307,12 +307,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.25.6, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.25.6
-  resolution: "@babel/runtime@npm:7.25.6"
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.25.6, @babel/runtime@npm:^7.25.7, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+  version: 7.25.7
+  resolution: "@babel/runtime@npm:7.25.7"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 10/0c4134734deb20e1005ffb9165bf342e1074576621b246d8e5e41cc7cb315a885b7d98950fbf5c63619a2990a56ae82f444d35fe8c4691a0b70c2fe5673667dc
+  checksum: 10/73411fe0f1bff3a962586cef05b30f49e554b6563767e6d84f7d79d605b2c20e7fc3df291a3aebef69043181a8f893afdab9e6672557a5c2d08b9377d6f678cd
   languageName: node
   linkType: hard
 
@@ -362,9 +362,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.13.0":
-  version: 5.13.0
-  resolution: "@blueprintjs/core@npm:5.13.0"
+"@blueprintjs/core@npm:^5.13.1":
+  version: 5.13.1
+  resolution: "@blueprintjs/core@npm:5.13.1"
   dependencies:
     "@blueprintjs/colors": "npm:^5.1.2"
     "@blueprintjs/icons": "npm:^5.13.0"
@@ -386,7 +386,7 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10/7298c3d264f840c68928750a5c401194cc5426ee638ca62b7ddb36694f3d3cdbfc19e20c468126344ae6c1063a5e00662a2b8852ce393cfe388859c208cc24c2
+  checksum: 10/3e6fe60bd35d6ede91e0525683234e291dd9f351ae288dda046d88aaee9a38fb2c49bfbb764437a967c3067c6822b059005f4cddb6168ef68d7a6c96db71284a
   languageName: node
   linkType: hard
 
@@ -2616,13 +2616,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.3.10":
-  version: 18.3.10
-  resolution: "@types/react@npm:18.3.10"
+"@types/react@npm:*, @types/react@npm:^18.3.11":
+  version: 18.3.11
+  resolution: "@types/react@npm:18.3.11"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/cdc946f15fcad62387e6485a2bbef3e45609708fd81e3ce30b03580077bb8a8a1bd0d19858d8602b33c3921bbb8907ddbc9411fd25294a2c2e944907dad8dd67
+  checksum: 10/a36f0707fdfe9fe19cbe5892bcdab0f042ecadb501ea4e1c39519943f3e74cffbd31e892d3860f5c87cf33f5f223552b246a552bed0087b95954f2cb39d5cf65
   languageName: node
   linkType: hard
 
@@ -5794,13 +5794,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-unique-numbers@npm:^9.0.9":
-  version: 9.0.9
-  resolution: "fast-unique-numbers@npm:9.0.9"
+"fast-unique-numbers@npm:^9.0.10":
+  version: 9.0.10
+  resolution: "fast-unique-numbers@npm:9.0.10"
   dependencies:
-    "@babel/runtime": "npm:^7.25.6"
+    "@babel/runtime": "npm:^7.25.7"
     tslib: "npm:^2.7.0"
-  checksum: 10/7f849c366c2d24d0f0e2afd1cd62047bcfd1e9d2e079fdc63105ad1751b52a76bc4d2d1ce1f11e0eb89943dff35ad80c251f7f42df6a68d19d8b157772fa3c3f
+  checksum: 10/371fc494a8e2b856651859a0784b105891964396054d6c21c380a8344e5a62ee2a963ca6c62b5b55cde0641923f88d211b8c7d5b29d0d97c01520f408e9c62a3
   languageName: node
   linkType: hard
 
@@ -6099,9 +6099,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.9.0":
-  version: 11.9.0
-  resolution: "framer-motion@npm:11.9.0"
+"framer-motion@npm:^11.11.1":
+  version: 11.11.1
+  resolution: "framer-motion@npm:11.11.1"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -6115,7 +6115,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/fa9dec871d99bd3289767eb2b1c2d4b68e142bbe3116deb6a17177c45e90d128e4184a0e96097bed15cf54d2db5c63c1ceed0b1156518e245b807ec8aa653a19
+  checksum: 10/acf1219d4400e3d08ed37caabb601cb6f79512d1add4288e50359635723a454ad5b620a9feeba5137673d2f71e9b51c9b0bee796fe64533c73b82fa9ba76e254
   languageName: node
   linkType: hard
 
@@ -8502,10 +8502,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"milliparsec@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "milliparsec@npm:4.0.0"
-  checksum: 10/d8e5d5e5a01d152df9d03eb0748fb89619059600c947147ec34b8560720cef4ffa274509aa960fa172be96eb6def5985e1a263edc8eb1ee0fd4d72ae77a72b01
+"milliparsec@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "milliparsec@npm:5.0.0"
+  checksum: 10/8c19367bd483337d093a0c4c6f78d158507ce1f1be1f4b368ebf276cf3248e912d04ebbb924604fc9bf6881c2365f50565e00ccb7c994fec0d70329b64363b2d
   languageName: node
   linkType: hard
 
@@ -10457,16 +10457,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dropzone@npm:^14.2.3":
-  version: 14.2.3
-  resolution: "react-dropzone@npm:14.2.3"
+"react-dropzone@npm:^14.2.9":
+  version: 14.2.9
+  resolution: "react-dropzone@npm:14.2.9"
   dependencies:
     attr-accept: "npm:^2.2.2"
     file-selector: "npm:^0.6.0"
     prop-types: "npm:^15.8.1"
   peerDependencies:
     react: ">= 16.8 || 18.0.0"
-  checksum: 10/34cf1758a896795b579adab5f9cdc144330577ab1826a0b66ff9daa8c60a80ed6b31b8f989647664f2548cfe00b336e9c31a2f3dd8de43111c8318fcc89b279c
+  checksum: 10/a8ff584a9dbf952dbd630f4ddf59b0b7a010eff49c3b97b363e30ab357f9cc7b8a0c7694069badeb4cf32361a00f3bbd1063964bd6438e9a68c6fe49ff879a38
   languageName: node
   linkType: hard
 
@@ -12849,38 +12849,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-broker@npm:^4.1.13":
-  version: 4.1.13
-  resolution: "web-audio-beat-detector-broker@npm:4.1.13"
+"web-audio-beat-detector-broker@npm:^4.1.14":
+  version: 4.1.14
+  resolution: "web-audio-beat-detector-broker@npm:4.1.14"
   dependencies:
-    "@babel/runtime": "npm:^7.25.6"
-    fast-unique-numbers: "npm:^9.0.9"
+    "@babel/runtime": "npm:^7.25.7"
+    fast-unique-numbers: "npm:^9.0.10"
     standardized-audio-context: "npm:^25.3.77"
     tslib: "npm:^2.7.0"
-    web-audio-beat-detector-worker: "npm:^5.2.56"
-  checksum: 10/5e70f73d62669b820206096407dad9ed3754028dce122de520348916209c73e53c713993d0c2f9aadd344d2633ddb16c2a671cea2fd011010efccfdb351881ad
+    web-audio-beat-detector-worker: "npm:^5.2.57"
+  checksum: 10/67982d759cb4440ebc53479797e140090a2f07b3ac5fc338287d9d09c09ae0a60ea5fc60bd4e3ec35ee3bf17216629a96ca7f8a91c2d0a176f4280b8f305a616
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector-worker@npm:^5.2.56":
-  version: 5.2.56
-  resolution: "web-audio-beat-detector-worker@npm:5.2.56"
+"web-audio-beat-detector-worker@npm:^5.2.57":
+  version: 5.2.57
+  resolution: "web-audio-beat-detector-worker@npm:5.2.57"
   dependencies:
-    "@babel/runtime": "npm:^7.25.6"
+    "@babel/runtime": "npm:^7.25.7"
     tslib: "npm:^2.7.0"
-  checksum: 10/85a6e37f0e5b2c053111c0a257436a32f0c14c08f9a0bc80a17a7a573a9823616dd2be9a9a3b17883548cb7f8e77d6d93b5adb7ddd179eac28f7862e265f2420
+  checksum: 10/924e9549d9d4561dc5f46e096a6eaa78d713abe7baddc22ffc74cb3a0c65968de07859296256d75bc8ff3a06d52e7609df000e087817b64addb5a1e94e27320f
   languageName: node
   linkType: hard
 
-"web-audio-beat-detector@npm:^8.2.14":
-  version: 8.2.14
-  resolution: "web-audio-beat-detector@npm:8.2.14"
+"web-audio-beat-detector@npm:^8.2.15":
+  version: 8.2.15
+  resolution: "web-audio-beat-detector@npm:8.2.15"
   dependencies:
-    "@babel/runtime": "npm:^7.25.6"
+    "@babel/runtime": "npm:^7.25.7"
     tslib: "npm:^2.7.0"
-    web-audio-beat-detector-broker: "npm:^4.1.13"
-    web-audio-beat-detector-worker: "npm:^5.2.56"
-  checksum: 10/e8296a0e851387f6e719d78e2c1165a776c18c83ee452f95c7ea49fabd4ff38beca76bd18ea5110fc503aee86b6483e344b3bc0ee8259486d53ba1f3a4d3e053
+    web-audio-beat-detector-broker: "npm:^4.1.14"
+    web-audio-beat-detector-worker: "npm:^5.2.57"
+  checksum: 10/6287927c629aaa094a4bd4e7d3bb515302aa514763947d2acaf250bcb0e8905a3d62a754bc048596163770e45cd6fe36163d690b77e813322339dbdd4c87b53e
   languageName: node
   linkType: hard
 
