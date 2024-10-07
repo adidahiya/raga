@@ -29,20 +29,24 @@ export default {
             // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
             entry: "src/main.ts",
             config: "vite.main.config.mjs",
+            target: "main",
           },
           {
             entry: "src/preload.ts",
             config: "vite.preload.config.mjs",
+            target: "preload",
           },
           {
             entry: "src/server.ts",
             config: "vite.main.config.mjs",
+            target: "main",
           },
         ],
         renderer: [
           {
             name: "main_window",
             config: "vite.renderer.config.mjs",
+            target: "renderer",
           },
         ],
       },
