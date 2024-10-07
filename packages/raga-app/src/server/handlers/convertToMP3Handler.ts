@@ -15,11 +15,11 @@ export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Ha
   return async (
     req: RequestWithBody<ConvertTrackToMP3RequestBody>,
     res: Response,
-    next: NextFunction,
+    next: NextFunction | undefined,
   ) => {
     await json()(req, res, (err) => {
       if (err) {
-        next(err);
+        next?.(err);
         return;
       }
     });
