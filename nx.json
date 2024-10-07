@@ -1,12 +1,5 @@
 {
-  "affected": {
-    "defaultBase": "main"
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default"
-    }
-  },
+  "defaultBase": "main",
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
