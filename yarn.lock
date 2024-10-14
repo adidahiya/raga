@@ -56,7 +56,7 @@ __metadata:
     roarr: "npm:^7.21.1"
     sass: "npm:^1.79.4"
     serialize-error: "npm:^11.0.3"
-    sirv: "npm:^2.0.4"
+    sirv: "npm:^3.0.0"
     typescript: "npm:^5.6.2"
     use-immer: "npm:^0.10.0"
     usehooks-ts: "npm:3.1.0"
@@ -11432,14 +11432,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sirv@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "sirv@npm:2.0.4"
+"sirv@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "sirv@npm:3.0.0"
   dependencies:
     "@polka/url": "npm:^1.0.0-next.24"
     mrmime: "npm:^2.0.0"
     totalist: "npm:^3.0.0"
-  checksum: 10/24f42cf06895017e589c9d16fc3f1c6c07fe8b0dbafce8a8b46322cfba67b7f2498610183954cb0e9d089c8cb60002a7ee7e8bca6a91a0d7042bfbc3473c95c3
+  checksum: 10/94dbd5df7cf4965f7c5941767117cbf9709e1d25de1d619a114c3f77fc63c124b5a5255717af2a0de637bb83d0b0defd0822d01420764b56432b53281b1d675d
   languageName: node
   linkType: hard
 
