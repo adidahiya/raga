@@ -18,8 +18,8 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.0",
     "@eslint/js": "^9.12.0",
-    "@lerna-lite/cli": "^3.9.2",
-    "@lerna-lite/version": "^3.9.2",
+    "@lerna-lite/cli": "^3.9.3",
+    "@lerna-lite/version": "^3.9.3",
     "@types/eslint__js": "^8.42.3",
     "@yarnpkg/types": "^4.0.0",
     "eslint": "^9.12.0",
@@ -27,10 +27,10 @@
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^15.10.0",
+    "globals": "^15.11.0",
     "nx": "^20.0.0",
     "prettier": "^3.3.3",
-    "typescript-eslint": "^8.8.0"
+    "typescript-eslint": "^8.9.0"
   },
   "engines": {
     "node": ">=22"
