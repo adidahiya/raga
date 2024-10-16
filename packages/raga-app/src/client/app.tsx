@@ -10,9 +10,8 @@ import LibraryView from "./views/libraryView";
 
 export default function App() {
   const fontWeight = appStore.use.fontWeight();
-  const userThemePreference = appStore.use.userThemePreference();
+  const isDarkThemeEnabled = appStore.use.isDarkThemeEnabled();
   const setSystemThemePreference = appStore.use.setSystemThemePreference();
-  const systemThemePreference = appStore.use.systemThemePreference();
   const systemPrefersDarkTheme = usePrefersDarkTheme();
 
   useEffect(
@@ -22,16 +21,12 @@ export default function App() {
     [systemPrefersDarkTheme, setSystemThemePreference],
   );
 
-  const useDarkTheme =
-    userThemePreference === "dark" ||
-    (userThemePreference === "system" && systemThemePreference === "dark");
-
   return (
     <div
       className={classNames(styles.app, {
         [styles.fontWeightLight]: fontWeight === "light",
         [styles.fontWeightRegular]: fontWeight === "regular",
-        [Classes.DARK]: useDarkTheme,
+        [Classes.DARK]: isDarkThemeEnabled,
       })}
     >
       <AppChrome />
