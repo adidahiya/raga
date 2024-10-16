@@ -2,7 +2,7 @@
 
 .bpmOverlay {
   align-items: center;
-  background: rgba(bp.$black, 0.8);
+  background: rgba(bp.$white, 0.8);
   border-bottom-left-radius: 3px;
   display: inline-flex;
   gap: 5px;
@@ -12,6 +12,10 @@
   right: 0;
   top: 0;
   z-index: 2; // just above the waveform
+
+  :global(.#{bp.$ns}-dark) & {
+    background: rgba(bp.$black, 0.8);
+  }
 }
 
 .bpmValue {

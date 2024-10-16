@@ -9,12 +9,17 @@ export interface PreviouslyUsedLibrary {
 
 export interface UserSettingsState {
   fontWeight: "light" | "regular";
+  systemThemePreference: "light" | "dark";
+  userThemePreference: "light" | "dark" | "system";
   previouslyUsedLibraries: Set<PreviouslyUsedLibrary>;
   userEmail: string | undefined;
+  isDarkThemeEnabled: boolean;
 }
 
 export interface UserSettingsActions {
   setFontWeight: (fontWeight: "light" | "regular") => void;
+  setSystemThemePreference: (pref: "light" | "dark") => void;
+  setUserThemePreference: (pref: "light" | "dark" | "system") => void;
   setUserEmail: (userEmail: string | undefined) => void;
   saveCurrentLibraryPath: (filePath: string) => void;
   clearPreviouslyUsedLibraries: () => void;
@@ -25,12 +30,31 @@ export const createUserSettingsSlice: AppStoreSliceCreator<
 > = (set, get) => ({
   fontWeight: "light",
 
+  systemThemePreference: "light",
+
+  userThemePreference: "system",
+
   previouslyUsedLibraries: new Set<PreviouslyUsedLibrary>(),
 
   userEmail: undefined,
 
+  get isDarkThemeEnabled() {
+    return (
+      get().userThemePreference === "dark" ||
+      (get().userThemePreference === "system" && get().systemThemePreference === "dark")
+    );
+  },
+
   setFontWeight: (fontWeight) => {
     set({ fontWeight });
+  },
+
+  setSystemThemePreference: (pref) => {
+    set({ systemThemePreference: pref });
+  },
+
+  setUserThemePreference: (pref) => {
+    set({ userThemePreference: pref });
   },
 
   setUserEmail: (userEmail: string | undefined) => {

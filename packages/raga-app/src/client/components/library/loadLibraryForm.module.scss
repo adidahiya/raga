@@ -23,7 +23,7 @@ $width-wide: 500px;
   width: $width-standard;
 
   &:before {
-    background: bp.$pt-dark-divider-white;
+    background: bp.$pt-divider-black;
     content: "";
     display: block;
     height: 1px;
@@ -34,7 +34,7 @@ $width-wide: 500px;
   }
 
   &:after {
-    background: bp.$pt-dark-divider-white;
+    background: bp.$pt-divider-black;
     content: "";
     display: block;
     height: 1px;
@@ -43,19 +43,35 @@ $width-wide: 500px;
     top: 10px;
     width: calc(50% - 5rem);
   }
+
+  :global(.#{bp.$ns}-dark) & {
+    &:before,
+    &:after {
+      background: bp.$pt-dark-divider-white;
+    }
+  }
 }
 
 .dropzone {
   align-items: center;
-  background: bp.$dark-gray3;
+  background: bp.$light-gray3;
   border-radius: bp.$pt-border-radius;
-  border: dashed 1px bp.$pt-dark-divider-white;
+  border: dashed 1px bp.$pt-divider-black;
   display: flex;
   justify-content: center;
   padding: 20px 10px;
 
   &.active {
-    background: bp.$dark-gray2;
+    background: bp.$light-gray2;
+  }
+
+  :global(.#{bp.$ns}-dark) & {
+    background-color: bp.$dark-gray3;
+    border-color: 1px bp.$pt-dark-divider-white;
+
+    &.active {
+      background-color: bp.$dark-gray2;
+    }
   }
 }
 

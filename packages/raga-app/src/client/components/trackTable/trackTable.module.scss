@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 @import "../../common/variables";
 
@@ -11,25 +12,25 @@
   padding-bottom: 1px;
 
   .headerRow {
-    background: bp.$dark-gray2;
+    background: bp.$light-gray4;
     font-size: bp.$pt-font-size-small;
   }
 
   :global(.resizer-handle) {
-    background-color: bp.$pt-dark-divider-white;
+    background-color: bp.$pt-divider-black;
   }
 
   .row {
     &:global(.row-select-clickable):hover {
-      background-color: bp.$dark-gray3;
+      background-color: bp.$light-gray3;
     }
 
     &:global(.row-select-single-selected) {
-      background-color: bp.$blue1;
+      background-color: color.adjust(bp.$blue5, $lightness: 10%);
       font-weight: 600; // override react-table-library default which sets '800'
 
       &:hover {
-        background-color: bp.$blue2;
+        background-color: color.adjust(bp.$blue4, $lightness: 10%);
       }
     }
 
@@ -40,7 +41,7 @@
   }
 
   [role="columnheader"] {
-    border-bottom: solid 1px bp.$pt-dark-divider-white;
+    border-bottom: solid 1px bp.$pt-divider-black;
   }
 
   .headerCell {
@@ -69,7 +70,7 @@
     background: none;
 
     .selected {
-      background-color: bp.$blue1;
+      background-color: bp.$blue5;
     }
   }
 
@@ -77,15 +78,67 @@
     // HACKHACK: rows are just divs without classes with <Virtualized>
     > div {
       &:nth-of-type(odd) {
-        background: bp.$dark-gray1;
+        background: bp.$light-gray5;
       }
 
       &:nth-of-type(even) {
-        background: bp.$dark-gray2;
+        background: bp.$white;
       }
 
       &:has(> .rowActive) {
-        box-shadow: inset 0 0 0 1px bp.$blue1;
+        box-shadow: inset 0 0 0 1px bp.$blue5;
+      }
+    }
+  }
+
+  :global(.#{bp.$ns}-dark) & {
+    .headerRow {
+      background: bp.$dark-gray2;
+    }
+
+    :global(.resizer-handle) {
+      background-color: bp.$pt-dark-divider-white;
+    }
+
+    .row {
+      &:global(.row-select-clickable):hover {
+        background-color: bp.$dark-gray3;
+      }
+
+      &:global(.row-select-single-selected) {
+        background-color: bp.$blue1;
+        font-weight: 600; // override react-table-library default which sets '800'
+
+        &:hover {
+          background-color: bp.$blue2;
+        }
+      }
+    }
+
+    [role="columnheader"] {
+      border-bottom: solid 1px bp.$pt-dark-divider-white;
+    }
+
+    [role="row"] {
+      .selected {
+        background-color: bp.$blue1;
+      }
+    }
+
+    :global(.tbody) {
+      // HACKHACK: rows are just divs without classes with <Virtualized>
+      > div {
+        &:nth-of-type(odd) {
+          background: bp.$dark-gray1;
+        }
+
+        &:nth-of-type(even) {
+          background: bp.$dark-gray2;
+        }
+
+        &:has(> .rowActive) {
+          box-shadow: inset 0 0 0 1px bp.$blue1;
+        }
       }
     }
   }
@@ -120,8 +173,12 @@
 
 .indexCell {
   font-size: bp.$pt-font-size-small;
-  color: bp.$pt-dark-text-color-muted;
+  color: bp.$pt-text-color-muted;
   text-align: right;
+
+  :global(.#{bp.$ns}-dark) & {
+    color: bp.$pt-dark-text-color-muted;
+  }
 }
 
 .bpmCell {
@@ -133,8 +190,16 @@
   font-weight: bold;
 }
 
-.analyzeTrackButton:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-  border-color: rgba(bp.$white, 0.25);
+.analyzeTrackButton {
+  &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
+    // no override for light theme
+  }
+
+  :global(.#{bp.$ns}-dark) & {
+    &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
+      border-color: rgba(bp.$white, 0.25);
+    }
+  }
 }
 
 :global(.resizer) {
@@ -143,7 +208,7 @@
   top: 0;
   height: 100%;
   width: 3px;
-  background: bp.$pt-dark-divider-white;
+  background: bp.$pt-divider-black;
   opacity: 0.8;
   cursor: col-resize;
   user-select: none;
@@ -151,6 +216,10 @@
 
   &:global(.isResizing) {
     opacity: 1;
+  }
+
+  :global(.#{bp.$ns}-dark) & {
+    background: bp.$pt-dark-divider-white;
   }
 }
 

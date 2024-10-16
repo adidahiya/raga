@@ -21,6 +21,8 @@ export default function UserSettingsDropdown() {
       <UserEmailFormGroup />
       <Divider className={styles.divider} />
       <UIFontFormGroup />
+      <Divider className={styles.divider} />
+      <ThemeFormGroup />
     </div>
   );
 
@@ -111,6 +113,43 @@ function UIFontFormGroup() {
         options={FONT_WEIGHT_OPTIONS}
         small={true}
         value={fontWeight}
+      />
+    </FormGroup>
+  );
+}
+
+const THEME_OPTIONS = [
+  {
+    label: "System",
+    value: "system",
+  },
+  {
+    label: "Light",
+    value: "light",
+  },
+  {
+    label: "Dark",
+    value: "dark",
+  },
+];
+
+function ThemeFormGroup() {
+  const userThemePreference = appStore.use.userThemePreference();
+  const setUserThemePreference = appStore.use.setUserThemePreference();
+  const handleValueChange = useCallback(
+    (value: string) => {
+      setUserThemePreference(value as "light" | "dark" | "system");
+    },
+    [setUserThemePreference],
+  );
+
+  return (
+    <FormGroup label="Theme" inline={true}>
+      <SegmentedControl
+        onValueChange={handleValueChange}
+        options={THEME_OPTIONS}
+        small={true}
+        value={userThemePreference}
       />
     </FormGroup>
   );
