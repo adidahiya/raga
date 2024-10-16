@@ -78,11 +78,11 @@
     // HACKHACK: rows are just divs without classes with <Virtualized>
     > div {
       &:nth-of-type(odd) {
-        background: bp.$light-gray3;
+        background: bp.$light-gray5;
       }
 
       &:nth-of-type(even) {
-        background: bp.$light-gray4;
+        background: bp.$white;
       }
 
       &:has(> .rowActive) {
@@ -190,8 +190,16 @@
   font-weight: bold;
 }
 
-.analyzeTrackButton:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-  border-color: rgba(bp.$white, 0.25);
+.analyzeTrackButton {
+  &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
+    // no override for light theme
+  }
+
+  :global(.#{bp.$ns}-dark) & {
+    &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
+      border-color: rgba(bp.$white, 0.25);
+    }
+  }
 }
 
 :global(.resizer) {
