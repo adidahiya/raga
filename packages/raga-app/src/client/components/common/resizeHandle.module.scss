@@ -25,7 +25,11 @@ $overflow: ($grabbable-width - $visible-width) * 0.5;
 
 .inner {
   width: 1px;
-  background-color: bp.$pt-dark-divider-white;
+  background-color: bp.$pt-divider-black;
   transition: opacity 0.1s linear;
   opacity: 0.6;
+
+  :global(.#{bp.$ns}-dark) & {
+    background-color: bp.$pt-dark-divider-white;
+  }
 }

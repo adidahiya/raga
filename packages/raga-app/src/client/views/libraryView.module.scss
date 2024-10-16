@@ -42,12 +42,16 @@
   position: relative; // creates a stacking context for playlist table layout
 
   .librarySidebarFooter {
-    border-top: solid 1px bp.$pt-dark-divider-white;
+    border-top: solid 1px bp.$pt-divider-black;
     bottom: 0;
     height: $sidebar-footer-height;
     left: 0;
     padding: $sidebar-footer-padding;
     position: absolute;
     right: 0;
+
+    :global(.#{bp.$ns}-dark) & {
+      border-color: bp.$pt-dark-divider-white;
+    }
   }
 }

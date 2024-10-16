@@ -180,12 +180,20 @@ TrackTable.displayName = "TrackTable";
 
 const RESIZER_OPTIONS = {
   minWidth: 50,
-  resizerHighlight: Colors.DARK_GRAY5,
   resizerWidth: 8,
 };
 
 function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+  const prefersDarkTheme = appStore.use.prefersDarkTheme();
+
+  const resizerOptions = useMemo(() => {
+    return {
+      ...RESIZER_OPTIONS,
+      resizerHighlight: prefersDarkTheme ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
+    };
+  }, [prefersDarkTheme]);
+
   return (
     <Header className={styles.header}>
       <HeaderRow className={styles.headerRow}>
@@ -217,14 +225,14 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
         </HeaderCellSort>
         <HeaderCellSort
           className={classNames(styles.headerCell, styles.editableColumn)}
-          resize={RESIZER_OPTIONS}
+          resize={resizerOptions}
           sortKey={TrackPropertySortKey.NAME}
         >
           Name
         </HeaderCellSort>
         <HeaderCellSort
           className={classNames(styles.headerCell, styles.editableColumn)}
-          resize={RESIZER_OPTIONS}
+          resize={resizerOptions}
           sortKey={TrackPropertySortKey.ARTIST}
         >
           Artist

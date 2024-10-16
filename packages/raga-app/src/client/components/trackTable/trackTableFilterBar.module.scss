@@ -4,11 +4,15 @@
   max-height: 30px;
 
   :global(.#{bp.$ns}-collapse-body) {
-    border-bottom: solid 1px bp.$pt-dark-divider-white;
+    border-bottom: solid 1px bp.$pt-divider-black;
     display: flex;
     gap: 5px;
     justify-content: flex-end;
     padding: 4px 6px;
+
+    :global(.#{bp.$ns}-dark) & {
+      border-color: bp.$pt-dark-divider-white;
+    }
   }
 
   :global(.#{bp.$ns}-form-group.#{bp.$ns}-inline) {

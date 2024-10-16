@@ -7,5 +7,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(bp.$black, 0.5);
+  background: rgba(bp.$light-gray1, 0.5);
+
+  :global(.#{bp.$ns}-dark) & {
+    background: rgba(bp.$black, 0.5);
+  }
 }
