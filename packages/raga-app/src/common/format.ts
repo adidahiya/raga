@@ -5,10 +5,13 @@ export function formatStatNumber(n: number) {
 }
 
 export function formatAudioDuration(durationMs: number) {
+  const { minutes, seconds } = getAudioMinutesAndSeconds(durationMs);
+  const formattedSeconds = seconds >= 10 ? seconds.toString() : "0" + seconds.toString();
+  return minutes.toString() + ":" + formattedSeconds;
+}
+
+export function getAudioMinutesAndSeconds(durationMs: number) {
   const seconds = Math.floor(durationMs / 1000);
   const minutes = Math.floor(seconds / 60);
-  const remainderSeconds = Math.floor(seconds % 60);
-  const formattedSeconds =
-    remainderSeconds >= 10 ? remainderSeconds.toString() : "0" + remainderSeconds.toString();
-  return minutes.toString() + ":" + formattedSeconds;
+  return { minutes, seconds: Math.floor(seconds % 60) };
 }
