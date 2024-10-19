@@ -10,7 +10,7 @@ import LibraryView from "./views/libraryView";
 
 export default function App() {
   const fontWeight = appStore.use.fontWeight();
-  const isDarkThemeEnabled = appStore.use.isDarkThemeEnabled();
+  const getIsDarkThemeEnabled = appStore.use.getIsDarkThemeEnabled();
   const setSystemThemePreference = appStore.use.setSystemThemePreference();
   const systemPrefersDarkTheme = usePrefersDarkTheme();
 
@@ -26,7 +26,7 @@ export default function App() {
       className={classNames(styles.app, {
         [styles.fontWeightLight]: fontWeight === "light",
         [styles.fontWeightRegular]: fontWeight === "regular",
-        [Classes.DARK]: isDarkThemeEnabled,
+        [Classes.DARK]: getIsDarkThemeEnabled(),
       })}
     >
       <AppChrome />

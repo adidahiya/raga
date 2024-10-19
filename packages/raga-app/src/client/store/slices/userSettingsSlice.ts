@@ -13,7 +13,7 @@ export interface UserSettingsState {
   userThemePreference: "light" | "dark" | "system";
   previouslyUsedLibraries: Set<PreviouslyUsedLibrary>;
   userEmail: string | undefined;
-  isDarkThemeEnabled: boolean;
+  getIsDarkThemeEnabled: () => boolean;
 }
 
 export interface UserSettingsActions {
@@ -38,7 +38,7 @@ export const createUserSettingsSlice: AppStoreSliceCreator<
 
   userEmail: undefined,
 
-  get isDarkThemeEnabled() {
+  getIsDarkThemeEnabled: () => {
     return (
       get().userThemePreference === "dark" ||
       (get().userThemePreference === "system" && get().systemThemePreference === "dark")

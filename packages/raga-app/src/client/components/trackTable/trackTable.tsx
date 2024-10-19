@@ -185,14 +185,14 @@ const RESIZER_OPTIONS = {
 
 function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-  const isDarkThemeEnabled = appStore.use.isDarkThemeEnabled();
+  const getIsDarkThemeEnabled = appStore.use.getIsDarkThemeEnabled();
 
   const resizerOptions = useMemo(() => {
     return {
       ...RESIZER_OPTIONS,
-      resizerHighlight: isDarkThemeEnabled ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
+      resizerHighlight: getIsDarkThemeEnabled() ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
     };
-  }, [isDarkThemeEnabled]);
+  }, [getIsDarkThemeEnabled]);
 
   return (
     <Header className={styles.header}>
