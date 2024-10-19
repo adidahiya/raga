@@ -25,6 +25,7 @@ __metadata:
     "@electron-forge/maker-zip": "npm:^7.5.0"
     "@electron-forge/plugin-vite": "npm:^7.5.0"
     "@emotion/react": "npm:^11.13.3"
+    "@number-flow/react": "npm:^0.2.1"
     "@roarr/browser-log-writer": "npm:^1.3.0"
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.4.0"
@@ -1772,6 +1773,19 @@ __metadata:
     proc-log: "npm:^4.0.0"
     which: "npm:^4.0.0"
   checksum: 10/256bd580f82b98db93e54065bf9bcc94946be4f2d668a062cf756cb8ea091f58ef7154b3d2450d79738081a150f25cc48f6075351911e672f24ffd34350f02f2
+  languageName: node
+  linkType: hard
+
+"@number-flow/react@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@number-flow/react@npm:0.2.1"
+  dependencies:
+    esm-env: "npm:^1.0.0"
+    number-flow: "npm:0.3.0"
+  peerDependencies:
+    react: ^18 || ^19.0.0-rc-915b914b3a-20240515
+    react-dom: ^18
+  checksum: 10/f354dc81aa5da25ff70e1f4e1d68048809f0f0dfe93a3e23607100bd49cf64e1e31323bf2732521bbd57068195db5613b4730a19fc0d8ed49260d9f8989daa0e
   languageName: node
   linkType: hard
 
@@ -5665,6 +5679,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esm-env@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "esm-env@npm:1.0.0"
+  checksum: 10/379e34c5bfdfe7004a6ddf492511b619bfe3488520ee5c683a700f5e58942a26dd2220ebb74be83b4d46930c57f26adfd449404edfa1e68231d4b354b23f91be
+  languageName: node
+  linkType: hard
+
 "espree@npm:^10.0.1, espree@npm:^10.2.0":
   version: 10.2.0
   resolution: "espree@npm:10.2.0"
@@ -9373,6 +9394,15 @@ __metadata:
   dependencies:
     boolbase: "npm:^1.0.0"
   checksum: 10/5afc3dafcd1573b08877ca8e6148c52abd565f1d06b1eb08caf982e3fa289a82f2cae697ffb55b5021e146d60443f1590a5d6b944844e944714a5b549675bcd3
+  languageName: node
+  linkType: hard
+
+"number-flow@npm:0.3.0":
+  version: 0.3.0
+  resolution: "number-flow@npm:0.3.0"
+  dependencies:
+    esm-env: "npm:^1.0.0"
+  checksum: 10/8985599ef7753870768b2a6498050ebca93a0f04c4e452402279c6d277ff69da893b0be0b981571937f304313f7a8c401305addc0590fd7308136f5b57a21fa6
   languageName: node
   linkType: hard
 

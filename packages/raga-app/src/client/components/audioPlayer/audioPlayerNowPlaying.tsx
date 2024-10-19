@@ -1,8 +1,9 @@
 import { Classes, Text } from "@blueprintjs/core";
+import NumberFlow from "@number-flow/react";
 import classNames from "classnames";
 import { useMemo } from "react";
 
-import { formatAudioDuration } from "../../../common/format";
+import { formatAudioDuration, getAudioMinutesAndSeconds } from "../../../common/format";
 import { appStore } from "../../store/appStore";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 import TrackRatingStars from "../trackTable/trackRatingStars";
@@ -18,7 +19,7 @@ export function AudioPlayerNowPlaying() {
 
   const selectedTrack = getSelectedTrackDef();
 
-  const formattedCurrentTime = useMemo(() => formatAudioDuration(currentTime), [currentTime]);
+  const { minutes, seconds } = useMemo(() => getAudioMinutesAndSeconds(currentTime), [currentTime]);
   const formattedDuration = useMemo(() => formatAudioDuration(duration), [duration]);
 
   if (waveSurfer === undefined || selectedTrack === undefined) {
@@ -36,7 +37,11 @@ export function AudioPlayerNowPlaying() {
         <TrackRatingStars trackID={selectedTrack["Track ID"]} rating={selectedTrack.Rating} />
       </div>
       <div className={classNames(styles.timeProgress, Classes.TEXT_MUTED)}>
-        {formattedCurrentTime} / {formattedDuration}
+        <NumberFlow value={minutes} format={{ minimumIntegerDigits: 1 }} locales="en-US" />
+        {":"}
+        <NumberFlow value={seconds} format={{ minimumIntegerDigits: 2 }} locales="en-US" />
+        {" / "}
+        {formattedDuration}
       </div>
     </div>
   );
