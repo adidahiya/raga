@@ -40,6 +40,7 @@ __metadata:
     classnames: "npm:^2.5.1"
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^4.1.0"
+    disconnect: "npm:^1.2.2"
     effection: "npm:^3.0.3"
     electron: "npm:^33.0.0"
     electron-extension-installer: "npm:^1.2.0"
@@ -4856,6 +4857,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"disconnect@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "disconnect@npm:1.2.2"
+  dependencies:
+    oauth-1.0a: "npm:2.x.x"
+  checksum: 10/6f2d5243d34f7a492b32fac0cd0c422cdd801383d7fcc51560966cc73619007b7fce97a1aead4997832a5e65807f652ed786a44fd429a502ae31e6722806a260
+  languageName: node
+  linkType: hard
+
 "discontinuous-range@npm:1.0.0":
   version: 1.0.0
   resolution: "discontinuous-range@npm:1.0.0"
@@ -9485,6 +9495,13 @@ __metadata:
     nx: bin/nx.js
     nx-cloud: bin/nx-cloud.js
   checksum: 10/33068798c39c365c78702ab7e8771224c5fa8787d2249164c1431308da152c140251d36013f6467478568c44754b59562e13f211ead9b06b6ed0e54cbe2d3baa
+  languageName: node
+  linkType: hard
+
+"oauth-1.0a@npm:2.x.x":
+  version: 2.2.6
+  resolution: "oauth-1.0a@npm:2.2.6"
+  checksum: 10/5807a52077538e853a47a29ee4cc0a87a0882b89918b4c069ebb295ad81c5abef451010ccaca3b991bf59f79f18893fe1df0186706097e2a3fdda9abc5dbe211
   languageName: node
   linkType: hard
 

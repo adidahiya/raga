@@ -45,7 +45,7 @@ export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: Track
       fill={true}
     >
       <Button
-        className={styles.analyzeTrackButton}
+        className={styles.smallOutlinedButton}
         disabled={buttonDisabled}
         outlined={true}
         small={true}

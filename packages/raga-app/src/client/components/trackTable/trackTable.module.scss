@@ -190,7 +190,7 @@
   font-weight: bold;
 }
 
-.analyzeTrackButton {
+.smallOutlinedButton {
   &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
     // no override for light theme
   }

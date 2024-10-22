@@ -55,6 +55,12 @@ export function writeAudioFileTag({
       }
       file.tag.performers = [value];
       break;
+    case "Genre":
+      if (!isString(value)) {
+        throw new Error(`Invalid value for '${tagName}' tag: ${value?.toString() ?? "undefined"}`);
+      }
+      file.tag.genres = value.split(",").map((genre) => genre.trim());
+      break;
   }
 
   file.save();

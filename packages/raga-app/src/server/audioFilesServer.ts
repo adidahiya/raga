@@ -5,6 +5,7 @@ import { env } from "node:process";
 
 import { AudioFileConverter } from "@adahiya/raga-lib";
 import { App, type Request, type Response } from "@tinyhttp/app";
+import { Client as Discogs } from "disconnect";
 import { call, type Operation, run } from "effection";
 import sirv from "sirv";
 
@@ -69,7 +70,14 @@ function* createAudioFileConverterAndInitServer(
 
   log.debug(`Initializing audio files converter...`);
   const converter = new AudioFileConverter({ ffmpeg });
-  const app = initServerApp(converter, options);
+  const discogs =
+    process.env.DISCOGS_CONSUMER_KEY && process.env.DISCOGS_CONSUMER_SECRET
+      ? new Discogs({
+          consumerKey: process.env.DISCOGS_CONSUMER_KEY,
+          consumerSecret: process.env.DISCOGS_CONSUMER_SECRET,
+        })
+      : null;
+  const app = initServerApp(converter, discogs, options);
 
   const httpServer = yield* waitForHTTPServerToStart(app);
 
@@ -89,7 +97,11 @@ function* createAudioFileConverterAndInitServer(
   return newAudioFilesServer;
 }
 
-function initServerApp(converter: AudioFileConverter, options: AudioFilesServerOptions): App {
+function initServerApp(
+  converter: AudioFileConverter,
+  discogs: Discogs | null,
+  options: AudioFilesServerOptions,
+): App {
   const app = new App();
 
   const staticServerMiddleware = sirv(options.audioFilesRootFolder, {
@@ -128,11 +140,51 @@ function initServerApp(converter: AudioFileConverter, options: AudioFilesServerO
     res.status(200).json(allConvertedMP3s);
   }
 
+  function handleGetGenreTags(req: Request, res: Response) {
+    let { artist, track } = req.query;
+
+    if (!artist || !track) {
+      res.status(400).json({ error: "Artist and track are required" });
+      return;
+    }
+
+    if (!discogs) {
+      res.status(500).json({ error: "Discogs client not initialized" });
+      return;
+    }
+
+    if (Array.isArray(artist)) {
+      log.warn(`Received artist array: [${artist.join(", ")}], picking the first one`);
+      artist = artist[0];
+    }
+
+    if (Array.isArray(track)) {
+      log.warn(`Received track array: [${track.join(", ")}], picking the first one`);
+      track = track[0];
+    }
+
+    discogs
+      .database()
+      .search({ artist, track, type: "release" })
+      .then((results) => {
+        if (results.results.length > 0) {
+          const genres = results.results[0].genre;
+          res.json({ genres });
+        } else {
+          res.status(404).json({ error: "No results found" });
+        }
+      })
+      .catch((err: unknown) => {
+        res.status(500).json({ error: (err as Error).message });
+      });
+  }
+
   return app
     .get(ServerRoutes.GET_PING, handlePingRequest)
     .get(`${ServerRoutes.GET_CONVERTED_MP3}/:filepath`, handleGetConvertedMP3FileRequest)
     .get(ServerRoutes.GET_ALL_CONVERTED_MP3S, handleGetAllConvertedMP3s)
     .post(ServerRoutes.POST_CONVERT_TO_MP3, getConvertToMP3RequestHandler(converter))
+    .get(ServerRoutes.GET_DISCOGS_GENRES, handleGetGenreTags)
     .use(staticServerMiddleware);
 }
 

@@ -28,6 +28,7 @@
     "app-root-dir": "^1.0.2",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
+    "disconnect": "^1.2.2",
     "effection": "^3.0.3",
     "framer-motion": "^11.11.9",
     "immer": "^10.1.1",

@@ -46,6 +46,7 @@ import styles from "./trackTable.module.scss";
 import { TrackTableFilterBar } from "./trackTableFilterBar";
 import useTrackTableContextMenu from "./useTrackTableContextMenu";
 import useTrackTableHotkeys from "./useTrackTableHotkeys";
+import FetchDiscogsGenreButton from "./fetchDiscogsGenreButton";
 
 // INTERFACES
 // -------------------------------------------------------------------------------------------------
@@ -71,6 +72,8 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
     (array as TrackDefinitionNode[]).sort((a, b) => (a.Artist ?? "").localeCompare(b.Artist ?? "")),
   [TrackPropertySortKey.BPM]: (array) =>
     (array as TrackDefinitionNode[]).sort((a, b) => (a.BPM ?? 0) - (b.BPM ?? 0)),
+  [TrackPropertySortKey.GENRE]: (array) =>
+    (array as TrackDefinitionNode[]).sort((a, b) => (a.Genre ?? "").localeCompare(b.Genre ?? "")),
   [TrackPropertySortKey.RATING]: (array) =>
     (array as TrackDefinitionNode[]).sort((a, b) => (a.Rating ?? 0) - (b.Rating ?? 0)),
   [TrackPropertySortKey.FILETYPE]: (array) =>
@@ -238,6 +241,13 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           Artist
         </HeaderCellSort>
         <HeaderCellSort
+          className={classNames(styles.headerCell)}
+          resize={resizerOptions}
+          sortKey={TrackPropertySortKey.GENRE}
+        >
+          Genres
+        </HeaderCellSort>
+        <HeaderCellSort
           className={styles.headerCell}
           stiff={true}
           sortKey={TrackPropertySortKey.RATING}
@@ -305,6 +315,10 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
       </Cell>
       <Cell>
         <EditableTrackTagValue tagName="Artist" trackDef={track} />
+      </Cell>
+      <Cell>
+        {track.Genre ? null : <FetchDiscogsGenreButton trackDef={track} />}
+        <EditableTrackTagValue tagName="Genre" trackDef={track} />
       </Cell>
       <Cell onClick={stopPropagation}>
         <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
@@ -402,6 +416,7 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
+  const genresColumnWidth = 120;
   const ratingColumnWidth = 90;
   const fileTypeColumnWidth = 80;
   const fileSourceColumnWidth = 80;
@@ -412,6 +427,7 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
     `${analyzeColumnWidth.toString()}px`,
     `${bpmColumnWidth.toString()}px`,
     `repeat(2, minmax(40px, 1fr))`,
+    `${genresColumnWidth.toString()}px`,
     `${ratingColumnWidth.toString()}px`,
     `${fileTypeColumnWidth.toString()}px`,
     `${fileSourceColumnWidth.toString()}px`,
