@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import { join, resolve } from "node:path";
 import { platform } from "node:process";
 

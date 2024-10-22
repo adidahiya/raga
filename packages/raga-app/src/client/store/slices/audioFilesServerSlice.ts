@@ -19,6 +19,7 @@ import {
 } from "../../../common/events";
 import getAllConvertedMP3sRequest from "../requestFactories/allConvertedMP3sRequest";
 import convertTrackToMP3Request from "../requestFactories/convertTrackToMP3Request";
+import getDiscogsGenreTagsRequest from "../requestFactories/getDiscogsGenreTagsRequest";
 import pingRequest from "../requestFactories/pingRequest";
 import type { AppStoreSet, AppStoreSliceCreator } from "../zustandUtils";
 
@@ -60,6 +61,9 @@ export interface AudioFilesServerActions {
     tagName: SupportedTagName,
     newValue: string | number | undefined,
   ) => Operation<void>;
+
+  // Third party API actions
+  getDiscogsGenres: (trackDef: TrackDefinition) => Operation<string[] | undefined>;
 }
 
 export const createAudioFilesServerSlice: AppStoreSliceCreator<
@@ -239,6 +243,9 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
             case "Title":
               state.library!.Tracks[trackID].Name = newValue as string | undefined;
               break;
+            case "Genre":
+              state.library!.Tracks[trackID].Genre = newValue as string | undefined;
+              break;
             default:
               return;
           }
@@ -247,6 +254,19 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
       } catch (e) {
         log.error(`[client] Failed to write audio file tag: ${(e as Error).message}`);
       }
+    },
+
+    getDiscogsGenres: function* (trackDef: TrackDefinition): Operation<string[] | undefined> {
+      if (!trackDef.Artist || !trackDef.Name) {
+        log.error(
+          `[client] cannot get Discogs genres for track ${trackDef["Track ID"].toString()}: missing Artist or Name`,
+        );
+        return undefined;
+      }
+
+      log.debug(`[client] getting Discogs genres for ${trackDef.Artist} - ${trackDef.Name}`);
+      const genres = yield* getDiscogsGenreTagsRequest(serverBaseURL, trackDef);
+      return genres;
     },
   };
 };

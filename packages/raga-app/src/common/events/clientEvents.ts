@@ -47,7 +47,7 @@ export interface AudioFilesServerStartOptions {
   audioFilesRootFolder: string;
 }
 
-export type SupportedTagName = "BPM" | "Rating" | "Title" | "Artist" | "Album";
+export type SupportedTagName = "BPM" | "Rating" | "Title" | "Artist" | "Album" | "Genre";
 
 export interface WriteAudioFileTagOptions {
   fileLocation: string;

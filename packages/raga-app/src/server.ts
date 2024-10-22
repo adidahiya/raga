@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import { ServerEventChannel } from "./common/events";
 import { initAppServer } from "./server/appServer";
 import { log } from "./server/common/serverLogger";

@@ -9,3 +9,4 @@ lib/
 .yarn/cache
 .yarn/install-state.gz
 **/bin/standalone
+.env

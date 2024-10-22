@@ -7,6 +7,7 @@ export const enum TrackPropertySortKey {
   DATE_ADDED = "dateAdded",
   FILESOURCE = "filesource",
   FILETYPE = "filetype",
+  GENRE = "genre",
   INDEX = "index",
   NAME = "name",
   RATING = "rating",

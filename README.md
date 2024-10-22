@@ -73,6 +73,9 @@ Requirements:
 Getting started:
 
 - `corepack enable` - configures the Yarn package manager
+- Set up [Discogs API](https://www.discogs.com/developers) credentials, add your key & secret to `packages/raga-app/.env` with the following keys:
+  - `DISCOGS_CONSUMER_KEY`
+  - `DISCOGS_CONSUMER_SECRET`
 
 Dev tasks:
 
