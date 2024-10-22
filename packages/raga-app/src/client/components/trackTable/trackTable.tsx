@@ -40,13 +40,13 @@ import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
 import EditableTrackTagValue from "./editableTrackTagValue";
+import FetchDiscogsGenreButton from "./fetchDiscogsGenreButton";
 import TrackDateAddedText from "./trackDateAddedText";
 import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
 import { TrackTableFilterBar } from "./trackTableFilterBar";
 import useTrackTableContextMenu from "./useTrackTableContextMenu";
 import useTrackTableHotkeys from "./useTrackTableHotkeys";
-import FetchDiscogsGenreButton from "./fetchDiscogsGenreButton";
 
 // INTERFACES
 // -------------------------------------------------------------------------------------------------
