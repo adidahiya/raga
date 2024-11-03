@@ -75,9 +75,9 @@ export const TrackProperty = {
 export type TrackProperty = (typeof TrackProperty)[keyof typeof TrackProperty];
 
 export type TrackDefinition = BasicTrackDefinition &
-  Partial<{ [P in NumericTrackProperty]: number }> &
-  Partial<{ [P in StringTrackProperty]: string }> &
-  Partial<{ [P in DateTrackProperty]: Date }>;
+  Partial<Record<NumericTrackProperty, number>> &
+  Partial<Record<StringTrackProperty, string>> &
+  Partial<Record<DateTrackProperty, Date>>;
 
 /**
  * Track properties which are commonly user-edited.
@@ -124,9 +124,7 @@ export type MusicAppTrackProperty =
   (typeof MusicAppTrackProperty)[keyof typeof MusicAppTrackProperty];
 
 export type MusicAppTrackDefinition = TrackDefinition &
-  Partial<{
-    [P in MusicAppTrackProperty]: string | number | boolean;
-  }>;
+  Partial<Record<MusicAppTrackProperty, string | number | boolean>>;
 
 export function convertSwinsianTrackToMusicAppTrack(
   track: SwinsianTrackDefinition,
@@ -167,6 +165,4 @@ export type SwinsianTrackProperty =
   (typeof SwinsianTrackProperty)[keyof typeof SwinsianTrackProperty];
 
 export type SwinsianTrackDefinition = TrackDefinition &
-  Partial<{
-    [P in SwinsianTrackProperty]: string | number;
-  }>;
+  Partial<Record<SwinsianTrackProperty, string | number>>;
