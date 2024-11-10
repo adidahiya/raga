@@ -17,8 +17,8 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
-    "@blueprintjs/core": "npm:^5.13.1"
-    "@blueprintjs/icons": "npm:^5.13.0"
+    "@blueprintjs/core": "npm:^5.14.0"
+    "@blueprintjs/icons": "npm:^5.14.0"
     "@blueprintjs/node-build-scripts": "npm:^9.2.2"
     "@electron-forge/cli": "npm:^7.5.0"
     "@electron-forge/maker-deb": "npm:^7.5.0"
@@ -53,7 +53,7 @@ __metadata:
     react: "npm:^18.3.1"
     react-devtools: "npm:^5.3.2"
     react-dom: "npm:^18.3.1"
-    react-dropzone: "npm:^14.3.3"
+    react-dropzone: "npm:^14.3.5"
     react-resizable-panels: "npm:^2.1.6"
     roarr: "npm:^7.21.1"
     sass: "npm:^1.80.6"
@@ -355,21 +355,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/colors@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "@blueprintjs/colors@npm:5.1.2"
+"@blueprintjs/colors@npm:^5.1.3":
+  version: 5.1.3
+  resolution: "@blueprintjs/colors@npm:5.1.3"
   dependencies:
     tslib: "npm:~2.6.2"
-  checksum: 10/ef9aa91eaeb78c9738216a0c7b5884d417e4e21684c16d0a7a782939df9e9219d7b570ae1058311ff4bd0cee12ae3a8f7126be9c6fd3f7492df224f3c7b09259
+  checksum: 10/50c02828ec7671dcb42b2574d21c9669ab9d4c118d86cbd409207b635d622b97396b5cf25343dfcaf4fdc4fc654fa04eaeeaa68e0db21e4cd2085b56cee5bee0
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^5.13.1":
-  version: 5.13.1
-  resolution: "@blueprintjs/core@npm:5.13.1"
+"@blueprintjs/core@npm:^5.14.0":
+  version: 5.14.0
+  resolution: "@blueprintjs/core@npm:5.14.0"
   dependencies:
-    "@blueprintjs/colors": "npm:^5.1.2"
-    "@blueprintjs/icons": "npm:^5.13.0"
+    "@blueprintjs/colors": "npm:^5.1.3"
+    "@blueprintjs/icons": "npm:^5.14.0"
     "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
     normalize.css: "npm:^8.0.1"
@@ -388,13 +388,13 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10/3e6fe60bd35d6ede91e0525683234e291dd9f351ae288dda046d88aaee9a38fb2c49bfbb764437a967c3067c6822b059005f4cddb6168ef68d7a6c96db71284a
+  checksum: 10/71f57ad412e858621e3542c99e8ef517f37c07bab75e0954211b926aa03944c229d97d147bb6dedd498c8b6d1ece25dc5accb2cc8439fa3fe2683546546ef0b6
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.13.0":
-  version: 5.13.0
-  resolution: "@blueprintjs/icons@npm:5.13.0"
+"@blueprintjs/icons@npm:^5.14.0":
+  version: 5.14.0
+  resolution: "@blueprintjs/icons@npm:5.14.0"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -406,7 +406,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/0e962fe73412c351466dd24f3ffff4f382af8f23de9dcf1d245e71cf0d2ee1e401f767fcf36f9f6df9d604e3b4a2874f6f0ae92e489d40d3b8abddfc0c352c66
+  checksum: 10/7da68febcb07ef63e9ee32c88d7e2325612f13cd43e9feb787d8f062fb3cafc6912370fa1d337d93a53891ddadfa0d09fbc08a69e3499b99ffd7d79f2456e09c
   languageName: node
   linkType: hard
 
@@ -10671,16 +10671,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dropzone@npm:^14.3.3":
-  version: 14.3.3
-  resolution: "react-dropzone@npm:14.3.3"
+"react-dropzone@npm:^14.3.5":
+  version: 14.3.5
+  resolution: "react-dropzone@npm:14.3.5"
   dependencies:
     attr-accept: "npm:^2.2.4"
     file-selector: "npm:^2.1.0"
     prop-types: "npm:^15.8.1"
   peerDependencies:
     react: ">= 16.8 || 18.0.0"
-  checksum: 10/1b2252da25d8684fd0ed4759e293aa3401f94b1bf91325c8c557db97c682500473952e6d24eafe72f5fb7061c72d9456be7a032b8d27a23a95a0df4fda012ca3
+  checksum: 10/6124bacd2138002d721c86c2b507a5c1889cfde73344fe474855a4e2e81fecb2c318edb0ab3333a75fd502fb6da44a6f8e9cdee317ec916331fd520d454e6297
   languageName: node
   linkType: hard
 
