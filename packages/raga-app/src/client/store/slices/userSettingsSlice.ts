@@ -13,7 +13,6 @@ export interface UserSettingsState {
   userThemePreference: "light" | "dark" | "system";
   previouslyUsedLibraries: Set<PreviouslyUsedLibrary>;
   userEmail: string | undefined;
-  getIsDarkThemeEnabled: () => boolean;
 }
 
 export interface UserSettingsActions {
@@ -37,13 +36,6 @@ export const createUserSettingsSlice: AppStoreSliceCreator<
   previouslyUsedLibraries: new Set<PreviouslyUsedLibrary>(),
 
   userEmail: undefined,
-
-  getIsDarkThemeEnabled: () => {
-    return (
-      get().userThemePreference === "dark" ||
-      (get().userThemePreference === "system" && get().systemThemePreference === "dark")
-    );
-  },
 
   setFontWeight: (fontWeight) => {
     set({ fontWeight });

@@ -35,6 +35,7 @@ import { stopPropagation } from "../../common/reactUtils";
 import { TrackPropertySortKey } from "../../common/trackPropertySortKey";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
+import { useIsDarkThemeEnabled } from "../../store/selectors/useIsDarkThemeEnabled";
 import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
@@ -188,14 +189,14 @@ const RESIZER_OPTIONS = {
 
 function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-  const getIsDarkThemeEnabled = appStore.use.getIsDarkThemeEnabled();
+  const isDarkThemeEnabled = useIsDarkThemeEnabled();
 
   const resizerOptions = useMemo(() => {
     return {
       ...RESIZER_OPTIONS,
-      resizerHighlight: getIsDarkThemeEnabled() ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
+      resizerHighlight: isDarkThemeEnabled ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
     };
-  }, [getIsDarkThemeEnabled]);
+  }, [isDarkThemeEnabled]);
 
   return (
     <Header className={styles.header}>
