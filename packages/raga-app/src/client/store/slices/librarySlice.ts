@@ -35,6 +35,8 @@ export interface LibraryState {
   libraryPlaylistsContainingTrack: PartialRecord<number, Set<string>>;
   libraryInputFilepath: string | undefined;
   libraryOutputFilepath: string | undefined;
+  /** Set of track IDs that have no genres found using the Discogs API */
+  libraryTrackIdsWithoutDiscogsGenres: number[];
   selectedPlaylistId: string | undefined;
   /** A track may be "selected" by left-clicking on it */
   selectedTrackId: number | undefined;
@@ -51,6 +53,7 @@ export interface LibraryActions {
   getPlaylistTrackIds: (playlistId: string) => number[] | undefined;
   getTrackDef: (id: number) => SwinsianTrackDefinition | undefined;
   getSelectedTrackDef: () => SwinsianTrackDefinition | undefined;
+  getLibraryTrackHasNoDiscogsGenres: (trackId: number) => boolean;
 
   // actions - simple setters
   setActiveTrackId: (activeTrackId: number | undefined) => void;
@@ -60,6 +63,7 @@ export interface LibraryActions {
   setSelectedPlaylistId: (selectedPlaylistId: string | undefined) => void;
   setSelectedTrackId: (selectedTrackId: number | undefined) => void;
   setTrackRating: (trackId: number, rating: number) => Operation<void>;
+  setLibraryTrackHasNoDiscogsGenre: (trackId: number) => void;
 }
 
 export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActions> = (
@@ -74,6 +78,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   libraryPlaylists: undefined,
   libraryPlaylistsContainingTrack: {},
   libraryWriteState: "none",
+  libraryTrackIdsWithoutDiscogsGenres: [],
   selectedPlaylistId: undefined,
   selectedTrackId: undefined,
 
@@ -88,6 +93,9 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   getSelectedTrackDef: () => {
     const { getTrackDef, selectedTrackId } = get();
     return selectedTrackId == null ? undefined : getTrackDef(selectedTrackId);
+  },
+  getLibraryTrackHasNoDiscogsGenres: (trackId: number) => {
+    return get().libraryTrackIdsWithoutDiscogsGenres.includes(trackId);
   },
 
   // simple setters
@@ -144,6 +152,11 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set((state) => {
       state.library!.Tracks[trackID].Rating = ratingOutOf100;
       state.libraryWriteState = "ready"; // needs to be written to disk
+    });
+  },
+  setLibraryTrackHasNoDiscogsGenre: (trackId: number) => {
+    set((state) => {
+      state.libraryTrackIdsWithoutDiscogsGenres.push(trackId);
     });
   },
 

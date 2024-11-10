@@ -294,6 +294,7 @@ interface TrackTableRowProps
 const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const activeTrackId = appStore.use.activeTrackId();
+  const hasNoDiscogsGenres = appStore.use.getLibraryTrackHasNoDiscogsGenres();
 
   return (
     <Row
@@ -318,8 +319,11 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
         <EditableTrackTagValue tagName="Artist" trackDef={track} />
       </Cell>
       <Cell>
-        {track.Genre ? null : <FetchDiscogsGenreButton trackDef={track} />}
-        <EditableTrackTagValue tagName="Genre" trackDef={track} />
+        {track.Genre || hasNoDiscogsGenres(track["Track ID"]) ? (
+          <EditableTrackTagValue tagName="Genre" placeholder="--" trackDef={track} />
+        ) : (
+          <FetchDiscogsGenreButton trackDef={track} />
+        )}
       </Cell>
       <Cell onClick={stopPropagation}>
         <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />

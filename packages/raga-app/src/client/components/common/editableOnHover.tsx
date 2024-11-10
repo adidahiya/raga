@@ -1,4 +1,4 @@
-import { Button, InputGroup, Spinner } from "@blueprintjs/core";
+import { Button, Classes, InputGroup, Spinner } from "@blueprintjs/core";
 import classNames from "classnames";
 import type { Operation } from "effection";
 import { useCallback, useRef, useState } from "react";
@@ -9,6 +9,7 @@ import styles from "./editableOnHover.module.scss";
 interface EditableOnHoverProps<T> {
   value: T | undefined;
   onChangeOperation: (newValue: T | undefined) => Operation<void>;
+  placeholder?: string;
   textAlign?: "left" | "right";
   showGradient?: boolean;
 }
@@ -16,6 +17,7 @@ interface EditableOnHoverProps<T> {
 export default function EditableOnHover<T extends string | number>({
   value,
   onChangeOperation,
+  placeholder,
   textAlign = "left",
   showGradient = true,
 }: EditableOnHoverProps<T>) {
@@ -75,7 +77,14 @@ export default function EditableOnHover<T extends string | number>({
 
   const valueAndEditableContent = (
     <>
-      <div className={styles.value}>{value}</div>
+      <div
+        className={classNames(styles.value, {
+          [Classes.TEXT_MUTED]: value == null,
+        })}
+      >
+        {value ?? placeholder}
+      </div>
+
       <div className={styles.editInput}>
         <InputGroup
           small={true}

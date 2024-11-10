@@ -9,6 +9,8 @@ import styles from "./editableTrackTagValue.module.scss";
 interface EditableTrackTagValueProps {
   /** @default true */
   editable?: boolean;
+  /** @default undefined */
+  placeholder?: string;
   /** Which tag name this value corresponds to */
   tagName: SupportedTagName;
   /** Track definition */
@@ -17,6 +19,7 @@ interface EditableTrackTagValueProps {
 
 const EditableTrackTagValue: React.FC<EditableTrackTagValueProps> = ({
   editable = true,
+  placeholder,
   tagName,
   trackDef,
 }) => {
@@ -43,6 +46,7 @@ const EditableTrackTagValue: React.FC<EditableTrackTagValueProps> = ({
           textAlign={tagName === "BPM" ? "right" : "left"}
           value={value}
           onChangeOperation={handleChangeOperation}
+          placeholder={placeholder}
           showGradient={tagName === "BPM" ? false : true}
         />
       ) : (

@@ -24,6 +24,11 @@ export default function* getDiscogsGenreTagsRequest(
     })
       .then((res) => res.json())
       .then((json) => {
+        if (json.genres == null || !Array.isArray(json.genres)) {
+          log.info(`[client] No Discogs genres found for ${Artist} - ${Name}`);
+          return [];
+        }
+
         const genres = json.genres as string[];
         log.info(`[client] got Discogs genres for ${Artist} - ${Name}: ${genres.join(", ")}`);
         return genres;
