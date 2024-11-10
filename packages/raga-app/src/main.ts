@@ -21,7 +21,6 @@ import {
   type OpenFileLocationOptions,
 } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
-import { installReactDevTools } from "./server/devTools";
 
 // see https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
@@ -36,8 +35,6 @@ const MAX_INITIAL_WINDOW_WIDTH = 2000;
 const MAX_INITIAL_WINDOW_HEIGHT = 1200;
 
 const createWindow = async () => {
-  await installReactDevTools();
-
   const primaryDisplay = screen.getPrimaryDisplay();
 
   // N.B. Vite still makes assumptions about Electron not supporting ESM (which was true until v28),

@@ -1,14 +1,12 @@
 import { BlueprintProvider, Classes, FocusStyleManager } from "@blueprintjs/core";
 import { createLogWriter } from "@roarr/browser-log-writer";
-import { call, main } from "effection";
 // import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { INSTALL_REACT_DEVELOPER_TOOLS } from "../common/constants";
 import { ClientErrors } from "../common/errorMessages";
 import App from "./app";
 
-await main(function* () {
+function main() {
   // set up client logging
   localStorage.setItem("ROARR_LOG", "true");
   globalThis.ROARR.write = createLogWriter();
@@ -30,9 +28,6 @@ await main(function* () {
       {/* </StrictMode> */}
     </BlueprintProvider>,
   );
+}
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (INSTALL_REACT_DEVELOPER_TOOLS) {
-    yield* call(import("react-devtools"));
-  }
-});
+main();
