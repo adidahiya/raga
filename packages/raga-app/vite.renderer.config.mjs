@@ -1,10 +1,18 @@
 import { sassNodeModulesLoadPaths } from "@blueprintjs/node-build-scripts";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import htmlPlugin from "vite-plugin-html-config";
 
 // https://vitejs.dev/config
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    htmlPlugin({
+      // Latest react devtools only work in Electron via script tag loaded before React on the page
+      // see https://github.com/electron/electron/issues/41613#issuecomment-2090365372
+      headScripts: process.env.NODE_ENV === "development" ? [{ src: "http://localhost:8097" }] : [],
+    }),
+    react(),
+  ],
   publicDir: "./src/client/assets",
   build: {
     target: "esnext",
