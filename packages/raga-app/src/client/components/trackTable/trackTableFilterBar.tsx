@@ -1,5 +1,6 @@
-import { Button, Classes, Collapse, FormGroup, InputGroup } from "@blueprintjs/core";
+import { Classes, Collapse, FormGroup, InputGroup } from "@blueprintjs/core";
 import { ChevronUp } from "@blueprintjs/icons";
+import { ActionIcon } from "@mantine/core";
 import { useCallback, useEffect, useRef } from "react";
 
 import { appStore } from "../../store/appStore";
@@ -47,7 +48,9 @@ export function TrackTableFilterBar({ query, onClose, onQueryChange }: TrackTabl
           onChange={handleInputChange}
         />
       </FormGroup>
-      <Button onClick={hideTableFilterBar} small={true} minimal={true} icon={<ChevronUp />} />
+      <ActionIcon onClick={hideTableFilterBar} size="compact-sm" color="gray" variant="subtle">
+        <ChevronUp />
+      </ActionIcon>
     </Collapse>
   );
 }

@@ -191,15 +191,7 @@
 }
 
 .smallOutlinedButton {
-  &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-    // no override for light theme
-  }
-
-  :global(.#{bp.$ns}-dark) & {
-    &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-      border-color: rgba(bp.$white, 0.25);
-    }
-  }
+  height: 18px;
 }
 
 :global(.resizer) {

@@ -18,6 +18,12 @@ const theme = createTheme({
     md: "14px",
     lg: "16px",
   },
+  radius: {
+    xs: "1px",
+    sm: "2px",
+    md: "4px",
+    lg: "8px",
+  },
 });
 
 export default function App() {

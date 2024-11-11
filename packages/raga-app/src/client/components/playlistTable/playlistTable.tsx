@@ -1,7 +1,7 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { Button, Collapse } from "@blueprintjs/core";
+import { Collapse } from "@blueprintjs/core";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import { Text } from "@mantine/core";
+import { ActionIcon, Text } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -42,12 +42,14 @@ export default function PlaylistTable() {
               ({formatStatNumber(numTotalPlaylists)})
             </Text>
           </span>
-          <Button
-            minimal={true}
-            small={true}
-            icon={isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+          <ActionIcon
+            size="compact-sm"
+            color="gray"
+            variant="subtle"
             onClick={togglePlaylistTreeExpanded}
-          />
+          >
+            {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+          </ActionIcon>
         </div>
       </div>
       <div className={styles.body}>

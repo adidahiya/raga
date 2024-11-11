@@ -1,4 +1,6 @@
-import { Button, ButtonGroup, ControlGroup, Slider } from "@blueprintjs/core";
+import { ControlGroup, Slider } from "@blueprintjs/core";
+import { Pause, Play, VolumeOff, VolumeUp } from "@blueprintjs/icons";
+import { ActionIcon, ButtonGroup } from "@mantine/core";
 import { useCallback, useState } from "react";
 
 import { useOperationCallback } from "../../hooks";
@@ -42,13 +44,19 @@ export function AudioPlayerControls() {
     <div className={styles.container}>
       <ButtonGroup>
         {isPlaying ? (
-          <Button minimal={true} icon="pause" onClick={handlePause} />
+          <ActionIcon variant="subtle" color="gray" onClick={handlePause}>
+            <Pause />
+          </ActionIcon>
         ) : (
-          <Button minimal={true} icon="play" onClick={handlePlay} disabled={isPlaying} />
+          <ActionIcon variant="subtle" color="gray" onClick={handlePlay}>
+            <Play />
+          </ActionIcon>
         )}
       </ButtonGroup>
       <ControlGroup>
-        <Button minimal={true} icon="volume-off" onClick={handleVolumeOff} />
+        <ActionIcon variant="subtle" color="gray" onClick={handleVolumeOff}>
+          <VolumeOff />
+        </ActionIcon>
         <div className={styles.volumeSlider}>
           <Slider
             value={volumeSliderValue}
@@ -59,7 +67,9 @@ export function AudioPlayerControls() {
             labelRenderer={false}
           />
         </div>
-        <Button minimal={true} icon="volume-up" onClick={handleVolumeFull} />
+        <ActionIcon variant="subtle" color="gray" onClick={handleVolumeFull}>
+          <VolumeUp />
+        </ActionIcon>
       </ControlGroup>
     </div>
   );

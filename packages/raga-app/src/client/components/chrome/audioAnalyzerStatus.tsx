@@ -1,5 +1,6 @@
-import { Button, Popover, Spinner } from "@blueprintjs/core";
-import { Text } from "@mantine/core";
+import { Popover, Spinner } from "@blueprintjs/core";
+import { CaretDown, Tick } from "@blueprintjs/icons";
+import { Button, Text } from "@mantine/core";
 
 import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore } from "../../store/appStore";
@@ -27,13 +28,14 @@ export default function AudioAnalyzerStatus() {
         backdropProps={{ className: commonStyles.popoverBackdrop }}
       >
         <Button
-          small={true}
-          minimal={true}
-          text={status === "busy" ? "Busy…" : "Ready"}
-          icon={status === "busy" ? <Spinner size={12} /> : "tick"}
-          rightIcon="caret-down"
-          intent={status === "busy" ? "success" : "primary"}
-        />
+          variant="subtle"
+          size="compact-sm"
+          leftSection={status === "busy" ? <Spinner size={12} /> : <Tick />}
+          rightSection={<CaretDown />}
+          color={status === "busy" ? "green" : "blue"}
+        >
+          {status === "busy" ? "Busy…" : "Ready"}
+        </Button>
       </Popover>
     </div>
   );

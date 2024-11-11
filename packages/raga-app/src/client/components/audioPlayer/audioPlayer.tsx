@@ -1,4 +1,6 @@
-import { Button, Classes, NonIdealState } from "@blueprintjs/core";
+import { Classes, NonIdealState } from "@blueprintjs/core";
+import { Play } from "@blueprintjs/icons";
+import { Button } from "@mantine/core";
 import { lazy, Suspense } from "react";
 
 import { useSelectedTrackFileURL } from "../../hooks";
@@ -50,13 +52,8 @@ function StartAudioFilesServerButton() {
   const startAudioFilesServer = appStore.use.startAudioFilesServer();
 
   return (
-    <Button
-      outlined={true}
-      ellipsizeText={true}
-      intent="primary"
-      text={`Start serving files from ${audioFilesRootFolder}`}
-      icon="play"
-      onClick={startAudioFilesServer}
-    />
+    <Button variant="outline" leftSection={<Play />} onClick={startAudioFilesServer}>
+      Start serving files from {audioFilesRootFolder}
+    </Button>
   );
 }

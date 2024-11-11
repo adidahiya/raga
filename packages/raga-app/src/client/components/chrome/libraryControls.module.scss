@@ -16,6 +16,16 @@
   padding: 10px;
 }
 
+.buttonNoRightRadius {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.buttonNoLeftRadius {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
 $inputWidth: 400px;
 
 .outputFilepath {

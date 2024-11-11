@@ -1,14 +1,13 @@
 import {
   AnchorButton,
-  Button,
-  ButtonGroup,
   ControlGroup,
   FormGroup,
   InputGroup,
   Popover,
   Tooltip,
 } from "@blueprintjs/core";
-import { Text } from "@mantine/core";
+import { CaretDown, Error, Tick, Time } from "@blueprintjs/icons";
+import { Button, ButtonGroup, Text } from "@mantine/core";
 import { run } from "effection";
 import { useCallback } from "react";
 import { useInterval } from "usehooks-ts";
@@ -61,15 +60,13 @@ export default function AudioFilesServerControls() {
           ? "Running"
           : "Not running";
   const statusIcon =
-    status === "failed"
-      ? "error"
-      : status === "starting"
-        ? "time"
-        : status === "started"
-          ? "tick"
-          : undefined;
-  const statusIntent =
-    status === "failed" ? "danger" : status === "started" ? "success" : undefined;
+    status === "failed" ? (
+      <Error />
+    ) : status === "starting" ? (
+      <Time />
+    ) : status === "started" ? (
+      <Tick />
+    ) : undefined;
 
   return (
     <div className={styles.container}>
@@ -83,13 +80,14 @@ export default function AudioFilesServerControls() {
         backdropProps={{ className: commonStyles.popoverBackdrop }}
       >
         <Button
-          small={true}
-          minimal={true}
-          text={statusText}
-          icon={statusIcon}
-          rightIcon="caret-down"
-          intent={statusIntent}
-        />
+          variant="subtle"
+          size="compact-sm"
+          leftSection={statusIcon}
+          rightSection={<CaretDown />}
+          color={status === "failed" ? "red" : status === "started" ? "green" : "blue"}
+        >
+          {statusText}
+        </Button>
       </Popover>
     </div>
   );

@@ -1,13 +1,6 @@
-import {
-  Button,
-  Divider,
-  FormGroup,
-  InputGroup,
-  Popover,
-  SegmentedControl,
-} from "@blueprintjs/core";
-import { Tick } from "@blueprintjs/icons";
-import { useMantineColorScheme, type MantineColorScheme } from "@mantine/core";
+import { Divider, FormGroup, InputGroup, Popover, SegmentedControl } from "@blueprintjs/core";
+import { CaretDown, Cog, Tick } from "@blueprintjs/icons";
+import { Button, type MantineColorScheme, useMantineColorScheme } from "@mantine/core";
 import { useCallback, useState } from "react";
 
 import commonStyles from "../../common/commonStyles.module.scss";
@@ -37,7 +30,15 @@ export default function UserSettingsDropdown() {
         placement="bottom"
         shouldReturnFocusOnClose={true}
       >
-        <Button small={true} minimal={true} text="Settings" icon="cog" rightIcon="caret-down" />
+        <Button
+          size="compact-sm"
+          color="gray"
+          variant="subtle"
+          leftSection={<Cog />}
+          rightSection={<CaretDown />}
+        >
+          Settings
+        </Button>
       </Popover>
     </div>
   );

@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Button, Slider, Tooltip } from "@blueprintjs/core";
+import { Slider, Tooltip } from "@blueprintjs/core";
 import { CaretLeft } from "@blueprintjs/icons";
-import { Text } from "@mantine/core";
+import { ActionIcon, Text } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "radash";
@@ -54,17 +54,17 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
         hoverOpenDelay={500}
         placement="bottom"
       >
-        <Button
+        <ActionIcon
           className={styles.tempoSliderToggleButton}
-          outlined={true}
-          small={true}
-          icon={
-            <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
-              <CaretLeft />
-            </motion.span>
-          }
+          variant="outline"
+          color="gray"
+          size="sm"
           onClick={toggleTempoSlider}
-        />
+        >
+          <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
+            <CaretLeft />
+          </motion.span>
+        </ActionIcon>
       </Tooltip>
       <Text component="span" c="dimmed">
         BPM:{" "}

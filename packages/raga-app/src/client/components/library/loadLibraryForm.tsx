@@ -1,5 +1,6 @@
-import { Button, FileInput, FormGroup, Menu, MenuItem } from "@blueprintjs/core";
-import { Text } from "@mantine/core";
+import { FileInput, FormGroup, Menu, MenuItem } from "@blueprintjs/core";
+import { Cross } from "@blueprintjs/icons";
+import { Button, Text } from "@mantine/core";
 import classNames from "classnames";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -98,12 +99,14 @@ function MaybeRecentlyUsedLibrariesSection() {
         </Menu>
         <div className={styles.clearRecent}>
           <Button
-            minimal={true}
+            size="compact-sm"
+            color="gray"
+            variant="subtle"
             onClick={handleClear}
-            rightIcon="cross"
-            small={true}
-            text="Clear all recent libraries"
-          />
+            rightSection={<Cross />}
+          >
+            Clear all recent libraries
+          </Button>
         </div>
       </FormGroup>
     </>

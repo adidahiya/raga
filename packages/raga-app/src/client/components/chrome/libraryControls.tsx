@@ -1,17 +1,16 @@
 import {
-  Button,
-  ButtonGroup,
   Classes,
   Divider,
   FileInput,
   FormGroup,
-  type IconName,
   Menu,
   MenuDivider,
   MenuItem,
   Popover,
   Tooltip,
 } from "@blueprintjs/core";
+import { CaretDown, Error, Export, Tick } from "@blueprintjs/icons";
+import { Button, ButtonGroup } from "@mantine/core";
 import classNames from "classnames";
 import { useCallback } from "react";
 
@@ -129,11 +128,7 @@ export default function LibraryControls() {
     </Menu>
   );
 
-  const statusText = isLibraryLoaded ? "Loaded" : "Not loaded";
-  const statusIcon: IconName = isLibraryLoaded ? "tick" : "error";
-  const statusIntent = isLibraryLoaded ? "success" : "none";
   const canWrite = libraryWriteState === "ready" && libraryOutputFilepath !== undefined;
-  const libraryOutputIntent = libraryWriteState === "none" ? "none" : "primary";
 
   return (
     <div className={styles.container}>
@@ -146,13 +141,14 @@ export default function LibraryControls() {
           backdropProps={{ className: commonStyles.popoverBackdrop }}
         >
           <Button
-            small={true}
-            minimal={true}
-            text={statusText}
-            icon={statusIcon}
-            rightIcon="caret-down"
-            intent={statusIntent}
-          />
+            variant="subtle"
+            size="compact-sm"
+            leftSection={isLibraryLoaded ? <Tick /> : <Error />}
+            rightSection={<CaretDown />}
+            color={isLibraryLoaded ? "green" : "blue"}
+          >
+            {isLibraryLoaded ? "Loaded" : "Not loaded"}
+          </Button>
         </Popover>
         <Divider className={styles.divider} />
 
@@ -170,14 +166,15 @@ export default function LibraryControls() {
           }
         >
           <Button
-            icon="export"
-            small={true}
+            className={styles.buttonNoRightRadius}
+            size="compact-sm"
+            leftSection={<Export />}
             disabled={!canWrite}
             loading={libraryWriteState === "busy"}
-            intent={libraryOutputIntent}
             onClick={handleWriteModifiedLibrary}
-            text="Export"
-          />
+          >
+            Export
+          </Button>
         </Tooltip>
         <Popover
           placement="bottom-end"
@@ -185,7 +182,13 @@ export default function LibraryControls() {
           hasBackdrop={true}
           backdropProps={{ className: commonStyles.popoverBackdrop }}
         >
-          <Button rightIcon="caret-down" small={true} intent={libraryOutputIntent} />
+          <Button
+            className={styles.buttonNoLeftRadius}
+            size="compact-sm"
+            color={libraryWriteState === "none" ? "gray" : "blue"}
+          >
+            <CaretDown />
+          </Button>
         </Popover>
       </ButtonGroup>
     </div>

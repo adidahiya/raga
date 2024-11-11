@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Button } from "@blueprintjs/core";
+import { Button } from "@mantine/core";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -26,11 +26,13 @@ export default function FetchDiscogsGenreButton({ trackDef }: { trackDef: TrackD
   return (
     <Button
       className={styles.smallOutlinedButton}
-      icon="plus"
       onClick={handleFetchDiscogsGenre}
-      outlined={true}
-      small={true}
-      text="Fetch"
-    />
+      variant="outline"
+      color="gray"
+      size="compact-sm"
+      fullWidth={true}
+    >
+      Fetch
+    </Button>
   );
 }

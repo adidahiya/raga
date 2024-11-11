@@ -1,4 +1,5 @@
-import { Button, InputGroup, Spinner } from "@blueprintjs/core";
+import { InputGroup, Spinner } from "@blueprintjs/core";
+import { Button } from "@mantine/core";
 import { Text } from "@mantine/core";
 import classNames from "classnames";
 import type { Operation } from "effection";
@@ -96,11 +97,13 @@ export default function EditableOnHover<T extends string | number>({
         {showGradient && <div className={styles.editButtonGradient} />}
         <Button
           className={styles.editButton}
-          minimal={true}
-          text="Edit"
+          size="compact-sm"
+          color="gray"
+          variant="subtle"
           onClick={handleEditClick}
-          small={true}
-        />
+        >
+          Edit
+        </Button>
       </div>
     </>
   );

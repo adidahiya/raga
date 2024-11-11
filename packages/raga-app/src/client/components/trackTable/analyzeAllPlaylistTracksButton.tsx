@@ -1,4 +1,5 @@
-import { Button, Tooltip } from "@blueprintjs/core";
+import { Tooltip } from "@blueprintjs/core";
+import { Button } from "@mantine/core";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -34,15 +35,14 @@ export default function AnalyzeAllPlaylistTracksButton({
       <Button
         className={styles.analyzeAllButton}
         disabled={buttonDisabled}
-        ellipsizeText={true}
-        fill={true}
-        intent="primary"
+        variant="subtle"
+        size="compact-sm"
+        fullWidth={true}
         loading={analyzerStatus === "busy"}
-        minimal={true}
         onClick={handleAnalyzeClick}
-        small={true}
-        text="Analyze all"
-      />
+      >
+        Analyze all
+      </Button>
     </Tooltip>
   );
 }
