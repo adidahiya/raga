@@ -1,5 +1,6 @@
 import { Colors } from "@blueprintjs/colors";
-import { NonIdealState, ProgressBar } from "@blueprintjs/core";
+import { NonIdealState } from "@blueprintjs/core";
+import { Progress } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import WaveSurfer from "wavesurfer.js";
@@ -68,10 +69,12 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
               audioFilesConverterIsBusy ? "Converting AIFF to MP3..." : "Loading track audio..."
             }
             action={
-              <ProgressBar
+              <Progress
                 className={styles.progressBar}
-                value={audioFilesConverterIsBusy ? undefined : loadingPercentage / 100}
-                intent="primary"
+                size="sm"
+                color="blue"
+                value={audioFilesConverterIsBusy ? 100 : loadingPercentage}
+                animated={true}
               />
             }
           />

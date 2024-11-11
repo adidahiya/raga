@@ -1,5 +1,5 @@
-import { NonIdealState, ProgressBar } from "@blueprintjs/core";
-import { Box, Text } from "@mantine/core";
+import { NonIdealState } from "@blueprintjs/core";
+import { Box, Progress, Text } from "@mantine/core";
 import classNames from "classnames";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
@@ -39,7 +39,7 @@ export default function LibraryView() {
         <NonIdealState
           title="Loading Swinsian library..."
           icon="music"
-          action={<ProgressBar intent="primary" />}
+          action={<Progress size="sm" color="blue" animated={true} value={100} />}
         />
       ) : libraryState === "error" ? (
         <NonIdealState title="Error loading Swinsian library" icon="error" />

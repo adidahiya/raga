@@ -26,8 +26,14 @@
   }
 }
 
-.tempoSlider {
+.tempoSliderContainer {
+  padding: 5px;
+  padding-bottom: 10px;
   transform-origin: right center;
+}
+
+.tempoSlider {
+  width: 200px;
 }
 
 .tempoSliderToggleButton {

@@ -1,5 +1,5 @@
-import { InputGroup, Spinner } from "@blueprintjs/core";
-import { Button } from "@mantine/core";
+import { InputGroup } from "@blueprintjs/core";
+import { Button, Loader } from "@mantine/core";
 import { Text } from "@mantine/core";
 import classNames from "classnames";
 import type { Operation } from "effection";
@@ -118,7 +118,7 @@ export default function EditableOnHover<T extends string | number>({
         [styles.showGradient]: showGradient,
       })}
     >
-      {isLoading ? <Spinner className={styles.spinner} size={16} /> : valueAndEditableContent}
+      {isLoading ? <Loader className={styles.spinner} size="xs" /> : valueAndEditableContent}
     </div>
   );
 }

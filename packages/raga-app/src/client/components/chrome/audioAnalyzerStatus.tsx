@@ -1,5 +1,5 @@
-import { Popover, Spinner } from "@blueprintjs/core";
-import { CaretDown, Tick } from "@blueprintjs/icons";
+import { Popover } from "@blueprintjs/core";
+import { Blank, CaretDown, Tick } from "@blueprintjs/icons";
 import { Button, Text } from "@mantine/core";
 
 import commonStyles from "../../common/commonStyles.module.scss";
@@ -30,9 +30,10 @@ export default function AudioAnalyzerStatus() {
         <Button
           variant="subtle"
           size="compact-sm"
-          leftSection={status === "busy" ? <Spinner size={12} /> : <Tick />}
+          loading={status === "busy"}
+          leftSection={status === "busy" ? <Blank /> : <Tick />}
           rightSection={<CaretDown />}
-          color={status === "busy" ? "green" : "blue"}
+          color={status === "busy" ? "blue" : "green"}
         >
           {status === "busy" ? "Busy…" : "Ready"}
         </Button>

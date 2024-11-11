@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Slider, Tooltip } from "@blueprintjs/core";
+import { Tooltip } from "@blueprintjs/core";
 import { CaretLeft } from "@blueprintjs/icons";
-import { ActionIcon, Text } from "@mantine/core";
+import { ActionIcon, Slider, Text } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "radash";
@@ -37,7 +37,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
         <AnimatePresence>
           {isTempoSliderOpen && (
             <motion.div
-              className={styles.tempoSlider}
+              className={styles.tempoSliderContainer}
               initial={{ opacity: 0, scaleX: 0.5 }}
               animate={{ opacity: 1, scaleX: 1 }}
               exit={{ opacity: 0, scaleX: 0.5, transition: { delay: 0, duration: 0.1 } }}
@@ -101,13 +101,19 @@ function TrackTempoSlider() {
 
   return (
     <Slider
+      classNames={{ root: styles.tempoSlider }}
       min={-10}
       max={10}
-      stepSize={0.1}
-      labelRenderer={renderTempoSliderLabel}
-      labelValues={[-10, 0, 10]}
+      step={0.1}
+      label={renderTempoSliderLabel}
+      marks={[
+        { value: -10, label: "-10%" },
+        { value: 0, label: "0%" },
+        { value: 10, label: "10%" },
+      ]}
       value={tempoSliderValue}
       onChange={handleTempoSliderChange}
+      color="gray"
     />
   );
 }
