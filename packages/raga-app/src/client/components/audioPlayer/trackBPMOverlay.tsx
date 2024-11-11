@@ -1,6 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Button, Classes, Slider, Tooltip } from "@blueprintjs/core";
+import { Button, Slider, Tooltip } from "@blueprintjs/core";
 import { CaretLeft } from "@blueprintjs/icons";
+import { Text } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "radash";
@@ -65,7 +66,9 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
           onClick={toggleTempoSlider}
         />
       </Tooltip>
-      <span className={Classes.TEXT_MUTED}>BPM: </span>
+      <Text component="span" c="dimmed">
+        BPM:{" "}
+      </Text>
       {trackDef.BPM !== undefined ? (
         <span
           className={classNames(styles.bpmValue, {

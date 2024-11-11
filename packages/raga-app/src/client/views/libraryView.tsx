@@ -1,4 +1,5 @@
-import { Card, NonIdealState, ProgressBar, Text } from "@blueprintjs/core";
+import { NonIdealState, ProgressBar } from "@blueprintjs/core";
+import { Box, Text } from "@mantine/core";
 import classNames from "classnames";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
@@ -27,7 +28,7 @@ export default function LibraryView() {
   );
 
   return (
-    <Card className={styles.container}>
+    <Box className={styles.container}>
       {libraryState === "none" ? (
         <NonIdealState
           title="Select a Swinsian library"
@@ -47,7 +48,7 @@ export default function LibraryView() {
           <Library />
         </div>
       )}
-    </Card>
+    </Box>
   );
 }
 
@@ -94,7 +95,7 @@ function LibrarySidebarFooter() {
 
   return (
     <div className={styles.librarySidebarFooter}>
-      <Text ellipsize={true}>
+      <Text component="span" truncate={true}>
         Total # tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}
       </Text>
     </div>

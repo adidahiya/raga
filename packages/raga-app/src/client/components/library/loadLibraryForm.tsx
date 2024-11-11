@@ -1,4 +1,5 @@
-import { Button, Classes, FileInput, FormGroup, Menu, MenuItem } from "@blueprintjs/core";
+import { Button, FileInput, FormGroup, Menu, MenuItem } from "@blueprintjs/core";
+import { Text } from "@mantine/core";
 import classNames from "classnames";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -77,7 +78,11 @@ function MaybeRecentlyUsedLibrariesSection() {
       <div className={styles.separator}>or</div>
       <FormGroup
         className={styles.recentLibrariesForm}
-        label={<span className={Classes.TEXT_MUTED}>Use a recent library</span>}
+        label={
+          <Text component="span" c="dimmed">
+            Use a recent library
+          </Text>
+        }
       >
         <Menu className={styles.recentLibrariesMenu}>
           {Array.from(previouslyUsedLibaries).map(({ filePath }) => (
@@ -98,7 +103,6 @@ function MaybeRecentlyUsedLibrariesSection() {
             rightIcon="cross"
             small={true}
             text="Clear all recent libraries"
-            textClassName={Classes.TEXT_MUTED}
           />
         </div>
       </FormGroup>

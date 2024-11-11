@@ -1,4 +1,5 @@
-import { Button, Classes, InputGroup, Spinner } from "@blueprintjs/core";
+import { Button, InputGroup, Spinner } from "@blueprintjs/core";
+import { Text } from "@mantine/core";
 import classNames from "classnames";
 import type { Operation } from "effection";
 import { useCallback, useRef, useState } from "react";
@@ -77,13 +78,9 @@ export default function EditableOnHover<T extends string | number>({
 
   const valueAndEditableContent = (
     <>
-      <div
-        className={classNames(styles.value, {
-          [Classes.TEXT_MUTED]: value == null,
-        })}
-      >
+      <Text component="div" c={value == null ? "dimmed" : undefined} className={styles.value}>
         {value ?? placeholder}
-      </div>
+      </Text>
 
       <div className={styles.editInput}>
         <InputGroup

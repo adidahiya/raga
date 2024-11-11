@@ -2,14 +2,13 @@ import {
   AnchorButton,
   Button,
   ButtonGroup,
-  Classes,
   ControlGroup,
   FormGroup,
   InputGroup,
   Popover,
   Tooltip,
 } from "@blueprintjs/core";
-import classNames from "classnames";
+import { Text } from "@mantine/core";
 import { run } from "effection";
 import { useCallback } from "react";
 import { useInterval } from "usehooks-ts";
@@ -74,7 +73,9 @@ export default function AudioFilesServerControls() {
 
   return (
     <div className={styles.container}>
-      <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>Audio server</span>
+      <Text component="span" c="dimmed" size="sm">
+        Audio server
+      </Text>
       <Popover
         placement="bottom"
         content={serverOptionsPopover}

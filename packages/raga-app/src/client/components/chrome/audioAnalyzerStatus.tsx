@@ -1,5 +1,5 @@
-import { Button, Classes, Popover, Spinner } from "@blueprintjs/core";
-import classNames from "classnames";
+import { Button, Popover, Spinner } from "@blueprintjs/core";
+import { Text } from "@mantine/core";
 
 import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore } from "../../store/appStore";
@@ -17,7 +17,9 @@ export default function AudioAnalyzerStatus() {
 
   return (
     <div className={styles.container}>
-      <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>Analyzer</span>
+      <Text component="span" c="dimmed" size="sm">
+        Analyzer
+      </Text>
       <Popover
         placement="bottom"
         content={statusPopover}

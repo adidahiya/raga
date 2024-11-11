@@ -137,7 +137,7 @@ export default function LibraryControls() {
 
   return (
     <div className={styles.container}>
-      <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>Library</span>
+      <span className={classNames(Classes.TEXT_SMALL)}>Library</span>
       <ButtonGroup>
         <Popover
           placement="bottom-end"

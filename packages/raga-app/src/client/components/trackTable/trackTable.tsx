@@ -1,6 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Colors, NonIdealState, Tag, Tooltip } from "@blueprintjs/core";
+import { Colors, NonIdealState, Tag, Tooltip } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
+import { Text } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
@@ -207,7 +208,9 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           pinLeft={true}
           sortKey={TrackPropertySortKey.INDEX}
         >
-          <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>#</span>
+          <Text component="span" c="dimmed" size="sm">
+            #
+          </Text>
         </HeaderCellSort>
         <HeaderCell
           className={styles.headerCell}

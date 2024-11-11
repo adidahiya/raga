@@ -1,7 +1,7 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { Button, Classes, Collapse } from "@blueprintjs/core";
+import { Button, Collapse } from "@blueprintjs/core";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import classNames from "classnames";
+import { Text } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -38,9 +38,9 @@ export default function PlaylistTable() {
         <div className={styles.headerContent}>
           <span>
             Playlists{" "}
-            <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+            <Text component="span" c="dimmed" size="sm">
               ({formatStatNumber(numTotalPlaylists)})
-            </span>
+            </Text>
           </span>
           <Button
             minimal={true}

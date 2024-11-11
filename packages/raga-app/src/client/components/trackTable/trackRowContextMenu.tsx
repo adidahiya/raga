@@ -1,6 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Menu, MenuDivider, MenuItem, Text } from "@blueprintjs/core";
+import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { Property } from "@blueprintjs/icons";
+import { Text } from "@mantine/core";
 import { useCallback, useEffect, useRef } from "react";
 import { Roarr as log } from "roarr";
 
@@ -48,7 +49,7 @@ export default function TrackRowContextMenu({ track }: { track: TrackDefinition 
 
   return (
     <Menu tabIndex={0} ulRef={containerElement}>
-      <Text className={styles.trackName} ellipsize={true}>
+      <Text component="span" className={styles.trackName} truncate={true}>
         <em>{track.Artist}</em>
         {"  "}&ndash;{"  "}
         <em>{track.Name}</em>
