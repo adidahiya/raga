@@ -7,6 +7,7 @@ import {
   SegmentedControl,
 } from "@blueprintjs/core";
 import { Tick } from "@blueprintjs/icons";
+import { useMantineColorScheme, type MantineColorScheme } from "@mantine/core";
 import { useCallback, useState } from "react";
 
 import commonStyles from "../../common/commonStyles.module.scss";
@@ -118,10 +119,10 @@ function UIFontFormGroup() {
   );
 }
 
-const THEME_OPTIONS = [
+const THEME_OPTIONS: { label: string; value: MantineColorScheme }[] = [
   {
     label: "System",
-    value: "system",
+    value: "auto",
   },
   {
     label: "Light",
@@ -134,13 +135,15 @@ const THEME_OPTIONS = [
 ];
 
 function ThemeFormGroup() {
+  const { setColorScheme } = useMantineColorScheme();
   const userThemePreference = appStore.use.userThemePreference();
   const setUserThemePreference = appStore.use.setUserThemePreference();
   const handleValueChange = useCallback(
     (value: string) => {
-      setUserThemePreference(value as "light" | "dark" | "system");
+      setUserThemePreference(value as MantineColorScheme);
+      setColorScheme(value as MantineColorScheme);
     },
-    [setUserThemePreference],
+    [setUserThemePreference, setColorScheme],
   );
 
   return (
