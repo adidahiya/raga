@@ -54,24 +54,14 @@ $width-wide: 500px;
 
 .dropzone {
   align-items: center;
-  background: bp.$light-gray3;
   border-radius: bp.$pt-border-radius;
   border: dashed 1px bp.$pt-divider-black;
   display: flex;
   justify-content: center;
   padding: 20px 10px;
 
-  &.active {
-    background: bp.$light-gray2;
-  }
-
   :global(.#{bp.$ns}-dark) & {
-    background-color: bp.$dark-gray3;
     border-color: 1px bp.$pt-dark-divider-white;
-
-    &.active {
-      background-color: bp.$dark-gray2;
-    }
   }
 }
 

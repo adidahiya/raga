@@ -1,4 +1,5 @@
-import { Divider, H4, OverlayToaster } from "@blueprintjs/core";
+import { H4, OverlayToaster } from "@blueprintjs/core";
+import { Divider, Group } from "@mantine/core";
 import { call } from "effection";
 import { createRoot } from "react-dom/client";
 
@@ -40,27 +41,27 @@ export default function AppChrome() {
   }, []);
 
   return (
-    <div className={styles.appChrome}>
-      <div className={styles.appChromeLeft}>
+    <Group className={styles.appChrome} justify="space-between" wrap="nowrap">
+      <Group className={styles.appChromeLeft} wrap="nowrap" preventGrowOverflow={true} gap="sm">
         <H4>Raga</H4>
         {isLibraryLoaded && (
           <>
-            <Divider />
+            <Divider orientation="vertical" />
             <AudioFilesServerControls />
           </>
         )}
         {audioFilesServerStatus === "started" && (
           <>
-            <Divider />
+            <Divider orientation="vertical" />
             <AudioAnalyzerStatus />
           </>
         )}
-        <Divider />
+        <Divider orientation="vertical" />
         <UserSettingsDropdown />
-      </div>
-      <div className={styles.appChromeRight}>
+      </Group>
+      <Group className={styles.appChromeRight}>
         <LibraryControls />
-      </div>
-    </div>
+      </Group>
+    </Group>
   );
 }

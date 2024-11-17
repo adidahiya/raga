@@ -10,3 +10,8 @@
 .popover {
   padding: 10px;
 }
+
+.buttons {
+  // account for text input label height
+  margin-top: calc(var(--mantine-line-height) * 1em);
+}

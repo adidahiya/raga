@@ -6,10 +6,8 @@
 
 .editInput {
   display: none;
-
-  :global(.#{bp.$ns}-input-group.#{bp.$ns}-small) input {
-    font-size: 14px;
-  }
+  --input-height-compact-sm: 24px;
+  --mantine-font-size-sm: 14px;
 }
 
 .editButtonContainer {

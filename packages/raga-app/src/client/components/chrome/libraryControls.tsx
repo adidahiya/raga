@@ -1,16 +1,6 @@
-import {
-  Classes,
-  Divider,
-  FileInput,
-  FormGroup,
-  Menu,
-  MenuDivider,
-  MenuItem,
-  Popover,
-  Tooltip,
-} from "@blueprintjs/core";
+import { Classes, Menu, MenuDivider, MenuItem, Popover, Tooltip } from "@blueprintjs/core";
 import { CaretDown, Error, Export, Tick } from "@blueprintjs/icons";
-import { Button, ButtonGroup } from "@mantine/core";
+import { Button, ButtonGroup, Divider, FileInput, Group, Stack, Text } from "@mantine/core";
 import classNames from "classnames";
 import { useCallback } from "react";
 
@@ -98,20 +88,25 @@ export default function LibraryControls() {
   );
 
   const libraryOutputMenu = (
-    <Menu>
-      <FormGroup
-        label="Output file"
-        className={styles.outputFilepath}
-        subLabel="Location of the Music.app/Rekordbox compatible XML file"
-      >
-        <FileInput text={libraryOutputFilepath} onInputChange={handleOutputFilepathInputChange} />
-      </FormGroup>
-      <MenuItem
-        icon="export"
-        text="Export library for Rekordbox"
-        onClick={handleWriteModifiedLibrary}
-      />
-    </Menu>
+    <Stack gap="xs" className={styles.popoverContent}>
+      <Stack gap="xs">
+        <Text className={styles.outputFilepath}>Output file</Text>
+        <FileInput
+          label="Location of the Music.app/Rekordbox compatible XML file"
+          placeholder={libraryOutputFilepath}
+          fileInputProps={{ onChange: handleOutputFilepathInputChange }}
+          rightSection={<Button size="compact-sm">Browse</Button>}
+          rightSectionWidth={70}
+        />
+      </Stack>
+      <Menu>
+        <MenuItem
+          icon="export"
+          text="Export library for Rekordbox"
+          onClick={handleWriteModifiedLibrary}
+        />
+      </Menu>
+    </Stack>
   );
 
   const libraryInputMenu = (
@@ -131,9 +126,9 @@ export default function LibraryControls() {
   const canWrite = libraryWriteState === "ready" && libraryOutputFilepath !== undefined;
 
   return (
-    <div className={styles.container}>
+    <Group className={styles.container} gap="xs">
       <span className={classNames(Classes.TEXT_SMALL)}>Library</span>
-      <ButtonGroup>
+      <Group gap="sm">
         <Popover
           placement="bottom-end"
           content={libraryInputMenu}
@@ -150,47 +145,50 @@ export default function LibraryControls() {
             {isLibraryLoaded ? "Loaded" : "Not loaded"}
           </Button>
         </Popover>
-        <Divider className={styles.divider} />
 
-        <Tooltip
-          placement="bottom-end"
-          compact={true}
-          content={
-            libraryWriteState === "busy"
-              ? "Writing..."
-              : canWrite
-                ? "Write modified library to disk"
-                : libraryWriteState === "ready"
-                  ? "Need to set output file"
-                  : "No changes to write to disk"
-          }
-        >
-          <Button
-            className={styles.buttonNoRightRadius}
-            size="compact-sm"
-            leftSection={<Export />}
-            disabled={!canWrite}
-            loading={libraryWriteState === "busy"}
-            onClick={handleWriteModifiedLibrary}
+        <Divider orientation="vertical" />
+
+        <ButtonGroup>
+          <Tooltip
+            placement="bottom-end"
+            compact={true}
+            content={
+              libraryWriteState === "busy"
+                ? "Writing..."
+                : canWrite
+                  ? "Write modified library to disk"
+                  : libraryWriteState === "ready"
+                    ? "Need to set output file"
+                    : "No changes to write to disk"
+            }
           >
-            Export
-          </Button>
-        </Tooltip>
-        <Popover
-          placement="bottom-end"
-          content={libraryOutputMenu}
-          hasBackdrop={true}
-          backdropProps={{ className: commonStyles.popoverBackdrop }}
-        >
-          <Button
-            className={styles.buttonNoLeftRadius}
-            size="compact-sm"
-            color={libraryWriteState === "none" ? "gray" : "blue"}
+            <Button
+              className={styles.buttonNoRightRadius}
+              size="compact-sm"
+              leftSection={<Export />}
+              disabled={!canWrite}
+              loading={libraryWriteState === "busy"}
+              onClick={handleWriteModifiedLibrary}
+            >
+              Export
+            </Button>
+          </Tooltip>
+          <Popover
+            placement="bottom-end"
+            content={libraryOutputMenu}
+            hasBackdrop={true}
+            backdropProps={{ className: commonStyles.popoverBackdrop }}
           >
-            <CaretDown />
-          </Button>
-        </Popover>
-      </ButtonGroup>
-    </div>
+            <Button
+              className={styles.buttonNoLeftRadius}
+              size="compact-sm"
+              color={libraryWriteState === "none" ? "gray" : "blue"}
+            >
+              <CaretDown />
+            </Button>
+          </Popover>
+        </ButtonGroup>
+      </Group>
+    </Group>
   );
 }

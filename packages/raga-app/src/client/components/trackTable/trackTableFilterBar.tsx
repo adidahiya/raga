@@ -1,6 +1,6 @@
-import { Classes, Collapse, FormGroup, InputGroup } from "@blueprintjs/core";
+import { Collapse } from "@blueprintjs/core";
 import { ChevronUp } from "@blueprintjs/icons";
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Group, Text, TextInput } from "@mantine/core";
 import { useCallback, useEffect, useRef } from "react";
 
 import { appStore } from "../../store/appStore";
@@ -38,16 +38,20 @@ export function TrackTableFilterBar({ query, onClose, onQueryChange }: TrackTabl
 
   return (
     <Collapse isOpen={isVisible} className={styles.tableFilter}>
-      <FormGroup className={Classes.TEXT_SMALL} inline={true} label="Filter table">
-        <InputGroup
-          inputRef={inputElement}
+      <Group>
+        <Text size="sm">Filter table</Text>
+        <TextInput
+          className={styles.filterInput}
+          w={300}
+          size="compact-sm"
+          radius="xl"
+          ref={inputElement}
           type="search"
-          small={true}
           placeholder="Search track names, artists, albums..."
           value={query}
           onChange={handleInputChange}
         />
-      </FormGroup>
+      </Group>
       <ActionIcon onClick={hideTableFilterBar} size="compact-sm" color="gray" variant="subtle">
         <ChevronUp />
       </ActionIcon>

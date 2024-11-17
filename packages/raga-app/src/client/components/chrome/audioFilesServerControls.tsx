@@ -1,13 +1,6 @@
-import {
-  AnchorButton,
-  ControlGroup,
-  FormGroup,
-  InputGroup,
-  Popover,
-  Tooltip,
-} from "@blueprintjs/core";
-import { CaretDown, Error, Tick, Time } from "@blueprintjs/icons";
-import { Button, ButtonGroup, Text } from "@mantine/core";
+import { Popover, Tooltip } from "@blueprintjs/core";
+import { CaretDown, CrossCircle, Error, Play, Refresh, Tick, Time } from "@blueprintjs/icons";
+import { ActionIcon, Box, Button, ButtonGroup, Group, Text, TextInput } from "@mantine/core";
 import { run } from "effection";
 import { useCallback } from "react";
 import { useInterval } from "usehooks-ts";
@@ -37,17 +30,19 @@ export default function AudioFilesServerControls() {
 
   const serverOptionsPopover = (
     <div className={styles.popover}>
-      <FormGroup label="Root folder">
-        <ControlGroup fill={true}>
-          <InputGroup
-            value={rootFolder}
-            onChange={handleRootFolderInputChange}
-            intent={status === "failed" ? "danger" : status === "started" ? "success" : undefined}
-            style={{ minWidth: 300 }}
-          />
+      <Group grow={true} gap="xs">
+        <TextInput
+          value={rootFolder}
+          onChange={handleRootFolderInputChange}
+          color={status === "failed" ? "red" : status === "started" ? "green" : undefined}
+          style={{ minWidth: 300 }}
+          size="sm"
+          label="Root folder"
+        />
+        <Box className={styles.buttons}>
           <AudioFilesServerButtons />
-        </ControlGroup>
-      </FormGroup>
+        </Box>
+      </Group>
     </div>
   );
 
@@ -94,9 +89,9 @@ export default function AudioFilesServerControls() {
 }
 
 function AudioFilesServerButtons() {
-  const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
-  const startAudioFilesServer = appStore.use.startAudioFilesServer();
-  const stopAudioFilesServer = appStore.use.stopAudioFilesServer();
+  const status = appStore.use.audioFilesServerStatus();
+  const startServer = appStore.use.startAudioFilesServer();
+  const stopServer = appStore.use.stopAudioFilesServer();
 
   return (
     <ButtonGroup>
@@ -104,31 +99,29 @@ function AudioFilesServerButtons() {
         placement="top"
         compact={true}
         content={
-          audioFilesServerStatus === "started"
+          status === "started"
             ? "Restart audio files server"
-            : audioFilesServerStatus === "failed"
-              ? "Failed to start audio files server"
-              : audioFilesServerStatus === "stopped"
+            : status === "failed"
+              ? "Failed to start audio files server, click to restart"
+              : status === "stopped"
                 ? "Start audio files server"
                 : "Starting audio files server..."
         }
       >
-        <AnchorButton
-          minimal={true}
-          icon={
-            audioFilesServerStatus === "started"
-              ? "refresh"
-              : audioFilesServerStatus === "failed"
-                ? "refresh"
-                : "play"
-          }
-          loading={audioFilesServerStatus === "starting"}
-          onClick={startAudioFilesServer}
-        />
+        <ActionIcon
+          variant="subtle"
+          color={status === "started" ? "blue" : "gray"}
+          loading={status === "starting"}
+          onClick={startServer}
+        >
+          {status === "started" ? <Refresh /> : status === "failed" ? <Refresh /> : <Play />}
+        </ActionIcon>
       </Tooltip>
-      {audioFilesServerStatus === "started" && (
+      {status === "started" && (
         <Tooltip placement="top" compact={true} content="Stop audio files server">
-          <AnchorButton minimal={true} icon="cross-circle" onClick={stopAudioFilesServer} />
+          <ActionIcon variant="subtle" color="red" onClick={stopServer}>
+            <CrossCircle />
+          </ActionIcon>
         </Tooltip>
       )}
     </ButtonGroup>

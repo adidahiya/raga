@@ -14,23 +14,8 @@
       border-color: bp.$pt-dark-divider-white;
     }
   }
+}
 
-  :global(.#{bp.$ns}-form-group.#{bp.$ns}-inline) {
-    flex-basis: 306px;
-
-    :global(.#{bp.$ns}-form-content) {
-      line-height: 20px;
-      flex-basis: 240px;
-    }
-
-    :global(.#{bp.$ns}-label) {
-      line-height: 20px;
-    }
-  }
-
-  :global(.#{bp.$ns}-input-group) {
-    :global(.#{bp.$ns}-input) {
-      height: 20px;
-    }
-  }
+.filterInput input {
+  padding-inline: 5px;
 }

@@ -1,5 +1,4 @@
-import { InputGroup } from "@blueprintjs/core";
-import { Button, Loader } from "@mantine/core";
+import { Button, Loader, TextInput } from "@mantine/core";
 import { Text } from "@mantine/core";
 import classNames from "classnames";
 import type { Operation } from "effection";
@@ -84,13 +83,14 @@ export default function EditableOnHover<T extends string | number>({
       </Text>
 
       <div className={styles.editInput}>
-        <InputGroup
-          small={true}
+        <TextInput
+          size="compact-sm"
+          radius="sm"
           defaultValue={value === undefined ? "" : value.toString()}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          inputRef={inputRef}
+          ref={inputRef}
         />
       </div>
       <div className={styles.editButtonContainer}>

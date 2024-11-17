@@ -1,6 +1,6 @@
-import { FileInput, FormGroup, Menu, MenuItem } from "@blueprintjs/core";
+import { Menu, MenuItem } from "@blueprintjs/core";
 import { Cross } from "@blueprintjs/icons";
-import { Button, Text } from "@mantine/core";
+import { Box, Button, Divider, Fieldset, FileInput, Stack } from "@mantine/core";
 import classNames from "classnames";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -41,26 +41,25 @@ export default function LoadLibraryForm() {
   });
 
   return (
-    <div className={styles.loadLibraryForm}>
-      <FormGroup>
-        <FileInput
-          className={styles.fileInput}
-          text="Select XML file"
-          fill={true}
-          onInputChange={handleInputChange}
-          inputProps={XML_INPUT_PROPS}
-        />
-        <div className={styles.separator}>or</div>
-        <div
-          className={classNames(styles.dropzone, { [styles.active]: isDragActive })}
-          {...getRootProps()}
-        >
-          <input {...getInputProps()} />
-          {isDragActive ? <span>Drop XML file here...</span> : <span>Drag and drop XML file</span>}
-        </div>
-      </FormGroup>
+    <Stack gap="xs">
+      <FileInput
+        className={styles.fileInput}
+        placeholder="Select XML file"
+        fileInputProps={{ ...XML_INPUT_PROPS, onChange: handleInputChange }}
+        rightSection={<Button size="compact-sm">Browse</Button>}
+        rightSectionWidth={70}
+      />
+      <Divider orientation="horizontal" label="or" />
+      <Box
+        className={classNames(styles.dropzone, { [styles.active]: isDragActive })}
+        bg={isDragActive ? "blue.1" : "gray.1"}
+        {...getRootProps()}
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? <span>Drop XML file here...</span> : <span>Drag and drop XML file</span>}
+      </Box>
       <MaybeRecentlyUsedLibrariesSection />
-    </div>
+    </Stack>
   );
 }
 
@@ -76,15 +75,8 @@ function MaybeRecentlyUsedLibrariesSection() {
 
   return (
     <>
-      <div className={styles.separator}>or</div>
-      <FormGroup
-        className={styles.recentLibrariesForm}
-        label={
-          <Text component="span" c="dimmed">
-            Use a recent library
-          </Text>
-        }
-      >
+      <Divider orientation="horizontal" label="or" />
+      <Fieldset className={styles.recentLibrariesForm} legend="Use a recent library">
         <Menu className={styles.recentLibrariesMenu}>
           {Array.from(previouslyUsedLibaries).map(({ filePath }) => (
             <MenuItem
@@ -108,7 +100,7 @@ function MaybeRecentlyUsedLibrariesSection() {
             Clear all recent libraries
           </Button>
         </div>
-      </FormGroup>
+      </Fieldset>
     </>
   );
 }
