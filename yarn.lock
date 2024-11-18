@@ -1786,14 +1786,15 @@ __metadata:
   linkType: hard
 
 "@number-flow/react@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@number-flow/react@npm:0.3.0"
+  version: 0.3.4
+  resolution: "@number-flow/react@npm:0.3.4"
   dependencies:
-    number-flow: "npm:0.3.5"
+    esm-env: "npm:^1.1.4"
+    number-flow: "npm:0.3.9"
   peerDependencies:
     react: ^18 || ^19.0.0-rc-915b914b3a-20240515
     react-dom: ^18
-  checksum: 10/b8dc59f92ca4dda96468d3cb3e1776893cb429dd9e94ee2df7c05c3d5999a363e65f89ffff28eef703735e6d07ae74379e326f6537049238fef8192765d7752d
+  checksum: 10/4e6d0063fd2a2f7fe5203b09816366de3833d7ce0a6e0de22ee9fbfb96a4484537eed3e271051af1b3508eb36de02b70cc1d216a3884e40788aead9192d4aeb6
   languageName: node
   linkType: hard
 
@@ -5696,6 +5697,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esm-env@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "esm-env@npm:1.1.4"
+  checksum: 10/cf20982cbcc729c89e5a63e63d6672e2f7fd39fccd6f1d1a12e84dd8468bd8ecb0abc37b1ad8822bd3a3ca26cd8e624c97fd49ab47025c68ea0158643d0e9fdc
+  languageName: node
+  linkType: hard
+
 "espree@npm:^10.0.1, espree@npm:^10.3.0":
   version: 10.3.0
   resolution: "espree@npm:10.3.0"
@@ -9399,10 +9407,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"number-flow@npm:0.3.5":
-  version: 0.3.5
-  resolution: "number-flow@npm:0.3.5"
-  checksum: 10/ed184136446be838c2b8a8c5ac2f51bdfd6f70a94e68e8c224593e7c7ddf4c14f7a79eed3a2604e6050f6df846608f57de0497df2588a14549e287db39fd8683
+"number-flow@npm:0.3.9":
+  version: 0.3.9
+  resolution: "number-flow@npm:0.3.9"
+  dependencies:
+    esm-env: "npm:^1.1.4"
+  checksum: 10/4b0807192f38b7f2588be1eba658ee619c549293561a1bd4407004789eba14c11525b0cb8cbca654ae12ed66da691e8278a19d6c3169a0aa4d313a5a7141afa6
   languageName: node
   linkType: hard
 
