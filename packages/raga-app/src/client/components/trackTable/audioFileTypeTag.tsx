@@ -25,7 +25,6 @@ export default function AudioFileTypeTag({
         fullWidth={true}
         color={isReadyForAnalysis ? undefined : "yellow"}
         variant="light"
-        style={{ textAlign: "center" }}
         {...props}
       >
         {fileType ?? "unknown"}

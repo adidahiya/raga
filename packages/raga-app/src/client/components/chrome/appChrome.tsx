@@ -6,7 +6,6 @@ import { createRoot } from "react-dom/client";
 import { useTaskEffect } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import UserSettingsDropdown from "../settings/userSettingsDropdown";
-import styles from "./appChrome.module.scss";
 import AudioAnalyzerStatus from "./audioAnalyzerStatus";
 import AudioFilesServerControls from "./audioFilesServerControls";
 import LibraryControls from "./libraryControls";
@@ -41,8 +40,8 @@ export default function AppChrome() {
   }, []);
 
   return (
-    <Group className={styles.appChrome} justify="space-between" wrap="nowrap">
-      <Group className={styles.appChromeLeft} wrap="nowrap" preventGrowOverflow={true} gap="sm">
+    <Group mb={5} justify="space-between" wrap="nowrap">
+      <Group h={30} wrap="nowrap" preventGrowOverflow={true} gap="sm">
         <Title order={4}>Raga</Title>
         {isLibraryLoaded && (
           <>
@@ -59,7 +58,7 @@ export default function AppChrome() {
         <Divider orientation="vertical" />
         <UserSettingsDropdown />
       </Group>
-      <Group className={styles.appChromeRight}>
+      <Group>
         <LibraryControls />
       </Group>
     </Group>
