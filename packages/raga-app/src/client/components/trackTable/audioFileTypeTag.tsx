@@ -1,7 +1,8 @@
 import type { AudioFileType } from "@adahiya/raga-lib";
-import { Tag, type TagProps, Tooltip } from "@blueprintjs/core";
+import { Tooltip } from "@blueprintjs/core";
+import { Badge, type BadgeProps } from "@mantine/core";
 
-export interface AudioFileTypeTagProps extends TagProps {
+export interface AudioFileTypeTagProps extends BadgeProps {
   isReadyForAnalysis: boolean;
   fileType: AudioFileType | undefined;
 }
@@ -18,15 +19,17 @@ export default function AudioFileTypeTag({
       fill={true}
       hoverOpenDelay={500}
     >
-      <Tag
-        fill={true}
-        intent={isReadyForAnalysis ? "none" : "warning"}
-        minimal={true}
+      <Badge
+        size="sm"
+        radius="sm"
+        fullWidth={true}
+        color={isReadyForAnalysis ? undefined : "yellow"}
+        variant="light"
         style={{ textAlign: "center" }}
         {...props}
       >
         {fileType ?? "unknown"}
-      </Tag>
+      </Badge>
     </Tooltip>
   );
 }

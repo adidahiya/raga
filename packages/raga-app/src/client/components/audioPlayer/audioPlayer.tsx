@@ -1,12 +1,11 @@
 import { Classes, NonIdealState } from "@blueprintjs/core";
 import { Play } from "@blueprintjs/icons";
-import { Button } from "@mantine/core";
+import { Box, Button, Center } from "@mantine/core";
 import { lazy, Suspense } from "react";
 
 import { useSelectedTrackFileURL } from "../../hooks";
 import useSelectedTrackDef from "../../hooks/useSelectedTrackDef";
 import { appStore } from "../../store/appStore";
-import styles from "./audioPlayer.module.scss";
 import { TrackBPMOverlay } from "./trackBPMOverlay";
 
 // TODO: reconsider if this lazy-loading is worth it...
@@ -19,30 +18,32 @@ export function AudioPlayer() {
   const selectedFileURL = useSelectedTrackFileURL();
   const fallback = <div className={Classes.SKELETON} />;
 
-  return (
-    <div className={styles.container}>
-      {isAudioFilesServerReady ? (
-        hasSelectedTrack ? (
-          <div className={styles.waveformContainer}>
-            <Suspense fallback={fallback}>
-              <AudioWaveform mediaURL={selectedFileURL} />
-            </Suspense>
-            <TrackBPMOverlay trackDef={selectedTrack} />
-          </div>
-        ) : (
-          <NonIdealState
-            className={styles.nonIdealState}
-            description={<em>No track selected</em>}
-          />
-        )
-      ) : (
+  if (!isAudioFilesServerReady) {
+    return (
+      <Center bd={{ base: 1, dark: 0 }} h={90}>
         <NonIdealState
-          className={styles.nonIdealState}
           description="Audio files server is not running"
           action={<StartAudioFilesServerButton />}
         />
-      )}
-    </div>
+      </Center>
+    );
+  }
+
+  if (!hasSelectedTrack) {
+    return (
+      <Center bd={{ base: 1, dark: 0 }} h={90}>
+        <NonIdealState description="No track selected" />
+      </Center>
+    );
+  }
+
+  return (
+    <Box pos="relative" h={90}>
+      <Suspense fallback={fallback}>
+        <AudioWaveform mediaURL={selectedFileURL} />
+      </Suspense>
+      <TrackBPMOverlay trackDef={selectedTrack} />
+    </Box>
   );
 }
 AudioPlayer.displayName = "AudioPlayer";

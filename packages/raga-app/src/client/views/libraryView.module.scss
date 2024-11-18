@@ -2,8 +2,6 @@
 @import "../common/variables";
 
 .container {
-  display: flex;
-  flex-direction: column;
   height: calc(100vh - 50px);
   padding: 0;
 
@@ -15,26 +13,6 @@
 .libraryLoaded {
   height: 100%;
   position: relative;
-}
-
-.library {
-  width: 100%;
-  height: 100%;
-}
-
-.libraryHeader {
-  display: flex;
-  flex-direction: row;
-}
-
-.libraryHeaderSection {
-  :global(.#{bp.$ns}-form-group:not(:last-of-type)) {
-    margin-bottom: 5px;
-  }
-}
-
-.audioPlayer {
-  // empty
 }
 
 .librarySidebar {
@@ -50,7 +28,7 @@
     position: absolute;
     right: 0;
 
-    :global(.#{bp.$ns}-dark) & {
+    :global([data-mantine-color-scheme="dark"]) & {
       border-color: bp.$pt-dark-divider-white;
     }
   }

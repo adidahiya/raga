@@ -1,12 +1,13 @@
 import { NonIdealState } from "@blueprintjs/core";
-import { Box, Progress, Text } from "@mantine/core";
-import classNames from "classnames";
+import { Divider, Group, Paper, Progress, Stack, Text } from "@mantine/core";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
 import { formatStatNumber } from "../../common/format";
 import { AudioPlayer } from "../components/audioPlayer/audioPlayer";
+import { AudioPlayerControls } from "../components/audioPlayer/audioPlayerControls";
+import { AudioPlayerNowPlaying } from "../components/audioPlayer/audioPlayerNowPlaying";
 import { ResizeHandle } from "../components/common";
-import { LibraryHeaderSection, LoadLibraryForm } from "../components/library";
+import { LoadLibraryForm } from "../components/library";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
 import { useMasterPlaylist, useTaskEffect } from "../hooks";
@@ -28,7 +29,7 @@ export default function LibraryView() {
   );
 
   return (
-    <Box className={styles.container}>
+    <Stack className={styles.container} gap={0}>
       {libraryState === "none" ? (
         <NonIdealState
           title="Select a Swinsian library"
@@ -48,7 +49,7 @@ export default function LibraryView() {
           <Library />
         </div>
       )}
-    </Box>
+    </Stack>
   );
 }
 
@@ -56,32 +57,35 @@ function Library() {
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
 
   return (
-    <div className={classNames("flex-column", styles.library)}>
-      <div className={styles.libraryHeader}>
-        <LibraryHeaderSection className={styles.libraryHeaderSection} />
-      </div>
-      <div className={styles.audioPlayer}>
+    <Paper w="100%" h="100%" shadow="sm" withBorder={true} radius="sm">
+      <Stack gap={0} w="100%" h="100%">
+        <Group justify="space-between" p={5}>
+          <AudioPlayerNowPlaying />
+          <AudioPlayerControls />
+        </Group>
+        <Divider orientation="horizontal" />
         <AudioPlayer />
-      </div>
-      <PanelGroup direction="horizontal">
-        <Panel className={styles.librarySidebar} defaultSize={20} minSize={20} maxSize={40}>
-          <PlaylistTable />
-          <LibrarySidebarFooter />
-        </Panel>
-        <ResizeHandle />
-        <Panel minSize={30}>
-          {selectedPlaylistId === undefined ? (
-            <NonIdealState
-              title="Playlist tracks"
-              description="Select a playlist to view tracks"
-              icon="list-detail-view"
-            />
-          ) : (
-            <TrackTable playlistId={selectedPlaylistId} />
-          )}
-        </Panel>
-      </PanelGroup>
-    </div>
+        <Divider orientation="horizontal" />
+        <PanelGroup direction="horizontal">
+          <Panel className={styles.librarySidebar} defaultSize={20} minSize={20} maxSize={40}>
+            <PlaylistTable />
+            <LibrarySidebarFooter />
+          </Panel>
+          <ResizeHandle />
+          <Panel minSize={30}>
+            {selectedPlaylistId === undefined ? (
+              <NonIdealState
+                title="Playlist tracks"
+                description="Select a playlist to view tracks"
+                icon="list-detail-view"
+              />
+            ) : (
+              <TrackTable playlistId={selectedPlaylistId} />
+            )}
+          </Panel>
+        </PanelGroup>
+      </Stack>
+    </Paper>
   );
 }
 LibraryView.displayName = "LibraryView";

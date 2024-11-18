@@ -13,7 +13,7 @@
   }
 }
 
-:global(.#{bp.$ns}-dark) .node {
+:global([data-mantine-color-scheme="dark"]) .node {
   &.selectedPath {
     > :global(.#{bp.$ns}-tree-node-content) {
       background-color: color.adjust(bp.$blue1, $lightness: -15%);

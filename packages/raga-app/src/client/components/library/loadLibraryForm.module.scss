@@ -44,7 +44,7 @@ $width-wide: 500px;
     width: calc(50% - 5rem);
   }
 
-  :global(.#{bp.$ns}-dark) & {
+  :global([data-mantine-color-scheme="dark"]) & {
     &:before,
     &:after {
       background: bp.$pt-dark-divider-white;
@@ -60,7 +60,7 @@ $width-wide: 500px;
   justify-content: center;
   padding: 20px 10px;
 
-  :global(.#{bp.$ns}-dark) & {
+  :global([data-mantine-color-scheme="dark"]) & {
     border-color: 1px bp.$pt-dark-divider-white;
   }
 }

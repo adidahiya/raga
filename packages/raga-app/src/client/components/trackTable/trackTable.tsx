@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
 import { Colors, NonIdealState, Tag, Tooltip } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
-import { Text } from "@mantine/core";
+import { Badge, Stack, Text } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
@@ -166,7 +166,10 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   );
 
   return (
-    <div
+    <Stack
+      w="100%"
+      h="100%"
+      gap={0}
       className={styles.trackTableContainer}
       ref={containerElement}
       onContextMenu={handleContextMenu}
@@ -178,7 +181,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
       />
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
       {contextMenuPopover}
-    </div>
+    </Stack>
   );
 }
 TrackTable.displayName = "TrackTable";
@@ -353,16 +356,16 @@ function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
 
 function TrackFileSourceCell({ track }: { track: TrackDefinition }) {
   const fileSource = getTrackFileSource(track);
-  const intent =
+  const color =
     fileSource === AudioFileSource.BANDCAMP
-      ? "primary"
+      ? "blue"
       : fileSource === AudioFileSource.SOULSEEK
-        ? "success"
-        : "none";
+        ? "green"
+        : "gray";
   return (
-    <Tag fill={true} minimal={true} intent={intent} style={{ textAlign: "center" }}>
+    <Badge size="sm" radius="sm" fullWidth={true} variant="light" color={color}>
       {fileSource}
-    </Tag>
+    </Badge>
   );
 }
 
@@ -427,7 +430,7 @@ function useTableTheme(numTracksInPlaylist: number): Theme {
   const genresColumnWidth = 120;
   const ratingColumnWidth = 90;
   const fileTypeColumnWidth = 80;
-  const fileSourceColumnWidth = 80;
+  const fileSourceColumnWidth = 90;
   const dateAddedColumnWidth = 80;
 
   const gridTemplateColumns = [

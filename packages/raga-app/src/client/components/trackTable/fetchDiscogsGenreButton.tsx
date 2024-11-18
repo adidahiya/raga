@@ -27,7 +27,7 @@ export default function FetchDiscogsGenreButton({ trackDef }: { trackDef: TrackD
     <Button
       className={styles.smallOutlinedButton}
       onClick={handleFetchDiscogsGenre}
-      variant="outline"
+      variant="light"
       color="gray"
       size="compact-sm"
       fullWidth={true}

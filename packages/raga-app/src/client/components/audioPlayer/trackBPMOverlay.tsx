@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
 import { Tooltip } from "@blueprintjs/core";
 import { CaretLeft } from "@blueprintjs/icons";
-import { ActionIcon, Slider, Text } from "@mantine/core";
+import { ActionIcon, Paper, Slider, Text } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "radash";
@@ -25,7 +25,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
   }, [setPlaybackRate]);
 
   return (
-    <div className={styles.bpmOverlay}>
+    <Paper className={styles.bpmOverlay} radius={0}>
       <motion.div
         className={styles.tempoSliderContainer}
         onDoubleClick={handleDoubleClick}
@@ -80,7 +80,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
       ) : (
         <AnalyzeSingleTrackButton trackDef={trackDef} />
       )}
-    </div>
+    </Paper>
   );
 }
 TrackBPMOverlay.displayName = "TrackBPMOverlay";
