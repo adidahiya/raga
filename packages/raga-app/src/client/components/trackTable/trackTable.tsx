@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Colors, NonIdealState, Tag, Tooltip } from "@blueprintjs/core";
+import { Colors, NonIdealState, Tooltip } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
-import { Badge, Stack, Text } from "@mantine/core";
+import { Badge, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
@@ -36,7 +36,6 @@ import { stopPropagation } from "../../common/reactUtils";
 import { TrackPropertySortKey } from "../../common/trackPropertySortKey";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
-import { useIsDarkThemeEnabled } from "../../store/selectors/useIsDarkThemeEnabled";
 import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
@@ -193,14 +192,14 @@ const RESIZER_OPTIONS = {
 
 function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-  const isDarkThemeEnabled = useIsDarkThemeEnabled();
+  const { colorScheme } = useMantineColorScheme();
 
   const resizerOptions = useMemo(() => {
     return {
       ...RESIZER_OPTIONS,
-      resizerHighlight: isDarkThemeEnabled ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
+      resizerHighlight: colorScheme === "dark" ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
     };
-  }, [isDarkThemeEnabled]);
+  }, [colorScheme]);
 
   return (
     <Header className={styles.header}>
