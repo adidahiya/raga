@@ -140,7 +140,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, filteredTrackDefNodes);
   const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
   useTrackTableHotkeys({ containerElement, sortedTrackIds });
-  const { contextMenuPopover, handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
+  const { handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
     containerElement,
     sortedTrackDefs,
   });
@@ -180,7 +180,6 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
         onQueryChange={setFilterQuery}
       />
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
-      {contextMenuPopover}
     </Stack>
   );
 }

@@ -1,7 +1,9 @@
 import "@mantine/core/styles.css";
+import "mantine-contextmenu/styles.layer.css";
 
 import { createTheme, MantineProvider } from "@mantine/core";
 import classNames from "classnames";
+import { ContextMenuProvider } from "mantine-contextmenu";
 
 import styles from "./app.module.scss";
 import AppChrome from "./components/chrome/appChrome";
@@ -32,15 +34,17 @@ export default function App() {
 
   return (
     <MantineProvider theme={theme} defaultColorScheme={userThemePreference}>
-      <div
-        className={classNames(styles.app, {
-          [styles.fontWeightLight]: fontWeight === "light",
-          [styles.fontWeightRegular]: fontWeight === "regular",
-        })}
-      >
-        <AppChrome />
-        <LibraryView />
-      </div>
+      <ContextMenuProvider>
+        <div
+          className={classNames(styles.app, {
+            [styles.fontWeightLight]: fontWeight === "light",
+            [styles.fontWeightRegular]: fontWeight === "regular",
+          })}
+        >
+          <AppChrome />
+          <LibraryView />
+        </div>
+      </ContextMenuProvider>
     </MantineProvider>
   );
 }

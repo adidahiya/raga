@@ -47,6 +47,7 @@ __metadata:
     ansis: "npm:^3.3.2"
     app-root-dir: "npm:^1.0.2"
     classnames: "npm:^2.5.1"
+    clsx: "npm:^2.1.1"
     cross-env: "npm:^7.0.3"
     date-fns: "npm:^4.1.0"
     dayjs: "npm:^1.11.13"
@@ -57,6 +58,7 @@ __metadata:
     eslint: "npm:^9.14.0"
     framer-motion: "npm:^11.11.11"
     immer: "npm:^10.1.1"
+    mantine-contextmenu: "npm:^7.12.2"
     milliparsec: "npm:^5.0.0"
     node-taglib-sharp: "npm:^5.2.3"
     postcss: "npm:^8.4.48"
@@ -8768,6 +8770,18 @@ __metadata:
     promise-retry: "npm:^2.0.1"
     ssri: "npm:^10.0.0"
   checksum: 10/ded5a91a02b76381b06a4ec4d5c1d23ebbde15d402b3c3e4533b371dac7e2f7ca071ae71ae6dae72aa261182557b7b1b3fd3a705b39252dc17f74fa509d3e76f
+  languageName: node
+  linkType: hard
+
+"mantine-contextmenu@npm:^7.12.2":
+  version: 7.12.2
+  resolution: "mantine-contextmenu@npm:7.12.2"
+  peerDependencies:
+    "@mantine/core": ">=7.12"
+    "@mantine/hooks": ">=7.12"
+    clsx: ">=2"
+    react: ">=18.2"
+  checksum: 10/b21b814e9298783374477ae7ca102242408f4cd3aa58b62b8e7ef8376d16d249219575c15663b876bb8b15eb4b1e661dbbd4c5e9f83a0a3f8d8c6fa26ac3f305
   languageName: node
   linkType: hard
 

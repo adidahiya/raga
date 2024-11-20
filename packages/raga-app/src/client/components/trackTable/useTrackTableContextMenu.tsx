@@ -1,14 +1,12 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { ContextMenuPopover } from "@blueprintjs/core";
-import { useCallback, useState } from "react";
-import { useBoolean } from "usehooks-ts";
+import { useContextMenu } from "mantine-contextmenu";
+import { useCallback } from "react";
 
 import {
   TRACK_TABLE_FILTER_BAR_HEIGHT,
   TRACK_TABLE_HEADER_HEIGHT,
   TRACK_TABLE_ROW_HEIGHT,
 } from "../../../common/constants";
-import type { Offset } from "../../common/types";
 import { appStore } from "../../store/appStore";
 import TrackRowContextMenu from "./trackRowContextMenu";
 import { getTableScrollingContainer } from "./trackTableDOMUtils";
@@ -21,7 +19,6 @@ export interface UseTrackTableContextMenuOptions {
 export interface UseTrackTableContextMenuReturnValue {
   handleContextMenu: React.MouseEventHandler<HTMLElement>;
   isContextMenuOpen: boolean;
-  contextMenuPopover: React.ReactElement;
 }
 
 export default function useTrackTableContextMenu({
@@ -29,11 +26,8 @@ export default function useTrackTableContextMenu({
   sortedTrackDefs,
 }: UseTrackTableContextMenuOptions): UseTrackTableContextMenuReturnValue {
   const isTableFilterVisible = appStore.use.trackTableFilterVisible();
-  const isContextMenuOpen = useBoolean(false);
-  const [targetOffset, setTargetOffset] = useState<Offset>({ left: 0, top: 0 });
-  // "active" for the context menu means the track that was right-clicked
-  const [activeTrackDef, setActiveTrackDef] = useState<TrackDefinition | undefined>(undefined);
   const setActiveTrackId = appStore.use.setActiveTrackId();
+  const { showContextMenu, isContextMenuVisible } = useContextMenu();
 
   const handleContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -54,35 +48,20 @@ export default function useTrackTableContextMenu({
       const trackIndex = Math.floor(topOffsetInList / TRACK_TABLE_ROW_HEIGHT);
       const newActiveTrackDef = sortedTrackDefs[trackIndex] as TrackDefinition | undefined;
 
-      setActiveTrackDef(newActiveTrackDef);
       setActiveTrackId(newActiveTrackDef?.["Track ID"]);
-      isContextMenuOpen.setValue(newActiveTrackDef !== undefined);
-      setTargetOffset({
-        left: event.clientX,
-        top: event.clientY,
-      });
+      // isContextMenuOpen.setValue(newActiveTrackDef !== undefined);
+
+      if (newActiveTrackDef !== undefined) {
+        showContextMenu((close) => <TrackRowContextMenu track={newActiveTrackDef} close={close} />)(
+          event,
+        );
+      }
     },
-    [containerElement, isContextMenuOpen, isTableFilterVisible, setActiveTrackId, sortedTrackDefs],
-  );
-
-  const handleClose = useCallback(() => {
-    isContextMenuOpen.setFalse();
-    setActiveTrackId(undefined);
-  }, [isContextMenuOpen, setActiveTrackId]);
-
-  const contextMenuPopover = (
-    <ContextMenuPopover
-      content={<TrackRowContextMenu track={activeTrackDef} />}
-      isOpen={isContextMenuOpen.value}
-      targetOffset={targetOffset}
-      onClose={handleClose}
-      isDarkTheme={true}
-    />
+    [containerElement, isTableFilterVisible, setActiveTrackId, showContextMenu, sortedTrackDefs],
   );
 
   return {
     handleContextMenu,
-    isContextMenuOpen: isContextMenuOpen.value,
-    contextMenuPopover,
+    isContextMenuOpen: isContextMenuVisible,
   };
 }
