@@ -1,4 +1,4 @@
-import { Classes, NonIdealState } from "@blueprintjs/core";
+import { Classes } from "@blueprintjs/core";
 import { Play } from "@blueprintjs/icons";
 import { Box, Button, Center } from "@mantine/core";
 import { lazy, Suspense } from "react";
@@ -6,6 +6,7 @@ import { lazy, Suspense } from "react";
 import { useSelectedTrackFileURL } from "../../hooks";
 import useSelectedTrackDef from "../../hooks/useSelectedTrackDef";
 import { appStore } from "../../store/appStore";
+import EmptyState from "../common/emptyState";
 import { TrackBPMOverlay } from "./trackBPMOverlay";
 
 // TODO: reconsider if this lazy-loading is worth it...
@@ -21,10 +22,9 @@ export function AudioPlayer() {
   if (!isAudioFilesServerReady) {
     return (
       <Center bd={{ base: 1, dark: 0 }} h={90}>
-        <NonIdealState
-          description="Audio files server is not running"
-          action={<StartAudioFilesServerButton />}
-        />
+        <EmptyState description="Audio files server is not running">
+          <StartAudioFilesServerButton />
+        </EmptyState>
       </Center>
     );
   }
@@ -32,7 +32,7 @@ export function AudioPlayer() {
   if (!hasSelectedTrack) {
     return (
       <Center bd={{ base: 1, dark: 0 }} h={90}>
-        <NonIdealState description="No track selected" />
+        <EmptyState description="No track selected" />
       </Center>
     );
   }

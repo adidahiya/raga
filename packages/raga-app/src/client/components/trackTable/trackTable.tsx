@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Colors, NonIdealState, Tooltip } from "@blueprintjs/core";
+import { Colors, Tooltip } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { Badge, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
@@ -37,6 +37,7 @@ import { TrackPropertySortKey } from "../../common/trackPropertySortKey";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
 import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
+import EmptyState from "../common/emptyState";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
@@ -379,19 +380,16 @@ function TrackTableEmpty({ playlistId }: TrackTableProps) {
   return (
     <div className={styles.trackTableEmpty}>
       {playlistDef === undefined ? (
-        <NonIdealState title={`No playlist selected`} />
+        <EmptyState title="No playlist selected" />
       ) : (
-        <NonIdealState
-          title={`No tracks found in playlist "${playlistDef.Name}"`}
-          action={
-            <p>
-              <em>
-                Raga does not currently support playlist editing. You may add tracks to this
-                playlist in Swinsian and re-import your library.
-              </em>
-            </p>
-          }
-        />
+        <EmptyState title={`No tracks found in playlist "${playlistDef.Name}"`}>
+          <Text>
+            <em>
+              Raga does not currently support playlist editing. You may add tracks to this playlist
+              in Swinsian and re-import your library.
+            </em>
+          </Text>
+        </EmptyState>
       )}
     </div>
   );

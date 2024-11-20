@@ -1,4 +1,4 @@
-import { NonIdealState } from "@blueprintjs/core";
+import { Classes, Icon } from "@blueprintjs/core";
 import { Divider, Group, Paper, Progress, Stack, Text } from "@mantine/core";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
@@ -7,6 +7,7 @@ import { AudioPlayer } from "../components/audioPlayer/audioPlayer";
 import { AudioPlayerControls } from "../components/audioPlayer/audioPlayerControls";
 import { AudioPlayerNowPlaying } from "../components/audioPlayer/audioPlayerNowPlaying";
 import { ResizeHandle } from "../components/common";
+import EmptyState from "../components/common/emptyState";
 import { LoadLibraryForm } from "../components/library";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
@@ -31,19 +32,24 @@ export default function LibraryView() {
   return (
     <Stack className={styles.container} gap={0}>
       {libraryState === "none" ? (
-        <NonIdealState
+        <EmptyState
           title="Select a Swinsian library"
-          icon="music"
-          action={<LoadLibraryForm />}
-        />
+          icon={<Icon icon="music" className={Classes.ICON_MUTED} size={48} />}
+        >
+          <LoadLibraryForm />
+        </EmptyState>
       ) : libraryState === "loading" ? (
-        <NonIdealState
+        <EmptyState
           title="Loading Swinsian library..."
-          icon="music"
-          action={<Progress size="sm" color="blue" animated={true} value={100} />}
-        />
+          icon={<Icon icon="music" className={Classes.ICON_MUTED} size={48} />}
+        >
+          <Progress size="sm" color="blue" animated={true} value={100} />
+        </EmptyState>
       ) : libraryState === "error" ? (
-        <NonIdealState title="Error loading Swinsian library" icon="error" />
+        <EmptyState
+          title="Error loading Swinsian library"
+          icon={<Icon icon="error" className={Classes.ICON_MUTED} size={48} />}
+        />
       ) : (
         <div className={styles.libraryLoaded}>
           <Library />
@@ -74,10 +80,10 @@ function Library() {
           <ResizeHandle />
           <Panel minSize={30}>
             {selectedPlaylistId === undefined ? (
-              <NonIdealState
+              <EmptyState
                 title="Playlist tracks"
                 description="Select a playlist to view tracks"
-                icon="list-detail-view"
+                icon={<Icon icon="list-detail-view" className={Classes.ICON_MUTED} size={48} />}
               />
             ) : (
               <TrackTable playlistId={selectedPlaylistId} />
