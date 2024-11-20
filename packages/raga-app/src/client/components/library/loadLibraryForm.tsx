@@ -1,5 +1,4 @@
-import { Menu, MenuItem } from "@blueprintjs/core";
-import { Cross } from "@blueprintjs/icons";
+import { Cross, DocumentOpen } from "@blueprintjs/icons";
 import { Box, Button, Divider, Fieldset, FileInput, Stack } from "@mantine/core";
 import classNames from "classnames";
 import { useCallback } from "react";
@@ -52,7 +51,7 @@ export default function LoadLibraryForm() {
       <Divider orientation="horizontal" label="or" />
       <Box
         className={classNames(styles.dropzone, { [styles.active]: isDragActive })}
-        bg={isDragActive ? "blue.1" : "gray.1"}
+        bg={isDragActive ? "blue" : "gray"}
         {...getRootProps()}
       >
         <input {...getInputProps()} />
@@ -77,29 +76,31 @@ function MaybeRecentlyUsedLibrariesSection() {
     <>
       <Divider orientation="horizontal" label="or" />
       <Fieldset className={styles.recentLibrariesForm} legend="Use a recent library">
-        <Menu className={styles.recentLibrariesMenu}>
+        <Stack gap={0} align="center">
           {Array.from(previouslyUsedLibaries).map(({ filePath }) => (
-            <MenuItem
+            <Button
               key={filePath}
-              text={filePath}
+              variant="subtle"
               onClick={() => {
                 setLibraryInputFilepath(filePath);
               }}
-              icon="document-open"
-            />
+              leftSection={<DocumentOpen />}
+            >
+              {filePath}
+            </Button>
           ))}
-        </Menu>
-        <div className={styles.clearRecent}>
-          <Button
-            size="compact-sm"
-            color="gray"
-            variant="subtle"
-            onClick={handleClear}
-            rightSection={<Cross />}
-          >
-            Clear all recent libraries
-          </Button>
-        </div>
+          <Box mt="xs">
+            <Button
+              size="compact-sm"
+              color="red"
+              variant="subtle"
+              onClick={handleClear}
+              rightSection={<Cross />}
+            >
+              Clear all recent libraries
+            </Button>
+          </Box>
+        </Stack>
       </Fieldset>
     </>
   );

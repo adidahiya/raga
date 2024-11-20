@@ -6,7 +6,7 @@ import {
   Divider,
   Group,
   type MantineColorScheme,
-  Popover,
+  Menu,
   SegmentedControl,
   Stack,
   Text,
@@ -21,7 +21,7 @@ const EMAIL_VALIDATION_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
 export default function UserSettingsDropdown() {
   return (
-    <Popover
+    <Menu
       trapFocus={true}
       position="bottom"
       withArrow={true}
@@ -29,7 +29,7 @@ export default function UserSettingsDropdown() {
       offset={{ mainAxis: 10 }}
       // TODO: restore commonStyles.popoverBackdrop
     >
-      <Popover.Target>
+      <Menu.Target>
         <Button
           size="compact-sm"
           color="gray"
@@ -39,8 +39,8 @@ export default function UserSettingsDropdown() {
         >
           Settings
         </Button>
-      </Popover.Target>
-      <Popover.Dropdown>
+      </Menu.Target>
+      <Menu.Dropdown>
         <Stack gap={0}>
           <Box p="xs">
             <UserEmailFormGroup />
@@ -54,8 +54,8 @@ export default function UserSettingsDropdown() {
             <ThemeFormGroup />
           </Box>
         </Stack>
-      </Popover.Dropdown>
-    </Popover>
+      </Menu.Dropdown>
+    </Menu>
   );
 }
 UserSettingsDropdown.displayName = "UserSettingsDropdown";

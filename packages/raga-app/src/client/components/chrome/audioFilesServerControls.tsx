@@ -5,7 +5,7 @@ import {
   Button,
   ButtonGroup,
   Group,
-  Popover,
+  Menu,
   Text,
   TextInput,
   Tooltip,
@@ -60,14 +60,14 @@ export default function AudioFilesServerControls() {
       <Text component="span" c="dimmed" size="sm">
         Audio server
       </Text>
-      <Popover
+      <Menu
         position="bottom"
         withArrow={true}
         arrowSize={12}
         offset={{ mainAxis: 10, crossAxis: 6 }}
         // TODO: restore commonStyles.popoverBackdrop
       >
-        <Popover.Target>
+        <Menu.Target>
           <Button
             variant="subtle"
             size="compact-sm"
@@ -77,8 +77,8 @@ export default function AudioFilesServerControls() {
           >
             {statusText}
           </Button>
-        </Popover.Target>
-        <Popover.Dropdown>
+        </Menu.Target>
+        <Menu.Dropdown>
           <Group grow={true} gap="xs">
             <TextInput
               value={rootFolder}
@@ -93,8 +93,8 @@ export default function AudioFilesServerControls() {
               <AudioFilesServerButtons />
             </Box>
           </Group>
-        </Popover.Dropdown>
-      </Popover>
+        </Menu.Dropdown>
+      </Menu>
     </Group>
   );
 }

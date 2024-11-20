@@ -12,7 +12,7 @@ export function AnalyzerSettings() {
   }, [analyzeBPMPerTrack, setAnalyzeBPMPerTrack]);
 
   return (
-    <Stack gap="xs">
+    <Stack gap="xs" p="xs">
       <Text>Analysis settings</Text>
       <Switch
         label="Analyze BPM per track"

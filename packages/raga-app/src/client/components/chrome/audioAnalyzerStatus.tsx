@@ -1,5 +1,5 @@
 import { Blank, CaretDown, Tick } from "@blueprintjs/icons";
-import { Button, Group, Popover, Text } from "@mantine/core";
+import { Button, Group, Menu, Text } from "@mantine/core";
 
 import { appStore } from "../../store/appStore";
 import { AnalyzerSettings } from "../settings/analyzerSettings";
@@ -12,14 +12,14 @@ export default function AudioAnalyzerStatus() {
       <Text component="span" c="dimmed" size="sm">
         Analyzer
       </Text>
-      <Popover
+      <Menu
         position="bottom"
         withArrow={true}
         arrowSize={12}
         offset={{ mainAxis: 10 }}
         // TODO: restore commonStyles.popoverBackdrop
       >
-        <Popover.Target>
+        <Menu.Target>
           <Button
             variant="subtle"
             size="compact-sm"
@@ -30,11 +30,11 @@ export default function AudioAnalyzerStatus() {
           >
             {status === "busy" ? "Busy…" : "Ready"}
           </Button>
-        </Popover.Target>
-        <Popover.Dropdown>
+        </Menu.Target>
+        <Menu.Dropdown>
           <AnalyzerSettings />
-        </Popover.Dropdown>
-      </Popover>
+        </Menu.Dropdown>
+      </Menu>
     </Group>
   );
 }

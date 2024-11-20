@@ -1,12 +1,12 @@
-import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
-import { CaretDown, Error, Export, Tick } from "@blueprintjs/icons";
+import { CaretDown, Error, Export, FloppyDisk, FolderOpen, Reset, Tick } from "@blueprintjs/icons";
 import {
   Button,
   ButtonGroup,
   Divider,
   FileInput,
   Group,
-  Popover,
+  Menu,
+  MenuDivider,
   Stack,
   Text,
   Tooltip,
@@ -101,14 +101,14 @@ export default function LibraryControls() {
     <Group gap="xs">
       <Text size="sm">Library</Text>
       <Group gap="sm">
-        <Popover
+        <Menu
           position="bottom"
           withArrow={true}
           arrowSize={12}
           offset={{ mainAxis: 10 }}
           // TODO: restore commonStyles.popoverBackdrop
         >
-          <Popover.Target>
+          <Menu.Target>
             <Button
               variant="subtle"
               size="compact-sm"
@@ -118,25 +118,25 @@ export default function LibraryControls() {
             >
               {isLibraryLoaded ? "Loaded" : "Not loaded"}
             </Button>
-          </Popover.Target>
-          <Popover.Dropdown>
+          </Menu.Target>
+          <Menu.Dropdown>
             <Menu>
-              <MenuDivider title={<LibraryLastModifiedText />} />
+              <Menu.Label>
+                <LibraryLastModifiedText />
+              </Menu.Label>
               <MenuDivider />
-              <MenuItem
-                icon="reset"
-                text={`${isLibraryLoaded ? "Reload" : "Load"} library`}
-                onClick={handleLoad}
-              />
-              <MenuItem icon="floppy-disk" text="Reload from disk" onClick={handleLoadFromDisk} />
-              <MenuItem
-                icon="folder-open"
-                text="Select new library..."
-                onClick={handleSelectNewLibrary}
-              />
+              <Menu.Item leftSection={<Reset />} onClick={handleLoad}>
+                {`${isLibraryLoaded ? "Reload" : "Load"} library`}
+              </Menu.Item>
+              <Menu.Item leftSection={<FloppyDisk />} onClick={handleLoadFromDisk}>
+                Reload from disk
+              </Menu.Item>
+              <Menu.Item leftSection={<FolderOpen />} onClick={handleSelectNewLibrary}>
+                Select new library…
+              </Menu.Item>
             </Menu>
-          </Popover.Dropdown>
-        </Popover>
+          </Menu.Dropdown>
+        </Menu>
 
         <Divider orientation="vertical" />
 
@@ -164,14 +164,14 @@ export default function LibraryControls() {
               Export
             </Button>
           </Tooltip>
-          <Popover
+          <Menu
             position="bottom"
             withArrow={true}
             arrowSize={12}
             offset={{ mainAxis: 10 }}
             // TODO: restore commonStyles.popoverBackdrop
           >
-            <Popover.Target>
+            <Menu.Target>
               <Button
                 className={styles.buttonNoLeftRadius}
                 size="compact-sm"
@@ -179,10 +179,10 @@ export default function LibraryControls() {
               >
                 <CaretDown />
               </Button>
-            </Popover.Target>
-            <Popover.Dropdown>
+            </Menu.Target>
+            <Menu.Dropdown>
               <Stack gap="xs">
-                <Stack gap="xs">
+                <Stack gap={0}>
                   <Text>Output file</Text>
                   <FileInput
                     label="Location of the Music.app/Rekordbox compatible XML file"
@@ -192,16 +192,12 @@ export default function LibraryControls() {
                     rightSectionWidth={70}
                   />
                 </Stack>
-                <Menu>
-                  <MenuItem
-                    icon="export"
-                    text="Export library for Rekordbox"
-                    onClick={handleWriteModifiedLibrary}
-                  />
-                </Menu>
+                <Menu.Item leftSection={<Export />} onClick={handleWriteModifiedLibrary}>
+                  Export library for Rekordbox
+                </Menu.Item>
               </Stack>
-            </Popover.Dropdown>
-          </Popover>
+            </Menu.Dropdown>
+          </Menu>
         </ButtonGroup>
       </Group>
     </Group>
