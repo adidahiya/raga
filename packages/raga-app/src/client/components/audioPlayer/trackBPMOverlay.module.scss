@@ -28,8 +28,11 @@
 }
 
 .tempoSliderContainer {
-  padding: 5px;
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
   padding-bottom: 10px;
+  padding: 5px;
   transform-origin: right center;
 }
 
@@ -39,10 +42,4 @@
 
 .tempoSliderToggleButton {
   margin: 0 5px;
-}
-
-.tempoSliderContainer {
-  align-items: center;
-  display: inline-flex;
-  gap: 5px;
 }

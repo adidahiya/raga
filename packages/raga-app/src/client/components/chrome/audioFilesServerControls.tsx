@@ -1,14 +1,22 @@
-import { Popover, Tooltip } from "@blueprintjs/core";
 import { CaretDown, CrossCircle, Error, Play, Refresh, Tick, Time } from "@blueprintjs/icons";
-import { ActionIcon, Box, Button, ButtonGroup, Group, Text, TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  ButtonGroup,
+  Group,
+  Popover,
+  Text,
+  TextInput,
+  Tooltip,
+  useMantineTheme,
+} from "@mantine/core";
 import { run } from "effection";
 import { useCallback } from "react";
 import { useInterval } from "usehooks-ts";
 
 import { AUDIO_FILES_SERVER_PING_INTERVAL } from "../../../common/constants";
-import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore } from "../../store/appStore";
-import styles from "./audioFilesServerControls.module.scss";
 
 export default function AudioFilesServerControls() {
   const status = appStore.use.audioFilesServerStatus();
@@ -28,24 +36,6 @@ export default function AudioFilesServerControls() {
   const shouldPing = status === "started" && !isLibraryWriting;
   useInterval(() => void run(pingServer), shouldPing ? AUDIO_FILES_SERVER_PING_INTERVAL : null);
 
-  const serverOptionsPopover = (
-    <div className={styles.popover}>
-      <Group grow={true} gap="xs">
-        <TextInput
-          value={rootFolder}
-          onChange={handleRootFolderInputChange}
-          color={status === "failed" ? "red" : status === "started" ? "green" : undefined}
-          style={{ minWidth: 300 }}
-          size="sm"
-          label="Root folder"
-        />
-        <Box className={styles.buttons}>
-          <AudioFilesServerButtons />
-        </Box>
-      </Group>
-    </div>
-  );
-
   const statusText =
     status === "failed"
       ? "Failed"
@@ -63,28 +53,49 @@ export default function AudioFilesServerControls() {
       <Tick />
     ) : undefined;
 
+  const { lineHeights } = useMantineTheme();
+
   return (
-    <div className={styles.container}>
+    <Group gap="xs" align="center">
       <Text component="span" c="dimmed" size="sm">
         Audio server
       </Text>
       <Popover
-        placement="bottom"
-        content={serverOptionsPopover}
-        hasBackdrop={true}
-        backdropProps={{ className: commonStyles.popoverBackdrop }}
+        position="bottom"
+        withArrow={true}
+        arrowSize={12}
+        offset={{ mainAxis: 10, crossAxis: 6 }}
+        // TODO: restore commonStyles.popoverBackdrop
       >
-        <Button
-          variant="subtle"
-          size="compact-sm"
-          leftSection={statusIcon}
-          rightSection={<CaretDown />}
-          color={status === "failed" ? "red" : status === "started" ? "green" : "blue"}
-        >
-          {statusText}
-        </Button>
+        <Popover.Target>
+          <Button
+            variant="subtle"
+            size="compact-sm"
+            leftSection={statusIcon}
+            rightSection={<CaretDown />}
+            color={status === "failed" ? "red" : status === "started" ? "green" : "blue"}
+          >
+            {statusText}
+          </Button>
+        </Popover.Target>
+        <Popover.Dropdown>
+          <Group grow={true} gap="xs">
+            <TextInput
+              value={rootFolder}
+              onChange={handleRootFolderInputChange}
+              color={status === "failed" ? "red" : status === "started" ? "green" : undefined}
+              style={{ minWidth: 300 }}
+              size="sm"
+              label="Root folder"
+            />
+            {/* Account for line height of text input label */}
+            <Box mt={`${lineHeights.xl}em`}>
+              <AudioFilesServerButtons />
+            </Box>
+          </Group>
+        </Popover.Dropdown>
       </Popover>
-    </div>
+    </Group>
   );
 }
 
@@ -96,9 +107,9 @@ function AudioFilesServerButtons() {
   return (
     <ButtonGroup>
       <Tooltip
-        placement="top"
-        compact={true}
-        content={
+        position="top"
+        // compact={true}
+        label={
           status === "started"
             ? "Restart audio files server"
             : status === "failed"
@@ -118,7 +129,7 @@ function AudioFilesServerButtons() {
         </ActionIcon>
       </Tooltip>
       {status === "started" && (
-        <Tooltip placement="top" compact={true} content="Stop audio files server">
+        <Tooltip position="top" label="Stop audio files server">
           <ActionIcon variant="subtle" color="red" onClick={stopServer}>
             <CrossCircle />
           </ActionIcon>

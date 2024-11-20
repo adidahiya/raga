@@ -1,10 +1,18 @@
-import { Classes, Menu, MenuDivider, MenuItem, Popover, Tooltip } from "@blueprintjs/core";
+import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { CaretDown, Error, Export, Tick } from "@blueprintjs/icons";
-import { Button, ButtonGroup, Divider, FileInput, Group, Stack, Text } from "@mantine/core";
-import classNames from "classnames";
+import {
+  Button,
+  ButtonGroup,
+  Divider,
+  FileInput,
+  Group,
+  Popover,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { useCallback } from "react";
 
-import commonStyles from "../../common/commonStyles.module.scss";
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import styles from "./libraryControls.module.scss";
@@ -87,72 +95,55 @@ export default function LibraryControls() {
     [setLibraryOutputFilepath],
   );
 
-  const libraryOutputMenu = (
-    <Stack gap="xs" className={styles.popoverContent}>
-      <Stack gap="xs">
-        <Text className={styles.outputFilepath}>Output file</Text>
-        <FileInput
-          label="Location of the Music.app/Rekordbox compatible XML file"
-          placeholder={libraryOutputFilepath}
-          fileInputProps={{ onChange: handleOutputFilepathInputChange }}
-          rightSection={<Button size="compact-sm">Browse</Button>}
-          rightSectionWidth={70}
-        />
-      </Stack>
-      <Menu>
-        <MenuItem
-          icon="export"
-          text="Export library for Rekordbox"
-          onClick={handleWriteModifiedLibrary}
-        />
-      </Menu>
-    </Stack>
-  );
-
-  const libraryInputMenu = (
-    <Menu>
-      <MenuDivider title={<LibraryLastModifiedText />} />
-      <MenuDivider />
-      <MenuItem
-        icon="reset"
-        text={`${isLibraryLoaded ? "Reload" : "Load"} library`}
-        onClick={handleLoad}
-      />
-      <MenuItem icon="floppy-disk" text="Reload from disk" onClick={handleLoadFromDisk} />
-      <MenuItem icon="folder-open" text="Select new library..." onClick={handleSelectNewLibrary} />
-    </Menu>
-  );
-
   const canWrite = libraryWriteState === "ready" && libraryOutputFilepath !== undefined;
 
   return (
-    <Group className={styles.container} gap="xs">
-      <span className={classNames(Classes.TEXT_SMALL)}>Library</span>
+    <Group gap="xs">
+      <Text size="sm">Library</Text>
       <Group gap="sm">
         <Popover
-          placement="bottom-end"
-          content={libraryInputMenu}
-          hasBackdrop={true}
-          backdropProps={{ className: commonStyles.popoverBackdrop }}
+          position="bottom"
+          withArrow={true}
+          arrowSize={12}
+          offset={{ mainAxis: 10 }}
+          // TODO: restore commonStyles.popoverBackdrop
         >
-          <Button
-            variant="subtle"
-            size="compact-sm"
-            leftSection={isLibraryLoaded ? <Tick /> : <Error />}
-            rightSection={<CaretDown />}
-            color={isLibraryLoaded ? "green" : "blue"}
-          >
-            {isLibraryLoaded ? "Loaded" : "Not loaded"}
-          </Button>
+          <Popover.Target>
+            <Button
+              variant="subtle"
+              size="compact-sm"
+              leftSection={isLibraryLoaded ? <Tick /> : <Error />}
+              rightSection={<CaretDown />}
+              color={isLibraryLoaded ? "green" : "blue"}
+            >
+              {isLibraryLoaded ? "Loaded" : "Not loaded"}
+            </Button>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <Menu>
+              <MenuDivider title={<LibraryLastModifiedText />} />
+              <MenuDivider />
+              <MenuItem
+                icon="reset"
+                text={`${isLibraryLoaded ? "Reload" : "Load"} library`}
+                onClick={handleLoad}
+              />
+              <MenuItem icon="floppy-disk" text="Reload from disk" onClick={handleLoadFromDisk} />
+              <MenuItem
+                icon="folder-open"
+                text="Select new library..."
+                onClick={handleSelectNewLibrary}
+              />
+            </Menu>
+          </Popover.Dropdown>
         </Popover>
 
         <Divider orientation="vertical" />
 
         <ButtonGroup>
           <Tooltip
-            placement="bottom-end"
-            compact={true}
-            content={
+            position="bottom-end"
+            label={
               libraryWriteState === "busy"
                 ? "Writing..."
                 : canWrite
@@ -174,18 +165,42 @@ export default function LibraryControls() {
             </Button>
           </Tooltip>
           <Popover
-            placement="bottom-end"
-            content={libraryOutputMenu}
-            hasBackdrop={true}
-            backdropProps={{ className: commonStyles.popoverBackdrop }}
+            position="bottom"
+            withArrow={true}
+            arrowSize={12}
+            offset={{ mainAxis: 10 }}
+            // TODO: restore commonStyles.popoverBackdrop
           >
-            <Button
-              className={styles.buttonNoLeftRadius}
-              size="compact-sm"
-              color={libraryWriteState === "none" ? "gray" : "blue"}
-            >
-              <CaretDown />
-            </Button>
+            <Popover.Target>
+              <Button
+                className={styles.buttonNoLeftRadius}
+                size="compact-sm"
+                color={libraryWriteState === "none" ? "gray" : "blue"}
+              >
+                <CaretDown />
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Stack gap="xs">
+                <Stack gap="xs">
+                  <Text>Output file</Text>
+                  <FileInput
+                    label="Location of the Music.app/Rekordbox compatible XML file"
+                    placeholder={libraryOutputFilepath}
+                    fileInputProps={{ onChange: handleOutputFilepathInputChange }}
+                    rightSection={<Button size="compact-sm">Browse</Button>}
+                    rightSectionWidth={70}
+                  />
+                </Stack>
+                <Menu>
+                  <MenuItem
+                    icon="export"
+                    text="Export library for Rekordbox"
+                    onClick={handleWriteModifiedLibrary}
+                  />
+                </Menu>
+              </Stack>
+            </Popover.Dropdown>
           </Popover>
         </ButtonGroup>
       </Group>

@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Colors, Tooltip } from "@blueprintjs/core";
+import { Colors } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
-import { Badge, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Badge, Stack, Text, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
@@ -281,7 +281,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           pinRight={true}
           sortKey={TrackPropertySortKey.DATE_ADDED}
         >
-          <Tooltip content="Date added" placement="bottom" compact={true}>
+          <Tooltip label="Date added" position="bottom">
             <span>Date</span>
           </Tooltip>
         </HeaderCellSort>

@@ -1,5 +1,4 @@
-import { Tooltip } from "@blueprintjs/core";
-import { Button } from "@mantine/core";
+import { Button, Tooltip } from "@mantine/core";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -25,12 +24,9 @@ export default function AnalyzeAllPlaylistTracksButton({
 
   return (
     <Tooltip
-      compact={true}
-      content={buttonDisabled ? "Disconnected from audio files server" : undefined}
+      label={buttonDisabled ? "Disconnected from audio files server" : undefined}
       disabled={!buttonDisabled}
-      fill={true}
-      hoverOpenDelay={300}
-      placement="top"
+      position="top"
     >
       <Button
         className={styles.analyzeAllButton}

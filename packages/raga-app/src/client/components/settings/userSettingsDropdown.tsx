@@ -1,4 +1,3 @@
-import { Popover } from "@blueprintjs/core";
 import { CaretDown, Cog, Cross, Tick } from "@blueprintjs/icons";
 import {
   ActionIcon,
@@ -7,6 +6,7 @@ import {
   Divider,
   Group,
   type MantineColorScheme,
+  Popover,
   SegmentedControl,
   Stack,
   Text,
@@ -15,39 +15,21 @@ import {
 } from "@mantine/core";
 import { type ChangeEvent, useCallback, useState } from "react";
 
-import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore } from "../../store/appStore";
-import styles from "./userSettingsDropdown.module.scss";
 
 const EMAIL_VALIDATION_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
 export default function UserSettingsDropdown() {
-  const settingsPopover = (
-    <Stack gap={0}>
-      <Box p="xs">
-        <UserEmailFormGroup />
-      </Box>
-      <Divider orientation="horizontal" />
-      <Box p="xs">
-        <UIFontFormGroup />
-      </Box>
-      <Divider orientation="horizontal" />
-      <Box p="xs">
-        <ThemeFormGroup />
-      </Box>
-    </Stack>
-  );
-
   return (
-    <div className={styles.userSettingsDropdown}>
-      <Popover
-        autoFocus={true}
-        backdropProps={{ className: commonStyles.popoverBackdrop }}
-        content={settingsPopover}
-        hasBackdrop={true}
-        placement="bottom"
-        shouldReturnFocusOnClose={true}
-      >
+    <Popover
+      trapFocus={true}
+      position="bottom"
+      withArrow={true}
+      arrowSize={12}
+      offset={{ mainAxis: 10 }}
+      // TODO: restore commonStyles.popoverBackdrop
+    >
+      <Popover.Target>
         <Button
           size="compact-sm"
           color="gray"
@@ -57,8 +39,23 @@ export default function UserSettingsDropdown() {
         >
           Settings
         </Button>
-      </Popover>
-    </div>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Stack gap={0}>
+          <Box p="xs">
+            <UserEmailFormGroup />
+          </Box>
+          <Divider orientation="horizontal" />
+          <Box p="xs">
+            <UIFontFormGroup />
+          </Box>
+          <Divider orientation="horizontal" />
+          <Box p="xs">
+            <ThemeFormGroup />
+          </Box>
+        </Stack>
+      </Popover.Dropdown>
+    </Popover>
   );
 }
 UserSettingsDropdown.displayName = "UserSettingsDropdown";
@@ -96,7 +93,7 @@ function UserEmailFormGroup() {
       color={emailInputValue === "" ? "gray" : isEmailValid ? "green" : "red"}
       rightSection={
         emailInputValue === "" ? undefined : isEmailValid ? (
-          <Tick className={styles.validIcon} />
+          <Tick />
         ) : (
           <ActionIcon variant="subtle" onClick={clearEmail}>
             <Cross />

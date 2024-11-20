@@ -1,7 +1,6 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Tooltip } from "@blueprintjs/core";
 import { CaretLeft } from "@blueprintjs/icons";
-import { ActionIcon, Paper, Slider, Text } from "@mantine/core";
+import { ActionIcon, Paper, Slider, Text, Tooltip } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "radash";
@@ -49,14 +48,12 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
         </AnimatePresence>
       </motion.div>
       <Tooltip
-        compact={true}
-        content={isTempoSliderOpen ? "Hide BPM slider" : "Show BPM adjustment slider"}
-        hoverOpenDelay={500}
-        placement="bottom"
+        label={isTempoSliderOpen ? "Hide BPM slider" : "Show BPM adjustment slider"}
+        position="bottom"
       >
         <ActionIcon
           className={styles.tempoSliderToggleButton}
-          variant="outline"
+          variant="light"
           color="gray"
           size="sm"
           onClick={toggleTempoSlider}

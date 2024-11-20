@@ -1,9 +1,5 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 
-.popoverContent {
-  padding: var(--mantine-spacing-sm);
-}
-
 .buttonNoRightRadius {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
