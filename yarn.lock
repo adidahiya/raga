@@ -8685,9 +8685,9 @@ __metadata:
   linkType: hard
 
 "milliparsec@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "milliparsec@npm:5.0.0"
-  checksum: 10/8c19367bd483337d093a0c4c6f78d158507ce1f1be1f4b368ebf276cf3248e912d04ebbb924604fc9bf6881c2365f50565e00ccb7c994fec0d70329b64363b2d
+  version: 5.0.1
+  resolution: "milliparsec@npm:5.0.1"
+  checksum: 10/e0b8fef0884bd9034587737af1eceb21de4f9c422ca63653aab6716326e28757778f8fd9fce2aa1ae11680f32a87b478acfe005a5790768d49f1e4236287a055
   languageName: node
   linkType: hard
 
