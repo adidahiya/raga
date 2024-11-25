@@ -22,7 +22,7 @@
     "@blueprintjs/core": "^5.14.0",
     "@blueprintjs/icons": "^5.14.0",
     "@emotion/react": "^11.13.3",
-    "@number-flow/react": "^0.3.0",
+    "@number-flow/react": "^0.4.0",
     "@roarr/browser-log-writer": "^1.3.0",
     "@table-library/react-table-library": "^4.1.7",
     "@tinyhttp/app": "^2.4.0",
