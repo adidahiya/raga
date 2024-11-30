@@ -1,21 +1,3 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
-.tableFilter {
-  max-height: 30px;
-
-  :global(.#{bp.$ns}-collapse-body) {
-    border-bottom: solid 1px bp.$pt-divider-black;
-    display: flex;
-    gap: 5px;
-    justify-content: flex-end;
-    padding: 4px 6px;
-
-    :global([data-mantine-color-scheme="dark"]) & {
-      border-color: bp.$pt-dark-divider-white;
-    }
-  }
-}
-
 .filterInput input {
   padding-inline: 5px;
 }

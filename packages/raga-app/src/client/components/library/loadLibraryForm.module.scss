@@ -1,5 +1,3 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
 $width-standard: 300px;
 $width-wide: 500px;
 
@@ -23,7 +21,7 @@ $width-wide: 500px;
   width: $width-standard;
 
   &:before {
-    background: bp.$pt-divider-black;
+    background: var(--mantine-color-dark-outline);
     content: "";
     display: block;
     height: 1px;
@@ -34,7 +32,7 @@ $width-wide: 500px;
   }
 
   &:after {
-    background: bp.$pt-divider-black;
+    background: var(--mantine-color-dark-outline);
     content: "";
     display: block;
     height: 1px;
@@ -43,24 +41,13 @@ $width-wide: 500px;
     top: 10px;
     width: calc(50% - 5rem);
   }
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    &:before,
-    &:after {
-      background: bp.$pt-dark-divider-white;
-    }
-  }
 }
 
 .dropzone {
   align-items: center;
-  border-radius: bp.$pt-border-radius;
-  border: dashed 1px bp.$pt-divider-black;
+  border-radius: var(--mantine-radius-md);
+  border: dashed 1px var(--mantine-color-dark-outline);
   display: flex;
   justify-content: center;
   padding: 20px 10px;
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    border-color: 1px bp.$pt-dark-divider-white;
-  }
 }

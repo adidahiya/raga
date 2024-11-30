@@ -1,5 +1,3 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
 .overlay {
   position: absolute;
   width: 100%;
@@ -7,9 +5,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(bp.$light-gray1, 0.5);
+  background-color: color-mix(in srgb, var(--mantine-color-dark-3) 50%, transparent);
 
   :global([data-mantine-color-scheme="dark"]) & {
-    background: rgba(bp.$black, 0.5);
+    background-color: color-mix(in srgb, var(--mantine-color-dark-9) 50%, transparent);
   }
 }

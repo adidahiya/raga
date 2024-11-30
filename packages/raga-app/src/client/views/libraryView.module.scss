@@ -1,13 +1,8 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 @import "../common/variables";
 
 .container {
   height: calc(100vh - 50px);
   padding: 0;
-
-  :global(.#{bp.$ns}-non-ideal-state) {
-    flex-grow: 1;
-  }
 }
 
 .libraryLoaded {
@@ -20,16 +15,12 @@
   position: relative; // creates a stacking context for playlist table layout
 
   .librarySidebarFooter {
-    border-top: solid 1px bp.$pt-divider-black;
+    border-top: solid 1px var(--mantine-color-dark-outline);
     bottom: 0;
     height: $sidebar-footer-height;
     left: 0;
     padding: $sidebar-footer-padding;
     position: absolute;
     right: 0;
-
-    :global([data-mantine-color-scheme="dark"]) & {
-      border-color: bp.$pt-dark-divider-white;
-    }
   }
 }

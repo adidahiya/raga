@@ -1,7 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { Collapse } from "@blueprintjs/core";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import { ActionIcon, Text } from "@mantine/core";
+import { ActionIcon, Collapse, Text } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -53,7 +52,7 @@ export default function PlaylistTable() {
         </div>
       </div>
       <div className={styles.body}>
-        <Collapse isOpen={isPlaylistTreeExpanded} className={styles.treeCollapse}>
+        <Collapse in={isPlaylistTreeExpanded}>
           <Tree
             compact={true}
             selectedNodeId={selectedPlaylistId}

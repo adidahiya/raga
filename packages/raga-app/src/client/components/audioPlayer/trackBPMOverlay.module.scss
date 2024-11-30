@@ -1,7 +1,5 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
 .bpmOverlay {
-  --mantine-color-body: #{rgba(bp.$white, 0.8)};
+  --mantine-color-body: #{rgba(var(--mantine-color-white), 0.8)};
 
   align-items: center;
   border-bottom-left-radius: 3px;
@@ -15,7 +13,7 @@
   z-index: 2; // just above the waveform
 
   :global([data-mantine-color-scheme="dark"]) & {
-    --mantine-color-body: #{rgba(bp.$black, 0.8)};
+    --mantine-color-body: #{rgba(var(--mantine-color-dark-9), 0.8)};
   }
 }
 
@@ -23,7 +21,7 @@
   width: 40px;
 
   &.adjusted {
-    color: bp.$blue4;
+    color: var(--mantine-color-primary-color-light-color);
   }
 }
 

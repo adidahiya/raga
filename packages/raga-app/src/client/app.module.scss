@@ -1,12 +1,10 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
 .app {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: bp.$pt-grid-size;
+  padding: 10px;
 }
 
 .fontWeightLight {

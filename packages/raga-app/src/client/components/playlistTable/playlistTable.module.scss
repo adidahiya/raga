@@ -1,4 +1,3 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 @import "../../common/variables";
 
 .playlistTableContainer {
@@ -12,15 +11,11 @@
 .header {
   line-height: $small-button-height;
   padding: $table-header-padding;
-  border-bottom: solid 1px bp.$pt-divider-black;
+  border-bottom: solid 1px var(--mantine-color-dark-outline);
   flex-grow: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    border-color: bp.$pt-dark-divider-white;
-  }
 }
 
 .headerContent {

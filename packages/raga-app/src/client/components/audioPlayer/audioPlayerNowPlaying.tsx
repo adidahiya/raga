@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import NumberFlow from "@number-flow/react";
 import { useMemo } from "react";
 
@@ -26,7 +26,7 @@ export function AudioPlayerNowPlaying() {
   }
 
   return (
-    <div className={styles.container}>
+    <Group gap={20} align="center">
       <Text component="span" className={styles.nowPlaying} title={selectedTrack.Artist}>
         <strong>{selectedTrack.Artist}</strong>
         <Text component="span" c="dimmed">
@@ -45,7 +45,7 @@ export function AudioPlayerNowPlaying() {
         {" / "}
         {formattedDuration}
       </Text>
-    </div>
+    </Group>
   );
 }
 AudioPlayerNowPlaying.displayName = "AudioPlayerNowPlaying";
