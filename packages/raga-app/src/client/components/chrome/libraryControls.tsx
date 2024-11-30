@@ -122,13 +122,7 @@ export default function LibraryControls() {
     <Group gap="xs">
       <Text size="sm">Library</Text>
       <Group gap="sm">
-        <Menu
-          position="bottom"
-          withArrow={true}
-          arrowSize={12}
-          offset={{ mainAxis: 10 }}
-          // TODO: restore commonStyles.popoverBackdrop
-        >
+        <Menu position="bottom" withArrow={true} arrowSize={12} offset={{ mainAxis: 10 }}>
           <Menu.Target>
             <Button
               variant="subtle"
@@ -185,13 +179,7 @@ export default function LibraryControls() {
               Export
             </Button>
           </Tooltip>
-          <Menu
-            position="bottom"
-            withArrow={true}
-            arrowSize={12}
-            offset={{ mainAxis: 10 }}
-            // TODO: restore commonStyles.popoverBackdrop
-          >
+          <Menu position="bottom" withArrow={true} arrowSize={12} offset={{ mainAxis: 10 }}>
             <Menu.Target>
               <Button
                 className={styles.buttonNoLeftRadius}

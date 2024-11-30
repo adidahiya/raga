@@ -12,13 +12,7 @@ export default function AudioAnalyzerStatus() {
       <Text component="span" c="dimmed" size="sm">
         Analyzer
       </Text>
-      <Menu
-        position="bottom"
-        withArrow={true}
-        arrowSize={12}
-        offset={{ mainAxis: 10 }}
-        // TODO: restore commonStyles.popoverBackdrop
-      >
+      <Menu position="bottom" withArrow={true} arrowSize={12} offset={{ mainAxis: 10 }}>
         <Menu.Target>
           <Button
             variant="subtle"

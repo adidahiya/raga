@@ -49,7 +49,6 @@ export default function useTrackTableContextMenu({
       const newActiveTrackDef = sortedTrackDefs[trackIndex] as TrackDefinition | undefined;
 
       setActiveTrackId(newActiveTrackDef?.["Track ID"]);
-      // isContextMenuOpen.setValue(newActiveTrackDef !== undefined);
 
       if (newActiveTrackDef !== undefined) {
         showContextMenu((close) => <TrackRowContextMenu track={newActiveTrackDef} close={close} />)(

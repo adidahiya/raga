@@ -65,7 +65,6 @@ export default function AudioFilesServerControls() {
         withArrow={true}
         arrowSize={12}
         offset={{ mainAxis: 10, crossAxis: 6 }}
-        // TODO: restore commonStyles.popoverBackdrop
       >
         <Menu.Target>
           <Button
@@ -108,7 +107,6 @@ function AudioFilesServerButtons() {
     <ButtonGroup>
       <Tooltip
         position="top"
-        // compact={true}
         label={
           status === "started"
             ? "Restart audio files server"

@@ -27,7 +27,6 @@ export default function UserSettingsDropdown() {
       withArrow={true}
       arrowSize={12}
       offset={{ mainAxis: 10 }}
-      // TODO: restore commonStyles.popoverBackdrop
     >
       <Menu.Target>
         <Button

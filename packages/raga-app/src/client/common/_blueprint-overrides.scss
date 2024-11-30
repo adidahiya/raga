@@ -1,56 +1,6 @@
 @use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 @import "variables";
 
-table.#{bp.$ns}-html-table.#{bp.$ns}-html-table.#{bp.$ns}-compact {
-  th,
-  td {
-    padding: 2px 6px;
-  }
-}
-
-// smaller small button
-.#{bp.$ns}-button.#{bp.$ns}-small {
-  min-height: $small-button-height;
-  font-size: $small-button-font-size;
-
-  // prettier-ignore
-  .#{bp.$ns}-icon
-        :not(.#{bp.$ns}-icon-caret-down)
-        :not(.#{bp.$ns}-icon-caret-up)
-        :not(.#{bp.$ns}-icon-caret-left)
-        :not(.#{bp.$ns}-icon-caret-right) {
-
-        width: 12px;
-        height: 12px;
-
-        > svg {
-            height: 12px;
-            width: 12px;
-        }
-    }
-}
-
-// more compact section
-.#{bp.$ns}-section.#{bp.$ns}-compact {
-  .#{bp.$ns}-section-header {
-    padding: 0 10px;
-  }
-
-  .#{bp.$ns}-section-card.#{bp.$ns}-padded {
-    padding: 10px 15px;
-  }
-}
-
-// remove unnecessary margins on form elements
-.#{bp.$ns}-form-group,
-.#{bp.$ns}-control {
-  margin: 0;
-}
-
-.#{bp.$ns}-slider {
-  min-width: 100px;
-}
-
 // more compact tree (horizontal padding)
 .#{bp.$ns}-tree.#{bp.$ns}-compact {
   .#{bp.$ns}-tree-node-content-1 {
