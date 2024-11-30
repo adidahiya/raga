@@ -1,6 +1,6 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { ChevronRight, FolderOpen, Property } from "@blueprintjs/icons";
-import { Button, Divider, Menu, Stack, Text } from "@mantine/core";
+import { FolderOpen } from "@blueprintjs/icons";
+import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 import { useCallback } from "react";
 import { Roarr as log } from "roarr";
 
@@ -43,33 +43,29 @@ export default function TrackRowContextMenu({
   }
 
   const playlistsContainingThisTrack = libraryPlaylistsContainingTrack[track["Track ID"]];
-  // TODO: fix clicking on submenu items
   const showInPlaylistItems =
     playlistsContainingThisTrack === undefined ||
     playlistsContainingThisTrack.size === 0 ? undefined : (
-      <Menu trigger="hover" position="right-start" closeDelay={500}>
-        <Menu.Target>
-          <Button
-            size="compact-sm"
-            m={5}
-            justify="flex-start"
-            variant="subtle"
-            color="gray"
-            leftSection={<Property />}
-            rightSection={<ChevronRight />}
-            classNames={{ label: styles.buttonLabel }}
-          >
-            Show in playlist
-          </Button>
-        </Menu.Target>
-        <Menu.Dropdown>
-          {[...playlistsContainingThisTrack]
-            .filter((playlistID) => playlistID !== selectedPlaylistId)
-            .map((playlistID) => (
-              <ShowTrackInPlaylistMenuItem key={playlistID} playlistID={playlistID} close={close} />
-            ))}
-        </Menu.Dropdown>
-      </Menu>
+      <>
+        <Divider orientation="horizontal" />
+        <Text component="span" className={styles.trackName} truncate={true}>
+          Show in playlist
+        </Text>
+        <Group className={styles.playlistLinksMenuSection}>
+          <Stack component="ul" gap={0} className={styles.playlistLinksList}>
+            {/* TODO: nest playlists according to depth */}
+            {[...playlistsContainingThisTrack]
+              .filter((playlistID) => playlistID !== selectedPlaylistId)
+              .map((playlistID) => (
+                <ShowTrackInPlaylistMenuItem
+                  key={playlistID}
+                  playlistID={playlistID}
+                  close={close}
+                />
+              ))}
+          </Stack>
+        </Group>
+      </>
     );
 
   return (
@@ -80,7 +76,6 @@ export default function TrackRowContextMenu({
         <em>{track.Name}</em>
       </Text>
       <Divider orientation="horizontal" />
-      {showInPlaylistItems}
       <Button
         size="compact-sm"
         variant="subtle"
@@ -93,6 +88,7 @@ export default function TrackRowContextMenu({
       >
         Reveal in Finder
       </Button>
+      {showInPlaylistItems}
     </Stack>
   );
 }
@@ -114,5 +110,9 @@ function ShowTrackInPlaylistMenuItem({ playlistID, close }: ShowTrackInPlaylistM
     // TODO: consider selecting this track in the newly selected playlist?
   }, [playlistID, setSelectedPlaylistId, close]);
 
-  return <Menu.Item onClick={handleClick}>{playlist?.Name}</Menu.Item>;
+  return (
+    <li onClick={handleClick} className={styles.playlistLinkListItem}>
+      {playlist?.Name}
+    </li>
+  );
 }
