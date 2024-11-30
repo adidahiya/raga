@@ -11,15 +11,16 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useCallback } from "react";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
+import NotificationMessage from "../common/NotificationMessage";
 import styles from "./libraryControls.module.scss";
 import LibraryLastModifiedText from "./libraryLastModifiedText";
 
 export default function LibraryControls() {
-  const toaster = appStore.use.toaster();
   const isLibraryLoaded = appStore.use.libraryLoadingState() !== "none";
   const libraryInputFilepath = appStore.use.libraryInputFilepath();
   const libraryOutputFilepath = appStore.use.libraryOutputFilepath();
@@ -54,39 +55,47 @@ export default function LibraryControls() {
     }
 
     if (libraryWriteState === "ready") {
-      toaster?.show({
-        intent: "warning",
-        message:
-          "There are changes which have not been written to disk, are you sure you want to reload?",
-        action: {
-          icon: "tick",
-          text: "Confirm reload",
-          onClick: confirmedLoadFromDisk,
-        },
+      notifications.show({
+        title: "Unsaved changes",
+        message: (
+          <NotificationMessage
+            message="There are changes which have not been written to disk."
+            action={{
+              icon: <Tick />,
+              text: "Confirm reload",
+              onClick: confirmedLoadFromDisk,
+            }}
+          />
+        ),
+        color: "yellow",
       });
       return;
     }
 
     confirmedLoadFromDisk();
-  }, [confirmedLoadFromDisk, libraryInputFilepath, libraryWriteState, toaster]);
+  }, [confirmedLoadFromDisk, libraryInputFilepath, libraryWriteState]);
 
   const handleSelectNewLibrary = useCallback(() => {
     if (libraryWriteState === "ready") {
-      toaster?.show({
-        intent: "warning",
-        message:
-          "There are changes which have not been written to disk, are you sure you want to unload this library?",
-        action: {
-          icon: "tick",
-          text: "Confirm unload",
-          onClick: unloadSwinsianLibrary,
-        },
+      notifications.show({
+        title: "Unsaved changes",
+        message: (
+          <NotificationMessage
+            message="There are changes which have not been written to disk, are you sure you want to unload this library?"
+            action={{
+              icon: <Tick />,
+              text: "Confirm unload",
+              onClick: unloadSwinsianLibrary,
+            }}
+          />
+        ),
+        color: "yellow",
       });
       return;
     }
 
     unloadSwinsianLibrary();
-  }, [libraryWriteState, toaster, unloadSwinsianLibrary]);
+  }, [libraryWriteState, unloadSwinsianLibrary]);
 
   const handleOutputFilepathInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

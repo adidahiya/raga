@@ -28,7 +28,7 @@
     "@mantine/form": "^7.13.5",
     "@mantine/hooks": "^7.13.5",
     "@mantine/modals": "^7.13.5",
-    "@mantine/notifications": "^7.13.5",
+    "@mantine/notifications": "^7.14.3",
     "@mantine/nprogress": "^7.13.5",
     "@mantine/spotlight": "^7.13.5",
     "@number-flow/react": "^0.3.0",

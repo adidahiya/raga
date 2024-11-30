@@ -1,7 +1,9 @@
 import "@mantine/core/styles.css";
 import "mantine-contextmenu/styles.layer.css";
+import "@mantine/notifications/styles.css";
 
 import { createTheme, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import classNames from "classnames";
 import { ContextMenuProvider } from "mantine-contextmenu";
 
@@ -34,6 +36,7 @@ export default function App() {
 
   return (
     <MantineProvider theme={theme} defaultColorScheme={userThemePreference}>
+      <Notifications />
       <ContextMenuProvider>
         <div
           className={classNames(styles.app, {

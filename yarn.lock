@@ -31,7 +31,7 @@ __metadata:
     "@mantine/form": "npm:^7.13.5"
     "@mantine/hooks": "npm:^7.13.5"
     "@mantine/modals": "npm:^7.13.5"
-    "@mantine/notifications": "npm:^7.13.5"
+    "@mantine/notifications": "npm:^7.14.3"
     "@mantine/nprogress": "npm:^7.13.5"
     "@mantine/spotlight": "npm:^7.13.5"
     "@number-flow/react": "npm:^0.3.0"
@@ -1791,18 +1791,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/notifications@npm:^7.13.5":
-  version: 7.13.5
-  resolution: "@mantine/notifications@npm:7.13.5"
+"@mantine/notifications@npm:^7.14.3":
+  version: 7.14.3
+  resolution: "@mantine/notifications@npm:7.14.3"
   dependencies:
-    "@mantine/store": "npm:7.13.5"
+    "@mantine/store": "npm:7.14.3"
     react-transition-group: "npm:4.4.5"
   peerDependencies:
-    "@mantine/core": 7.13.5
-    "@mantine/hooks": 7.13.5
+    "@mantine/core": 7.14.3
+    "@mantine/hooks": 7.14.3
     react: ^18.x || ^19.x
     react-dom: ^18.x || ^19.x
-  checksum: 10/f90ded7229e68bec88568d7c282f09ec6230906c7982a3962075065ccb2d08a1533046301bdc93b532c18158d17aea03f13fffbe1bf9374630e4f824c28380eb
+  checksum: 10/3754eb948b8989cd4986796289665aac6899b63bd03e20b468c8c8eb3237695f97827cfc369d8c8f988b917df3d4a9b8a98d4670aaf4a35852b068a091ee88a7
   languageName: node
   linkType: hard
 
@@ -1840,6 +1840,15 @@ __metadata:
   peerDependencies:
     react: ^18.x || ^19.x
   checksum: 10/1bc3eaa80b24ea217bb81f28f9b52db3efa432ea93849a3a2167b328d41774af39ece82500b8ae9fa4682b4796e1a8524ede2b0c83dc6772870893762edcb42d
+  languageName: node
+  linkType: hard
+
+"@mantine/store@npm:7.14.3":
+  version: 7.14.3
+  resolution: "@mantine/store@npm:7.14.3"
+  peerDependencies:
+    react: ^18.x || ^19.x
+  checksum: 10/3ea301edc9cf84b39efb19fb7db8d0671aa641fe31f9f500cd56146f9ad317445c8dfa3ef5ade329e9abc5337f84ca2ad43333fe5f237114388089dae5c7240f
   languageName: node
   linkType: hard
 
