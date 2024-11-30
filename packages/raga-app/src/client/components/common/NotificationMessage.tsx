@@ -1,4 +1,4 @@
-import { Button, Group, Text } from "@mantine/core";
+import { Button, type MantineColor, Stack, Text } from "@mantine/core";
 import * as React from "react";
 
 interface NotificationMessageProps {
@@ -7,16 +7,22 @@ interface NotificationMessageProps {
     icon: React.JSX.Element;
     text: string;
     onClick: () => void;
+    color?: MantineColor;
   };
 }
 
 export default function NotificationMessage({ message, action }: NotificationMessageProps) {
   return (
-    <Group>
-      <Text style={{ flexGrow: 1 }}>{message}</Text>
-      <Button leftSection={action.icon} onClick={action.onClick}>
+    <Stack gap={5}>
+      <Text>{message}</Text>
+      <Button
+        size="compact-sm"
+        leftSection={action.icon}
+        onClick={action.onClick}
+        color={action.color}
+      >
         {action.text}
       </Button>
-    </Group>
+    </Stack>
   );
 }

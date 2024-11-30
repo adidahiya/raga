@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -49,13 +49,18 @@ export default function LibraryControls() {
     yield* loadLibrary({ filepath: libraryInputFilepath, reloadFromDisk: true });
   });
 
+  const notificationId = useRef<string | undefined>(undefined);
+
   const handleLoadFromDisk = useCallback(() => {
     if (libraryInputFilepath === undefined) {
       return;
     }
 
     if (libraryWriteState === "ready") {
-      notifications.show({
+      if (notificationId.current != null) {
+        notifications.hide(notificationId.current);
+      }
+      notificationId.current = notifications.show({
         title: "Unsaved changes",
         message: (
           <NotificationMessage
@@ -64,10 +69,12 @@ export default function LibraryControls() {
               icon: <Tick />,
               text: "Confirm reload",
               onClick: confirmedLoadFromDisk,
+              color: "yellow",
             }}
           />
         ),
         color: "yellow",
+        autoClose: false,
       });
       return;
     }
@@ -77,7 +84,10 @@ export default function LibraryControls() {
 
   const handleSelectNewLibrary = useCallback(() => {
     if (libraryWriteState === "ready") {
-      notifications.show({
+      if (notificationId.current != null) {
+        notifications.hide(notificationId.current);
+      }
+      notificationId.current = notifications.show({
         title: "Unsaved changes",
         message: (
           <NotificationMessage
@@ -86,10 +96,12 @@ export default function LibraryControls() {
               icon: <Tick />,
               text: "Confirm unload",
               onClick: unloadSwinsianLibrary,
+              color: "yellow",
             }}
           />
         ),
         color: "yellow",
+        autoClose: false,
       });
       return;
     }

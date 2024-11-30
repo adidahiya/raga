@@ -29,6 +29,6 @@ $overflow: ($grabbable-width - $visible-width) * 0.5;
   opacity: 0.6;
 
   :global([data-mantine-color-scheme="dark"]) & {
-    background-color: var(--mantine-color-gray-6);
+    background-color: var(--mantine-color-gray-7);
   }
 }

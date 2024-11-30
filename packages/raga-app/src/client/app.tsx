@@ -1,6 +1,7 @@
 import "@mantine/core/styles.css";
 import "mantine-contextmenu/styles.layer.css";
 import "@mantine/notifications/styles.css";
+import "./common/mantine-overrides.scss";
 
 import { createTheme, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
