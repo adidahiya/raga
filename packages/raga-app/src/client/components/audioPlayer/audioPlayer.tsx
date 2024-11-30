@@ -1,6 +1,5 @@
-import { Classes } from "@blueprintjs/core";
 import { Play } from "@blueprintjs/icons";
-import { Box, Button, Center } from "@mantine/core";
+import { Box, Button, Center, Skeleton } from "@mantine/core";
 import { lazy, Suspense } from "react";
 
 import { useSelectedTrackFileURL } from "../../hooks";
@@ -17,7 +16,6 @@ export function AudioPlayer() {
   const hasSelectedTrack = selectedTrack !== undefined;
   const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
   const selectedFileURL = useSelectedTrackFileURL();
-  const fallback = <div className={Classes.SKELETON} />;
 
   if (!isAudioFilesServerReady) {
     return (
@@ -39,7 +37,7 @@ export function AudioPlayer() {
 
   return (
     <Box pos="relative" h={90}>
-      <Suspense fallback={fallback}>
+      <Suspense fallback={<Skeleton width="100%" height="100%" />}>
         <AudioWaveform mediaURL={selectedFileURL} />
       </Suspense>
       <TrackBPMOverlay trackDef={selectedTrack} />

@@ -1,7 +1,6 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Colors } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
-import { Badge, Stack, Text, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { Badge, Stack, Text, Tooltip, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
@@ -193,13 +192,14 @@ const RESIZER_OPTIONS = {
 function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const { colorScheme } = useMantineColorScheme();
+  const { colors } = useMantineTheme();
 
   const resizerOptions = useMemo(() => {
     return {
       ...RESIZER_OPTIONS,
-      resizerHighlight: colorScheme === "dark" ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
+      resizerHighlight: colorScheme === "dark" ? colors.gray[7] : colors.gray[3],
     };
-  }, [colorScheme]);
+  }, [colorScheme, colors]);
 
   return (
     <Header className={styles.header}>

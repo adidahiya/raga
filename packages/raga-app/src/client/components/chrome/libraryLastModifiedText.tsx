@@ -1,6 +1,5 @@
 import type { MusicLibraryPlist } from "@adahiya/raga-lib";
-import { Classes } from "@blueprintjs/core";
-import classNames from "classnames";
+import { Text } from "@mantine/core";
 import { format, parseISO } from "date-fns";
 import { isString } from "radash";
 
@@ -10,11 +9,11 @@ export default function LibraryLastModifiedText() {
   const library = appStore.use.library();
   const dateModified = getDateModified(library);
 
-  return (
-    <span className={classNames({ [Classes.SKELETON]: !library })}>
-      Last modified: {format(dateModified, "Pp")}
-    </span>
-  );
+  if (library == null) {
+    return <Text>No library loaded</Text>;
+  }
+
+  return <Text>Last modified: {format(dateModified, "Pp")}</Text>;
 }
 
 function getDateModified(library: MusicLibraryPlist | undefined) {
