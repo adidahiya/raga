@@ -26,7 +26,9 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
   return (
     <Paper className={styles.bpmOverlay} radius={0}>
       <motion.div
-        className={styles.tempoSliderContainer}
+        className={classNames(styles.tempoSliderContainer, {
+          [styles.open]: isTempoSliderOpen,
+        })}
         onDoubleClick={handleDoubleClick}
         animate={{ opacity: 1, width: isTempoSliderOpen ? "auto" : 0 }}
         initial={{ opacity: 0 }}
@@ -36,7 +38,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
         <AnimatePresence>
           {isTempoSliderOpen && (
             <motion.div
-              className={styles.tempoSliderContainer}
+              className={styles.tempoSlider}
               initial={{ opacity: 0, scaleX: 0.5 }}
               animate={{ opacity: 1, scaleX: 1 }}
               exit={{ opacity: 0, scaleX: 0.5, transition: { delay: 0, duration: 0.1 } }}

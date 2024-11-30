@@ -1,6 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import { ActionIcon, Collapse, Text } from "@mantine/core";
+import { ActionIcon, Collapse, Divider, Text } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -51,6 +51,7 @@ export default function PlaylistTable() {
           </ActionIcon>
         </div>
       </div>
+      <Divider orientation="horizontal" />
       <div className={styles.body}>
         <Collapse in={isPlaylistTreeExpanded}>
           <Tree

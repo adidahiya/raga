@@ -1,5 +1,5 @@
 .bpmOverlay {
-  --mantine-color-body: #{rgba(var(--mantine-color-white), 0.8)};
+  --mantine-color-body: color-mix(in srgb, var(--mantine-color-white) 80%, transparent);
 
   align-items: center;
   border-bottom-left-radius: 3px;
@@ -13,7 +13,7 @@
   z-index: 2; // just above the waveform
 
   :global([data-mantine-color-scheme="dark"]) & {
-    --mantine-color-body: #{rgba(var(--mantine-color-dark-9), 0.8)};
+    --mantine-color-body: color-mix(in srgb, var(--mantine-color-dark-9) 80%, transparent);
   }
 }
 
@@ -30,8 +30,11 @@
   display: inline-flex;
   gap: 5px;
   padding-bottom: 10px;
-  padding: 5px;
   transform-origin: right center;
+
+  &.open {
+    padding-inline: 5px;
+  }
 }
 
 .tempoSlider {

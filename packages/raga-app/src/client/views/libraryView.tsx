@@ -1,5 +1,5 @@
 import { Classes, Icon } from "@blueprintjs/core";
-import { Divider, Group, Paper, Progress, Stack, Text } from "@mantine/core";
+import { Box, Divider, Group, Paper, Progress, Stack, Text } from "@mantine/core";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
 import { formatStatNumber } from "../../common/format";
@@ -104,10 +104,13 @@ function LibrarySidebarFooter() {
   }
 
   return (
-    <div className={styles.librarySidebarFooter}>
-      <Text component="span" truncate={true}>
-        Total # tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}
-      </Text>
-    </div>
+    <Box className={styles.librarySidebarFooter}>
+      <Divider orientation="horizontal" />
+      <Box py={5} px={7}>
+        <Text component="span" truncate={true}>
+          Total # tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}
+        </Text>
+      </Box>
+    </Box>
   );
 }
