@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: color-mix(in srgb, var(--mantine-color-dark-3) 50%, transparent);
+  background-color: color-mix(in srgb, var(--mantine-color-dark-1) 50%, transparent);
 
   :global([data-mantine-color-scheme="dark"]) & {
     background-color: color-mix(in srgb, var(--mantine-color-dark-9) 50%, transparent);
