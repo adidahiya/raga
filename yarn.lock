@@ -356,21 +356,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/colors@npm:^5.1.3":
-  version: 5.1.3
-  resolution: "@blueprintjs/colors@npm:5.1.3"
+"@blueprintjs/colors@npm:^5.1.4":
+  version: 5.1.4
+  resolution: "@blueprintjs/colors@npm:5.1.4"
   dependencies:
     tslib: "npm:~2.6.2"
-  checksum: 10/50c02828ec7671dcb42b2574d21c9669ab9d4c118d86cbd409207b635d622b97396b5cf25343dfcaf4fdc4fc654fa04eaeeaa68e0db21e4cd2085b56cee5bee0
+  checksum: 10/8811d6355b0bc8a43f2c869f003208811886fe68c40b723a048602d1a358acda8bafa16d11ec1f15a8c007f29982a5e0d75c3445dd3ad0ab79d8e405f098d265
   languageName: node
   linkType: hard
 
 "@blueprintjs/core@npm:^5.14.0":
-  version: 5.14.2
-  resolution: "@blueprintjs/core@npm:5.14.2"
+  version: 5.16.0
+  resolution: "@blueprintjs/core@npm:5.16.0"
   dependencies:
-    "@blueprintjs/colors": "npm:^5.1.3"
-    "@blueprintjs/icons": "npm:^5.14.0"
+    "@blueprintjs/colors": "npm:^5.1.4"
+    "@blueprintjs/icons": "npm:^5.15.0"
     "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
     normalize.css: "npm:^8.0.1"
@@ -389,13 +389,13 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10/d6edc52db6220d968df76a27da327acec4b79e00732e3f6f69d11583b943c12eddbc11da879ce3cfd51a9ac7738ee9b0567a7a8577b2daf65fffc3a263f340a5
+  checksum: 10/d5984ec32aefdef02de9298c1aad23eee80ae0bccba618b2f9c1387197407b438e2c6ce5b884573ad27d4059d19160f8b705fd0f2c04fe28a2e542669f756896
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.14.0":
-  version: 5.14.0
-  resolution: "@blueprintjs/icons@npm:5.14.0"
+"@blueprintjs/icons@npm:^5.14.0, @blueprintjs/icons@npm:^5.15.0":
+  version: 5.15.0
+  resolution: "@blueprintjs/icons@npm:5.15.0"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -407,13 +407,13 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/7da68febcb07ef63e9ee32c88d7e2325612f13cd43e9feb787d8f062fb3cafc6912370fa1d337d93a53891ddadfa0d09fbc08a69e3499b99ffd7d79f2456e09c
+  checksum: 10/9ff1e128d2f42f3739a2893ca99d2dbb60c6a02adc92ce39ef794a7dc2f79e502b6c5761bd8b7b478d5e35e8eda751330afe0763710d48a736fc54ec90853273
   languageName: node
   linkType: hard
 
 "@blueprintjs/node-build-scripts@npm:^9.2.2":
-  version: 9.2.2
-  resolution: "@blueprintjs/node-build-scripts@npm:9.2.2"
+  version: 9.2.3
+  resolution: "@blueprintjs/node-build-scripts@npm:9.2.3"
   dependencies:
     autoprefixer: "npm:^10.4.17"
     chokidar: "npm:^3.5.3"
@@ -448,7 +448,7 @@ __metadata:
     generate-css-variables: ./generate-css-variables.mjs
     sass-compile: ./sass-compile.mjs
     sass-lint: ./sass-lint.mjs
-  checksum: 10/01866c87bb9659945a8a244de44568be6355d333fe6bf852fa11d56396c752cde15899e24b66f9789b4eb3b0f924f571a6f5e6a13f767dacecc2f8e37024bd35
+  checksum: 10/70cbdf44462421ff03adff498f4a4bf0680cc24fc1397a2444b706d73ff3fe1e267949bf7478e44b3ea66c6f3c36a0e4b61d7b906617c52c64bee7f84cd48e79
   languageName: node
   linkType: hard
 
