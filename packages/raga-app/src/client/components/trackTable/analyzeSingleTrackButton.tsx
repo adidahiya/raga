@@ -1,5 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Button, Tooltip } from "@blueprintjs/core";
+import { Button, Tooltip } from "@mantine/core";
 
 import { useOperationCallback } from "../../hooks";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
@@ -36,22 +36,18 @@ export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: Track
       : undefined;
 
   return (
-    <Tooltip
-      compact={true}
-      disabled={!buttonDisabled}
-      placement="top"
-      content={tooltipText}
-      hoverOpenDelay={300}
-      fill={true}
-    >
+    <Tooltip label={tooltipText} disabled={!buttonDisabled} position="top">
       <Button
         className={styles.smallOutlinedButton}
         disabled={buttonDisabled}
-        outlined={true}
-        small={true}
-        text="Analyze"
+        variant="light"
+        color="gray"
+        size="compact-sm"
+        fullWidth={true}
         onClick={handleAnalyzeBPM}
-      />
+      >
+        Analyze
+      </Button>
     </Tooltip>
   );
 }

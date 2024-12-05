@@ -1,6 +1,5 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Text } from "@blueprintjs/core";
-import classNames from "classnames";
+import { Text } from "@mantine/core";
 import { format } from "date-fns";
 import { useMemo } from "react";
 
@@ -11,7 +10,7 @@ export default function TrackDateAddedText({ track }: { track: TrackDefinition }
     [dateAdded],
   );
   return (
-    <Text className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)} ellipsize={true}>
+    <Text component="span" c="dimmed" size="sm" truncate={true}>
       {dateAddedText}
     </Text>
   );

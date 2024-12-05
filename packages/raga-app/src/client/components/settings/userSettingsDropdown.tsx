@@ -1,44 +1,60 @@
+import { CaretDown, Cog, Cross, Tick } from "@blueprintjs/icons";
 import {
+  ActionIcon,
+  Box,
   Button,
   Divider,
-  FormGroup,
-  InputGroup,
-  Popover,
+  Group,
+  type MantineColorScheme,
+  Menu,
   SegmentedControl,
-} from "@blueprintjs/core";
-import { Tick } from "@blueprintjs/icons";
-import { useCallback, useState } from "react";
+  Stack,
+  Text,
+  TextInput,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { type ChangeEvent, useCallback, useState } from "react";
 
-import commonStyles from "../../common/commonStyles.module.scss";
 import { appStore } from "../../store/appStore";
-import styles from "./userSettingsDropdown.module.scss";
 
 const EMAIL_VALIDATION_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
 export default function UserSettingsDropdown() {
-  const settingsPopover = (
-    <div className={styles.popover}>
-      <UserEmailFormGroup />
-      <Divider className={styles.divider} />
-      <UIFontFormGroup />
-      <Divider className={styles.divider} />
-      <ThemeFormGroup />
-    </div>
-  );
-
   return (
-    <div className={styles.userSettingsDropdown}>
-      <Popover
-        autoFocus={true}
-        backdropProps={{ className: commonStyles.popoverBackdrop }}
-        content={settingsPopover}
-        hasBackdrop={true}
-        placement="bottom"
-        shouldReturnFocusOnClose={true}
-      >
-        <Button small={true} minimal={true} text="Settings" icon="cog" rightIcon="caret-down" />
-      </Popover>
-    </div>
+    <Menu
+      trapFocus={true}
+      position="bottom"
+      withArrow={true}
+      arrowSize={12}
+      offset={{ mainAxis: 10 }}
+    >
+      <Menu.Target>
+        <Button
+          size="compact-sm"
+          color="gray"
+          variant="subtle"
+          leftSection={<Cog />}
+          rightSection={<CaretDown />}
+        >
+          Settings
+        </Button>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Stack gap={0}>
+          <Box p="xs">
+            <UserEmailFormGroup />
+          </Box>
+          <Divider orientation="horizontal" />
+          <Box p="xs">
+            <UIFontFormGroup />
+          </Box>
+          <Divider orientation="horizontal" />
+          <Box p="xs">
+            <ThemeFormGroup />
+          </Box>
+        </Stack>
+      </Menu.Dropdown>
+    </Menu>
   );
 }
 UserSettingsDropdown.displayName = "UserSettingsDropdown";
@@ -53,7 +69,7 @@ function UserEmailFormGroup() {
     setEmailInputValue("");
     setUserEmail(undefined);
   }, [setUserEmail]);
-  const handleEmailChange = useCallback(
+  const handleEmailChange = useTextInputChangeHandler(
     (email: string) => {
       setEmailInputValue(email);
       const isValid = EMAIL_VALIDATION_REGEX.test(email);
@@ -66,22 +82,24 @@ function UserEmailFormGroup() {
   );
 
   return (
-    <FormGroup label="User email" helperText="Used to write the 'Rating' tag on audio files">
-      <InputGroup
-        autoFocus={true}
-        type="email"
-        value={emailInputValue}
-        onValueChange={handleEmailChange}
-        intent={emailInputValue === "" ? "none" : isEmailValid ? "success" : "danger"}
-        rightElement={
-          emailInputValue === "" ? undefined : isEmailValid ? (
-            <Tick className={styles.validIcon} />
-          ) : (
-            <Button minimal={true} icon="cross" onClick={clearEmail} />
-          )
-        }
-      />
-    </FormGroup>
+    <TextInput
+      label="User email"
+      description="Used to write the 'Rating' tag on audio files"
+      autoFocus={true}
+      type="email"
+      value={emailInputValue}
+      onChange={handleEmailChange}
+      color={emailInputValue === "" ? "gray" : isEmailValid ? "green" : "red"}
+      rightSection={
+        emailInputValue === "" ? undefined : isEmailValid ? (
+          <Tick />
+        ) : (
+          <ActionIcon variant="subtle" onClick={clearEmail}>
+            <Cross />
+          </ActionIcon>
+        )
+      }
+    />
   );
 }
 
@@ -107,21 +125,21 @@ function UIFontFormGroup() {
   );
 
   return (
-    <FormGroup label="UI font" inline={true}>
+    <Group>
+      <Text>UI font</Text>
       <SegmentedControl
-        onValueChange={handleValueChange}
-        options={FONT_WEIGHT_OPTIONS}
-        small={true}
+        onChange={handleValueChange}
+        data={FONT_WEIGHT_OPTIONS}
         value={fontWeight}
       />
-    </FormGroup>
+    </Group>
   );
 }
 
-const THEME_OPTIONS = [
+const THEME_OPTIONS: { label: string; value: MantineColorScheme }[] = [
   {
     label: "System",
-    value: "system",
+    value: "auto",
   },
   {
     label: "Light",
@@ -134,23 +152,32 @@ const THEME_OPTIONS = [
 ];
 
 function ThemeFormGroup() {
+  const { setColorScheme } = useMantineColorScheme();
   const userThemePreference = appStore.use.userThemePreference();
   const setUserThemePreference = appStore.use.setUserThemePreference();
   const handleValueChange = useCallback(
     (value: string) => {
-      setUserThemePreference(value as "light" | "dark" | "system");
+      setUserThemePreference(value as MantineColorScheme);
+      setColorScheme(value as MantineColorScheme);
     },
-    [setUserThemePreference],
+    [setUserThemePreference, setColorScheme],
   );
 
   return (
-    <FormGroup label="Theme" inline={true}>
+    <Group>
+      <Text>Theme</Text>
       <SegmentedControl
-        onValueChange={handleValueChange}
-        options={THEME_OPTIONS}
-        small={true}
+        onChange={handleValueChange}
+        data={THEME_OPTIONS}
         value={userThemePreference}
       />
-    </FormGroup>
+    </Group>
   );
+}
+
+function useTextInputChangeHandler(cb: (value: string) => void, deps: React.DependencyList) {
+  return useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    cb(event.target.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 }

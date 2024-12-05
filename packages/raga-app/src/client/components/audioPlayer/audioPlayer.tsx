@@ -1,10 +1,11 @@
-import { Button, Classes, NonIdealState } from "@blueprintjs/core";
+import { Play } from "@blueprintjs/icons";
+import { Box, Button, Center, Skeleton } from "@mantine/core";
 import { lazy, Suspense } from "react";
 
 import { useSelectedTrackFileURL } from "../../hooks";
 import useSelectedTrackDef from "../../hooks/useSelectedTrackDef";
 import { appStore } from "../../store/appStore";
-import styles from "./audioPlayer.module.scss";
+import EmptyState from "../common/emptyState";
 import { TrackBPMOverlay } from "./trackBPMOverlay";
 
 // TODO: reconsider if this lazy-loading is worth it...
@@ -15,32 +16,32 @@ export function AudioPlayer() {
   const hasSelectedTrack = selectedTrack !== undefined;
   const isAudioFilesServerReady = appStore.use.audioFilesServerStatus() === "started";
   const selectedFileURL = useSelectedTrackFileURL();
-  const fallback = <div className={Classes.SKELETON} />;
+
+  if (!isAudioFilesServerReady) {
+    return (
+      <Center bd={{ base: 1, dark: 0 }} h={90}>
+        <EmptyState description="Audio files server is not running">
+          <StartAudioFilesServerButton />
+        </EmptyState>
+      </Center>
+    );
+  }
+
+  if (!hasSelectedTrack) {
+    return (
+      <Center bd={{ base: 1, dark: 0 }} h={90}>
+        <EmptyState description="No track selected" />
+      </Center>
+    );
+  }
 
   return (
-    <div className={styles.container}>
-      {isAudioFilesServerReady ? (
-        hasSelectedTrack ? (
-          <div className={styles.waveformContainer}>
-            <Suspense fallback={fallback}>
-              <AudioWaveform mediaURL={selectedFileURL} />
-            </Suspense>
-            <TrackBPMOverlay trackDef={selectedTrack} />
-          </div>
-        ) : (
-          <NonIdealState
-            className={styles.nonIdealState}
-            description={<em>No track selected</em>}
-          />
-        )
-      ) : (
-        <NonIdealState
-          className={styles.nonIdealState}
-          description="Audio files server is not running"
-          action={<StartAudioFilesServerButton />}
-        />
-      )}
-    </div>
+    <Box pos="relative" h={90}>
+      <Suspense fallback={<Skeleton width="100%" height="100%" />}>
+        <AudioWaveform mediaURL={selectedFileURL} />
+      </Suspense>
+      <TrackBPMOverlay trackDef={selectedTrack} />
+    </Box>
   );
 }
 AudioPlayer.displayName = "AudioPlayer";
@@ -50,13 +51,8 @@ function StartAudioFilesServerButton() {
   const startAudioFilesServer = appStore.use.startAudioFilesServer();
 
   return (
-    <Button
-      outlined={true}
-      ellipsizeText={true}
-      intent="primary"
-      text={`Start serving files from ${audioFilesRootFolder}`}
-      icon="play"
-      onClick={startAudioFilesServer}
-    />
+    <Button variant="outline" leftSection={<Play />} onClick={startAudioFilesServer}>
+      Start serving files from {audioFilesRootFolder}
+    </Button>
   );
 }

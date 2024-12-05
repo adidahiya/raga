@@ -1,6 +1,6 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Button, Classes, Slider, Tooltip } from "@blueprintjs/core";
 import { CaretLeft } from "@blueprintjs/icons";
+import { ActionIcon, Paper, Slider, Text, Tooltip } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "radash";
@@ -24,9 +24,11 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
   }, [setPlaybackRate]);
 
   return (
-    <div className={styles.bpmOverlay}>
+    <Paper className={styles.bpmOverlay} radius={0}>
       <motion.div
-        className={styles.tempoSliderContainer}
+        className={classNames(styles.tempoSliderContainer, {
+          [styles.open]: isTempoSliderOpen,
+        })}
         onDoubleClick={handleDoubleClick}
         animate={{ opacity: 1, width: isTempoSliderOpen ? "auto" : 0 }}
         initial={{ opacity: 0 }}
@@ -48,24 +50,24 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
         </AnimatePresence>
       </motion.div>
       <Tooltip
-        compact={true}
-        content={isTempoSliderOpen ? "Hide BPM slider" : "Show BPM adjustment slider"}
-        hoverOpenDelay={500}
-        placement="bottom"
+        label={isTempoSliderOpen ? "Hide BPM slider" : "Show BPM adjustment slider"}
+        position="bottom"
       >
-        <Button
+        <ActionIcon
           className={styles.tempoSliderToggleButton}
-          outlined={true}
-          small={true}
-          icon={
-            <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
-              <CaretLeft />
-            </motion.span>
-          }
+          variant="light"
+          color="gray"
+          size="sm"
           onClick={toggleTempoSlider}
-        />
+        >
+          <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
+            <CaretLeft />
+          </motion.span>
+        </ActionIcon>
       </Tooltip>
-      <span className={Classes.TEXT_MUTED}>BPM: </span>
+      <Text component="span" c="dimmed">
+        BPM:{" "}
+      </Text>
       {trackDef.BPM !== undefined ? (
         <span
           className={classNames(styles.bpmValue, {
@@ -77,7 +79,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
       ) : (
         <AnalyzeSingleTrackButton trackDef={trackDef} />
       )}
-    </div>
+    </Paper>
   );
 }
 TrackBPMOverlay.displayName = "TrackBPMOverlay";
@@ -98,13 +100,19 @@ function TrackTempoSlider() {
 
   return (
     <Slider
+      classNames={{ root: styles.tempoSlider }}
       min={-10}
       max={10}
-      stepSize={0.1}
-      labelRenderer={renderTempoSliderLabel}
-      labelValues={[-10, 0, 10]}
+      step={0.1}
+      label={renderTempoSliderLabel}
+      marks={[
+        { value: -10, label: "-10%" },
+        { value: 0, label: "0%" },
+        { value: 10, label: "10%" },
+      ]}
       value={tempoSliderValue}
       onChange={handleTempoSliderChange}
+      color="gray"
     />
   );
 }

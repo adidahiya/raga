@@ -1,4 +1,5 @@
-import { Button, ButtonGroup, ControlGroup, Slider } from "@blueprintjs/core";
+import { Pause, Play, VolumeOff, VolumeUp } from "@blueprintjs/icons";
+import { ActionIcon, ButtonGroup, Group, Slider } from "@mantine/core";
 import { useCallback, useState } from "react";
 
 import { useOperationCallback } from "../../hooks";
@@ -39,29 +40,35 @@ export function AudioPlayerControls() {
   }
 
   return (
-    <div className={styles.container}>
+    <Group gap={5} align="center">
       <ButtonGroup>
         {isPlaying ? (
-          <Button minimal={true} icon="pause" onClick={handlePause} />
+          <ActionIcon variant="subtle" color="gray" onClick={handlePause}>
+            <Pause />
+          </ActionIcon>
         ) : (
-          <Button minimal={true} icon="play" onClick={handlePlay} disabled={isPlaying} />
+          <ActionIcon variant="subtle" color="gray" onClick={handlePlay}>
+            <Play />
+          </ActionIcon>
         )}
       </ButtonGroup>
-      <ControlGroup>
-        <Button minimal={true} icon="volume-off" onClick={handleVolumeOff} />
-        <div className={styles.volumeSlider}>
-          <Slider
-            value={volumeSliderValue}
-            onChange={handleVolumeChange}
-            min={0}
-            max={1}
-            stepSize={0.01}
-            labelRenderer={false}
-          />
-        </div>
-        <Button minimal={true} icon="volume-up" onClick={handleVolumeFull} />
-      </ControlGroup>
-    </div>
+      <ActionIcon variant="subtle" color="gray" onClick={handleVolumeOff}>
+        <VolumeOff />
+      </ActionIcon>
+      <div className={styles.volumeSlider}>
+        <Slider
+          value={volumeSliderValue}
+          onChange={handleVolumeChange}
+          min={0}
+          max={1}
+          step={0.01}
+          label={null}
+        />
+      </div>
+      <ActionIcon variant="subtle" color="gray" onClick={handleVolumeFull}>
+        <VolumeUp />
+      </ActionIcon>
+    </Group>
   );
 }
 AudioPlayerControls.displayName = "AudioPlayerControls";

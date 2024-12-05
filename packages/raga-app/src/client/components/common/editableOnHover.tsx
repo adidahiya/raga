@@ -1,4 +1,5 @@
-import { Button, Classes, InputGroup, Spinner } from "@blueprintjs/core";
+import { Button, Loader, TextInput } from "@mantine/core";
+import { Text } from "@mantine/core";
 import classNames from "classnames";
 import type { Operation } from "effection";
 import { useCallback, useRef, useState } from "react";
@@ -77,33 +78,32 @@ export default function EditableOnHover<T extends string | number>({
 
   const valueAndEditableContent = (
     <>
-      <div
-        className={classNames(styles.value, {
-          [Classes.TEXT_MUTED]: value == null,
-        })}
-      >
+      <Text component="div" c={value == null ? "dimmed" : undefined} className={styles.value}>
         {value ?? placeholder}
-      </div>
+      </Text>
 
       <div className={styles.editInput}>
-        <InputGroup
-          small={true}
+        <TextInput
+          size="compact-sm"
+          radius="sm"
           defaultValue={value === undefined ? "" : value.toString()}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          inputRef={inputRef}
+          ref={inputRef}
         />
       </div>
       <div className={styles.editButtonContainer}>
         {showGradient && <div className={styles.editButtonGradient} />}
         <Button
           className={styles.editButton}
-          minimal={true}
-          text="Edit"
+          size="compact-sm"
+          color="gray"
+          variant="subtle"
           onClick={handleEditClick}
-          small={true}
-        />
+        >
+          Edit
+        </Button>
       </div>
     </>
   );
@@ -118,7 +118,7 @@ export default function EditableOnHover<T extends string | number>({
         [styles.showGradient]: showGradient,
       })}
     >
-      {isLoading ? <Spinner className={styles.spinner} size={16} /> : valueAndEditableContent}
+      {isLoading ? <Loader className={styles.spinner} size="xs" /> : valueAndEditableContent}
     </div>
   );
 }

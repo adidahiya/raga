@@ -1,9 +1,9 @@
-import { FormGroup, type Props, Switch } from "@blueprintjs/core";
+import { Stack, Switch, Text } from "@mantine/core";
 import { useCallback } from "react";
 
 import { appStore } from "../../store/appStore";
 
-export function AnalyzerSettings(props: Props) {
+export function AnalyzerSettings() {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const setAnalyzeBPMPerTrack = appStore.use.setAnalyzeBPMPerTrack();
 
@@ -12,12 +12,13 @@ export function AnalyzerSettings(props: Props) {
   }, [analyzeBPMPerTrack, setAnalyzeBPMPerTrack]);
 
   return (
-    <FormGroup className={props.className} label="Analysis settings">
+    <Stack gap="xs" p="xs">
+      <Text>Analysis settings</Text>
       <Switch
         label="Analyze BPM per track"
         onChange={handleToggleAnalyzeBPMPerTrack}
         checked={analyzeBPMPerTrack}
       />
-    </FormGroup>
+    </Stack>
   );
 }

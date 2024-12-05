@@ -3,16 +3,7 @@
 @import "../../common/variables";
 
 .trackTableContainer {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  // padding allows container border to show
-  padding-right: 1px;
-  padding-bottom: 1px;
-
   .headerRow {
-    background: bp.$light-gray4;
     font-size: bp.$pt-font-size-small;
   }
 
@@ -91,7 +82,7 @@
     }
   }
 
-  :global(.#{bp.$ns}-dark) & {
+  :global([data-mantine-color-scheme="dark"]) & {
     .headerRow {
       background: bp.$dark-gray2;
     }
@@ -176,7 +167,7 @@
   color: bp.$pt-text-color-muted;
   text-align: right;
 
-  :global(.#{bp.$ns}-dark) & {
+  :global([data-mantine-color-scheme="dark"]) & {
     color: bp.$pt-dark-text-color-muted;
   }
 }
@@ -191,15 +182,7 @@
 }
 
 .smallOutlinedButton {
-  &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-    // no override for light theme
-  }
-
-  :global(.#{bp.$ns}-dark) & {
-    &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-      border-color: rgba(bp.$white, 0.25);
-    }
-  }
+  height: 18px;
 }
 
 :global(.resizer) {
@@ -218,7 +201,7 @@
     opacity: 1;
   }
 
-  :global(.#{bp.$ns}-dark) & {
+  :global([data-mantine-color-scheme="dark"]) & {
     background: bp.$pt-dark-divider-white;
   }
 }

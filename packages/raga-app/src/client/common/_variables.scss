@@ -1,7 +1,5 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
-$double-grid-size: bp.$pt-grid-size * 2;
-$half-grid-size: bp.$pt-grid-size * 0.5;
+$double-grid-size: 20px;
+$half-grid-size: 10px;
 
 $small-button-height: 20px;
 $small-button-font-size: 12px;
@@ -9,6 +7,3 @@ $small-button-font-size: 12px;
 $table-header-padding: 4px;
 $table-cell-padding: 0 4px;
 $table-cell-height: 24px;
-
-$sidebar-footer-height: 30px;
-$sidebar-footer-padding: 5px 7px;
