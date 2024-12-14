@@ -55,7 +55,6 @@ export default function PlaylistTable() {
       <div className={styles.body}>
         <Collapse in={isPlaylistTreeExpanded}>
           <Tree
-            compact={true}
             selectedNodeId={selectedPlaylistId}
             nodes={playlistDefNodes}
             onSelect={handleSelect}
@@ -69,7 +68,11 @@ export default function PlaylistTable() {
 // HOOKS
 // -------------------------------------------------------------------------------------------------
 
-/** Gets the list of playlist definitions in the music library as tree data nodes */
+/**
+ * Gets the list of playlist definitions in the music library as tree data nodes.
+ *
+ * TODO: we can probably just return Mantine tree nodes instead of an intermediate data structure.
+ */
 function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
   const { Playlists: playlistDefs } = useLibraryOrThrow();
 
@@ -102,7 +105,7 @@ function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
       playlistIsFolderWithChildren(playlistId)
         ? folderChildrenByParentId[playlistId]!.map(
             (def: PlaylistDefinition): TreeNode<PlaylistDefinition> => ({
-              childNodes: recursivelyGetFolderChildren(def["Playlist Persistent ID"]),
+              children: recursivelyGetFolderChildren(def["Playlist Persistent ID"]),
               data: def,
               id: def["Playlist Persistent ID"],
               label: def.Name,
@@ -117,13 +120,16 @@ function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
     () =>
       playlistDefs
         .filter((p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined)
-        .map((d) => ({
-          childNodes: recursivelyGetFolderChildren(d["Playlist Persistent ID"]),
-          data: d,
-          id: d["Playlist Persistent ID"],
-          label: d.Name,
-          parentId: d["Parent Persistent ID"],
-        })),
+        .map(
+          (d) =>
+            ({
+              children: recursivelyGetFolderChildren(d["Playlist Persistent ID"]),
+              data: d,
+              id: d["Playlist Persistent ID"],
+              label: d.Name,
+              parentId: d["Parent Persistent ID"],
+            }) satisfies TreeNode<PlaylistDefinition>,
+        ),
     [playlistDefs, recursivelyGetFolderChildren],
   );
 }
