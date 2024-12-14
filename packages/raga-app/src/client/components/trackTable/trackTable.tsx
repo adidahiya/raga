@@ -420,7 +420,7 @@ function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> 
 
 /** Configures CSS grid styles. */
 function useTableTheme(numTracksInPlaylist: number): Theme {
-  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
+  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 25;
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
   const genresColumnWidth = 120;

@@ -1,14 +1,16 @@
 @use "sass:color";
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
+@use "@blueprintjs/colors/lib/scss/colors.scss" as bp;
 @import "../../common/variables";
 
 .trackTableContainer {
+  --divider-color: var(--mantine-color-gray-3);
+
   .headerRow {
-    font-size: bp.$pt-font-size-small;
+    font-size: var(--mantine-font-size-sm);
   }
 
   :global(.resizer-handle) {
-    background-color: bp.$pt-divider-black;
+    background-color: var(--divider-color);
   }
 
   .row {
@@ -17,11 +19,11 @@
     }
 
     &:global(.row-select-single-selected) {
-      background-color: color.adjust(bp.$blue5, $lightness: 10%);
+      background-color: var(--mantine-primary-color-light);
       font-weight: 600; // override react-table-library default which sets '800'
 
       &:hover {
-        background-color: color.adjust(bp.$blue4, $lightness: 10%);
+        background-color: var(--mantine-primary-color-light-hover);
       }
     }
 
@@ -32,11 +34,11 @@
   }
 
   [role="columnheader"] {
-    border-bottom: solid 1px bp.$pt-divider-black;
+    border-bottom: solid 1px var(--divider-color);
   }
 
   .headerCell {
-    padding: $table-header-padding;
+    padding: 1px $table-header-padding;
 
     &.editableColumn {
       padding-left: 10px;
@@ -61,7 +63,7 @@
     background: none;
 
     .selected {
-      background-color: bp.$blue5;
+      background-color: var(--mantine-primary-color-light);
     }
   }
 
@@ -83,12 +85,14 @@
   }
 
   :global([data-mantine-color-scheme="dark"]) & {
+    --divider-color: var(--mantine-color-gray-7);
+
     .headerRow {
       background: bp.$dark-gray2;
     }
 
     :global(.resizer-handle) {
-      background-color: bp.$pt-dark-divider-white;
+      background-color: var(--divider-color);
     }
 
     .row {
@@ -97,17 +101,17 @@
       }
 
       &:global(.row-select-single-selected) {
-        background-color: bp.$blue1;
+        background-color: var(--mantine-primary-color-light);
         font-weight: 600; // override react-table-library default which sets '800'
 
         &:hover {
-          background-color: bp.$blue2;
+          background-color: var(--mantine-primary-color-light-hover);
         }
       }
     }
 
     [role="columnheader"] {
-      border-bottom: solid 1px bp.$pt-dark-divider-white;
+      border-bottom: solid 1px var(--divider-color);
     }
 
     [role="row"] {
@@ -163,13 +167,8 @@
 }
 
 .indexCell {
-  font-size: bp.$pt-font-size-small;
-  color: bp.$pt-text-color-muted;
+  font-size: var(--mantine-font-size-sm);
   text-align: right;
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    color: bp.$pt-dark-text-color-muted;
-  }
 }
 
 .bpmCell {
@@ -191,7 +190,7 @@
   top: 0;
   height: 100%;
   width: 3px;
-  background: bp.$pt-divider-black;
+  background: var(--mantine-color-dark-1);
   opacity: 0.8;
   cursor: col-resize;
   user-select: none;
@@ -202,7 +201,7 @@
   }
 
   :global([data-mantine-color-scheme="dark"]) & {
-    background: bp.$pt-dark-divider-white;
+    background: var(--mantine-color-dark-8);
   }
 }
 
