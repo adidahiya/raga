@@ -1,4 +1,4 @@
-import { Classes, Icon } from "@blueprintjs/core";
+import { Error, ListDetailView, Music } from "@blueprintjs/icons";
 import { Box, Divider, Group, Paper, Progress, Stack, Text } from "@mantine/core";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
@@ -33,22 +33,25 @@ export default function LibraryView() {
     <Stack className={styles.container} gap={0}>
       {libraryState === "none" ? (
         <EmptyState
+          className={styles.emptyState}
           title="Select a Swinsian library"
-          icon={<Icon icon="music" className={Classes.ICON_MUTED} size={48} />}
+          icon={<Music size={48} />}
         >
           <LoadLibraryForm />
         </EmptyState>
       ) : libraryState === "loading" ? (
         <EmptyState
+          className={styles.emptyState}
           title="Loading Swinsian library..."
-          icon={<Icon icon="music" className={Classes.ICON_MUTED} size={48} />}
+          icon={<Music size={48} />}
         >
           <Progress size="sm" color="blue" animated={true} value={100} />
         </EmptyState>
       ) : libraryState === "error" ? (
         <EmptyState
+          className={styles.emptyState}
           title="Error loading Swinsian library"
-          icon={<Icon icon="error" className={Classes.ICON_MUTED} size={48} />}
+          icon={<Error size={48} />}
         />
       ) : (
         <div className={styles.libraryLoaded}>
@@ -81,9 +84,10 @@ function Library() {
           <Panel minSize={30}>
             {selectedPlaylistId === undefined ? (
               <EmptyState
+                className={styles.emptyState}
                 title="Playlist tracks"
                 description="Select a playlist to view tracks"
-                icon={<Icon icon="list-detail-view" className={Classes.ICON_MUTED} size={48} />}
+                icon={<ListDetailView size={48} />}
               />
             ) : (
               <TrackTable playlistId={selectedPlaylistId} />

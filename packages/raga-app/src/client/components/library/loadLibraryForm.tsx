@@ -51,7 +51,6 @@ export default function LoadLibraryForm() {
       <Divider orientation="horizontal" label="or" />
       <Box
         className={classNames(styles.dropzone, { [styles.active]: isDragActive })}
-        bg={isDragActive ? "blue" : "gray"}
         {...getRootProps()}
       >
         <input {...getInputProps()} />
