@@ -59,7 +59,7 @@ __metadata:
     immer: "npm:^10.1.1"
     mantine-contextmenu: "npm:^7.14.2"
     milliparsec: "npm:^5.0.1"
-    node-taglib-sharp: "npm:^5.2.3"
+    node-taglib-sharp: "npm:^6.0.1"
     postcss: "npm:^8.4.49"
     postcss-preset-mantine: "npm:^1.17.0"
     postcss-simple-vars: "npm:^7.0.1"
@@ -4841,13 +4841,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dateformat@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "dateformat@npm:3.0.3"
-  checksum: 10/0504baf50c3777ad333c96c37d1673d67efcb7dd071563832f70b5cbf7f3f4753f18981d44bfd8f665d5e5a511d2fc0af8e0ead8b585b9b3ddaa90067864d3f0
-  languageName: node
-  linkType: hard
-
 "dayjs@npm:^1.11.13":
   version: 1.11.13
   resolution: "dayjs@npm:1.11.13"
@@ -8148,13 +8141,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"itiriri@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "itiriri@npm:2.0.1"
-  checksum: 10/17e0c8e7142258e6559a581c2508dd10f8363799c50e08c26a5e5f1d712e70fc8dffbb26f96e4a355d33794f20fea4eb3faaf25d9edef0f595ef69431d8408d4
-  languageName: node
-  linkType: hard
-
 "jackspeak@npm:^2.3.5":
   version: 2.3.6
   resolution: "jackspeak@npm:2.3.6"
@@ -8407,7 +8393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lcid@npm:^3.0.0":
+"lcid@npm:^3.1.1":
   version: 3.1.1
   resolution: "lcid@npm:3.1.1"
   dependencies:
@@ -8751,7 +8737,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"map-age-cleaner@npm:^0.1.1, map-age-cleaner@npm:^0.1.3":
+"map-age-cleaner@npm:^0.1.1":
   version: 0.1.3
   resolution: "map-age-cleaner@npm:0.1.3"
   dependencies:
@@ -8812,17 +8798,6 @@ __metadata:
     mimic-fn: "npm:^2.0.0"
     p-is-promise: "npm:^2.0.0"
   checksum: 10/ae4afa1cac2b4d64e089ecd54e06ae857b6e5aae410802564032cb407aad13aa598c5aededae8cca6c5827f4057ec3f58415a078c80181dd08019ae1a9aa1226
-  languageName: node
-  linkType: hard
-
-"mem@npm:^5.0.0":
-  version: 5.1.1
-  resolution: "mem@npm:5.1.1"
-  dependencies:
-    map-age-cleaner: "npm:^0.1.3"
-    mimic-fn: "npm:^2.1.0"
-    p-is-promise: "npm:^2.1.0"
-  checksum: 10/8dc22ded29d7c0a9aeb4ae2a69ad232d32b117a5a8842d7997b7a37aa943dc306326ea24616b42de3d819e9dad0dbba083aa25dd5fe55ca1dfa654d89e5a0969
   languageName: node
   linkType: hard
 
@@ -9387,16 +9362,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-taglib-sharp@npm:^5.2.3":
-  version: 5.2.3
-  resolution: "node-taglib-sharp@npm:5.2.3"
+"node-taglib-sharp@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "node-taglib-sharp@npm:6.0.1"
   dependencies:
-    dateformat: "npm:^3.0.3"
     iconv-lite: "npm:^0.6.3"
-    itiriri: "npm:^2.0.1"
-    os-locale: "npm:^4.0.0"
+    os-locale: "npm:^6.0.2"
     uuid: "npm:^8.3.2"
-  checksum: 10/3c8503814c48097a30937cda9ac1c7aa7153b8372eadfd81656256342b52717e705b1c84b116807f4f13e31dc5e9bf6c0d4cacdb55a2ff763bac36aacde384dd
+  checksum: 10/71953f1f972405b1ce15489a80da0d875882bef49d60796455ffd26eeb3151733007a311eb4349f2288fe79a0ac049ba60b20360dd59d76469a3c8edc1af60a6
   languageName: node
   linkType: hard
 
@@ -9858,14 +9831,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"os-locale@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "os-locale@npm:4.0.0"
+"os-locale@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "os-locale@npm:6.0.2"
   dependencies:
-    execa: "npm:^1.0.0"
-    lcid: "npm:^3.0.0"
-    mem: "npm:^5.0.0"
-  checksum: 10/e971925f46dd25498045b6b1528cb478132a0179aad30a04acd7b160a61ee02c2af31fa90e842fed7349859d0d8e73271a7824a6d332f1fc698531c4b5e4d795
+    lcid: "npm:^3.1.1"
+  checksum: 10/812d73334c8773b971bf7fd257b84d2ce7b85d5d2184370f2875fe0e51451f530d6f7c272de1faa0b9ff02d0d10dafd665b6425ed85489271705ab5738691a43
   languageName: node
   linkType: hard
 
@@ -9899,7 +9870,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-is-promise@npm:^2.0.0, p-is-promise@npm:^2.1.0":
+"p-is-promise@npm:^2.0.0":
   version: 2.1.0
   resolution: "p-is-promise@npm:2.1.0"
   checksum: 10/c9a8248c8b5e306475a5d55ce7808dbce4d4da2e3d69526e4991a391a7809bfd6cfdadd9bf04f1c96a3db366c93d9a0f5ee81d949e7b1684c4e0f61f747199ef
