@@ -1,4 +1,3 @@
-import { Colors } from "@blueprintjs/colors";
 import { Progress } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useBoolean } from "usehooks-ts";
@@ -35,7 +34,7 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
         container: waveformElement.current,
         height,
         url: mediaURL,
-        waveColor: Colors.BLUE3,
+        waveColor: "#4dabf7",
       });
       setWaveSurfer(inst);
 

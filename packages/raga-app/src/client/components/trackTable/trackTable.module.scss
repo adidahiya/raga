@@ -1,9 +1,9 @@
 @use "sass:color";
-@use "@blueprintjs/colors/lib/scss/colors.scss" as bp;
 @import "../../common/variables";
 
 .trackTableContainer {
   --divider-color: var(--mantine-color-gray-3);
+  --row-hover-color: var(--mantine-color-gray-2);
 
   .headerRow {
     font-size: var(--mantine-font-size-sm);
@@ -15,7 +15,7 @@
 
   .row {
     &:global(.row-select-clickable):hover {
-      background-color: bp.$light-gray3;
+      background-color: var(--row-hover-color);
     }
 
     &:global(.row-select-single-selected) {
@@ -71,24 +71,25 @@
     // HACKHACK: rows are just divs without classes with <Virtualized>
     > div {
       &:nth-of-type(odd) {
-        background: bp.$light-gray5;
+        background: var(--mantine-color-gray-1);
       }
 
       &:nth-of-type(even) {
-        background: bp.$white;
+        background: var(--mantine-color-white);
       }
 
       &:has(> .rowActive) {
-        box-shadow: inset 0 0 0 1px bp.$blue5;
+        box-shadow: inset 0 0 0 1px var(--mantine-primary-color-filled);
       }
     }
   }
 
   :global([data-mantine-color-scheme="dark"]) & {
     --divider-color: var(--mantine-color-gray-7);
+    --row-hover-color: var(--mantine-color-dark-5);
 
     .headerRow {
-      background: bp.$dark-gray2;
+      background: var(--mantine-color-dark-7);
     }
 
     :global(.resizer-handle) {
@@ -96,10 +97,6 @@
     }
 
     .row {
-      &:global(.row-select-clickable):hover {
-        background-color: bp.$dark-gray3;
-      }
-
       &:global(.row-select-single-selected) {
         background-color: var(--mantine-primary-color-light);
         font-weight: 600; // override react-table-library default which sets '800'
@@ -114,25 +111,19 @@
       border-bottom: solid 1px var(--divider-color);
     }
 
-    [role="row"] {
-      .selected {
-        background-color: bp.$blue1;
-      }
-    }
-
     :global(.tbody) {
       // HACKHACK: rows are just divs without classes with <Virtualized>
       > div {
         &:nth-of-type(odd) {
-          background: bp.$dark-gray1;
+          background: var(--mantine-color-dark-8);
         }
 
         &:nth-of-type(even) {
-          background: bp.$dark-gray2;
+          background: var(--mantine-color-dark-7);
         }
 
         &:has(> .rowActive) {
-          box-shadow: inset 0 0 0 1px bp.$blue1;
+          box-shadow: inset 0 0 0 1px var(--mantine-primary-color-filled);
         }
       }
     }
