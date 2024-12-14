@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@adahiya/raga-lib": "workspace:^",
-    "@blueprintjs/core": "^5.14.0",
     "@blueprintjs/icons": "^5.14.0",
     "@emotion/react": "^11.13.3",
     "@mantine/core": "^7.14.3",
