@@ -1,6 +1,6 @@
 import "@mantine/core/styles.css";
-import "mantine-contextmenu/styles.layer.css";
 import "@mantine/notifications/styles.css";
+import "mantine-contextmenu/styles.layer.css";
 import "./common/mantine-overrides.scss";
 
 import { createTheme, MantineProvider } from "@mantine/core";
@@ -10,6 +10,7 @@ import { ContextMenuProvider } from "mantine-contextmenu";
 
 import styles from "./app.module.scss";
 import AppChrome from "./components/chrome/appChrome";
+import GlobalHotkeysDialog from "./components/globalHotkeysDialog";
 import { appStore } from "./store/appStore";
 import LibraryView from "./views/libraryView";
 
@@ -47,6 +48,7 @@ export default function App() {
         >
           <AppChrome />
           <LibraryView />
+          <GlobalHotkeysDialog />
         </div>
       </ContextMenuProvider>
     </MantineProvider>
