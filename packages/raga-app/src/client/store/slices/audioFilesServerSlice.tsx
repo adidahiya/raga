@@ -1,4 +1,6 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
+import { Cross, Tick } from "@blueprintjs/icons";
+import { notifications } from "@mantine/notifications";
 import { call, type Operation, run } from "effection";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";
@@ -282,10 +284,11 @@ function initAudioFilesServer(set: AppStoreSet) {
       ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
       (_event, data) => {
         set((state) => {
-          state.toaster?.show({
-            message: `Audio files server started at ${state.audioFilesRootFolder}`,
-            intent: "success",
-            icon: "tick",
+          notifications.show({
+            title: "Audio files server started",
+            message: state.audioFilesRootFolder,
+            color: "green",
+            icon: <Tick />,
           });
           state.audioFilesConverterTemporaryFolder = data?.audioConverterTemporaryFolder;
           state.audioFilesServerStatus = "started";
@@ -305,10 +308,11 @@ function initAudioFilesServer(set: AppStoreSet) {
           `[client] audio files server failed to start, check server logs: ${JSON.stringify(err)}`,
         );
         set((state) => {
-          state.toaster?.show({
-            message: `Audio files server failed to start at ${state.audioFilesRootFolder}`,
-            intent: "danger",
-            icon: "cross",
+          notifications.show({
+            title: "Audio files server failed to start",
+            message: state.audioFilesRootFolder,
+            color: "red",
+            icon: <Cross />,
           });
           state.audioFilesServerStatus = "failed";
         });

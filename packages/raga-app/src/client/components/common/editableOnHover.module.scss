@@ -1,15 +1,11 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
 .value {
   padding-block: 2px;
 }
 
 .editInput {
   display: none;
-
-  :global(.#{bp.$ns}-input-group.#{bp.$ns}-small) input {
-    font-size: 14px;
-  }
+  --input-height-compact-sm: 24px;
+  --mantine-font-size-sm: 14px;
 }
 
 .editButtonContainer {
@@ -27,20 +23,27 @@
   width: 100px;
   right: 0;
   position: absolute;
-  background: linear-gradient(90deg, rgba(bp.$light-gray2, 0) 0%, rgba(bp.$light-gray2, 1) 80%);
 
-  :global(.#{bp.$ns}-dark) & {
-    background: linear-gradient(90deg, rgba(bp.$dark-gray1, 0) 0%, rgba(bp.$dark-gray1, 1) 80%);
+  --gradient-start: color-mix(in srgb, var(--mantine-color-white) 0%, transparent);
+  --gradient-end: var(--mantine-color-white);
+
+  background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 80%);
+
+  :global([data-mantine-color-scheme="dark"]) & {
+    --gradient-start: color-mix(in srgb, var(--mantine-color-dark-8) 0%, transparent);
+    --gradient-end: color-mix(in srgb, var(--mantine-color-dark-8) 100%, transparent);
   }
 }
 
 .editButton {
+  height: 18px;
   position: relative; // allows stacking above gradient element
   margin-right: 2px;
 }
 
 .spinner {
-  margin-right: 8px;
+  padding: 2px;
+  margin-right: 6px;
 }
 
 .editableOnHover {

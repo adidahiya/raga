@@ -1,0 +1,17 @@
+// see https://github.com/palantir/blueprint/blob/fd422a9ab1cd5191483abeb84a43d257242ea97b/packages/core/src/components/icon/_icon.scss
+
+.bp5-icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: text-bottom;
+
+  > svg {
+    // prevent extra vertical whitespace
+    display: block;
+
+    // inherit text color unless explicit fill is set
+    &:not([fill]) {
+      fill: currentcolor;
+    }
+  }
+}

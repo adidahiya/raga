@@ -1,28 +1,9 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
-.container {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-  align-items: center;
-
-  .divider {
-    height: 20px;
-    margin-block: 0;
-  }
+.buttonNoRightRadius {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.popover {
-  padding: 10px;
-}
-
-$inputWidth: 400px;
-
-.outputFilepath {
-  margin-bottom: 10px;
-  width: $inputWidth;
-
-  :global(.#{bp.$ns}-file-upload-input) {
-    width: $inputWidth;
-  }
+.buttonNoLeftRadius {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }

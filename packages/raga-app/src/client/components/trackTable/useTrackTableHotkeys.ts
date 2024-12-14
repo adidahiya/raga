@@ -1,5 +1,5 @@
-import { useHotkeys } from "@blueprintjs/core";
-import { useCallback, useMemo } from "react";
+import { useHotkeys } from "@mantine/hooks";
+import { useCallback } from "react";
 
 import { TRACK_TABLE_ROW_HEIGHT } from "../../../common/constants";
 import { appStore } from "../../store/appStore";
@@ -54,7 +54,7 @@ export default function useTrackTableHotkeys({
     if (trackTableFilterVisible) {
       // focus the filter search input
       const filterSearchInput = document.querySelector<HTMLInputElement>(
-        `.${styles.tableFilter} input[type='search']`,
+        `.${styles.filterInput} input[type='search']`,
       );
       filterSearchInput?.focus();
     } else {
@@ -63,25 +63,8 @@ export default function useTrackTableHotkeys({
     }
   }, [setTrackTableFilterVisible, trackTableFilterVisible]);
 
-  const hotkeyConfig = useMemo(
-    () => [
-      {
-        global: true,
-        group: "Track Browser",
-        combo: "cmd+l",
-        label: "Scroll to selected track",
-        onKeyDown: handleScrollToSelectedTrack,
-      },
-      {
-        global: true,
-        group: "Track Browser",
-        combo: "cmd+f",
-        label: "Filter track table",
-        onKeyDown: handleTableSearch,
-      },
-    ],
-    [handleScrollToSelectedTrack, handleTableSearch],
-  );
-
-  return useHotkeys(hotkeyConfig);
+  useHotkeys([
+    ["mod+l", handleScrollToSelectedTrack],
+    ["mod+f", handleTableSearch],
+  ]);
 }

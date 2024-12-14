@@ -1,36 +1,29 @@
 @use "sass:color";
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 @import "../../common/variables";
 
 .trackTableContainer {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  // padding allows container border to show
-  padding-right: 1px;
-  padding-bottom: 1px;
+  --divider-color: var(--mantine-color-gray-3);
+  --row-hover-color: var(--mantine-color-gray-2);
 
   .headerRow {
-    background: bp.$light-gray4;
-    font-size: bp.$pt-font-size-small;
+    font-size: var(--mantine-font-size-sm);
   }
 
   :global(.resizer-handle) {
-    background-color: bp.$pt-divider-black;
+    background-color: var(--divider-color);
   }
 
   .row {
     &:global(.row-select-clickable):hover {
-      background-color: bp.$light-gray3;
+      background-color: var(--row-hover-color);
     }
 
     &:global(.row-select-single-selected) {
-      background-color: color.adjust(bp.$blue5, $lightness: 10%);
+      background-color: var(--mantine-primary-color-light);
       font-weight: 600; // override react-table-library default which sets '800'
 
       &:hover {
-        background-color: color.adjust(bp.$blue4, $lightness: 10%);
+        background-color: var(--mantine-primary-color-light-hover);
       }
     }
 
@@ -41,11 +34,11 @@
   }
 
   [role="columnheader"] {
-    border-bottom: solid 1px bp.$pt-divider-black;
+    border-bottom: solid 1px var(--divider-color);
   }
 
   .headerCell {
-    padding: $table-header-padding;
+    padding: 1px $table-header-padding;
 
     &.editableColumn {
       padding-left: 10px;
@@ -70,7 +63,7 @@
     background: none;
 
     .selected {
-      background-color: bp.$blue5;
+      background-color: var(--mantine-primary-color-light);
     }
   }
 
@@ -78,66 +71,59 @@
     // HACKHACK: rows are just divs without classes with <Virtualized>
     > div {
       &:nth-of-type(odd) {
-        background: bp.$light-gray5;
+        background: var(--mantine-color-gray-1);
       }
 
       &:nth-of-type(even) {
-        background: bp.$white;
+        background: var(--mantine-color-white);
       }
 
       &:has(> .rowActive) {
-        box-shadow: inset 0 0 0 1px bp.$blue5;
+        box-shadow: inset 0 0 0 1px var(--mantine-primary-color-filled);
       }
     }
   }
 
-  :global(.#{bp.$ns}-dark) & {
+  :global([data-mantine-color-scheme="dark"]) & {
+    --divider-color: var(--mantine-color-gray-7);
+    --row-hover-color: var(--mantine-color-dark-5);
+
     .headerRow {
-      background: bp.$dark-gray2;
+      background: var(--mantine-color-dark-7);
     }
 
     :global(.resizer-handle) {
-      background-color: bp.$pt-dark-divider-white;
+      background-color: var(--divider-color);
     }
 
     .row {
-      &:global(.row-select-clickable):hover {
-        background-color: bp.$dark-gray3;
-      }
-
       &:global(.row-select-single-selected) {
-        background-color: bp.$blue1;
+        background-color: var(--mantine-primary-color-light);
         font-weight: 600; // override react-table-library default which sets '800'
 
         &:hover {
-          background-color: bp.$blue2;
+          background-color: var(--mantine-primary-color-light-hover);
         }
       }
     }
 
     [role="columnheader"] {
-      border-bottom: solid 1px bp.$pt-dark-divider-white;
-    }
-
-    [role="row"] {
-      .selected {
-        background-color: bp.$blue1;
-      }
+      border-bottom: solid 1px var(--divider-color);
     }
 
     :global(.tbody) {
       // HACKHACK: rows are just divs without classes with <Virtualized>
       > div {
         &:nth-of-type(odd) {
-          background: bp.$dark-gray1;
+          background: var(--mantine-color-dark-8);
         }
 
         &:nth-of-type(even) {
-          background: bp.$dark-gray2;
+          background: var(--mantine-color-dark-7);
         }
 
         &:has(> .rowActive) {
-          box-shadow: inset 0 0 0 1px bp.$blue1;
+          box-shadow: inset 0 0 0 1px var(--mantine-primary-color-filled);
         }
       }
     }
@@ -172,13 +158,8 @@
 }
 
 .indexCell {
-  font-size: bp.$pt-font-size-small;
-  color: bp.$pt-text-color-muted;
+  font-size: var(--mantine-font-size-sm);
   text-align: right;
-
-  :global(.#{bp.$ns}-dark) & {
-    color: bp.$pt-dark-text-color-muted;
-  }
 }
 
 .bpmCell {
@@ -191,15 +172,7 @@
 }
 
 .smallOutlinedButton {
-  &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-    // no override for light theme
-  }
-
-  :global(.#{bp.$ns}-dark) & {
-    &:global(.#{bp.$ns}-button.#{bp.$ns}-outlined) {
-      border-color: rgba(bp.$white, 0.25);
-    }
-  }
+  height: 18px;
 }
 
 :global(.resizer) {
@@ -208,7 +181,7 @@
   top: 0;
   height: 100%;
   width: 3px;
-  background: bp.$pt-divider-black;
+  background: var(--mantine-color-dark-1);
   opacity: 0.8;
   cursor: col-resize;
   user-select: none;
@@ -218,8 +191,8 @@
     opacity: 1;
   }
 
-  :global(.#{bp.$ns}-dark) & {
-    background: bp.$pt-dark-divider-white;
+  :global([data-mantine-color-scheme="dark"]) & {
+    background: var(--mantine-color-dark-8);
   }
 }
 

@@ -1,85 +1,28 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
 $width-standard: 300px;
 $width-wide: 500px;
 
-.loadLibraryForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  :global(.bp5-form-group) {
-    max-width: $width-standard;
-  }
-
-  .recentLibrariesForm {
-    max-width: $width-wide;
-  }
-}
-
-.separator {
-  margin: 10px 0;
-  position: relative;
-  width: $width-standard;
-
-  &:before {
-    background: bp.$pt-divider-black;
-    content: "";
-    display: block;
-    height: 1px;
-    left: 4rem;
-    position: absolute;
-    top: 10px;
-    width: calc(50% - 5rem);
-  }
-
-  &:after {
-    background: bp.$pt-divider-black;
-    content: "";
-    display: block;
-    height: 1px;
-    position: absolute;
-    right: 4rem;
-    top: 10px;
-    width: calc(50% - 5rem);
-  }
-
-  :global(.#{bp.$ns}-dark) & {
-    &:before,
-    &:after {
-      background: bp.$pt-dark-divider-white;
-    }
-  }
-}
-
 .dropzone {
+  --outline-color: var(--mantine-color-gray-5);
+  --background-color: var(--mantine-color-gray-0);
+
   align-items: center;
-  background: bp.$light-gray3;
-  border-radius: bp.$pt-border-radius;
-  border: dashed 1px bp.$pt-divider-black;
+  border-radius: var(--mantine-radius-md);
+  border: dashed 1px var(--outline-color);
   display: flex;
   justify-content: center;
   padding: 20px 10px;
+  background-color: var(--background-color);
 
   &.active {
-    background: bp.$light-gray2;
+    --background-color: var(--mantine-primary-color-light-hover);
   }
 
-  :global(.#{bp.$ns}-dark) & {
-    background-color: bp.$dark-gray3;
-    border-color: 1px bp.$pt-dark-divider-white;
+  :global([data-mantine-color-scheme="dark"]) & {
+    --outline-color: var(--mantine-color-gray-7);
+    --background-color: var(--mantine-color-gray-8);
 
     &.active {
-      background-color: bp.$dark-gray2;
+      --background-color: var(--mantine-primary-color-light-hover);
     }
   }
-}
-
-.clearRecent {
-  display: inline-flex;
-  margin-top: 10px;
-}
-
-.recentLibrariesMenu {
-  margin-top: 5px;
 }

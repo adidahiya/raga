@@ -1,12 +1,3 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
-.container {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
-}
-
 .nowPlaying {
   max-width: calc(100vw - 480px);
 }

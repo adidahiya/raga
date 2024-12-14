@@ -1,5 +1,5 @@
-import { useHotkeys } from "@blueprintjs/core";
-import { useCallback, useMemo } from "react";
+import { useHotkeys } from "@mantine/hooks";
+import { useCallback } from "react";
 
 import { useOperationCallback } from "../../hooks";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
@@ -25,55 +25,11 @@ export default function useAudioPlayerHotkeys() {
     seek(30 * 1000);
   }, [seek]);
 
-  const hotkeyConfig = useMemo(
-    () => [
-      {
-        global: true,
-        group: "Audio Player",
-        combo: "space",
-        label: "Play/Pause audio",
-        onKeyDown: isPlaying ? pause : handlePlay,
-        preventDefault: true,
-      },
-      {
-        global: true,
-        group: "Audio Player",
-        combo: "arrowleft",
-        label: "Seek backward 10s",
-        onKeyDown: seekBackwardTen,
-      },
-      {
-        global: true,
-        group: "Audio Player",
-        combo: "cmd+arrowleft",
-        label: "Seek backward 30s",
-        onKeyDown: seekBackwardThirty,
-      },
-      {
-        global: true,
-        group: "Audio Player",
-        combo: "arrowright",
-        label: "Seek forward 10s",
-        onKeyDown: seekForwardTen,
-      },
-      {
-        global: true,
-        group: "Audio Player",
-        combo: "cmd+arrowright",
-        label: "Seek forward 30s",
-        onKeyDown: seekForwardThirty,
-      },
-    ],
-    [
-      handlePlay,
-      isPlaying,
-      pause,
-      seekBackwardTen,
-      seekBackwardThirty,
-      seekForwardTen,
-      seekForwardThirty,
-    ],
-  );
-
-  return useHotkeys(hotkeyConfig);
+  useHotkeys([
+    ["space", isPlaying ? pause : handlePlay],
+    ["ArrowLeft", seekBackwardTen],
+    ["mod+ArrowLeft", seekBackwardThirty],
+    ["ArrowRight", seekForwardTen],
+    ["mod+ArrowRight", seekForwardThirty],
+  ]);
 }

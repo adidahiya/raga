@@ -1,14 +1,30 @@
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
 @import "../common/variables";
 
 .container {
-  display: flex;
-  flex-direction: column;
   height: calc(100vh - 50px);
   padding: 0;
+}
 
-  :global(.#{bp.$ns}-non-ideal-state) {
-    flex-grow: 1;
+.emptyState {
+  --icon-fill-color: var(--mantine-color-gray-5);
+  --icon-stroke-color: var(--mantine-color-dark-5);
+
+  :global([data-mantine-color-scheme="dark"]) & {
+    --icon-fill-color: var(--mantine-color-dark-1);
+    --icon-stroke-color: var(--mantine-color-dark-1);
+  }
+
+  :global(.bp5-icon svg) {
+    fill-opacity: 0.25;
+    // need to show overflow for some strokes on paths that reach the edge of the icon bounding box
+    overflow: visible;
+
+    path {
+      fill: var(--icon-fill-color);
+      stroke: var(--icon-stroke-color);
+      stroke-opacity: 1;
+      stroke-width: 1px;
+    }
   }
 }
 
@@ -17,41 +33,15 @@
   position: relative;
 }
 
-.library {
-  width: 100%;
-  height: 100%;
-}
-
-.libraryHeader {
-  display: flex;
-  flex-direction: row;
-}
-
-.libraryHeaderSection {
-  :global(.#{bp.$ns}-form-group:not(:last-of-type)) {
-    margin-bottom: 5px;
-  }
-}
-
-.audioPlayer {
-  // empty
-}
-
 .librarySidebar {
   justify-content: space-between;
   position: relative; // creates a stacking context for playlist table layout
 
   .librarySidebarFooter {
-    border-top: solid 1px bp.$pt-divider-black;
     bottom: 0;
-    height: $sidebar-footer-height;
+    height: 30px;
     left: 0;
-    padding: $sidebar-footer-padding;
     position: absolute;
     right: 0;
-
-    :global(.#{bp.$ns}-dark) & {
-      border-color: bp.$pt-dark-divider-white;
-    }
   }
 }

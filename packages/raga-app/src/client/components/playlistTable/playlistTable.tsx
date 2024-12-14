@@ -1,7 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { Button, Classes, Collapse } from "@blueprintjs/core";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import classNames from "classnames";
+import { ActionIcon, Collapse, Divider, Text } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -38,22 +37,24 @@ export default function PlaylistTable() {
         <div className={styles.headerContent}>
           <span>
             Playlists{" "}
-            <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>
+            <Text component="span" c="dimmed" size="sm">
               ({formatStatNumber(numTotalPlaylists)})
-            </span>
+            </Text>
           </span>
-          <Button
-            minimal={true}
-            small={true}
-            icon={isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+          <ActionIcon
+            size="compact-sm"
+            color="gray"
+            variant="subtle"
             onClick={togglePlaylistTreeExpanded}
-          />
+          >
+            {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+          </ActionIcon>
         </div>
       </div>
+      <Divider orientation="horizontal" />
       <div className={styles.body}>
-        <Collapse isOpen={isPlaylistTreeExpanded} className={styles.treeCollapse}>
+        <Collapse in={isPlaylistTreeExpanded}>
           <Tree
-            compact={true}
             selectedNodeId={selectedPlaylistId}
             nodes={playlistDefNodes}
             onSelect={handleSelect}
@@ -67,7 +68,11 @@ export default function PlaylistTable() {
 // HOOKS
 // -------------------------------------------------------------------------------------------------
 
-/** Gets the list of playlist definitions in the music library as tree data nodes */
+/**
+ * Gets the list of playlist definitions in the music library as tree data nodes.
+ *
+ * TODO: we can probably just return Mantine tree nodes instead of an intermediate data structure.
+ */
 function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
   const { Playlists: playlistDefs } = useLibraryOrThrow();
 
@@ -100,7 +105,7 @@ function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
       playlistIsFolderWithChildren(playlistId)
         ? folderChildrenByParentId[playlistId]!.map(
             (def: PlaylistDefinition): TreeNode<PlaylistDefinition> => ({
-              childNodes: recursivelyGetFolderChildren(def["Playlist Persistent ID"]),
+              children: recursivelyGetFolderChildren(def["Playlist Persistent ID"]),
               data: def,
               id: def["Playlist Persistent ID"],
               label: def.Name,
@@ -115,13 +120,16 @@ function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
     () =>
       playlistDefs
         .filter((p) => !p.Master && p.Name !== "Music" && p["Parent Persistent ID"] === undefined)
-        .map((d) => ({
-          childNodes: recursivelyGetFolderChildren(d["Playlist Persistent ID"]),
-          data: d,
-          id: d["Playlist Persistent ID"],
-          label: d.Name,
-          parentId: d["Parent Persistent ID"],
-        })),
+        .map(
+          (d) =>
+            ({
+              children: recursivelyGetFolderChildren(d["Playlist Persistent ID"]),
+              data: d,
+              id: d["Playlist Persistent ID"],
+              label: d.Name,
+              parentId: d["Parent Persistent ID"],
+            }) satisfies TreeNode<PlaylistDefinition>,
+        ),
     [playlistDefs, recursivelyGetFolderChildren],
   );
 }

@@ -1,10 +1,10 @@
-import { Colors } from "@blueprintjs/colors";
-import { NonIdealState, ProgressBar } from "@blueprintjs/core";
+import { Progress } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import WaveSurfer from "wavesurfer.js";
 
 import { appStore } from "../../store/appStore";
+import EmptyState from "../common/emptyState";
 import InlineOverlay from "../common/inlineOverlay";
 import styles from "./audioWaveform.module.scss";
 
@@ -34,7 +34,7 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
         container: waveformElement.current,
         height,
         url: mediaURL,
-        waveColor: Colors.BLUE3,
+        waveColor: "#4dabf7",
       });
       setWaveSurfer(inst);
 
@@ -63,18 +63,19 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
       <div className={styles.waveform} ref={waveformElement} />
       {showLoadingOverlay && (
         <InlineOverlay className={styles.loadingOverlay}>
-          <NonIdealState
+          <EmptyState
             description={
               audioFilesConverterIsBusy ? "Converting AIFF to MP3..." : "Loading track audio..."
             }
-            action={
-              <ProgressBar
-                className={styles.progressBar}
-                value={audioFilesConverterIsBusy ? undefined : loadingPercentage / 100}
-                intent="primary"
-              />
-            }
-          />
+          >
+            <Progress
+              className={styles.progressBar}
+              size="sm"
+              color="blue"
+              value={audioFilesConverterIsBusy ? 100 : loadingPercentage}
+              animated={true}
+            />
+          </EmptyState>
         </InlineOverlay>
       )}
     </div>

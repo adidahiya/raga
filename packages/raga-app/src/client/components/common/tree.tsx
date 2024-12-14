@@ -1,24 +1,34 @@
-import { Tree, type TreeNodeInfo, type TreeProps, usePrevious } from "@blueprintjs/core";
+import { ChevronDown, ChevronRight } from "@blueprintjs/icons";
+import {
+  ActionIcon,
+  getTreeExpandedState,
+  Group,
+  type RenderTreeNodePayload,
+  Tree,
+  type TreeNodeData,
+  useTree,
+} from "@mantine/core";
 import classNames from "classnames";
 import { useCallback, useEffect, useMemo } from "react";
-import { useImmer } from "use-immer";
 
 import styles from "./tree.module.scss";
 
 // INTERFACES
 // -------------------------------------------------------------------------------------------------
 
-export interface TreeNode<T> extends TreeNodeInfo<T> {
-  childNodes?: TreeNode<T>[];
+/**
+ * Input tree node interface.
+ * We can probably refactor this to not be necessary, just use Mantine's interfaces instead.
+ */
+export interface TreeNode<T> {
+  children?: TreeNode<T>[];
   data: T;
   id: string;
+  label: string;
   parentId: string | undefined;
 }
 
-export interface ControlledTreeProps<T> extends Omit<TreeProps<T>, "contents"> {
-  /** Optional classes for the container element. */
-  className?: string;
-
+export interface ControlledTreeProps<T> {
   /** Tree data nodes. */
   nodes: TreeNode<T>[];
 
@@ -26,208 +36,203 @@ export interface ControlledTreeProps<T> extends Omit<TreeProps<T>, "contents"> {
   selectedNodeId?: string;
 
   /** Callback invoked when a node is selected. */
-  onSelect?: (node: TreeNode<T>, nodePath: NodePath) => void;
-
-  /** Callback invoked when a node is expanded or collapsed in the tree. */
-  onChange?: (node: TreeNode<T>, nodePath: NodePath, changeType: "expand" | "collapse") => void;
+  onSelect?: (node: TreeNode<T>) => void;
 }
 
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-// TODO: consider refactoring with `useImmerReducer` if the state management in event handlers feels unweildy,
-// see https://immerjs.github.io/immer/example-setstate#useimmerreducer
-
 /**
- * Augment Blueprint's Tree component (purely presentational, fully controlled) with Immer-based
- * immutable state management.
+ * Wrapper around Mantine's Tree component with controlled state management.
+ *
+ * Notable differences from older tree implementations (like Blueprint's Tree component):
+ * - Node value string represent not just the id of the current node, but the full path (delimited by
+ *   slashes) of all the node ids from the root node to the current node.
  */
 export default function ControlledTree<T extends object>({
   selectedNodeId,
   nodes,
-  onChange,
   onSelect,
-  ...treeProps
 }: ControlledTreeProps<T>) {
-  const nodesWithClassNames = useMemo(() => mapEachNode<T>(nodes, applyDefaultClassNames), [nodes]);
-  const [nodesWithTreeState, setNodes] = useImmer<TreeNode<T>[]>(nodesWithClassNames);
+  // Convert our node structure to Mantine's expected format
+  const mantineNodes = useMemo(
+    () => mapNodesToMantineFormat(nodes, selectedNodeId),
+    [nodes, selectedNodeId],
+  );
 
-  const prevSelectedNodeId = usePrevious(selectedNodeId);
-
-  // set the intially selected node and expand its parent nodes, only once on component mount
-  useEffect(() => {
-    if (selectedNodeId !== undefined) {
-      setNodes((draft) => {
-        const previouslySelectedNode = getNodeWithId(draft, prevSelectedNodeId);
-        const newlySelectedNode = getNodeWithId(draft, selectedNodeId);
-
-        // deselect previous node, collapse all parents in its path
-        if (previouslySelectedNode !== undefined) {
-          previouslySelectedNode.isSelected = false;
-
-          let currentNodeInSelectionPath = getNodeWithId(draft, previouslySelectedNode.parentId);
-          while (currentNodeInSelectionPath !== undefined) {
-            currentNodeInSelectionPath.isExpanded = false;
-            currentNodeInSelectionPath = getNodeWithId(draft, currentNodeInSelectionPath.parentId);
-          }
-        }
-
-        // select new node, expand all parents in its path
-        if (newlySelectedNode !== undefined) {
-          newlySelectedNode.isSelected = true;
-
-          let currentNodeInSelectionPath = getNodeWithId(draft, newlySelectedNode.parentId);
-          while (currentNodeInSelectionPath !== undefined) {
-            currentNodeInSelectionPath.isExpanded = true;
-            currentNodeInSelectionPath = getNodeWithId(draft, currentNodeInSelectionPath.parentId);
-          }
-        }
-      });
+  const selectedNode = findNodeById(nodes, selectedNodeId);
+  const selectedMantineNode = findMantineNodeById(mantineNodes, selectedNodeId);
+  const pathToSelectedNode = useMemo(() => {
+    if (!selectedNode || !selectedMantineNode) {
+      return [];
     }
-  }, [prevSelectedNodeId, selectedNodeId, setNodes]);
 
-  const handleNodeClick = useCallback(
-    (node: TreeNodeInfo<T>, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
-      const originallySelected = node.isSelected ?? false;
-      const newSelected = !originallySelected;
+    const path = [];
+    let currentNode: TreeNode<T> | undefined = selectedNode;
+    let currentMantineNode: TreeNodeData | undefined = selectedMantineNode;
+    while (currentNode && currentMantineNode) {
+      path.unshift(currentMantineNode.value);
+      currentNode = findNodeById(nodes, currentNode.parentId);
+      currentMantineNode = findMantineNodeById(mantineNodes, currentNode?.id);
+    }
+    return path;
+  }, [mantineNodes, nodes, selectedMantineNode, selectedNode]);
 
-      // set the node at this path to be selected
-      setNodes((draft) => {
-        if (!e.shiftKey) {
-          // deselect all
-          forEachNode(draft, (node) => {
-            node.isSelected = false;
-            if (node.className !== undefined) {
-              // remove our 'selected path' classes
-              node.className = node.className.replace(styles.selectedPath, "");
-            }
-          });
-        }
+  const tree = useTree({
+    initialExpandedState: getTreeExpandedState(mantineNodes, pathToSelectedNode),
+    initialSelectedState: selectedMantineNode ? [selectedMantineNode.value] : [],
+  });
+  const { select, clearSelected } = tree;
 
-        if (newSelected) {
-          // apply our 'selected path' class at each level of the path
-          for (let i = 0; i < nodePath.length; i++) {
-            const subPath = nodePath.slice(0, i + 1);
-            forNodeAtPath(draft, subPath, (node) => {
-              if (!node.className?.includes(styles.selectedPath)) {
-                node.className = classNames(node.className, styles.selectedPath);
+  const renderTreeNode = useCallback(
+    ({ node, expanded, selected, hasChildren, elementProps, tree }: RenderTreeNodePayload) => {
+      return (
+        <Group
+          gap={5}
+          key={node.value}
+          {...elementProps}
+          className={classNames(styles.node, elementProps.className, {
+            [styles.selectedPath]: selected,
+          })}
+        >
+          {hasChildren && (
+            <ActionIcon
+              size="compact-sm"
+              ml={2}
+              color="gray"
+              variant="subtle"
+              onClick={() => {
+                if (expanded) {
+                  tree.collapse(node.value);
+                } else {
+                  tree.expand(node.value);
+                }
+              }}
+            >
+              {expanded ? <ChevronDown /> : <ChevronRight />}
+            </ActionIcon>
+          )}
+
+          <Group
+            gap={5}
+            pl={hasChildren ? 0 : 5}
+            onClick={() => {
+              if (selected) {
+                tree.deselect(node.value);
+              } else {
+                tree.select(node.value);
+                const selectedNode = findNodeById(nodes, mantineNodeValueToId(node.value));
+                if (selectedNode) {
+                  onSelect?.(selectedNode);
+                }
               }
-            });
-          }
-        }
-
-        forNodeAtPath(draft, nodePath, (node) => {
-          node.isSelected = newSelected;
-        });
-      });
-
-      onSelect?.(node as TreeNode<T>, nodePath);
+            }}
+          >
+            <span>{node.label}</span>
+          </Group>
+        </Group>
+      );
     },
-    [onSelect, setNodes],
+    [nodes, onSelect],
   );
 
-  const handleNodeCollapse = useCallback(
-    (node: TreeNodeInfo<T>, nodePath: NodePath) => {
-      // set the node at this path to be collapsed
-      setNodes((draft) => {
-        forNodeAtPath(draft, nodePath, (node) => {
-          node.isExpanded = false;
-        });
-      });
-      onChange?.(node as TreeNode<T>, nodePath, "collapse");
-    },
-    [onChange, setNodes],
-  );
-
-  const handleNodeExpand = useCallback(
-    (node: TreeNodeInfo<T>, nodePath: NodePath) => {
-      // set the node at this path to be expanded
-      setNodes((draft) => {
-        forNodeAtPath(draft, nodePath, (node) => {
-          node.isExpanded = true;
-        });
-      });
-      onChange?.(node as TreeNode<T>, nodePath, "expand");
-    },
-    [setNodes, onChange],
-  );
+  // Update tree state controlled selection changes
+  useEffect(() => {
+    clearSelected();
+    if (selectedMantineNode) {
+      select(selectedMantineNode.value);
+    }
+  }, [selectedMantineNode, select, clearSelected]);
 
   return (
     <Tree
-      {...treeProps}
-      contents={nodesWithTreeState}
-      onNodeClick={handleNodeClick}
-      onNodeCollapse={handleNodeCollapse}
-      onNodeExpand={handleNodeExpand}
+      data={mantineNodes}
+      expandOnClick={false}
+      selectOnClick={true}
+      tree={tree}
+      renderNode={renderTreeNode}
     />
   );
 }
-ControlledTree.displayName = "ControlledTree";
 
-// TREE MANIPULATION UTILITIES
+// UTILITIES
 // -------------------------------------------------------------------------------------------------
 
-type NodePath = number[];
-
-function forEachNode<T>(
-  nodes: TreeNodeInfo<T>[] | undefined,
-  callback: (node: TreeNodeInfo<T>) => void,
-) {
-  if (nodes === undefined) {
-    return;
+function mapNodesToMantineFormat<T>(
+  nodes: TreeNode<T>[],
+  /** ID of the selected node. */
+  selectedNodeId?: string,
+  /**
+   * Accumulated map of node id to node value path.
+   * Example:
+   * - node 1: "1"
+   * - node 2: "1/2"
+   * - node 3: "1/2/3"
+   */
+  nodeValuePaths: Map<string, string> = new Map<string, string>(),
+): TreeNodeData[] {
+  function getNodeValue(node: TreeNode<T>) {
+    const parentNodeValue = node.parentId ? nodeValuePaths.get(node.parentId) : undefined;
+    const value = parentNodeValue ? `${parentNodeValue}/${node.id}` : node.id;
+    nodeValuePaths.set(node.id, value);
+    return value;
   }
 
-  for (const node of nodes) {
-    callback(node);
-    forEachNode(node.childNodes, callback);
-  }
+  return nodes.map((node) => ({
+    id: node.id,
+    label: node.label,
+    selected: node.id === selectedNodeId,
+    value: getNodeValue(node),
+    children: node.children
+      ? mapNodesToMantineFormat(node.children, selectedNodeId, nodeValuePaths)
+      : undefined,
+  }));
 }
 
-/** Invokes the given callback on a node at the specified path */
-function forNodeAtPath(
-  nodes: TreeNodeInfo[],
-  path: NodePath,
-  callback: (node: TreeNodeInfo) => void,
-) {
-  callback(Tree.nodeFromPath(path, nodes));
-}
-
-/** Gets the node with a specified ID in the tree */
-function getNodeWithId<T>(
-  nodes: TreeNode<T>[] | undefined,
-  id: string | undefined,
-): TreeNode<T> | undefined {
-  if (nodes === undefined || id === undefined) {
-    return;
+function findNodeById<T>(nodes: TreeNode<T>[], id: string | undefined): TreeNode<T> | undefined {
+  if (!id) {
+    return undefined;
   }
 
   for (const node of nodes) {
     if (node.id === id) {
       return node;
     }
-    const childNode = getNodeWithId(node.childNodes, id);
-    if (childNode !== undefined) {
-      return childNode;
+
+    if (node.children) {
+      const found = findNodeById(node.children, id);
+      if (found) {
+        return found;
+      }
     }
   }
-
   return undefined;
 }
 
-function mapEachNode<T>(nodes: TreeNode<T>[], callback: (node: TreeNode<T>) => TreeNode<T>) {
-  return nodes.map((node: TreeNode<T>): TreeNode<T> => {
-    const newNode = callback(node);
-    return {
-      ...newNode,
-      childNodes:
-        newNode.childNodes === undefined ? undefined : mapEachNode(newNode.childNodes, callback),
-    };
-  });
+function findMantineNodeById(
+  nodes: TreeNodeData[],
+  id: string | undefined,
+): TreeNodeData | undefined {
+  if (!id) {
+    return undefined;
+  }
+
+  for (const node of nodes) {
+    const nodeId = mantineNodeValueToId(node.value);
+    if (nodeId === id) {
+      return node;
+    }
+
+    if (node.children) {
+      const found = findMantineNodeById(node.children, id);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return undefined;
 }
 
-function applyDefaultClassNames<T>(node: TreeNode<T>) {
-  return {
-    ...node,
-    className: classNames(node.className, styles.node),
-  };
+function mantineNodeValueToId(value: string): string {
+  return value.split("/").at(-1) ?? "";
 }

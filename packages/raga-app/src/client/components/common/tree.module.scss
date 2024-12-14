@@ -1,26 +1,20 @@
-@use "sass:color";
-@use "@blueprintjs/core/lib/scss/variables.scss" as bp;
-
 .node {
-  &.selectedPath {
-    > :global(.#{bp.$ns}-tree-node-content) {
-      background-color: color.adjust(bp.$blue5, $lightness: 10%);
-    }
+  border: solid 1px transparent;
+  margin-bottom: -1px; // slight overlap to avoid double border on hover
 
-    &:global(.#{bp.$ns}-tree-node-selected) > :global(.#{bp.$ns}-tree-node-content) {
-      background-color: bp.$pt-intent-primary;
-    }
+  &.selectedPath {
+    background-color: var(--mantine-primary-color-light);
+    border: solid 1px var(--mantine-primary-color-filled);
+  }
+
+  &:hover {
+    background-color: var(--mantine-primary-color-light-hover);
+    border-color: var(--mantine-primary-color-9);
   }
 }
 
-:global(.#{bp.$ns}-dark) .node {
-  &.selectedPath {
-    > :global(.#{bp.$ns}-tree-node-content) {
-      background-color: color.adjust(bp.$blue1, $lightness: -15%);
-    }
-
-    &:global(.#{bp.$ns}-tree-node-selected) > :global(.#{bp.$ns}-tree-node-content) {
-      background-color: bp.$blue1;
-    }
+:global([data-mantine-color-scheme="dark"]) .node {
+  &:hover {
+    border-color: var(--mantine-primary-color-1);
   }
 }

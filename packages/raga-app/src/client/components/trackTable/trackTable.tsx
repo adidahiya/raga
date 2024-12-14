@@ -1,6 +1,6 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Classes, Colors, NonIdealState, Tag, Tooltip } from "@blueprintjs/core";
 import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
+import { Badge, Stack, Text, Tooltip, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
@@ -35,8 +35,8 @@ import { stopPropagation } from "../../common/reactUtils";
 import { TrackPropertySortKey } from "../../common/trackPropertySortKey";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
-import { useIsDarkThemeEnabled } from "../../store/selectors/useIsDarkThemeEnabled";
 import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
+import EmptyState from "../common/emptyState";
 import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
 import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
 import AudioFileTypeTag from "./audioFileTypeTag";
@@ -139,7 +139,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, filteredTrackDefNodes);
   const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
   useTrackTableHotkeys({ containerElement, sortedTrackIds });
-  const { contextMenuPopover, handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
+  const { handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
     containerElement,
     sortedTrackDefs,
   });
@@ -165,7 +165,10 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   );
 
   return (
-    <div
+    <Stack
+      w="100%"
+      h="100%"
+      gap={0}
       className={styles.trackTableContainer}
       ref={containerElement}
       onContextMenu={handleContextMenu}
@@ -176,8 +179,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
         onQueryChange={setFilterQuery}
       />
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
-      {contextMenuPopover}
-    </div>
+    </Stack>
   );
 }
 TrackTable.displayName = "TrackTable";
@@ -189,14 +191,15 @@ const RESIZER_OPTIONS = {
 
 function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-  const isDarkThemeEnabled = useIsDarkThemeEnabled();
+  const { colorScheme } = useMantineColorScheme();
+  const { colors } = useMantineTheme();
 
   const resizerOptions = useMemo(() => {
     return {
       ...RESIZER_OPTIONS,
-      resizerHighlight: isDarkThemeEnabled ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY5,
+      resizerHighlight: colorScheme === "dark" ? colors.gray[7] : colors.gray[3],
     };
-  }, [isDarkThemeEnabled]);
+  }, [colorScheme, colors]);
 
   return (
     <Header className={styles.header}>
@@ -207,7 +210,9 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           pinLeft={true}
           sortKey={TrackPropertySortKey.INDEX}
         >
-          <span className={classNames(Classes.TEXT_MUTED, Classes.TEXT_SMALL)}>#</span>
+          <Text component="span" c="dimmed" size="sm">
+            #
+          </Text>
         </HeaderCellSort>
         <HeaderCell
           className={styles.headerCell}
@@ -275,7 +280,7 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
           pinRight={true}
           sortKey={TrackPropertySortKey.DATE_ADDED}
         >
-          <Tooltip content="Date added" placement="bottom" compact={true}>
+          <Tooltip label="Date added" position="bottom">
             <span>Date</span>
           </Tooltip>
         </HeaderCellSort>
@@ -350,16 +355,16 @@ function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
 
 function TrackFileSourceCell({ track }: { track: TrackDefinition }) {
   const fileSource = getTrackFileSource(track);
-  const intent =
+  const color =
     fileSource === AudioFileSource.BANDCAMP
-      ? "primary"
+      ? "blue"
       : fileSource === AudioFileSource.SOULSEEK
-        ? "success"
-        : "none";
+        ? "green"
+        : "gray";
   return (
-    <Tag fill={true} minimal={true} intent={intent} style={{ textAlign: "center" }}>
+    <Badge size="sm" radius="sm" fullWidth={true} variant="light" color={color}>
       {fileSource}
-    </Tag>
+    </Badge>
   );
 }
 
@@ -374,19 +379,16 @@ function TrackTableEmpty({ playlistId }: TrackTableProps) {
   return (
     <div className={styles.trackTableEmpty}>
       {playlistDef === undefined ? (
-        <NonIdealState title={`No playlist selected`} />
+        <EmptyState title="No playlist selected" />
       ) : (
-        <NonIdealState
-          title={`No tracks found in playlist "${playlistDef.Name}"`}
-          action={
-            <p>
-              <em>
-                Raga does not currently support playlist editing. You may add tracks to this
-                playlist in Swinsian and re-import your library.
-              </em>
-            </p>
-          }
-        />
+        <EmptyState title={`No tracks found in playlist "${playlistDef.Name}"`}>
+          <Text>
+            <em>
+              Raga does not currently support playlist editing. You may add tracks to this playlist
+              in Swinsian and re-import your library.
+            </em>
+          </Text>
+        </EmptyState>
       )}
     </div>
   );
@@ -418,13 +420,13 @@ function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> 
 
 /** Configures CSS grid styles. */
 function useTableTheme(numTracksInPlaylist: number): Theme {
-  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 15;
+  const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 25;
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
   const genresColumnWidth = 120;
   const ratingColumnWidth = 90;
   const fileTypeColumnWidth = 80;
-  const fileSourceColumnWidth = 80;
+  const fileSourceColumnWidth = 90;
   const dateAddedColumnWidth = 80;
 
   const gridTemplateColumns = [

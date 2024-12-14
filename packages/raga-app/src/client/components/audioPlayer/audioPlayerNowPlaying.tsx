@@ -1,6 +1,5 @@
-import { Classes, Text } from "@blueprintjs/core";
+import { Group, Text } from "@mantine/core";
 import NumberFlow from "@number-flow/react";
-import classNames from "classnames";
 import { useMemo } from "react";
 
 import { formatAudioDuration, getAudioMinutesAndSeconds } from "../../../common/format";
@@ -27,23 +26,26 @@ export function AudioPlayerNowPlaying() {
   }
 
   return (
-    <div className={styles.container}>
-      <Text className={styles.nowPlaying} ellipsize={true} title={selectedTrack.Artist}>
+    <Group gap={20} align="center">
+      <Text component="span" className={styles.nowPlaying} title={selectedTrack.Artist}>
         <strong>{selectedTrack.Artist}</strong>
-        <span className={Classes.TEXT_MUTED}> &ndash; </span>
+        <Text component="span" c="dimmed">
+          {" "}
+          &ndash;{" "}
+        </Text>
         <strong>{selectedTrack.Name}</strong>
       </Text>
       <div>
         <TrackRatingStars trackID={selectedTrack["Track ID"]} rating={selectedTrack.Rating} />
       </div>
-      <div className={classNames(styles.timeProgress, Classes.TEXT_MUTED)}>
+      <Text c="dimmed" className={styles.timeProgress}>
         <NumberFlow value={minutes} format={{ minimumIntegerDigits: 1 }} locales="en-US" />
         {":"}
         <NumberFlow value={seconds} format={{ minimumIntegerDigits: 2 }} locales="en-US" />
         {" / "}
         {formattedDuration}
-      </div>
-    </div>
+      </Text>
+    </Group>
   );
 }
 AudioPlayerNowPlaying.displayName = "AudioPlayerNowPlaying";
