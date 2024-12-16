@@ -24,6 +24,7 @@ __metadata:
     "@electron-forge/maker-zip": "npm:^7.6.0"
     "@electron-forge/plugin-vite": "npm:^7.6.0"
     "@emotion/react": "npm:^11.14.0"
+    "@mantine/colors-generator": "npm:^7.15.1"
     "@mantine/core": "npm:^7.15.1"
     "@mantine/dates": "npm:^7.15.1"
     "@mantine/dropzone": "npm:^7.15.1"
@@ -45,6 +46,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^4.3.4"
     ansis: "npm:^3.3.2"
     app-root-dir: "npm:^1.0.2"
+    chroma-js: "npm:^3.1.2"
     classnames: "npm:^2.5.1"
     clsx: "npm:^2.1.1"
     cross-env: "npm:^7.0.3"
@@ -1729,6 +1731,15 @@ __metadata:
   dependencies:
     cross-spawn: "npm:^7.0.1"
   checksum: 10/b7402d050e5ca99375b0226e4bb3fbefb0bcd86187dd4d6baac70f34b93d5c7fada9c78bd377ccd8ee74886ce911dd38f91c53479d1e40a2a38fc890150b670f
+  languageName: node
+  linkType: hard
+
+"@mantine/colors-generator@npm:^7.15.1":
+  version: 7.15.1
+  resolution: "@mantine/colors-generator@npm:7.15.1"
+  peerDependencies:
+    chroma-js: ">=2.4.2"
+  checksum: 10/1d3ef23379da8ce3773090f5ec164b27a4335e7ba0861b302739968e6049fcb1f346ec4e5f2525288b3a02a93dc50bcf56384b80696d37177a1703f03167c8ce
   languageName: node
   linkType: hard
 
@@ -4122,6 +4133,13 @@ __metadata:
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
   checksum: 10/c57cf9dd0791e2f18a5ee9c1a299ae6e801ff58fee96dc8bfd0dcb4738a6ce58dd252a3605b1c93c6418fe4f9d5093b28ffbf4d66648cb2a9c67eaef9679be2f
+  languageName: node
+  linkType: hard
+
+"chroma-js@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "chroma-js@npm:3.1.2"
+  checksum: 10/ea09b27d04b477a8fdc3314bfa6dc8de05feab47999ff1acdeba6cf3c32c76338baa5b4562d949d33d8adeca57754e5ea591c15b9985d65583c8771e7e07c2ef
   languageName: node
   linkType: hard
 

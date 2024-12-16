@@ -3,6 +3,7 @@ import "@mantine/notifications/styles.css";
 import "mantine-contextmenu/styles.layer.css";
 import "./common/mantine-overrides.scss";
 
+import { generateColors } from "@mantine/colors-generator";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import classNames from "classnames";
@@ -30,6 +31,10 @@ const theme = createTheme({
     md: "4px",
     lg: "8px",
   },
+  colors: {
+    green: generateColors("#2e6f40"),
+  },
+  primaryShade: { light: 7, dark: 8 },
 });
 
 export default function App() {

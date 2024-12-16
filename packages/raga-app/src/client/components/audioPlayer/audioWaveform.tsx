@@ -1,4 +1,4 @@
-import { Progress } from "@mantine/core";
+import { Progress, useMantineTheme } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import WaveSurfer from "wavesurfer.js";
@@ -26,6 +26,8 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
     setFalse: resetWaveformReady,
   } = useBoolean(false);
 
+  const theme = useMantineTheme();
+
   // initialize a new WaveSurfer instance when the selected track or audio server status changes
   useEffect(() => {
     if (isAudioFilesServerReady && waveformElement.current != null && mediaURL != undefined) {
@@ -34,7 +36,7 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
         container: waveformElement.current,
         height,
         url: mediaURL,
-        waveColor: "#4dabf7",
+        waveColor: theme.colors.blue[5],
       });
       setWaveSurfer(inst);
 
@@ -54,6 +56,7 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
     resetWaveformReady,
     setWaveSurfer,
     waveformElement,
+    theme,
   ]);
 
   const showLoadingOverlay = audioFilesConverterIsBusy || !isWaveformReady;
