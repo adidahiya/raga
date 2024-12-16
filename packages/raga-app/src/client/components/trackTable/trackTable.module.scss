@@ -1,5 +1,5 @@
 @use "sass:color";
-@import "../../common/variables";
+@use "../../common/variables";
 
 .trackTableContainer {
   --divider-color: var(--mantine-color-gray-3);
@@ -38,7 +38,7 @@
   }
 
   .headerCell {
-    padding: 1px $table-header-padding;
+    padding: 1px variables.$table-header-padding;
 
     &.editableColumn {
       padding-left: 10px;
@@ -46,7 +46,7 @@
   }
 
   [role="gridcell"] {
-    padding: $table-cell-padding;
+    padding: variables.$table-cell-padding;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;

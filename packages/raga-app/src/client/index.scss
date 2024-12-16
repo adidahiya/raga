@@ -1,6 +1,6 @@
-@import "./common/blueprint-icons-shim";
-@import "./common/global-modifiers";
-@import "./common/typography";
+@use "./common/blueprint-icons-shim";
+@use "./common/global-modifiers";
+@use "./common/typography";
 
 body {
   height: 100%;

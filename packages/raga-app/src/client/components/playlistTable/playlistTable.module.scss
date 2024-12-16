@@ -1,4 +1,4 @@
-@import "../../common/variables";
+@use "../../common/variables";
 
 .playlistTableContainer {
   padding-left: 1px; // allows border from container element to show
@@ -9,8 +9,8 @@
 }
 
 .header {
-  line-height: $small-button-height;
-  padding: $table-header-padding;
+  line-height: variables.$small-button-height;
+  padding: variables.$table-header-padding;
   flex-grow: 0;
   display: flex;
   flex-direction: column;
