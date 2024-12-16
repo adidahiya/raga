@@ -29,7 +29,7 @@ export function AudioPlayer() {
 
   if (!hasSelectedTrack) {
     return (
-      <Center bd={{ base: 1, dark: 0 }} h={90}>
+      <Center bd={{ base: 1, dark: 0 }} h={110}>
         <EmptyState description="No track selected" />
       </Center>
     );

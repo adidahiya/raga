@@ -64,15 +64,22 @@ export default function LibraryView() {
 
 function Library() {
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
+  const waveSurfer = appStore.use.waveSurfer();
+  const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
+  const selectedTrack = getSelectedTrackDef();
 
   return (
     <Paper w="100%" h="100%" shadow="sm" withBorder={true} radius="sm">
       <Stack gap={0} w="100%" h="100%">
-        <Group justify="space-between" p={5}>
-          <AudioPlayerNowPlaying />
-          <AudioPlayerControls />
-        </Group>
-        <Divider orientation="horizontal" />
+        {selectedTrack === undefined || waveSurfer === undefined ? null : (
+          <>
+            <Group justify="space-between" p={5}>
+              <AudioPlayerNowPlaying selectedTrack={selectedTrack} />
+              <AudioPlayerControls />
+            </Group>
+            <Divider orientation="horizontal" />
+          </>
+        )}
         <AudioPlayer />
         <Divider orientation="horizontal" />
         <PanelGroup direction="horizontal">

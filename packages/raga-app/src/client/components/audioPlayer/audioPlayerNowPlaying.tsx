@@ -1,29 +1,20 @@
+import type { TrackDefinition } from "@adahiya/raga-lib";
 import { Group, Text } from "@mantine/core";
 import NumberFlow from "@number-flow/react";
 import { useMemo } from "react";
 
 import { formatAudioDuration, getAudioMinutesAndSeconds } from "../../../common/format";
-import { appStore } from "../../store/appStore";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 import TrackRatingStars from "../trackTable/trackRatingStars";
 import styles from "./audioPlayerNowPlaying.module.scss";
 import useAudioPlayerHotkeys from "./useAudioPlayerHotkeys";
 
-export function AudioPlayerNowPlaying() {
+export function AudioPlayerNowPlaying({ selectedTrack }: { selectedTrack: TrackDefinition }) {
   const { currentTime, duration } = useAudioPlayerControls();
-  const waveSurfer = appStore.use.waveSurfer();
-  const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
-
   useAudioPlayerHotkeys();
-
-  const selectedTrack = getSelectedTrackDef();
 
   const { minutes, seconds } = useMemo(() => getAudioMinutesAndSeconds(currentTime), [currentTime]);
   const formattedDuration = useMemo(() => formatAudioDuration(duration), [duration]);
-
-  if (waveSurfer === undefined || selectedTrack === undefined) {
-    return undefined;
-  }
 
   return (
     <Group gap={20} align="center">

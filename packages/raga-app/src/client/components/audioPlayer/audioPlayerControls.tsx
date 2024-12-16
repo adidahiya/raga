@@ -3,20 +3,16 @@ import { ActionIcon, ButtonGroup, Group, Slider } from "@mantine/core";
 import { useCallback, useState } from "react";
 
 import { useOperationCallback } from "../../hooks";
-import { appStore } from "../../store/appStore";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
 import styles from "./audioPlayerControls.module.scss";
 import useAudioPlayerHotkeys from "./useAudioPlayerHotkeys";
 
 export function AudioPlayerControls() {
   const { play, pause, isPlaying, setVolume } = useAudioPlayerControls();
-  const waveSurfer = appStore.use.waveSurfer();
-  const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
   const [volumeSliderValue, setVolumeSliderValue] = useState(1);
 
   useAudioPlayerHotkeys();
 
-  const selectedTrack = getSelectedTrackDef();
   const handlePlay = useOperationCallback(play, [play]);
   const handlePause = pause;
   const handleVolumeChange = useCallback(
@@ -34,10 +30,6 @@ export function AudioPlayerControls() {
     setVolume(1);
     setVolumeSliderValue(1);
   }, [setVolume, setVolumeSliderValue]);
-
-  if (waveSurfer === undefined || selectedTrack === undefined) {
-    return undefined;
-  }
 
   return (
     <Group gap={5} align="center">
