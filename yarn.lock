@@ -39,6 +39,7 @@ __metadata:
     "@table-library/react-table-library": "npm:^4.1.7"
     "@tinyhttp/app": "npm:^2.5.0"
     "@types/app-root-dir": "npm:^0.1.4"
+    "@types/chroma-js": "npm:^2.4.5"
     "@types/node": "npm:^22.10.2"
     "@types/react": "npm:^19.0.1"
     "@types/react-devtools": "npm:^3.6.2"
@@ -2801,6 +2802,13 @@ __metadata:
     "@types/node": "npm:*"
     "@types/responselike": "npm:^1.0.0"
   checksum: 10/159f9fdb2a1b7175eef453ae2ced5ea04c0d2b9610cc9ccd9f9abb066d36dacb1f37acd879ace10ad7cbb649490723feb396fb7307004c9670be29636304b988
+  languageName: node
+  linkType: hard
+
+"@types/chroma-js@npm:^2.4.5":
+  version: 2.4.5
+  resolution: "@types/chroma-js@npm:2.4.5"
+  checksum: 10/8b4eeb55ff122d758a598a014f5e7ad14bbc5cfe45ce10a907f33b3d4082e1921655bc83dbaf6728886f4344ee78301b2934ad319656845208ee0164a90a5051
   languageName: node
   linkType: hard
 

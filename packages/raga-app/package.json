@@ -71,6 +71,7 @@
     "@electron-forge/maker-zip": "^7.6.0",
     "@electron-forge/plugin-vite": "^7.6.0",
     "@types/app-root-dir": "^0.1.4",
+    "@types/chroma-js": "^2.4.5",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.1",
     "@types/react-devtools": "^3.6.2",

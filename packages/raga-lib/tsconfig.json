@@ -3,8 +3,6 @@
   "include": ["src"],
   "compilerOptions": {
     "declaration": true,
-    "outDir": "./lib/",
-    // HACKHACK: @types/react-dom is being included for some reason, and we don't have dom types here
-    "skipLibCheck": true
+    "outDir": "./lib/"
   }
 }
