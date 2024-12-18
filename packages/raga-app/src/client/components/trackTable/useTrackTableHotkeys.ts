@@ -7,7 +7,7 @@ import { getTableScrollingContainer } from "./trackTableDOMUtils";
 import styles from "./trackTableFilterBar.module.scss";
 
 export interface UseTrackTableHotkeysOptions {
-  containerElement: React.RefObject<HTMLElement>;
+  containerElement: React.RefObject<HTMLElement | null>;
   sortedTrackIds: number[];
 }
 

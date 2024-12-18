@@ -12,7 +12,7 @@ import TrackRowContextMenu from "./trackRowContextMenu";
 import { getTableScrollingContainer } from "./trackTableDOMUtils";
 
 export interface UseTrackTableContextMenuOptions {
-  containerElement: React.RefObject<HTMLElement>;
+  containerElement: React.RefObject<HTMLElement | null>;
   sortedTrackDefs: TrackDefinition[];
 }
 
