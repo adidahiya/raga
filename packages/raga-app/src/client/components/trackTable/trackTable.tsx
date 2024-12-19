@@ -110,7 +110,7 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
   const allTrackDefNodes = useTrackDefinitionNodes(playlistId);
   const numTracksInPlaylist = allTrackDefNodes.nodes.length;
   const theme = useTableTheme(numTracksInPlaylist);
-  const containerElement = useRef<HTMLDivElement>(null);
+  const containerElement = useRef<HTMLDivElement | null>(null);
 
   // filter trackDefNodes based on filterQuery value
   const [filterQuery, setFilterQuery] = useState<string>("");
