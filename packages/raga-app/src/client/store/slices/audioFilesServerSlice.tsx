@@ -153,7 +153,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
     getConvertedMP3s: function* (): Operation<void> {
       const res = yield* getAllConvertedMP3sRequest(serverBaseURL);
       if (res.ok) {
-        const convertedFilePaths: Record<string, string> = yield* call(res.json());
+        const convertedFilePaths: Record<string, string> = yield* call(() => res.json());
         const audioConvertedFileURLs: Record<number, string> = {};
         for (const [trackID, filePath] of Object.entries(convertedFilePaths)) {
           audioConvertedFileURLs[parseInt(trackID, 10)] = `${serverBaseURL}${
@@ -177,7 +177,7 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
 
       try {
         const res = yield* convertTrackToMP3Request(serverBaseURL, trackDef);
-        const responseText = yield* call(res.text());
+        const responseText = yield* call(() => res.text());
 
         if (res.ok) {
           const outputFilePath = responseText;

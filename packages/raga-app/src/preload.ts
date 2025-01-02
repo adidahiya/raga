@@ -44,18 +44,20 @@ const contextBridgeApi: ContextBridgeApi = {
     return ipcRenderer.once(channel, callback);
   },
 
-  waitForResponse: <T extends object>(channel: ServerEventChannel, timeoutMs = 0) => {
-    log.debug(`waiting for '${channel}' event with timeout ${timeoutMs.toString()}ms`);
-    return new Promise<T | undefined>((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error(`timed out waiting for ${channel} response`));
-      }, timeoutMs);
-      contextBridgeApi.handleOnce<T>(channel, (_event, data) => {
-        clearTimeout(timeout);
-        resolve(data);
+  waitForResponse:
+    <T extends object>(channel: ServerEventChannel, timeoutMs = 0) =>
+    () => {
+      log.debug(`waiting for '${channel}' event with timeout ${timeoutMs.toString()}ms`);
+      return new Promise<T | undefined>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error(`timed out waiting for ${channel} response`));
+        }, timeoutMs);
+        contextBridgeApi.handleOnce<T>(channel, (_event, data) => {
+          clearTimeout(timeout);
+          resolve(data);
+        });
       });
-    });
-  },
+    },
 
   removeHandler: <T extends object>(
     channel: ServerEventChannel,

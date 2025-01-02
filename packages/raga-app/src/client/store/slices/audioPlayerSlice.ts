@@ -113,7 +113,7 @@ export const createAudioPlayerSlice: AppStoreSliceCreator<AudioPlayerState & Aud
     if (waveSurfer === undefined) {
       return;
     }
-    yield* call(waveSurfer.play());
+    yield* call(() => waveSurfer.play());
     set({ audioIsPlaying: true });
   },
 

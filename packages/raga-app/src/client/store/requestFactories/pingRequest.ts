@@ -6,5 +6,5 @@ export default function* pingRequest(
   serverBaseURL: string,
   init?: RequestInit,
 ): Operation<Response> {
-  return yield* call(fetch(`${serverBaseURL}${Routes.GET_PING}`, init));
+  return yield* call(() => fetch(`${serverBaseURL}${Routes.GET_PING}`, init));
 }

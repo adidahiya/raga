@@ -17,7 +17,7 @@ export default function* getDiscogsGenreTagsRequest(
     track: Name,
   } satisfies GetDiscogsGenresRequestParams);
 
-  return yield* call(
+  return yield* call(() =>
     fetch(`${serverBaseURL}${Routes.GET_DISCOGS_GENRES}?${params.toString()}`, {
       method: "GET",
       ...init,

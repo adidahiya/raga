@@ -12,7 +12,7 @@ export default function* convertTrackToMP3Request(
   trackDef: TrackDefinition,
   init?: RequestInit,
 ): Operation<Response> {
-  return yield* call(
+  return yield* call(() =>
     fetch(`${serverBaseURL}${Routes.POST_CONVERT_TO_MP3}`, {
       method: "POST",
       body: JSON.stringify({

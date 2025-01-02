@@ -39,9 +39,9 @@ export interface ContextBridgeApi {
     callback: (event: IpcRendererEvent, data?: T) => void,
   ) => void;
 
-  /** Wait for a server event with an optional timeout and event payload */
+  /** Returns a function which waits for a server event with an optional timeout and event payload */
   waitForResponse: <T extends object = object>(
     channel: ServerEventChannel,
     timeoutMs?: number,
-  ) => Promise<T | undefined>;
+  ) => () => Promise<T | undefined>;
 }

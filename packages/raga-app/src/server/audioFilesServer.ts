@@ -193,7 +193,7 @@ function* waitForHTTPServerToStart(app: App, timeoutMs = 1_000): Operation<Serve
   return yield* withTimeout(
     run(function* () {
       const newServer = app.listen(DEFAULT_AUDIO_FILES_SERVER_PORT);
-      yield* call(once(newServer, "listening"));
+      yield* call(() => once(newServer, "listening"));
       return newServer;
     }),
     timeoutMs,
