@@ -295,10 +295,11 @@ interface TrackTableRowProps
   item: ExtendedNode<TrackDefinitionNode>;
 }
 
-// N.B. we cannot wrap this in a standard Blueprint ContextMenu because `<Row>` does not use forwardRef
 const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const activeTrackId = appStore.use.activeTrackId();
+  // if we previously failed to fetch Discogs genres for a track, we save that information
+  // (and persist it to local storage) so that we don't show the "fetch genres" button again
   const hasNoDiscogsGenres = appStore.use.getLibraryTrackHasNoDiscogsGenres();
 
   return (
