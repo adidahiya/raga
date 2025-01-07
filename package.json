@@ -18,8 +18,8 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.4",
     "@eslint/js": "^9.17.0",
-    "@lerna-lite/cli": "^3.10.1",
-    "@lerna-lite/version": "^3.10.1",
+    "@lerna-lite/cli": "^3.11.0",
+    "@lerna-lite/version": "^3.11.0",
     "@types/eslint__js": "^8.42.3",
     "@types/minimist": "^1.2.5",
     "@yarnpkg/types": "^4.0.0",
@@ -32,7 +32,7 @@
     "nx": "^20.3.0",
     "prettier": "^3.4.2",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.19.0"
+    "typescript-eslint": "^8.19.1"
   },
   "engines": {
     "node": ">=22"
