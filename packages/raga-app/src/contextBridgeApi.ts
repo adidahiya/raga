@@ -7,6 +7,10 @@ import type { ClientEventChannel, ServerEventChannel } from "./common/events";
  * Promises for async operations.
  */
 export interface ContextBridgeApi {
+  /** OS platform */
+  platform: NodeJS.Platform;
+
+  /** Node.js process version info */
   versions: Record<string, string | undefined>;
 
   /**

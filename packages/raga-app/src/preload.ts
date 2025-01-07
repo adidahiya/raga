@@ -3,6 +3,7 @@
 
 import { blueBright } from "ansis";
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
+import { platform } from "os";
 
 import { ClientEventChannel, ServerEventChannel } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
@@ -10,6 +11,8 @@ import { type ContextBridgeApi } from "./contextBridgeApi";
 
 const log = createScopedLogger("contextBridge", blueBright);
 const contextBridgeApi: ContextBridgeApi = {
+  platform: platform(),
+
   versions: process.versions,
 
   isReady: false,

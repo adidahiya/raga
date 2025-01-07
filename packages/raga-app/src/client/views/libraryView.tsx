@@ -30,7 +30,7 @@ export default function LibraryView() {
   );
 
   return (
-    <Stack className={styles.container} gap={0}>
+    <Stack className={styles.container} gap={0} px={5}>
       {libraryState === "none" ? (
         <EmptyState
           className={styles.emptyState}
@@ -69,7 +69,7 @@ function Library() {
   const selectedTrack = getSelectedTrackDef();
 
   return (
-    <Paper w="100%" h="100%" shadow="sm" withBorder={true} radius="sm">
+    <Paper w="100%" h="100%" shadow="sm" withBorder={true} radius="sm" className={styles.library}>
       <Stack gap={0} w="100%" h="100%">
         {selectedTrack === undefined || waveSurfer === undefined ? null : (
           <>
