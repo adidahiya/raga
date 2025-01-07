@@ -1,6 +1,5 @@
 .container {
-  height: calc(100vh - 50px);
-  padding: 0;
+  height: calc(100vh - 40px);
 }
 
 .emptyState {
@@ -42,4 +41,9 @@
     position: absolute;
     right: 0;
   }
+}
+
+.library {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }

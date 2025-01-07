@@ -51,6 +51,8 @@ const createWindow = async () => {
       preload: join(__dirname, "preload.js"),
       webSecurity: false,
     },
+    titleBarStyle: "hiddenInset",
+    titleBarOverlay: true,
   });
 
   // and load the index.html of the app.
