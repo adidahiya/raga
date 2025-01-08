@@ -13,7 +13,7 @@ import styles from "./playlistTable.module.scss";
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-export default function PlaylistTable() {
+export default function PlaylistTable({ collapsible = true }: { collapsible?: boolean }) {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
 
@@ -41,19 +41,21 @@ export default function PlaylistTable() {
               ({formatStatNumber(numTotalPlaylists)})
             </Text>
           </span>
-          <ActionIcon
-            size="compact-sm"
-            color="gray"
-            variant="subtle"
-            onClick={togglePlaylistTreeExpanded}
-          >
-            {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
-          </ActionIcon>
+          {collapsible && (
+            <ActionIcon
+              size="compact-sm"
+              color="gray"
+              variant="subtle"
+              onClick={togglePlaylistTreeExpanded}
+            >
+              {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+            </ActionIcon>
+          )}
         </div>
       </div>
       <Divider orientation="horizontal" />
       <div className={styles.body}>
-        <Collapse in={isPlaylistTreeExpanded}>
+        <Collapse in={collapsible ? isPlaylistTreeExpanded : true}>
           <Tree
             selectedNodeId={selectedPlaylistId}
             nodes={playlistDefNodes}
