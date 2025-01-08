@@ -1,5 +1,5 @@
-import { Error, ListDetailView, Music } from "@blueprintjs/icons";
-import { Box, Divider, Group, Paper, Progress, Stack, Text } from "@mantine/core";
+import { ListDetailView } from "@blueprintjs/icons";
+import { Box, Divider, Group, Paper, Stack, Text } from "@mantine/core";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
 import { formatStatNumber } from "../../common/format";
@@ -8,61 +8,13 @@ import { AudioPlayerControls } from "../components/audioPlayer/audioPlayerContro
 import { AudioPlayerNowPlaying } from "../components/audioPlayer/audioPlayerNowPlaying";
 import { ResizeHandle } from "../components/common";
 import EmptyState from "../components/common/emptyState";
-import { LoadLibraryForm } from "../components/library";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
-import { useMasterPlaylist, useTaskEffect } from "../hooks";
+import { useMasterPlaylist } from "../hooks";
 import { appStore } from "../store/appStore";
 import styles from "./libraryView.module.scss";
 
 export default function LibraryView() {
-  const libraryInputFilepath = appStore.use.libraryInputFilepath();
-  const libraryState = appStore.use.libraryLoadingState();
-  const loadLibrary = appStore.use.loadSwinsianLibrary();
-
-  useTaskEffect(
-    function* () {
-      if (libraryInputFilepath !== undefined) {
-        yield* loadLibrary({ filepath: libraryInputFilepath });
-      }
-    },
-    [libraryInputFilepath, loadLibrary],
-  );
-
-  return (
-    <Stack className={styles.container} gap={0} px={5}>
-      {libraryState === "none" ? (
-        <EmptyState
-          className={styles.emptyState}
-          title="Select a Swinsian library"
-          icon={<Music size={48} />}
-        >
-          <LoadLibraryForm />
-        </EmptyState>
-      ) : libraryState === "loading" ? (
-        <EmptyState
-          className={styles.emptyState}
-          title="Loading Swinsian library..."
-          icon={<Music size={48} />}
-        >
-          <Progress size="sm" color="blue" animated={true} value={100} />
-        </EmptyState>
-      ) : libraryState === "error" ? (
-        <EmptyState
-          className={styles.emptyState}
-          title="Error loading Swinsian library"
-          icon={<Error size={48} />}
-        />
-      ) : (
-        <div className={styles.libraryLoaded}>
-          <Library />
-        </div>
-      )}
-    </Stack>
-  );
-}
-
-function Library() {
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
   const waveSurfer = appStore.use.waveSurfer();
   const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
