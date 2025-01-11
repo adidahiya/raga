@@ -33,7 +33,10 @@ export default function ExportView() {
 
   const handleOutputFilepathInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setLibraryOutputFilepath(event.target.value);
+      if (event.target.files?.length) {
+        const filePath = window.api.getFilePath(event.target.files[0]);
+        setLibraryOutputFilepath(filePath);
+      }
     },
     [setLibraryOutputFilepath],
   );

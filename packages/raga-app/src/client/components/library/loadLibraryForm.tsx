@@ -20,7 +20,8 @@ export default function LoadLibraryForm() {
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files?.length) {
-        setLibraryInputFilepath(event.target.files[0].path);
+        const filePath = window.api.getFilePath(event.target.files[0]);
+        setLibraryInputFilepath(filePath);
       }
     },
     [setLibraryInputFilepath],
@@ -29,7 +30,8 @@ export default function LoadLibraryForm() {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       log.debug(`[client] accepted input library file: ${acceptedFiles[0].path}`);
-      setLibraryInputFilepath(acceptedFiles[0].path);
+      const filePath = window.api.getFilePath(acceptedFiles[0]);
+      setLibraryInputFilepath(filePath);
     },
     [setLibraryInputFilepath],
   );
