@@ -23,6 +23,10 @@ export default function ExportView() {
   const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
   const writeModifiedLibrary = appStore.use.writeModiifedLibrary();
 
+  const handlePlaylistsSelected = useCallback((nodeIds: string[]) => {
+    console.log(nodeIds);
+  }, []);
+
   const handleOutputFilepathInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setLibraryOutputFilepath(event.target.value);
@@ -46,7 +50,11 @@ export default function ExportView() {
       </ExportColumn>
 
       <ExportColumn p={0}>
-        <PlaylistTable collapsible={false} />
+        <PlaylistTable
+          collapsible={false}
+          selectionMode="multiple"
+          onSelect={handlePlaylistsSelected}
+        />
       </ExportColumn>
 
       <ExportColumn title="Select playlists to export">

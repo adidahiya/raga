@@ -7,7 +7,7 @@ import { Roarr as log } from "roarr";
 import { formatStatNumber } from "../../../common/format";
 import { appStore } from "../../store/appStore";
 import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
-import Tree, { type TreeNode } from "../common/tree";
+import Tree, { type TreeNode, type TreeSelectionMode } from "../common/tree";
 import styles from "./playlistTable.module.scss";
 
 // COMPONENTS
@@ -18,7 +18,7 @@ interface PlaylistTableProps extends MantineStyleProps {
   collapsible?: boolean;
 
   /** @default "none" */
-  selectionMode?: "single" | "multiple" | "none";
+  selectionMode?: TreeSelectionMode;
 
   /** Callback invoked when a playlist is selected or deselected. */
   onSelect?: (playlistIds: string[]) => void;
@@ -44,13 +44,13 @@ export default function PlaylistTable({
   // Selects a playlist in Raga's app store only. Mantine UI selection state is handled
   // in the Tree component.
   const handleSelect = useCallback(
-    (node: TreeNode<PlaylistDefinition>) => {
-      log.debug(`[client] selected playlist ${node.id}: '${node.data.Name}'`);
-
+    (nodes: TreeNode<PlaylistDefinition>[]) => {
       if (selectionMode === "single") {
-        onSelect?.([node.id]);
+        const firstNode = nodes[0];
+        log.debug(`[client] selected playlist ${firstNode.id}: '${firstNode.data.Name}'`);
+        onSelect?.([firstNode.id]);
       } else if (selectionMode === "multiple") {
-        // TODO: implement multiple selection
+        onSelect?.(nodes.map((n) => n.id));
       }
     },
     [onSelect, selectionMode],
@@ -82,8 +82,9 @@ export default function PlaylistTable({
       <div className={styles.body}>
         <Collapse in={collapsible ? isPlaylistTreeExpanded : true}>
           <Tree
-            selectedNodeIds={selectedNodeIds}
             nodes={playlistDefNodes}
+            selectionMode={selectionMode}
+            selectedNodeIds={selectedNodeIds}
             onSelect={selectionMode === "none" ? undefined : handleSelect}
           />
         </Collapse>

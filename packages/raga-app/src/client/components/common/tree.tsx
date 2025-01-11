@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight } from "@blueprintjs/icons";
 import {
   ActionIcon,
+  Checkbox,
   getTreeExpandedState,
   Group,
   type RenderTreeNodePayload,
@@ -15,6 +16,8 @@ import styles from "./tree.module.scss";
 
 // INTERFACES
 // -------------------------------------------------------------------------------------------------
+
+export type TreeSelectionMode = "single" | "multiple" | "none";
 
 /**
  * Input tree node interface.
@@ -32,11 +35,14 @@ export interface ControlledTreeProps<T> {
   /** Tree data nodes. */
   nodes: TreeNode<T>[];
 
+  /** Selection mode. */
+  selectionMode: TreeSelectionMode;
+
   /** IDs of the selected node(s). */
   selectedNodeIds?: string[];
 
-  /** Callback invoked when a node is selected. */
-  onSelect?: (node: TreeNode<T>) => void;
+  /** Callback invoked when one or more nodes are selected. */
+  onSelect?: (nodes: TreeNode<T>[]) => void;
 }
 
 // COMPONENTS
@@ -50,8 +56,9 @@ export interface ControlledTreeProps<T> {
  *   slashes) of all the node ids from the root node to the current node.
  */
 export default function ControlledTree<T extends object>({
-  selectedNodeIds = [],
   nodes,
+  selectionMode,
+  selectedNodeIds = [],
   onSelect,
 }: ControlledTreeProps<T>) {
   // Convert our node structure to Mantine's expected format
@@ -59,8 +66,6 @@ export default function ControlledTree<T extends object>({
     () => mapNodesToMantineFormat(nodes, selectedNodeIds),
     [nodes, selectedNodeIds],
   );
-
-  const canSelect = onSelect != null;
 
   const { selectedNodes, selectedMantineNodes } = useMemo(
     () => ({
@@ -95,20 +100,50 @@ export default function ControlledTree<T extends object>({
     initialExpandedState: getTreeExpandedState(mantineNodes, pathToFirstSelectedNode),
     initialSelectedState: selectedMantineNodes.map((node) => node.value),
   });
-  const { select, clearSelected } = tree;
+  const { select, clearSelected, checkedState } = tree;
+
+  useEffect(() => {
+    if (selectionMode === "multiple") {
+      onSelect?.(
+        filterUndefined(
+          checkedState.map((nodeId) => findNodeById(nodes, mantineNodeValueToId(nodeId))),
+        ),
+      );
+    }
+  }, [checkedState, nodes, onSelect, selectionMode]);
 
   const renderTreeNode = useCallback(
     ({ node, expanded, selected, hasChildren, elementProps, tree }: RenderTreeNodePayload) => {
+      const checked = tree.isNodeChecked(node.value);
+      const indeterminate = tree.isNodeIndeterminate(node.value);
+
       return (
         <Group
           gap={5}
           key={node.value}
           {...elementProps}
           className={classNames(styles.node, elementProps.className, {
-            [styles.selectable]: canSelect,
+            [styles.selectOnClick]: selectionMode === "single",
             [styles.selectedPath]: selected,
           })}
         >
+          {selectionMode === "multiple" && (
+            <Checkbox.Indicator
+              className={classNames(styles.checkbox, {
+                [styles.checked]: checked,
+              })}
+              checked={checked}
+              indeterminate={indeterminate}
+              onClick={() => {
+                if (checked) {
+                  tree.uncheckNode(node.value);
+                } else {
+                  tree.checkNode(node.value);
+                }
+              }}
+            />
+          )}
+
           {hasChildren && (
             <ActionIcon
               size="compact-sm"
@@ -131,7 +166,7 @@ export default function ControlledTree<T extends object>({
             gap={5}
             pl={hasChildren ? 0 : 5}
             onClick={() => {
-              if (!canSelect) {
+              if (selectionMode !== "single") {
                 return;
               }
 
@@ -141,7 +176,7 @@ export default function ControlledTree<T extends object>({
                 tree.select(node.value);
                 const selectedNode = findNodeById(nodes, mantineNodeValueToId(node.value));
                 if (selectedNode) {
-                  onSelect(selectedNode);
+                  onSelect?.([selectedNode]);
                 }
               }
             }}
@@ -151,22 +186,26 @@ export default function ControlledTree<T extends object>({
         </Group>
       );
     },
-    [nodes, onSelect, canSelect],
+    [nodes, onSelect, selectionMode],
   );
 
   // Update tree state controlled selection changes
   useEffect(() => {
-    clearSelected();
-    selectedMantineNodes.forEach((node) => {
-      select(node.value);
-    });
-  }, [selectedMantineNodes, select, clearSelected]);
+    if (selectionMode === "single") {
+      clearSelected();
+      const selectedNode = selectedMantineNodes[0];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (selectedNode) {
+        select(selectedNode.value);
+      }
+    }
+  }, [selectedMantineNodes, select, clearSelected, selectionMode]);
 
   return (
     <Tree
       data={mantineNodes}
       expandOnClick={false}
-      selectOnClick={canSelect}
+      selectOnClick={selectionMode === "single"}
       tree={tree}
       renderNode={renderTreeNode}
     />
