@@ -1,9 +1,11 @@
 import { ChevronDown, ChevronRight } from "@blueprintjs/icons";
 import {
   ActionIcon,
+  Checkbox,
   getTreeExpandedState,
   Group,
   type RenderTreeNodePayload,
+  Text,
   Tree,
   type TreeNodeData,
   useTree,
@@ -15,6 +17,8 @@ import styles from "./tree.module.scss";
 
 // INTERFACES
 // -------------------------------------------------------------------------------------------------
+
+export type TreeSelectionMode = "single" | "multiple" | "none";
 
 /**
  * Input tree node interface.
@@ -32,11 +36,14 @@ export interface ControlledTreeProps<T> {
   /** Tree data nodes. */
   nodes: TreeNode<T>[];
 
-  /** ID of the selected node. */
-  selectedNodeId?: string;
+  /** Selection mode. */
+  selectionMode: TreeSelectionMode;
 
-  /** Callback invoked when a node is selected. */
-  onSelect?: (node: TreeNode<T>) => void;
+  /** IDs of the selected node(s). */
+  selectedNodeIds?: string[];
+
+  /** Callback invoked when one or more nodes are selected. */
+  onSelect?: (nodes: TreeNode<T>[]) => void;
 }
 
 // COMPONENTS
@@ -50,51 +57,96 @@ export interface ControlledTreeProps<T> {
  *   slashes) of all the node ids from the root node to the current node.
  */
 export default function ControlledTree<T extends object>({
-  selectedNodeId,
   nodes,
+  selectionMode,
+  selectedNodeIds = [],
   onSelect,
 }: ControlledTreeProps<T>) {
   // Convert our node structure to Mantine's expected format
-  const mantineNodes = useMemo(
-    () => mapNodesToMantineFormat(nodes, selectedNodeId),
-    [nodes, selectedNodeId],
+  const { mantineNodes, numLeafNodes } = useMemo(
+    () => mapNodesToMantineFormat(nodes, selectedNodeIds),
+    [nodes, selectedNodeIds],
   );
 
-  const selectedNode = findNodeById(nodes, selectedNodeId);
-  const selectedMantineNode = findMantineNodeById(mantineNodes, selectedNodeId);
-  const pathToSelectedNode = useMemo(() => {
-    if (!selectedNode || !selectedMantineNode) {
+  const { selectedNodes, selectedMantineNodes } = useMemo(
+    () => ({
+      selectedNodes: filterUndefined(selectedNodeIds.map((id) => findNodeById(nodes, id))),
+      selectedMantineNodes: filterUndefined(
+        selectedNodeIds.map((id) => findMantineNodeById(mantineNodes, id)),
+      ),
+    }),
+    [nodes, mantineNodes, selectedNodeIds],
+  );
+
+  const pathToFirstSelectedNode = useMemo(() => {
+    if (selectedNodes.length === 0 || selectedMantineNodes.length === 0) {
       return [];
     }
 
+    const firstSelectedNode = selectedNodes[0];
+    const firstSelectedMantineNode = selectedMantineNodes[0];
+
     const path = [];
-    let currentNode: TreeNode<T> | undefined = selectedNode;
-    let currentMantineNode: TreeNodeData | undefined = selectedMantineNode;
+    let currentNode: TreeNode<T> | undefined = firstSelectedNode;
+    let currentMantineNode: TreeNodeData | undefined = firstSelectedMantineNode;
     while (currentNode && currentMantineNode) {
       path.unshift(currentMantineNode.value);
       currentNode = findNodeById(nodes, currentNode.parentId);
       currentMantineNode = findMantineNodeById(mantineNodes, currentNode?.id);
     }
     return path;
-  }, [mantineNodes, nodes, selectedMantineNode, selectedNode]);
+  }, [mantineNodes, nodes, selectedNodes, selectedMantineNodes]);
 
   const tree = useTree({
-    initialExpandedState: getTreeExpandedState(mantineNodes, pathToSelectedNode),
-    initialSelectedState: selectedMantineNode ? [selectedMantineNode.value] : [],
+    initialExpandedState: getTreeExpandedState(mantineNodes, pathToFirstSelectedNode),
+    initialSelectedState: selectedMantineNodes.map((node) => node.value),
   });
-  const { select, clearSelected } = tree;
+  const { select, clearSelected, checkedState } = tree;
+
+  const allNodesChecked = checkedState.length === numLeafNodes;
+  const someNodesChecked = checkedState.length > 0;
+  useEffect(() => {
+    if (selectionMode === "multiple") {
+      onSelect?.(
+        filterUndefined(
+          checkedState.map((nodeId) => findNodeById(nodes, mantineNodeValueToId(nodeId))),
+        ),
+      );
+    }
+  }, [checkedState, nodes, onSelect, selectionMode]);
 
   const renderTreeNode = useCallback(
     ({ node, expanded, selected, hasChildren, elementProps, tree }: RenderTreeNodePayload) => {
+      const checked = tree.isNodeChecked(node.value);
+      const indeterminate = tree.isNodeIndeterminate(node.value);
+
       return (
         <Group
           gap={5}
           key={node.value}
           {...elementProps}
           className={classNames(styles.node, elementProps.className, {
+            [styles.selectOnClick]: selectionMode === "single",
             [styles.selectedPath]: selected,
           })}
         >
+          {selectionMode === "multiple" && (
+            <Checkbox.Indicator
+              className={classNames(styles.checkbox, {
+                [styles.filled]: checked || indeterminate,
+              })}
+              checked={checked}
+              indeterminate={indeterminate}
+              onClick={() => {
+                if (checked) {
+                  tree.uncheckNode(node.value);
+                } else {
+                  tree.checkNode(node.value);
+                }
+              }}
+            />
+          )}
+
           {hasChildren && (
             <ActionIcon
               size="compact-sm"
@@ -117,13 +169,17 @@ export default function ControlledTree<T extends object>({
             gap={5}
             pl={hasChildren ? 0 : 5}
             onClick={() => {
+              if (selectionMode !== "single") {
+                return;
+              }
+
               if (selected) {
                 tree.deselect(node.value);
               } else {
                 tree.select(node.value);
                 const selectedNode = findNodeById(nodes, mantineNodeValueToId(node.value));
                 if (selectedNode) {
-                  onSelect?.(selectedNode);
+                  onSelect?.([selectedNode]);
                 }
               }
             }}
@@ -133,25 +189,52 @@ export default function ControlledTree<T extends object>({
         </Group>
       );
     },
-    [nodes, onSelect],
+    [nodes, onSelect, selectionMode],
   );
 
   // Update tree state controlled selection changes
   useEffect(() => {
-    clearSelected();
-    if (selectedMantineNode) {
-      select(selectedMantineNode.value);
+    if (selectionMode === "single") {
+      clearSelected();
+      const selectedNode = selectedMantineNodes[0];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (selectedNode) {
+        select(selectedNode.value);
+      }
     }
-  }, [selectedMantineNode, select, clearSelected]);
+  }, [selectedMantineNodes, select, clearSelected, selectionMode]);
 
   return (
-    <Tree
-      data={mantineNodes}
-      expandOnClick={false}
-      selectOnClick={true}
-      tree={tree}
-      renderNode={renderTreeNode}
-    />
+    <>
+      {selectionMode === "multiple" && (
+        <Group gap={5} className={classNames(styles.node)}>
+          <Checkbox.Indicator
+            className={classNames(styles.checkbox, {
+              [styles.filled]: someNodesChecked,
+            })}
+            checked={allNodesChecked}
+            indeterminate={!allNodesChecked && someNodesChecked}
+            onClick={() => {
+              if (allNodesChecked) {
+                tree.uncheckAllNodes();
+              } else {
+                tree.checkAllNodes();
+              }
+            }}
+          />
+          <Text pl={5} fw={600}>
+            Select all
+          </Text>
+        </Group>
+      )}
+      <Tree
+        data={mantineNodes}
+        expandOnClick={false}
+        selectOnClick={selectionMode === "single"}
+        tree={tree}
+        renderNode={renderTreeNode}
+      />
+    </>
   );
 }
 
@@ -160,8 +243,8 @@ export default function ControlledTree<T extends object>({
 
 function mapNodesToMantineFormat<T>(
   nodes: TreeNode<T>[],
-  /** ID of the selected node. */
-  selectedNodeId?: string,
+  /** IDs of the selected node(s). */
+  selectedNodeIds: string[],
   /**
    * Accumulated map of node id to node value path.
    * Example:
@@ -170,7 +253,9 @@ function mapNodesToMantineFormat<T>(
    * - node 3: "1/2/3"
    */
   nodeValuePaths: Map<string, string> = new Map<string, string>(),
-): TreeNodeData[] {
+): { mantineNodes: TreeNodeData[]; numLeafNodes: number } {
+  let numLeafNodes = 0;
+
   function getNodeValue(node: TreeNode<T>) {
     const parentNodeValue = node.parentId ? nodeValuePaths.get(node.parentId) : undefined;
     const value = parentNodeValue ? `${parentNodeValue}/${node.id}` : node.id;
@@ -178,15 +263,28 @@ function mapNodesToMantineFormat<T>(
     return value;
   }
 
-  return nodes.map((node) => ({
-    id: node.id,
-    label: node.label,
-    selected: node.id === selectedNodeId,
-    value: getNodeValue(node),
-    children: node.children
-      ? mapNodesToMantineFormat(node.children, selectedNodeId, nodeValuePaths)
-      : undefined,
-  }));
+  const mantineNodes = nodes.map((node) => {
+    let children: TreeNodeData[] | undefined;
+
+    if (node.children) {
+      const { mantineNodes: childMantineNodes, numLeafNodes: childNumLeafNodes } =
+        mapNodesToMantineFormat(node.children, selectedNodeIds, nodeValuePaths);
+      children = childMantineNodes;
+      numLeafNodes += childNumLeafNodes;
+    } else {
+      numLeafNodes++;
+    }
+
+    return {
+      id: node.id,
+      label: node.label,
+      selected: selectedNodeIds.includes(node.id),
+      value: getNodeValue(node),
+      children,
+    };
+  });
+
+  return { mantineNodes, numLeafNodes };
 }
 
 function findNodeById<T>(nodes: TreeNode<T>[], id: string | undefined): TreeNode<T> | undefined {
@@ -230,9 +328,14 @@ function findMantineNodeById(
       }
     }
   }
+
   return undefined;
 }
 
 function mantineNodeValueToId(value: string): string {
   return value.split("/").at(-1) ?? "";
+}
+
+function filterUndefined<T>(arr: (T | undefined)[]): T[] {
+  return arr.filter((item) => item !== undefined) as T[];
 }

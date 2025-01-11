@@ -48,4 +48,7 @@ export interface ContextBridgeApi {
     channel: ServerEventChannel,
     timeoutMs?: number,
   ) => () => Promise<T | undefined>;
+
+  /** Get the full path for a File object */
+  getFilePath: (file: File) => string;
 }

@@ -1,20 +1,33 @@
 .node {
   border: solid 1px transparent;
   margin-bottom: -1px; // slight overlap to avoid double border on hover
+  cursor: default;
 
-  &.selectedPath {
-    background-color: var(--mantine-primary-color-light);
-    border: solid 1px var(--mantine-primary-color-filled);
-  }
+  &.selectOnClick {
+    cursor: pointer;
 
-  &:hover {
-    background-color: var(--mantine-primary-color-light-hover);
-    border-color: var(--mantine-primary-color-9);
+    &.selectedPath {
+      background-color: var(--mantine-primary-color-light);
+      border: solid 1px var(--mantine-primary-color-filled);
+    }
+
+    &:hover {
+      background-color: var(--mantine-primary-color-light-hover);
+      border-color: var(--mantine-primary-color-9);
+    }
   }
 }
 
 :global([data-mantine-color-scheme="dark"]) .node {
-  &:hover {
+  &.selectOnClick:hover {
     border-color: var(--mantine-primary-color-1);
+  }
+}
+
+.checkbox {
+  cursor: pointer;
+
+  &:not(.filled):hover {
+    background-color: var(--mantine-primary-color-light-hover);
   }
 }

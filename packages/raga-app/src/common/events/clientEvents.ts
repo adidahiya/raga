@@ -60,6 +60,9 @@ export interface WriteModifiedLibraryOptions {
   /** Modified Swinsian library */
   library: SwinsianLibraryPlist;
 
+  /** Playlist IDs to include in the exported library */
+  selectedPlaylistIds: string[];
+
   /** Location of the original Swinsian library XML on disk (to be overwritten) */
   inputFilepath: string;
 

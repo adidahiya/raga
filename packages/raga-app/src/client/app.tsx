@@ -12,7 +12,9 @@ import { ContextMenuProvider } from "mantine-contextmenu";
 import styles from "./app.module.scss";
 import AppChrome from "./components/chrome/appChrome";
 import GlobalHotkeysDialog from "./components/globalHotkeysDialog";
+import LibraryLoader from "./components/library/libraryLoader";
 import { appStore } from "./store/appStore";
+import ExportView from "./views/exportView";
 import LibraryView from "./views/libraryView";
 
 const theme = createTheme({
@@ -40,6 +42,7 @@ const theme = createTheme({
 export default function App() {
   const fontWeight = appStore.use.fontWeight();
   const userThemePreference = appStore.use.userThemePreference();
+  const workspaceMode = appStore.use.workspaceMode();
 
   return (
     <MantineProvider theme={theme} defaultColorScheme={userThemePreference}>
@@ -52,7 +55,9 @@ export default function App() {
           })}
         >
           <AppChrome />
-          <LibraryView />
+          <LibraryLoader>
+            {workspaceMode === "tracks" ? <LibraryView /> : <ExportView />}
+          </LibraryLoader>
           <GlobalHotkeysDialog />
         </div>
       </ContextMenuProvider>

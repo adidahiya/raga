@@ -1,16 +1,5 @@
 import { CaretDown, Error, Export, FloppyDisk, FolderOpen, Reset, Tick } from "@blueprintjs/icons";
-import {
-  Button,
-  ButtonGroup,
-  Divider,
-  FileInput,
-  Group,
-  Menu,
-  MenuDivider,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Button, Divider, Group, Menu, MenuDivider, Text, Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useCallback, useRef } from "react";
 
@@ -27,9 +16,8 @@ export default function LibraryControls() {
   const libraryWriteState = appStore.use.libraryWriteState();
 
   const loadLibrary = appStore.use.loadSwinsianLibrary();
-  const writeModifiedLibrary = appStore.use.writeModiifedLibrary();
+  const writeModifiedLibrary = appStore.use.writeModifiedLibrary();
   const unloadSwinsianLibrary = appStore.use.unloadSwinsianLibrary();
-  const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
 
   const handleWriteModifiedLibrary = useOperationCallback(writeModifiedLibrary);
   const handleLoad = useOperationCallback(
@@ -109,13 +97,6 @@ export default function LibraryControls() {
     unloadSwinsianLibrary();
   }, [libraryWriteState, unloadSwinsianLibrary]);
 
-  const handleOutputFilepathInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setLibraryOutputFilepath(event.target.value);
-    },
-    [setLibraryOutputFilepath],
-  );
-
   const canWrite = libraryWriteState === "ready" && libraryOutputFilepath !== undefined;
 
   return (
@@ -155,59 +136,29 @@ export default function LibraryControls() {
 
         <Divider orientation="vertical" />
 
-        <ButtonGroup>
-          <Tooltip
-            position="bottom-end"
-            label={
-              libraryWriteState === "busy"
-                ? "Writing..."
-                : canWrite
-                  ? "Write modified library to disk"
-                  : libraryWriteState === "ready"
-                    ? "Need to set output file"
-                    : "No changes to write to disk"
-            }
+        <Tooltip
+          position="bottom-end"
+          label={
+            libraryWriteState === "busy"
+              ? "Writing..."
+              : canWrite
+                ? "Write modified library to disk"
+                : libraryWriteState === "ready"
+                  ? "Need to set output file"
+                  : "No changes to write to disk"
+          }
+        >
+          <Button
+            className={styles.buttonNoRightRadius}
+            size="compact-sm"
+            leftSection={<Export />}
+            disabled={!canWrite}
+            loading={libraryWriteState === "busy"}
+            onClick={handleWriteModifiedLibrary}
           >
-            <Button
-              className={styles.buttonNoRightRadius}
-              size="compact-sm"
-              leftSection={<Export />}
-              disabled={!canWrite}
-              loading={libraryWriteState === "busy"}
-              onClick={handleWriteModifiedLibrary}
-            >
-              Export
-            </Button>
-          </Tooltip>
-          <Menu position="bottom" withArrow={true} arrowSize={12} offset={{ mainAxis: 10 }}>
-            <Menu.Target>
-              <Button
-                className={styles.buttonNoLeftRadius}
-                size="compact-sm"
-                color={libraryWriteState === "none" ? "gray" : "blue"}
-              >
-                <CaretDown />
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Stack gap="xs">
-                <Stack gap={0}>
-                  <Text>Output file</Text>
-                  <FileInput
-                    label="Location of the Music.app/Rekordbox compatible XML file"
-                    placeholder={libraryOutputFilepath}
-                    fileInputProps={{ onChange: handleOutputFilepathInputChange }}
-                    rightSection={<Button size="compact-sm">Browse</Button>}
-                    rightSectionWidth={70}
-                  />
-                </Stack>
-                <Menu.Item leftSection={<Export />} onClick={handleWriteModifiedLibrary}>
-                  Export library for Rekordbox
-                </Menu.Item>
-              </Stack>
-            </Menu.Dropdown>
-          </Menu>
-        </ButtonGroup>
+            Export
+          </Button>
+        </Tooltip>
       </Group>
     </Group>
   );

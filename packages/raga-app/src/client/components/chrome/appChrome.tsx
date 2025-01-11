@@ -7,6 +7,7 @@ import styles from "./appChrome.module.scss";
 import AudioAnalyzerStatus from "./audioAnalyzerStatus";
 import AudioFilesServerControls from "./audioFilesServerControls";
 import LibraryControls from "./libraryControls";
+import WorkspaceControl from "./workspaceControl";
 
 export default function AppChrome() {
   const audioFilesServerStatus = appStore.use.audioFilesServerStatus();
@@ -40,6 +41,7 @@ export default function AppChrome() {
         {isLibraryLoaded && (
           <>
             <Divider orientation="vertical" />
+            <WorkspaceControl />
             <AudioFilesServerControls />
           </>
         )}

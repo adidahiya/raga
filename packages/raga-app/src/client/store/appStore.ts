@@ -19,6 +19,11 @@ import {
   type AudioPlayerState,
   createAudioPlayerSlice,
 } from "./slices/audioPlayerSlice";
+import {
+  createExporterSlice,
+  type ExporterActions,
+  type ExporterState,
+} from "./slices/exporterSlice";
 import { createLibrarySlice, type LibraryActions, type LibraryState } from "./slices/librarySlice";
 import { createSidebarSlice, type SidebarActions, type SidebarState } from "./slices/sidebarSlice";
 import {
@@ -31,6 +36,11 @@ import {
   type UserSettingsActions,
   type UserSettingsState,
 } from "./slices/userSettingsSlice";
+import {
+  createWorkspaceSlice,
+  type WorkspaceActions,
+  type WorkspaceState,
+} from "./slices/workspaceSlice";
 import { createSelectors } from "./zustandUtils";
 
 export type AppState = AudioFilesServerState &
@@ -39,14 +49,18 @@ export type AppState = AudioFilesServerState &
   AudioPlayerState &
   SidebarState &
   TrackTableState &
-  UserSettingsState;
+  UserSettingsState &
+  ExporterState &
+  WorkspaceState;
 export type AppActions = AudioFilesServerActions &
   LibraryActions &
   AudioAnalyzerActions &
   AudioPlayerActions &
   SidebarActions &
   TrackTableActions &
-  UserSettingsActions;
+  UserSettingsActions &
+  ExporterActions &
+  WorkspaceActions;
 export type AppStore = AppState & AppActions;
 
 export const useAppStore = create<AppStore>()(
@@ -61,6 +75,8 @@ export const useAppStore = create<AppStore>()(
       ...createSidebarSlice(...args),
       ...createTrackTableSlice(...args),
       ...createUserSettingsSlice(...args),
+      ...createExporterSlice(...args),
+      ...createWorkspaceSlice(...args),
     })),
     {
       name: `${LOCAL_STORAGE_KEY}-appStore`,

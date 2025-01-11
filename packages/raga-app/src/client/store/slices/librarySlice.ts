@@ -45,7 +45,7 @@ export interface LibraryState {
 export interface LibraryActions {
   // actions - complex
   loadSwinsianLibrary: (options: LoadSwinsianLibraryOptions) => Operation<void>;
-  writeModiifedLibrary: () => Operation<void>;
+  writeModifiedLibrary: () => Operation<void>;
   unloadSwinsianLibrary: () => void;
 
   // actions - simple getters
@@ -209,14 +209,15 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     }
   },
 
-  writeModiifedLibrary: function* (): Operation<void> {
-    const { library, libraryInputFilepath, libraryOutputFilepath, libraryWriteState } = get();
+  writeModifiedLibrary: function* (): Operation<void> {
+    const { library, libraryInputFilepath, libraryOutputFilepath, selectedPlaylistIdsForExport } =
+      get();
+    // if we haven't filtered any playlists for export, assume the intent is to export all playlists
+    const selectedPlaylistIds =
+      selectedPlaylistIdsForExport.length > 0 ? selectedPlaylistIdsForExport : undefined;
 
     if (library === undefined) {
       log.error(ClientErrors.LIBRARY_NOT_LOADED);
-      return;
-    } else if (libraryWriteState !== "ready") {
-      log.info(`[client] No library modifications to write to disk`);
       return;
     } else if (libraryInputFilepath === undefined || libraryOutputFilepath === undefined) {
       log.error(ClientErrors.LIBRARY_WRITE_NO_OUTPUT_FILEPATH);
@@ -232,6 +233,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       library,
       inputFilepath: libraryInputFilepath,
       outputFilepath: libraryOutputFilepath,
+      selectedPlaylistIds,
     });
 
     try {

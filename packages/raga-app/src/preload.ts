@@ -2,7 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { blueBright } from "ansis";
-import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
+import { contextBridge, ipcRenderer, type IpcRendererEvent, webUtils } from "electron";
 import { platform } from "os";
 
 import { ClientEventChannel, ServerEventChannel } from "./common/events";
@@ -68,6 +68,13 @@ const contextBridgeApi: ContextBridgeApi = {
   ) => {
     log.debug(`removing '${channel}' event handler`);
     return ipcRenderer.removeListener(channel, callback);
+  },
+
+  getFilePath: (file: File) => {
+    // Electron previously used to add a `path` property automatically to File objects in the client
+    // but it no longer does so, so we need to expose a function to do it.
+    // See https://www.electronjs.org/docs/latest/api/web-utils
+    return webUtils.getPathForFile(file);
   },
 };
 

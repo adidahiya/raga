@@ -1,67 +1,103 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import { ActionIcon, Collapse, Divider, Text } from "@mantine/core";
+import { ActionIcon, Box, Collapse, Divider, type MantineStyleProps, Text } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
 import { formatStatNumber } from "../../../common/format";
 import { appStore } from "../../store/appStore";
 import { useLibraryOrThrow } from "../../store/useLibraryOrThrow";
-import Tree, { type TreeNode } from "../common/tree";
+import Tree, { type TreeNode, type TreeSelectionMode } from "../common/tree";
 import styles from "./playlistTable.module.scss";
 
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-export default function PlaylistTable() {
+interface PlaylistTableProps extends MantineStyleProps {
+  /** @default true */
+  collapsible?: boolean;
+
+  /** @default true */
+  showHeader?: boolean;
+
+  /** @default "none" */
+  selectionMode?: TreeSelectionMode;
+
+  /** Callback invoked when a playlist is selected or deselected. */
+  onSelect?: (playlistIds: string[]) => void;
+}
+
+export default function PlaylistTable({
+  collapsible = true,
+  showHeader = true,
+  selectionMode = "none",
+  onSelect,
+  ...props
+}: PlaylistTableProps) {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
 
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
-  const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
 
   const isPlaylistTreeExpanded = appStore.use.isPlaylistTreeExpanded();
   const togglePlaylistTreeExpanded = appStore.use.togglePlaylistTreeExpanded();
 
+  const selectedNodeIds = useMemo(() => {
+    return selectionMode === "none" || selectedPlaylistId === undefined ? [] : [selectedPlaylistId];
+  }, [selectionMode, selectedPlaylistId]);
+  // Selects a playlist in Raga's app store only. Mantine UI selection state is handled
+  // in the Tree component.
   const handleSelect = useCallback(
-    (node: TreeNode<PlaylistDefinition>) => {
-      log.debug(`[client] selected playlist ${node.id}: '${node.data.Name}'`);
-      setSelectedPlaylistId(node.id);
+    (nodes: TreeNode<PlaylistDefinition>[]) => {
+      if (selectionMode === "single") {
+        const firstNode = nodes[0];
+        log.debug(`[client] selected playlist ${firstNode.id}: '${firstNode.data.Name}'`);
+        onSelect?.([firstNode.id]);
+      } else if (selectionMode === "multiple") {
+        onSelect?.(nodes.map((n) => n.id));
+      }
     },
-    [setSelectedPlaylistId],
+    [onSelect, selectionMode],
   );
 
   return (
-    <div className={styles.playlistTableContainer}>
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <span>
-            Playlists{" "}
-            <Text component="span" c="dimmed" size="sm">
-              ({formatStatNumber(numTotalPlaylists)})
-            </Text>
-          </span>
-          <ActionIcon
-            size="compact-sm"
-            color="gray"
-            variant="subtle"
-            onClick={togglePlaylistTreeExpanded}
-          >
-            {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
-          </ActionIcon>
-        </div>
-      </div>
-      <Divider orientation="horizontal" />
+    <Box className={styles.playlistTableContainer} {...props}>
+      {showHeader && (
+        <>
+          <div className={styles.header}>
+            <div className={styles.headerContent}>
+              <span>
+                Playlists{" "}
+                <Text component="span" c="dimmed" size="sm">
+                  ({formatStatNumber(numTotalPlaylists)})
+                </Text>
+              </span>
+              {collapsible && (
+                <ActionIcon
+                  size="compact-sm"
+                  color="gray"
+                  variant="subtle"
+                  onClick={togglePlaylistTreeExpanded}
+                >
+                  {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+                </ActionIcon>
+              )}
+            </div>
+          </div>
+          <Divider orientation="horizontal" />
+        </>
+      )}
       <div className={styles.body}>
-        <Collapse in={isPlaylistTreeExpanded}>
+        <Collapse in={collapsible ? isPlaylistTreeExpanded : true}>
           <Tree
-            selectedNodeId={selectedPlaylistId}
             nodes={playlistDefNodes}
-            onSelect={handleSelect}
+            selectionMode={selectionMode}
+            selectedNodeIds={selectedNodeIds}
+            onSelect={selectionMode === "none" ? undefined : handleSelect}
           />
         </Collapse>
       </div>
-    </div>
+    </Box>
   );
 }
 
