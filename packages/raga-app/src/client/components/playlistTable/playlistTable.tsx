@@ -17,6 +17,9 @@ interface PlaylistTableProps extends MantineStyleProps {
   /** @default true */
   collapsible?: boolean;
 
+  /** @default true */
+  showHeader?: boolean;
+
   /** @default "none" */
   selectionMode?: TreeSelectionMode;
 
@@ -26,6 +29,7 @@ interface PlaylistTableProps extends MantineStyleProps {
 
 export default function PlaylistTable({
   collapsible = true,
+  showHeader = true,
   selectionMode = "none",
   onSelect,
   ...props
@@ -58,27 +62,31 @@ export default function PlaylistTable({
 
   return (
     <Box className={styles.playlistTableContainer} {...props}>
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <span>
-            Playlists{" "}
-            <Text component="span" c="dimmed" size="sm">
-              ({formatStatNumber(numTotalPlaylists)})
-            </Text>
-          </span>
-          {collapsible && (
-            <ActionIcon
-              size="compact-sm"
-              color="gray"
-              variant="subtle"
-              onClick={togglePlaylistTreeExpanded}
-            >
-              {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
-            </ActionIcon>
-          )}
-        </div>
-      </div>
-      <Divider orientation="horizontal" />
+      {showHeader && (
+        <>
+          <div className={styles.header}>
+            <div className={styles.headerContent}>
+              <span>
+                Playlists{" "}
+                <Text component="span" c="dimmed" size="sm">
+                  ({formatStatNumber(numTotalPlaylists)})
+                </Text>
+              </span>
+              {collapsible && (
+                <ActionIcon
+                  size="compact-sm"
+                  color="gray"
+                  variant="subtle"
+                  onClick={togglePlaylistTreeExpanded}
+                >
+                  {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+                </ActionIcon>
+              )}
+            </div>
+          </div>
+          <Divider orientation="horizontal" />
+        </>
+      )}
       <div className={styles.body}>
         <Collapse in={collapsible ? isPlaylistTreeExpanded : true}>
           <Tree

@@ -49,19 +49,13 @@ export default function ExportView() {
         <InputLibraryColumn />
       </ExportColumn>
 
-      <ExportColumn p={0}>
+      <ExportColumn title="Select playlists to export">
         <PlaylistTable
           collapsible={false}
+          showHeader={false}
           selectionMode="multiple"
           onSelect={handlePlaylistsSelected}
         />
-      </ExportColumn>
-
-      <ExportColumn title="Select playlists to export">
-        <Text size="sm" c="dimmed">
-          This column will allow users to move playlists from the left column (tree) into a list or
-          queue for export.
-        </Text>
       </ExportColumn>
 
       <ExportColumn title="Export target">
