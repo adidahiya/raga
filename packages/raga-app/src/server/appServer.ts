@@ -137,6 +137,7 @@ function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
   const serializedSwinsianLibrary = serializeLibraryPlist(options.library);
   const convertedLibrary = convertSwinsianToItunesXmlLibrary(
     options.library,
+    options.selectedPlaylistIds,
   ) as MusicAppLibraryPlist;
   const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary);
 

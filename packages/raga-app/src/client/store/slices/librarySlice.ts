@@ -210,7 +210,13 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   },
 
   writeModiifedLibrary: function* (): Operation<void> {
-    const { library, libraryInputFilepath, libraryOutputFilepath, libraryWriteState } = get();
+    const {
+      library,
+      libraryInputFilepath,
+      libraryOutputFilepath,
+      libraryWriteState,
+      selectedPlaylistIdsForExport,
+    } = get();
 
     if (library === undefined) {
       log.error(ClientErrors.LIBRARY_NOT_LOADED);
@@ -232,6 +238,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       library,
       inputFilepath: libraryInputFilepath,
       outputFilepath: libraryOutputFilepath,
+      selectedPlaylistIds: selectedPlaylistIdsForExport,
     });
 
     try {

@@ -21,11 +21,15 @@ import styles from "./exportView.module.scss";
 export default function ExportView() {
   const libraryOutputFilepath = appStore.use.libraryOutputFilepath();
   const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
+  const setSelectedPlaylistIdsForExport = appStore.use.setSelectedPlaylistIdsForExport();
   const writeModifiedLibrary = appStore.use.writeModiifedLibrary();
 
-  const handlePlaylistsSelected = useCallback((nodeIds: string[]) => {
-    console.log(nodeIds);
-  }, []);
+  const handlePlaylistsSelected = useCallback(
+    (nodeIds: string[]) => {
+      setSelectedPlaylistIdsForExport(nodeIds);
+    },
+    [setSelectedPlaylistIdsForExport],
+  );
 
   const handleOutputFilepathInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
