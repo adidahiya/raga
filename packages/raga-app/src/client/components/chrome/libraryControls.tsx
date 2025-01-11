@@ -16,7 +16,7 @@ export default function LibraryControls() {
   const libraryWriteState = appStore.use.libraryWriteState();
 
   const loadLibrary = appStore.use.loadSwinsianLibrary();
-  const writeModifiedLibrary = appStore.use.writeModiifedLibrary();
+  const writeModifiedLibrary = appStore.use.writeModifiedLibrary();
   const unloadSwinsianLibrary = appStore.use.unloadSwinsianLibrary();
 
   const handleWriteModifiedLibrary = useOperationCallback(writeModifiedLibrary);

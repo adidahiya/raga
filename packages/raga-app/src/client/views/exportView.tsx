@@ -22,7 +22,7 @@ export default function ExportView() {
   const libraryOutputFilepath = appStore.use.libraryOutputFilepath();
   const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
   const setSelectedPlaylistIdsForExport = appStore.use.setSelectedPlaylistIdsForExport();
-  const writeModifiedLibrary = appStore.use.writeModiifedLibrary();
+  const writeModifiedLibrary = appStore.use.writeModifiedLibrary();
 
   const handlePlaylistsSelected = useCallback(
     (nodeIds: string[]) => {
