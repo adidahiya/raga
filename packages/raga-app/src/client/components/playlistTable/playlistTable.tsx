@@ -1,7 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
 import { ActionIcon, Box, Collapse, Divider, type MantineStyleProps, Text } from "@mantine/core";
-import classNames from "classnames";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -15,41 +14,50 @@ import styles from "./playlistTable.module.scss";
 // -------------------------------------------------------------------------------------------------
 
 interface PlaylistTableProps extends MantineStyleProps {
+  /** @default true */
   collapsible?: boolean;
-  selectable?: boolean;
+
+  /** @default "none" */
+  selectionMode?: "single" | "multiple" | "none";
+
+  /** Callback invoked when a playlist is selected or deselected. */
+  onSelect?: (playlistIds: string[]) => void;
 }
 
 export default function PlaylistTable({
   collapsible = true,
-  selectable = false,
+  selectionMode = "none",
+  onSelect,
   ...props
 }: PlaylistTableProps) {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
 
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
-  const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
 
   const isPlaylistTreeExpanded = appStore.use.isPlaylistTreeExpanded();
   const togglePlaylistTreeExpanded = appStore.use.togglePlaylistTreeExpanded();
 
+  const selectedNodeIds = useMemo(() => {
+    return selectionMode === "none" || selectedPlaylistId === undefined ? [] : [selectedPlaylistId];
+  }, [selectionMode, selectedPlaylistId]);
   // Selects a playlist in Raga's app store only. Mantine UI selection state is handled
   // in the Tree component.
   const handleSelect = useCallback(
     (node: TreeNode<PlaylistDefinition>) => {
       log.debug(`[client] selected playlist ${node.id}: '${node.data.Name}'`);
-      setSelectedPlaylistId(node.id);
+
+      if (selectionMode === "single") {
+        onSelect?.([node.id]);
+      } else if (selectionMode === "multiple") {
+        // TODO: implement multiple selection
+      }
     },
-    [setSelectedPlaylistId],
+    [onSelect, selectionMode],
   );
 
   return (
-    <Box
-      className={classNames(styles.playlistTableContainer, {
-        [styles.selectable]: selectable,
-      })}
-      {...props}
-    >
+    <Box className={styles.playlistTableContainer} {...props}>
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <span>
@@ -74,9 +82,9 @@ export default function PlaylistTable({
       <div className={styles.body}>
         <Collapse in={collapsible ? isPlaylistTreeExpanded : true}>
           <Tree
-            selectedNodeId={selectable ? selectedPlaylistId : undefined}
+            selectedNodeIds={selectedNodeIds}
             nodes={playlistDefNodes}
-            onSelect={selectable ? handleSelect : undefined}
+            onSelect={selectionMode === "none" ? undefined : handleSelect}
           />
         </Collapse>
       </div>

@@ -32,8 +32,8 @@ export interface ControlledTreeProps<T> {
   /** Tree data nodes. */
   nodes: TreeNode<T>[];
 
-  /** ID of the selected node. */
-  selectedNodeId?: string;
+  /** IDs of the selected node(s). */
+  selectedNodeIds?: string[];
 
   /** Callback invoked when a node is selected. */
   onSelect?: (node: TreeNode<T>) => void;
@@ -50,38 +50,50 @@ export interface ControlledTreeProps<T> {
  *   slashes) of all the node ids from the root node to the current node.
  */
 export default function ControlledTree<T extends object>({
-  selectedNodeId,
+  selectedNodeIds = [],
   nodes,
   onSelect,
 }: ControlledTreeProps<T>) {
   // Convert our node structure to Mantine's expected format
   const mantineNodes = useMemo(
-    () => mapNodesToMantineFormat(nodes, selectedNodeId),
-    [nodes, selectedNodeId],
+    () => mapNodesToMantineFormat(nodes, selectedNodeIds),
+    [nodes, selectedNodeIds],
   );
 
   const canSelect = onSelect != null;
-  const selectedNode = findNodeById(nodes, selectedNodeId);
-  const selectedMantineNode = findMantineNodeById(mantineNodes, selectedNodeId);
-  const pathToSelectedNode = useMemo(() => {
-    if (!selectedNode || !selectedMantineNode) {
+
+  const { selectedNodes, selectedMantineNodes } = useMemo(
+    () => ({
+      selectedNodes: filterUndefined(selectedNodeIds.map((id) => findNodeById(nodes, id))),
+      selectedMantineNodes: filterUndefined(
+        selectedNodeIds.map((id) => findMantineNodeById(mantineNodes, id)),
+      ),
+    }),
+    [nodes, mantineNodes, selectedNodeIds],
+  );
+
+  const pathToFirstSelectedNode = useMemo(() => {
+    if (selectedNodes.length === 0 || selectedMantineNodes.length === 0) {
       return [];
     }
 
+    const firstSelectedNode = selectedNodes[0];
+    const firstSelectedMantineNode = selectedMantineNodes[0];
+
     const path = [];
-    let currentNode: TreeNode<T> | undefined = selectedNode;
-    let currentMantineNode: TreeNodeData | undefined = selectedMantineNode;
+    let currentNode: TreeNode<T> | undefined = firstSelectedNode;
+    let currentMantineNode: TreeNodeData | undefined = firstSelectedMantineNode;
     while (currentNode && currentMantineNode) {
       path.unshift(currentMantineNode.value);
       currentNode = findNodeById(nodes, currentNode.parentId);
       currentMantineNode = findMantineNodeById(mantineNodes, currentNode?.id);
     }
     return path;
-  }, [mantineNodes, nodes, selectedMantineNode, selectedNode]);
+  }, [mantineNodes, nodes, selectedNodes, selectedMantineNodes]);
 
   const tree = useTree({
-    initialExpandedState: getTreeExpandedState(mantineNodes, pathToSelectedNode),
-    initialSelectedState: selectedMantineNode ? [selectedMantineNode.value] : [],
+    initialExpandedState: getTreeExpandedState(mantineNodes, pathToFirstSelectedNode),
+    initialSelectedState: selectedMantineNodes.map((node) => node.value),
   });
   const { select, clearSelected } = tree;
 
@@ -129,7 +141,7 @@ export default function ControlledTree<T extends object>({
                 tree.select(node.value);
                 const selectedNode = findNodeById(nodes, mantineNodeValueToId(node.value));
                 if (selectedNode) {
-                  onSelect?.(selectedNode);
+                  onSelect(selectedNode);
                 }
               }
             }}
@@ -145,10 +157,10 @@ export default function ControlledTree<T extends object>({
   // Update tree state controlled selection changes
   useEffect(() => {
     clearSelected();
-    if (selectedMantineNode) {
-      select(selectedMantineNode.value);
-    }
-  }, [selectedMantineNode, select, clearSelected]);
+    selectedMantineNodes.forEach((node) => {
+      select(node.value);
+    });
+  }, [selectedMantineNodes, select, clearSelected]);
 
   return (
     <Tree
@@ -166,8 +178,8 @@ export default function ControlledTree<T extends object>({
 
 function mapNodesToMantineFormat<T>(
   nodes: TreeNode<T>[],
-  /** ID of the selected node. */
-  selectedNodeId?: string,
+  /** IDs of the selected node(s). */
+  selectedNodeIds: string[],
   /**
    * Accumulated map of node id to node value path.
    * Example:
@@ -187,10 +199,10 @@ function mapNodesToMantineFormat<T>(
   return nodes.map((node) => ({
     id: node.id,
     label: node.label,
-    selected: node.id === selectedNodeId,
+    selected: selectedNodeIds.includes(node.id),
     value: getNodeValue(node),
     children: node.children
-      ? mapNodesToMantineFormat(node.children, selectedNodeId, nodeValuePaths)
+      ? mapNodesToMantineFormat(node.children, selectedNodeIds, nodeValuePaths)
       : undefined,
   }));
 }
@@ -236,9 +248,14 @@ function findMantineNodeById(
       }
     }
   }
+
   return undefined;
 }
 
 function mantineNodeValueToId(value: string): string {
   return value.split("/").at(-1) ?? "";
+}
+
+function filterUndefined<T>(arr: (T | undefined)[]): T[] {
+  return arr.filter((item) => item !== undefined) as T[];
 }

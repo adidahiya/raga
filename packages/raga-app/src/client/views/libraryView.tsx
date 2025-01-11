@@ -1,5 +1,6 @@
 import { ListDetailView } from "@blueprintjs/icons";
 import { Box, Divider, Group, Paper, Stack, Text } from "@mantine/core";
+import { useCallback } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
 import { formatStatNumber } from "../../common/format";
@@ -19,6 +20,14 @@ export default function LibraryView() {
   const waveSurfer = appStore.use.waveSurfer();
   const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
   const selectedTrack = getSelectedTrackDef();
+  const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
+
+  const handlePlaylistSelect = useCallback(
+    ([playlistId]: string[]) => {
+      setSelectedPlaylistId(playlistId);
+    },
+    [setSelectedPlaylistId],
+  );
 
   return (
     <Paper w="100%" h="100%" shadow="sm" withBorder={true} radius="sm" className={styles.library}>
@@ -36,7 +45,7 @@ export default function LibraryView() {
         <Divider orientation="horizontal" />
         <PanelGroup direction="horizontal">
           <Panel className={styles.librarySidebar} defaultSize={20} minSize={20} maxSize={40}>
-            <PlaylistTable selectable={true} />
+            <PlaylistTable selectionMode="single" onSelect={handlePlaylistSelect} />
             <LibrarySidebarFooter />
           </Panel>
           <ResizeHandle />
