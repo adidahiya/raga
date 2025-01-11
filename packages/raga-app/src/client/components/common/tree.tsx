@@ -60,6 +60,7 @@ export default function ControlledTree<T extends object>({
     [nodes, selectedNodeId],
   );
 
+  const canSelect = onSelect != null;
   const selectedNode = findNodeById(nodes, selectedNodeId);
   const selectedMantineNode = findMantineNodeById(mantineNodes, selectedNodeId);
   const pathToSelectedNode = useMemo(() => {
@@ -92,6 +93,7 @@ export default function ControlledTree<T extends object>({
           key={node.value}
           {...elementProps}
           className={classNames(styles.node, elementProps.className, {
+            [styles.selectable]: canSelect,
             [styles.selectedPath]: selected,
           })}
         >
@@ -117,6 +119,10 @@ export default function ControlledTree<T extends object>({
             gap={5}
             pl={hasChildren ? 0 : 5}
             onClick={() => {
+              if (!canSelect) {
+                return;
+              }
+
               if (selected) {
                 tree.deselect(node.value);
               } else {
@@ -133,7 +139,7 @@ export default function ControlledTree<T extends object>({
         </Group>
       );
     },
-    [nodes, onSelect],
+    [nodes, onSelect, canSelect],
   );
 
   // Update tree state controlled selection changes
@@ -148,7 +154,7 @@ export default function ControlledTree<T extends object>({
     <Tree
       data={mantineNodes}
       expandOnClick={false}
-      selectOnClick={true}
+      selectOnClick={canSelect}
       tree={tree}
       renderNode={renderTreeNode}
     />

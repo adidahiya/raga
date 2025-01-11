@@ -1,6 +1,7 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
 import { ActionIcon, Box, Collapse, Divider, type MantineStyleProps, Text } from "@mantine/core";
+import classNames from "classnames";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -15,9 +16,14 @@ import styles from "./playlistTable.module.scss";
 
 interface PlaylistTableProps extends MantineStyleProps {
   collapsible?: boolean;
+  selectable?: boolean;
 }
 
-export default function PlaylistTable({ collapsible = true, ...props }: PlaylistTableProps) {
+export default function PlaylistTable({
+  collapsible = true,
+  selectable = false,
+  ...props
+}: PlaylistTableProps) {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
 
@@ -27,6 +33,8 @@ export default function PlaylistTable({ collapsible = true, ...props }: Playlist
   const isPlaylistTreeExpanded = appStore.use.isPlaylistTreeExpanded();
   const togglePlaylistTreeExpanded = appStore.use.togglePlaylistTreeExpanded();
 
+  // Selects a playlist in Raga's app store only. Mantine UI selection state is handled
+  // in the Tree component.
   const handleSelect = useCallback(
     (node: TreeNode<PlaylistDefinition>) => {
       log.debug(`[client] selected playlist ${node.id}: '${node.data.Name}'`);
@@ -36,7 +44,12 @@ export default function PlaylistTable({ collapsible = true, ...props }: Playlist
   );
 
   return (
-    <Box className={styles.playlistTableContainer} {...props}>
+    <Box
+      className={classNames(styles.playlistTableContainer, {
+        [styles.selectable]: selectable,
+      })}
+      {...props}
+    >
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <span>
@@ -61,9 +74,9 @@ export default function PlaylistTable({ collapsible = true, ...props }: Playlist
       <div className={styles.body}>
         <Collapse in={collapsible ? isPlaylistTreeExpanded : true}>
           <Tree
-            selectedNodeId={selectedPlaylistId}
+            selectedNodeId={selectable ? selectedPlaylistId : undefined}
             nodes={playlistDefNodes}
-            onSelect={handleSelect}
+            onSelect={selectable ? handleSelect : undefined}
           />
         </Collapse>
       </div>

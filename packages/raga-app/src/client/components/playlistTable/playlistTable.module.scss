@@ -6,6 +6,16 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  &:not(.selectable) {
+    :global(.mantine-Tree-item) {
+      cursor: default;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
 }
 
 .header {

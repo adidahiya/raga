@@ -1,15 +1,20 @@
 .node {
   border: solid 1px transparent;
   margin-bottom: -1px; // slight overlap to avoid double border on hover
+  cursor: default;
 
-  &.selectedPath {
-    background-color: var(--mantine-primary-color-light);
-    border: solid 1px var(--mantine-primary-color-filled);
-  }
+  &.selectable {
+    cursor: pointer;
 
-  &:hover {
-    background-color: var(--mantine-primary-color-light-hover);
-    border-color: var(--mantine-primary-color-9);
+    &.selectedPath {
+      background-color: var(--mantine-primary-color-light);
+      border: solid 1px var(--mantine-primary-color-filled);
+    }
+
+    &:hover {
+      background-color: var(--mantine-primary-color-light-hover);
+      border-color: var(--mantine-primary-color-9);
+    }
   }
 }
 

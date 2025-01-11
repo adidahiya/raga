@@ -36,7 +36,7 @@ export default function LibraryView() {
         <Divider orientation="horizontal" />
         <PanelGroup direction="horizontal">
           <Panel className={styles.librarySidebar} defaultSize={20} minSize={20} maxSize={40}>
-            <PlaylistTable />
+            <PlaylistTable selectable={true} />
             <LibrarySidebarFooter />
           </Panel>
           <ResizeHandle />
