@@ -1,10 +1,12 @@
 import { Cross, DocumentOpen } from "@blueprintjs/icons";
 import { Box, Button, Divider, Fieldset, FileInput, Stack } from "@mantine/core";
 import classNames from "classnames";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { Roarr as log } from "roarr";
+import { useResizeObserver } from "usehooks-ts";
 
+import { truncateFilePath } from "../../common/stringUtils";
 import { appStore } from "../../store/appStore";
 import styles from "./loadLibraryForm.module.scss";
 
@@ -39,8 +41,15 @@ export default function LoadLibraryForm() {
     onDrop,
   });
 
+  const ref = useRef<HTMLDivElement>(null);
+  const { width = 0 } = useResizeObserver({
+    // @ts-expect-error - incompatible with stricter React 19 types, see https://github.com/juliencrn/usehooks-ts/issues/663
+    ref,
+    box: "border-box",
+  });
+
   return (
-    <Stack gap="xs">
+    <Stack gap="xs" ref={ref}>
       <FileInput
         className={styles.fileInput}
         placeholder="Select XML file"
@@ -56,12 +65,12 @@ export default function LoadLibraryForm() {
         <input {...getInputProps()} />
         {isDragActive ? <span>Drop XML file here...</span> : <span>Drag and drop XML file</span>}
       </Box>
-      <MaybeRecentlyUsedLibrariesSection />
+      <MaybeRecentlyUsedLibrariesSection formWidth={width} />
     </Stack>
   );
 }
 
-function MaybeRecentlyUsedLibrariesSection() {
+function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number }) {
   const previouslyUsedLibaries = appStore.use.previouslyUsedLibraries();
   const setLibraryInputFilepath = appStore.use.setLibraryInputFilepath();
   const clearPreviouslyUsedLibraries = appStore.use.clearPreviouslyUsedLibraries();
@@ -70,6 +79,8 @@ function MaybeRecentlyUsedLibrariesSection() {
   if (previouslyUsedLibaries.size === 0) {
     return null;
   }
+
+  const maxFilePathLength = Math.floor((formWidth - 40) / 7);
 
   return (
     <>
@@ -84,8 +95,9 @@ function MaybeRecentlyUsedLibrariesSection() {
                 setLibraryInputFilepath(filePath);
               }}
               leftSection={<DocumentOpen />}
+              title={filePath}
             >
-              {filePath}
+              {truncateFilePath(filePath, maxFilePathLength)}
             </Button>
           ))}
           <Box mt="xs">

@@ -1,6 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
 import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import { ActionIcon, Collapse, Divider, Text } from "@mantine/core";
+import { ActionIcon, Box, Collapse, Divider, type MantineStyleProps, Text } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -13,7 +13,11 @@ import styles from "./playlistTable.module.scss";
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-export default function PlaylistTable({ collapsible = true }: { collapsible?: boolean }) {
+interface PlaylistTableProps extends MantineStyleProps {
+  collapsible?: boolean;
+}
+
+export default function PlaylistTable({ collapsible = true, ...props }: PlaylistTableProps) {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
 
@@ -32,7 +36,7 @@ export default function PlaylistTable({ collapsible = true }: { collapsible?: bo
   );
 
   return (
-    <div className={styles.playlistTableContainer}>
+    <Box className={styles.playlistTableContainer} {...props}>
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <span>
@@ -63,7 +67,7 @@ export default function PlaylistTable({ collapsible = true }: { collapsible?: bo
           />
         </Collapse>
       </div>
-    </div>
+    </Box>
   );
 }
 
