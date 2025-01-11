@@ -5,6 +5,7 @@ import {
   getTreeExpandedState,
   Group,
   type RenderTreeNodePayload,
+  Text,
   Tree,
   type TreeNodeData,
   useTree,
@@ -62,7 +63,7 @@ export default function ControlledTree<T extends object>({
   onSelect,
 }: ControlledTreeProps<T>) {
   // Convert our node structure to Mantine's expected format
-  const mantineNodes = useMemo(
+  const { mantineNodes, numLeafNodes } = useMemo(
     () => mapNodesToMantineFormat(nodes, selectedNodeIds),
     [nodes, selectedNodeIds],
   );
@@ -102,6 +103,8 @@ export default function ControlledTree<T extends object>({
   });
   const { select, clearSelected, checkedState } = tree;
 
+  const allNodesChecked = checkedState.length === numLeafNodes;
+  const someNodesChecked = checkedState.length > 0;
   useEffect(() => {
     if (selectionMode === "multiple") {
       onSelect?.(
@@ -130,7 +133,7 @@ export default function ControlledTree<T extends object>({
           {selectionMode === "multiple" && (
             <Checkbox.Indicator
               className={classNames(styles.checkbox, {
-                [styles.checked]: checked,
+                [styles.filled]: checked || indeterminate,
               })}
               checked={checked}
               indeterminate={indeterminate}
@@ -202,13 +205,36 @@ export default function ControlledTree<T extends object>({
   }, [selectedMantineNodes, select, clearSelected, selectionMode]);
 
   return (
-    <Tree
-      data={mantineNodes}
-      expandOnClick={false}
-      selectOnClick={selectionMode === "single"}
-      tree={tree}
-      renderNode={renderTreeNode}
-    />
+    <>
+      {selectionMode === "multiple" && (
+        <Group gap={5} className={classNames(styles.node)}>
+          <Checkbox.Indicator
+            className={classNames(styles.checkbox, {
+              [styles.filled]: someNodesChecked,
+            })}
+            checked={allNodesChecked}
+            indeterminate={!allNodesChecked && someNodesChecked}
+            onClick={() => {
+              if (allNodesChecked) {
+                tree.uncheckAllNodes();
+              } else {
+                tree.checkAllNodes();
+              }
+            }}
+          />
+          <Text pl={5} fw={600}>
+            Select all
+          </Text>
+        </Group>
+      )}
+      <Tree
+        data={mantineNodes}
+        expandOnClick={false}
+        selectOnClick={selectionMode === "single"}
+        tree={tree}
+        renderNode={renderTreeNode}
+      />
+    </>
   );
 }
 
@@ -227,7 +253,9 @@ function mapNodesToMantineFormat<T>(
    * - node 3: "1/2/3"
    */
   nodeValuePaths: Map<string, string> = new Map<string, string>(),
-): TreeNodeData[] {
+): { mantineNodes: TreeNodeData[]; numLeafNodes: number } {
+  let numLeafNodes = 0;
+
   function getNodeValue(node: TreeNode<T>) {
     const parentNodeValue = node.parentId ? nodeValuePaths.get(node.parentId) : undefined;
     const value = parentNodeValue ? `${parentNodeValue}/${node.id}` : node.id;
@@ -235,15 +263,28 @@ function mapNodesToMantineFormat<T>(
     return value;
   }
 
-  return nodes.map((node) => ({
-    id: node.id,
-    label: node.label,
-    selected: selectedNodeIds.includes(node.id),
-    value: getNodeValue(node),
-    children: node.children
-      ? mapNodesToMantineFormat(node.children, selectedNodeIds, nodeValuePaths)
-      : undefined,
-  }));
+  const mantineNodes = nodes.map((node) => {
+    let children: TreeNodeData[] | undefined;
+
+    if (node.children) {
+      const { mantineNodes: childMantineNodes, numLeafNodes: childNumLeafNodes } =
+        mapNodesToMantineFormat(node.children, selectedNodeIds, nodeValuePaths);
+      children = childMantineNodes;
+      numLeafNodes += childNumLeafNodes;
+    } else {
+      numLeafNodes++;
+    }
+
+    return {
+      id: node.id,
+      label: node.label,
+      selected: selectedNodeIds.includes(node.id),
+      value: getNodeValue(node),
+      children,
+    };
+  });
+
+  return { mantineNodes, numLeafNodes };
 }
 
 function findNodeById<T>(nodes: TreeNode<T>[], id: string | undefined): TreeNode<T> | undefined {

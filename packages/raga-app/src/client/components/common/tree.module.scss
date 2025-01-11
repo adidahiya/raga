@@ -27,7 +27,7 @@
 .checkbox {
   cursor: pointer;
 
-  &:not(.checked):hover {
+  &:not(.filled):hover {
     background-color: var(--mantine-primary-color-light-hover);
   }
 }
