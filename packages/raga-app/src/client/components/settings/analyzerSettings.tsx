@@ -12,8 +12,8 @@ export function AnalyzerSettings() {
   }, [analyzeBPMPerTrack, setAnalyzeBPMPerTrack]);
 
   return (
-    <Stack gap="xs" p="xs">
-      <Text>Analysis settings</Text>
+    <Stack gap="xs">
+      <Text>Analysis</Text>
       <Switch
         label="Analyze BPM per track"
         onChange={handleToggleAnalyzeBPMPerTrack}

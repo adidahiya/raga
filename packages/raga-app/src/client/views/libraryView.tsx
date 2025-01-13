@@ -9,6 +9,8 @@ import { AudioPlayerControls } from "../components/audioPlayer/audioPlayerContro
 import { AudioPlayerNowPlaying } from "../components/audioPlayer/audioPlayerNowPlaying";
 import { ResizeHandle } from "../components/common";
 import EmptyState from "../components/common/emptyState";
+import AudioAnalyzerStatus from "../components/library/audioAnalyzerStatus";
+import AudioFilesServerControls from "../components/library/audioFilesServerControls";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
 import { useMasterPlaylist } from "../hooks";
@@ -45,7 +47,7 @@ export default function LibraryView() {
         <Divider orientation="horizontal" />
         <PanelGroup direction="horizontal">
           <Panel className={styles.librarySidebar} defaultSize={20} minSize={20} maxSize={40}>
-            <PlaylistTable selectionMode="single" onSelect={handlePlaylistSelect} />
+            <PlaylistTable selectionMode="single" onSelect={handlePlaylistSelect} pb={87} />
             <LibrarySidebarFooter />
           </Panel>
           <ResizeHandle />
@@ -79,10 +81,24 @@ function LibrarySidebarFooter() {
     <Box className={styles.librarySidebarFooter}>
       <Divider orientation="horizontal" />
       <Box py={5} px={7}>
-        <Text component="span" truncate={true}>
-          Total # tracks: {formatStatNumber(masterPlaylist["Playlist Items"].length)}
-        </Text>
+        <AudioFilesServerControls />
+      </Box>
+      <Divider orientation="horizontal" />
+      <Box py={5} px={7}>
+        <AudioAnalyzerStatus />
+      </Box>
+      <Divider orientation="horizontal" />
+      <Box py={5} px={7}>
+        <Group align="center" justify="space-between">
+          <Text component="span" truncate={true} size="sm" c="dimmed">
+            Total # tracks
+          </Text>
+          <Text component="span" truncate={true} size="sm">
+            {formatStatNumber(masterPlaylist["Playlist Items"].length)}
+          </Text>
+        </Group>
       </Box>
     </Box>
   );
 }
+LibrarySidebarFooter.displayName = "LibrarySidebarFooter";
