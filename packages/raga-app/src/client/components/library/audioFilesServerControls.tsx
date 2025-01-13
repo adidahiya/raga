@@ -1,8 +1,8 @@
 import { CaretDown, CrossCircle, Error, Play, Refresh, Tick, Time } from "@blueprintjs/icons";
 import {
   ActionIcon,
+  Badge,
   Box,
-  Button,
   ButtonGroup,
   Group,
   Menu,
@@ -56,7 +56,7 @@ export default function AudioFilesServerControls() {
   const { lineHeights } = useMantineTheme();
 
   return (
-    <Group gap="xs" align="center">
+    <Group gap="xs" align="center" justify="space-between">
       <Text component="span" c="dimmed" size="sm">
         Audio server
       </Text>
@@ -67,15 +67,16 @@ export default function AudioFilesServerControls() {
         offset={{ mainAxis: 10, crossAxis: 6 }}
       >
         <Menu.Target>
-          <Button
-            variant="subtle"
-            size="compact-sm"
+          <Badge
+            size="sm"
+            variant="light"
             leftSection={statusIcon}
             rightSection={<CaretDown />}
             color={status === "failed" ? "red" : status === "started" ? "green" : "blue"}
+            radius="sm"
           >
             {statusText}
-          </Button>
+          </Badge>
         </Menu.Target>
         <Menu.Dropdown>
           <Group grow={true} gap="xs">

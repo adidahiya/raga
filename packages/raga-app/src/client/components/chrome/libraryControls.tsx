@@ -1,25 +1,21 @@
-import { CaretDown, Error, Export, FloppyDisk, FolderOpen, Reset, Tick } from "@blueprintjs/icons";
-import { Button, Divider, Group, Menu, MenuDivider, Text, Tooltip } from "@mantine/core";
+import { CaretDown, Error, FloppyDisk, FolderOpen, Reset, Tick } from "@blueprintjs/icons";
+import { Button, Group, Menu, MenuDivider, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useCallback, useRef } from "react";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import NotificationMessage from "../common/NotificationMessage";
-import styles from "./libraryControls.module.scss";
 import LibraryLastModifiedText from "./libraryLastModifiedText";
 
 export default function LibraryControls() {
   const isLibraryLoaded = appStore.use.libraryLoadingState() !== "none";
   const libraryInputFilepath = appStore.use.libraryInputFilepath();
-  const libraryOutputFilepath = appStore.use.libraryOutputFilepath();
   const libraryWriteState = appStore.use.libraryWriteState();
 
   const loadLibrary = appStore.use.loadSwinsianLibrary();
-  const writeModifiedLibrary = appStore.use.writeModifiedLibrary();
   const unloadSwinsianLibrary = appStore.use.unloadSwinsianLibrary();
 
-  const handleWriteModifiedLibrary = useOperationCallback(writeModifiedLibrary);
   const handleLoad = useOperationCallback(
     function* () {
       if (libraryInputFilepath === undefined) {
@@ -97,8 +93,6 @@ export default function LibraryControls() {
     unloadSwinsianLibrary();
   }, [libraryWriteState, unloadSwinsianLibrary]);
 
-  const canWrite = libraryWriteState === "ready" && libraryOutputFilepath !== undefined;
-
   return (
     <Group gap="xs">
       <Text size="sm">Library</Text>
@@ -133,32 +127,6 @@ export default function LibraryControls() {
             </Menu>
           </Menu.Dropdown>
         </Menu>
-
-        <Divider orientation="vertical" />
-
-        <Tooltip
-          position="bottom-end"
-          label={
-            libraryWriteState === "busy"
-              ? "Writing..."
-              : canWrite
-                ? "Write modified library to disk"
-                : libraryWriteState === "ready"
-                  ? "Need to set output file"
-                  : "No changes to write to disk"
-          }
-        >
-          <Button
-            className={styles.buttonNoRightRadius}
-            size="compact-sm"
-            leftSection={<Export />}
-            disabled={!canWrite}
-            loading={libraryWriteState === "busy"}
-            onClick={handleWriteModifiedLibrary}
-          >
-            Export
-          </Button>
-        </Tooltip>
       </Group>
     </Group>
   );

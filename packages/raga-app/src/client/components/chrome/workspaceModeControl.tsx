@@ -1,4 +1,4 @@
-import { Group, SegmentedControl, Text } from "@mantine/core";
+import { Group, SegmentedControl } from "@mantine/core";
 
 import { appStore } from "../../store/appStore";
 
@@ -7,15 +7,12 @@ import { appStore } from "../../store/appStore";
  * - "tracks" view which allows exploring playlists and tracks
  * - "export" view which only shows playlist tree and streamlined view to export library data for other apps (rekordbox)
  */
-export default function WorkspaceControl() {
+export default function WorkspaceModeControl() {
   const workspaceMode = appStore.use.workspaceMode();
   const setWorkspaceMode = appStore.use.setWorkspaceMode();
 
   return (
     <Group gap="xs" align="center">
-      <Text component="span" c="dimmed" size="sm">
-        Mode
-      </Text>
       <SegmentedControl
         size="xs"
         value={workspaceMode}
@@ -30,3 +27,4 @@ export default function WorkspaceControl() {
     </Group>
   );
 }
+WorkspaceModeControl.displayName = "WorkspaceModeControl";

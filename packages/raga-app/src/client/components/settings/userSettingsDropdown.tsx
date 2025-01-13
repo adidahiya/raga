@@ -16,6 +16,7 @@ import {
 import { type ChangeEvent, useCallback, useState } from "react";
 
 import { appStore } from "../../store/appStore";
+import { AnalyzerSettings } from "./analyzerSettings";
 
 const EMAIL_VALIDATION_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
@@ -51,6 +52,10 @@ export default function UserSettingsDropdown() {
           <Divider orientation="horizontal" />
           <Box p="xs">
             <ThemeFormGroup />
+          </Box>
+          <Divider orientation="horizontal" />
+          <Box p="xs">
+            <AnalyzerSettings />
           </Box>
         </Stack>
       </Menu.Dropdown>

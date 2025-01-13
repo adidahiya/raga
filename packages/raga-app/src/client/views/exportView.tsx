@@ -46,7 +46,7 @@ export default function ExportView() {
     <Group
       w="100%"
       h="100%"
-      gap={10}
+      gap={5}
       align="start"
       justify="flex-start"
       className={styles.export}
