@@ -1,4 +1,4 @@
-import { convertSwinsianToItunesXml } from "@adahiya/raga-lib-native";
+import * as native from "@adahiya/raga-lib-native";
 
 import type { SwinsianLibraryPlist } from "../models/library.js";
 import { convertSwinsianTrackToMusicAppTrack } from "../models/tracks.js";
@@ -23,7 +23,7 @@ export function convertSwinsianToItunesXmlLibrary(
     );
   }
 
-  return convertSwinsianToItunesXml(tracks, playlists);
+  return native.convertSwinsianToItunesXml(tracks, playlists);
 }
 
 export { default as loadSwinsianLibrary } from "./loadSwinsianLibrary.js";

@@ -2,6 +2,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "deno.enable": true,
   "deno.lint": true,
-  "deno.unstable": false,
-  "deno.enablePaths": ["packages/raga-cli"]
+  "deno.enablePaths": ["packages/raga-cli"],
+  "rust-analyzer.linkedProjects": ["packages/raga-lib-native/Cargo.toml"]
 }

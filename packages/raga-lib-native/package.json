@@ -10,6 +10,10 @@
     "index.d.ts",
     "raga-lib-native.darwin-arm64.node"
   ],
+  "exports": {
+    ".": "./index.js",
+    "./darwin-arm64": "./raga-lib-native.darwin-arm64.node"
+  },
   "scripts": {
     "artifacts": "napi artifacts",
     "build": "napi build --platform --release",
