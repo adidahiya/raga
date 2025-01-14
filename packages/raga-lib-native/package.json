@@ -2,11 +2,13 @@
   "name": "@adahiya/raga-lib-native",
   "version": "0.1.0",
   "private": true,
+  "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
     "index.js",
-    "index.d.ts"
+    "index.d.ts",
+    "raga-lib-native.darwin-arm64.node"
   ],
   "scripts": {
     "artifacts": "napi artifacts",
@@ -26,8 +28,7 @@
     "triples": {
       "defaults": true,
       "additional": [
-        "aarch64-apple-darwin",
-        "x86_64-apple-darwin"
+        "aarch64-apple-darwin"
       ]
     }
   }
