@@ -105,10 +105,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@adahiya/raga-lib-native@workspace:*, @adahiya/raga-lib-native@workspace:packages/raga-lib-native":
+  version: 0.0.0-use.local
+  resolution: "@adahiya/raga-lib-native@workspace:packages/raga-lib-native"
+  dependencies:
+    "@napi-rs/cli": "npm:^2.18.4"
+  languageName: unknown
+  linkType: soft
+
 "@adahiya/raga-lib@workspace:^, @adahiya/raga-lib@workspace:packages/raga-lib":
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-lib@workspace:packages/raga-lib"
   dependencies:
+    "@adahiya/raga-lib-native": "workspace:*"
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.27"
     "@types/node": "npm:^22.10.5"
@@ -1882,6 +1891,15 @@ __metadata:
   peerDependencies:
     react: ^18.x || ^19.x
   checksum: 10/837b4fbea76dfcdbabdf46b3c7eda6790d3fb57c52f5cf07da550cf32cf340f3ded8e7b3d78ddb958bf7a42f42d5cc314a1714e5a1dd54824a697be7ab2d42a8
+  languageName: node
+  linkType: hard
+
+"@napi-rs/cli@npm:^2.18.4":
+  version: 2.18.4
+  resolution: "@napi-rs/cli@npm:2.18.4"
+  bin:
+    napi: scripts/index.js
+  checksum: 10/b9bdb0e0f96328315a5ad7846df5c72f5f00c707aa58bf2e8b753ad419c4a45989ba6967c8a27acf1552051d2693ae43a9be9ab2c173671040c1861e6d920ac6
   languageName: node
   linkType: hard
 

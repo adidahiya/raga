@@ -7,7 +7,6 @@ import {
   getOutputLibraryPath,
   getSwinsianLibraryPath,
   loadSwinsianLibrary,
-  serializeLibraryPlist,
 } from "@adahiya/raga-lib";
 import dedent from "dedent";
 import parseArgs from "minimist";
@@ -80,9 +79,8 @@ if (whichScript === ScriptId.ConvertSwinsianLibrary) {
 
   const swinsianLibrary = loadSwinsianLibrary(inputLibraryPath);
   console.info(`Building modified library`);
-  const modifiedLibrary = convertSwinsianToItunesXmlLibrary(swinsianLibrary);
-  const serializedLibrary = serializeLibraryPlist(modifiedLibrary);
+  const modifiedLibrarySerialized = convertSwinsianToItunesXmlLibrary(swinsianLibrary);
 
   console.info(`Writing modified library to ${outputLibraryPath}`);
-  writeFileSync(outputLibraryPath, serializedLibrary);
+  writeFileSync(outputLibraryPath, modifiedLibrarySerialized);
 }

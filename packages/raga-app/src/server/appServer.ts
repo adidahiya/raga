@@ -3,7 +3,6 @@ import { writeFileSync } from "node:fs";
 import {
   convertSwinsianToItunesXmlLibrary,
   loadSwinsianLibrary,
-  type MusicAppLibraryPlist,
   serializeLibraryPlist,
   type SwinsianLibraryPlist,
 } from "@adahiya/raga-lib";
@@ -135,11 +134,10 @@ function handleAudioFilesServerStop() {
 function handleWriteModifiedLibrary(options: WriteModifiedLibraryOptions) {
   options.library.Date = new Date();
   const serializedSwinsianLibrary = serializeLibraryPlist(options.library);
-  const convertedLibrary = convertSwinsianToItunesXmlLibrary(
+  const serializedMusicAppLibrary = convertSwinsianToItunesXmlLibrary(
     options.library,
     options.selectedPlaylistIds,
-  ) as MusicAppLibraryPlist;
-  const serializedMusicAppLibrary = serializeLibraryPlist(convertedLibrary);
+  );
 
   const swinsianLibraryOutputPath = options.inputFilepath;
   const modifiedLibraryOutputPath = options.outputFilepath;

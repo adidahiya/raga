@@ -14,6 +14,7 @@
     "publish-npm": "npm publish --access public"
   },
   "dependencies": {
+    "@adahiya/raga-lib-native": "workspace:*",
     "ansis": "^3.8.1",
     "dedent": "^1.5.3",
     "fluent-ffmpeg": "^2.1.3",

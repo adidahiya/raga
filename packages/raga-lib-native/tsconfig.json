@@ -1,0 +1,8 @@
+{
+  "extends": "../../config/tsconfig.base.json",
+  "include": ["index.d.ts"],
+  "compilerOptions": {
+    "outDir": ".",
+    "declaration": true
+  }
+}
