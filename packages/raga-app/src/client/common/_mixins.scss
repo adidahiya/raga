@@ -1,0 +1,38 @@
+// CSS Scroll shadows adapted from https://lea.verou.me/blog/2012/04/background-attachment-local/
+@mixin scroll-shadows {
+  --body-bg: var(--mantine-color-body);
+  --body-bg-rgba: rgba(255, 255, 255, 0);
+  --body-shadow: rgba(0, 0, 0, 0.2);
+  --shadow-width: 40px;
+  --shadow-height: 14px;
+
+  /* prettier-ignore */
+  background:
+		/* Shadow covers */
+    linear-gradient(--body-bg 30%, var(--body-bg-rgba)),
+    linear-gradient(var(--body-bg-rgba), var(--body-bg) 70%) 0 100%,
+    /* Shadows */
+    radial-gradient(50% 0, farthest-side, var(--body-shadow), rgba(0, 0, 0, 0)),
+    radial-gradient(50% 100%, farthest-side, var(--body-shadow), rgba(0, 0, 0, 0)) 0 100%;
+  /* prettier-ignore */
+  background:
+		/* Shadow covers */
+    linear-gradient(var(--body-bg) 30%, var(--body-bg-rgba)),
+    linear-gradient(var(--body-bg-rgba), var(--body-bg) 70%) 0 100%,
+    /* Shadows */
+    radial-gradient(farthest-side at 50% 0, var(--body-shadow), rgba(0, 0, 0, 0)),
+    radial-gradient(farthest-side at 50% 100%, var(--body-shadow), rgba(0, 0, 0, 0)) 0 100%;
+  background-repeat: no-repeat;
+  background-color: var(--body-bg);
+  background-size:
+    100% var(--shadow-width),
+    100% var(--shadow-width),
+    100% var(--shadow-height),
+    100% var(--shadow-height);
+  background-attachment: local, local, scroll, scroll;
+
+  :global([data-mantine-color-scheme="dark"]) & {
+    --body-bg-rgba: rgba(0, 0, 0, 0);
+    --body-shadow: rgba(0, 0, 0, 0.4);
+  }
+}
