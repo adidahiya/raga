@@ -1,0 +1,806 @@
+[
+  {
+    "markdown": "Docs\n\nConcepts\n\nObject\n\n# Object\n\n`Object` is very easy to confuse with the use of `Class`. Unlike `Class` you can't assign `function` or `method` to `Object`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(object)]\npub struct Pet {\n  pub name: String,\n  pub kind: u32,\n}\n```\n\nAny `impl` block of this `struct` will not affect the JavaScript `Object`.\n\n⚠️\n\nIf you want to convert a Rust `struct` into JavaScript `Object` using\n`#[napi(object)]` attribute, you need to mark all of its fields as `pub`.\n\nOnce `struct` is marked as `#[napi(object)]`, you can use it as a function argument type or return type.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(object)]\npub struct Pet {\n  pub name: String,\n  pub kind: u32,\n}\n\n#[napi]\nfn print_pet(pet: Pet) {\n  println!(\"{}\", pet.name);\n}\n\n#[napi]\nfn create_cat() -> Pet {\n  Pet {\n    name: \"cat\".to_string(),\n    kind: 1,\n  }\n}\n```\n\n⚠️\n\nThe JavaScript Object passed in or returned from Rust is cloned. This means\nany mutation on JavaScript `Object` will not affect the original Rust\n`struct`. And any mutation on Rust `struct` will not affect the JavaScript\n`Object` either.\n\nLast updated on August 17, 2022\n\n[Enum](/docs/concepts/enum \"Enum\") [Function](/docs/concepts/function \"Function\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/object",
+      "ogUrl": "https://napi.rs",
+      "title": "Object – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Object – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Object – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "15b423f4-900f-4efa-8308-f5c0873b1a32",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/object",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": "a framework for building pre-compiled Node.js addons in Rust",
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "og:description": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Introduction\n\nNAPI-RS is a framework for building pre-compiled Node.js addons in Rust.\n\n[![rust doc](https://docs.rs/napi/badge.svg)](https://docs.rs/crate/napi)[![rust crates](https://img.shields.io/crates/v/napi.svg)](https://crates.io/crates/napi)[![npm Downloads](https://img.shields.io/npm/dm/@napi-rs/cli)](https://www.npmjs.com/package/@napi-rs/cli)[![crate Downloads](https://img.shields.io/crates/d/napi.svg?label=crates.io%20download)](https://crates.io/crates/napi)[![GitHub stars](https://img.shields.io/github/stars/napi-rs/napi-rs?style=social)](https://github.com/napi-rs/napi-rs)[![chat](https://img.shields.io/discord/874290842444111882.svg?logo=discord&style=flat-square)](https://discord.gg/SpWzYHsKHs)[Sponsor](https://github.com/sponsors/napi-rs?o=esb)\n\n## Rustify Node.js in few lines! [Permalink for this section](\\#rustify-nodejs-in-few-lines)\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi_derive::napi;\n\n#[napi]\nfn fibonacci(n: u32) -> u32 {\n  match n {\n    1 | 2 => 1,\n    _ => fibonacci(n - 1) + fibonacci(n - 2),\n  }\n}\n```\n\nCompatible with both `CommonJS` and `esm`, with auto generated `.d.ts` file:\n\nmain.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { fibonacci } from './index.js'\n\n// output: 5\nconsole.log(fibonacci(5))\n```\n\nmain.cjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nconst { fibonacci } = require('./index')\n\n// output: 5\nconsole.log(fibonacci(5))\n```\n\n## Features [Permalink for this section](\\#features)\n\n🚀 Bring native performance for `Node.js`\n\n👷‍♂️ Memory safe, guaranteed by `Rust` compiler\n\n⚡️ Zero copy data interactive between `Rust` & `Node.js` via `Buffer` and `TypedArray`\n\n⚙️ Parallelism in few lines\n\n## Sponsors [Permalink for this section](\\#sponsors)\n\nPlatinum Sponsors [Tailwind](https://github.com/tailwindlabs) [Vercel](https://github.com/Vercel-Sponsorships) Gold Sponsors [Prisma](https://github.com/prisma) [Nx](https://github.com/nrwl) [Workleap](https://github.com/gsoft-inc) [ChainSafe](https://github.com/ChainSafe) Sliver Sponsors [Parcel](https://github.com/parcel-bundler) Backers\n\n## Ecosystem [Permalink for this section](\\#ecosystem)\n\n[**AFFiNE**](https://affine.pro) [Prisma.io](https://www.prisma.io/) [![swc](https://raw.githubusercontent.com/swc-project/logo/master/swc.png)](https://swc.rs/) [![Parcel](https://user-images.githubusercontent.com/19409/31321658-f6aed0f2-ac3d-11e7-8100-1587e676e0ec.png)](https://parceljs.org/) [![next.js](https://assets.vercel.com/image/upload/v1607554385/repositories/next-js/next-logo.png)](https://nextjs.org/) [![pola.rs](/assets/pola.svg)Polars](https://www.pola.rs/) [![logseq](/assets/logseq.png)Logseq](https://logseq.com/) [Format.JS](https://formatjs.io/) [![astgrep](/assets/ast-grep.svg)](https://ast-grep.github.io/) [![perfsee](/assets/perfsee.png)Perfsee](https://perfsee.com/) [![npmmirror](/assets/npmmirror.png)](https://npmmirror.com/) [**Databend**](https://databend.rs/) [![rspack](https://assets.rspack.dev/rspack/rspack-logo.svg)**Rspack**](https://rspack.dev/) [**Hugging Face**](https://github.com/huggingface/tokenizers) [**ditto**](https://www.ditto.live/) [Turborepo logo](https://turbo.build) [**Loro**](https://loro.dev/) [**Rollup**](https://github.com/rollup/rollup)\n\n## Support matrix [Permalink for this section](\\#support-matrix)\n\n### Node.js [Permalink for this section](\\#nodejs)\n\n| Node10 | Node12 | Node14 | Node16 | Node18 | Node20 |\n| --- | --- | --- | --- | --- | --- |\n| ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |\n\n### Platform support [Permalink for this section](\\#platform-support)\n\n> ✅ Means official tested in napi-rs repo.\n>\n> `-` Means no official Node.js release.\n\n|  | i686 | x64 | aarch64 | arm |\n| --- | --- | --- | --- | --- |\n| Windows | ✅ | ✅ | ✅ | - |\n| macOS | - | ✅ | ✅ | ✅ |\n| Linux | - | ✅ | ✅ | ✅ |\n| Linux musl | - | ✅ | ✅ | - |\n| FreeBSD | - | ✅ | - | - |\n| Android | - | - | ✅ | ✅ |\n\n## Related projects [Permalink for this section](\\#related-projects)\n\n- [neon (opens in a new tab)](https://www.neon-bindings.com)\n- [node-bindgen (opens in a new tab)](https://github.com/infinyon/node-bindgen)\n\nLast updated on October 22, 2023",
+    "metadata": {
+      "url": "https://napi.rs/",
+      "ogUrl": "https://napi.rs",
+      "title": "Home – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Home – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Home – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "0b3d668c-98ea-40b9-941d-1dd7fc7bdad2",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "NAPI-RS is a framework for building Node.js addons in Rust.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "NAPI-RS is a framework for building Node.js addons in Rust.",
+      "og:description": [
+        "NAPI-RS is a framework for building Node.js addons in Rust.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nFunction\n\n# Function\n\nDefining a JavaScript `function` is very simple in **NAPI-RS**. Just a plain Rust `fn`:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn sum(a: u32, b: u32) -> u32 {\n  a + b\n}\n```\n\nThe most important thing you should keep in mind is **_NAPI-RS fn does not support every Rust type_**. Here is a table to illustrate how JavaScript types map to Rust types when they are `fn` arguments and return types:\n\n## Arguments [Permalink for this section](\\#arguments)\n\n| Rust Type | JavaScript Type |\n| --- | --- |\n| `u32` | `number` |\n| `i32` | `number` |\n| `i64` | `number` |\n| `f64` | `number` |\n| `bool` | `boolean` |\n| `String` | `string` |\n| `Latin1String` | `string` |\n| `UTF16String` | `string` |\n| `#[napi(object)] struct` | `Object` |\n| `& struct` or `&mut struct` | [Class](/docs/concepts/class) instance |\n| `serde_json::Map` | `Object` |\n| `serde_json::Value` | `unknown` |\n| `std::collections::HashMap` | `Object` |\n| `Array` | `unknown[]` |\n| `Vec<T>` T must be types in this table | T\\[\\] |\n| `Buffer` | `Buffer` |\n| `External` | [`External` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_create_external) |\n| `Null` | `null` |\n| `Undefined` / `()` | `undefined` |\n| `Option<T>` | `T or null` |\n| `Fn(Arg) ->T` `Arg ` and `T` must be types in this table | `(arg: Arg) => T` |\n| `Promise<T>` | `Promise<T>` |\n| `AbortSignal` | [`AbortSignal` (opens in a new tab)](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) |\n| `JsSymbol` | `Symbol` |\n| `Int8Array` / `Uint8Array` / `Int16Array`... | `TypedArray` |\n| `BigInt` | `BigInt` |\n\n## Return Type [Permalink for this section](\\#return-type)\n\n| Rust Type | JavaScript Type |\n| --- | --- |\n| `u32` | `number` |\n| `i32` | `number` |\n| `i64` | `number` |\n| `f64` | `number` |\n| `bool` | `boolean` |\n| `String` | `string` |\n| `Latin1String` | `string` |\n| `UTF16String` | `string` |\n| `#[napi(object)] struct` | `Object` |\n| `#[napi] struct` | [Class](/docs/concepts/class) |\n| `serde_json::Map` | `Object` |\n| `serde_json::Value` | `unknown` |\n| `std::collections::HashMap` | `Object` |\n| `Array` | `unknown[]` |\n| `Vec<T>` T must be types in this table | `T[]` |\n| `Buffer` | `Buffer` |\n| `External` | `External` |\n| `Null` | `null` |\n| `Undefined` / `()` | `undefined` |\n| `Option<T>` | `T` or `null` |\n| `AsyncTask<Task<JsValue = T>>` | `Promise<T>` |\n| `JsSymbol` | `Symbol` |\n| `Int8Array` / `Uint8Array` / `Int16Array`... | `TypedArray` |\n| `BigInt` | `BigInt` |\n| `i64n` | `BigInt` |\n| `i128` | `BigInt` |\n| `u128` | `BigInt` |\n\nLast updated on July 9, 2022\n\n[Object](/docs/concepts/object \"Object\") [ThreadsafeFunction](/docs/concepts/threadsafe-function \"ThreadsafeFunction\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/function",
+      "ogUrl": "https://napi.rs",
+      "title": "Function – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Function – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Function – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "221fffd1-3f08-4efb-809c-afefc5b6cbf7",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/function",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": "a framework for building pre-compiled Node.js addons in Rust",
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "og:description": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nNaming conventions\n\n# Naming conventions\n\n## `snake_case` to `camelCase` [Permalink for this section](\\#snake_case-to-camelcase)\n\nThe code styles are very different between Rust and JavaScript. The Rust community prefers the `snake_case` style while the JavaScript community prefers the `camelCase` style. **NAPI-RS** will change the case of the Rust code to the `camelCase` style automatically.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn a_function(a_arg: u32) -> u32 {\n  a_arg + 1\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function aFunction(aArg: number): number\n```\n\n## `js_name` [Permalink for this section](\\#js_name)\n\nYou can use the `js_name` attribute in `#[napi]` to rename the JavaScript function.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(js_name = \"coolFunction\")]\nfn a_function(a_arg: u32) -> u32 {\n  a_arg + 1\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function coolFunction(aArg: number): number\n```\n\nThe JavaScript function name will be `coolFunction`, both in the generated TypeScript definition and in the JavaScript runtime:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { coolFunction } from './index.js'\n\nconsole.log(coolFunction(1)) // 2\n```\n\nLast updated on January 26, 2022\n\n[Exports](/docs/concepts/exports \"Exports\") [Values](/docs/concepts/values \"Values\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/naming-conventions",
+      "ogUrl": "https://napi.rs",
+      "title": "Naming conventions – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Naming conventions – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Naming conventions – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "e7d750bf-5858-4857-9b37-e21f119a95e1",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/naming-conventions",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": "a framework for building pre-compiled Node.js addons in Rust",
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "og:description": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nTypes Overwrite\n\n# Types Overwrite\n\nIn most cases, **NAPI-RS** will generate the right TypeScript types for you. But in some scenarios, you may want to overwrite the arguments or return type.\n\n[ThreadsafeFunction](/docs/concepts/threadsafe-function) is an example, because the `ThreadsafeFunction` is too complex, **NAPI-RS** can't generate the right TypeScript types for it. You always need to overwrite its argument type.\n\n## `ts_args_type` [Permalink for this section](\\#ts_args_type)\n\nRewrite the arguments type of the function, **NAPI-RS** will put the rewritten type into the brace of the function signature.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(ts_args_type=\"callback: (err: null | Error, result: number) => void\")]\nfn call_threadsafe_function(callback: JsFunction) -> Result<()> {\n  let tsfn: ThreadsafeFunction<u32, ErrorStrategy::CalleeHandled> = callback\n    .create_threadsafe_function(0, |ctx| {\n      ctx.env.create_uint32(ctx.value + 1).map(|v| vec![v])\n    })?;\n  for n in 0..100 {\n    let tsfn = tsfn.clone();\n    thread::spawn(move || {\n      tsfn.call(Ok(n), ThreadsafeFunctionCallMode::Blocking);\n    });\n  }\n  Ok(())\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function callThreadsafeFunction(\n  callback: (err: null | Error, result: number) => void,\n): void\n```\n\n## `ts_arg_type` [Permalink for this section](\\#ts_arg_type)\n\nRewrite one or more argument types of a function _individually_, **NAPI-RS** will put the rewritten types into the brace of the function\nsignature and will auto-derive the other ones.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn override_individual_arg_on_function(\n  not_overridden: String,\n  #[napi(ts_arg_type = \"() => string\")] f: JsFunction,\n  not_overridden2: u32,\n) {\n// code ...\n}\n```\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function overrideIndividualArgOnFunction(\n  notOverridden: string,\n  f: () => string,\n  notOverridden2: number,\n): string\n```\n\n## `ts_return_type` [Permalink for this section](\\#ts_return_type)\n\nRewrite the return type of the function, **NAPI-RS** will add the rewritten type to the end of the function signature.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(ts_return_type=\"number\")]\nfn return_something_unknown(env: Env) -> Result<JsUnknown> {\n  env.create_uint32(42).map(|v| v.into_unknown())\n}\n```\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function returnSomethingUnknown(): number\n```\n\n## `ts_type` [Permalink for this section](\\#ts_type)\n\nOverwrite the generated ts-type of a field in a struct.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(object)]\npub struct TsTypeChanged {\n  #[napi(ts_type = \"MySpecialString\")]\n  pub type_override: String,\n\n  #[napi(ts_type = \"object\")]\n  pub type_override_optional: Option<String>,\n}\n```\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport interface TsTypeChanged {\n  typeOverride: MySpecialString\n  typeOverrideOptional?: object\n}\n```\n\nLast updated on May 21, 2022\n\n[Await Promise](/docs/concepts/await-promise \"Await Promise\") [Typed Array](/docs/concepts/typed-array \"Typed Array\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/types-overwrite",
+      "ogUrl": "https://napi.rs",
+      "title": "Types Overwrite – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Types Overwrite – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Types Overwrite – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "c91b22b5-d5a5-426c-9487-2dc331d0f75e",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/types-overwrite",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Overwrite the argument and return TypeScript types.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Overwrite the argument and return TypeScript types.",
+      "og:description": [
+        "Overwrite the argument and return TypeScript types.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nAwait Promise\n\n# Await Promise\n\nAwaiting a JavaScript `Promise` in Rust sounds crazy, but it's feasible in **NAPI-RS**.\n\n💡\n\nAwaiting a JavaScript `Promise` needs the `tokio_rt` and `napi4` features to\nbe enabled.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\n\n#[napi]\npub async fn async_plus_100(p: Promise<u32>) -> Result<u32> {\n  let v = p.await?;\n  Ok(v + 100)\n}\n```\n\ntest.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { asyncPlus100 } from './index.js'\n\nconst fx = 20\nconst result = await asyncPlus100(\n  new Promise((resolve) => {\n    setTimeout(() => resolve(fx), 50)\n  }),\n)\n\nconsole.log(result) // 120\n```\n\nLast updated on August 17, 2022\n\n[External](/docs/concepts/external \"External\") [Types Overwrite](/docs/concepts/types-overwrite \"Types Overwrite\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/await-promise",
+      "ogUrl": "https://napi.rs",
+      "title": "Await Promise – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Await Promise – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Await Promise – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "2f667695-168e-42f6-aaf9-fc6f139a8b0e",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/await-promise",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Await a JavaScript Promise in Rust.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Await a JavaScript Promise in Rust.",
+      "og:description": [
+        "Await a JavaScript Promise in Rust.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nValues\n\n# Values\n\nConversions between Rust and JavaScript types.\n\n### Undefined [Permalink for this section](\\#undefined)\n\nRepresent `undefined` in JavaScript.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn get_undefined() -> Undefined {\n\t()\n}\n\n// default return or empty tuple `()` are `undefined` after converted into JS value.\n#[napi]\nfn log(n: u32) {\n\tprintln!(\"{}\", n);\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function getUndefined(): undefined\nexport function log(n: number): void\n```\n\n### Null [Permalink for this section](\\#null)\n\nRepresents `null` value in JavaScript.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn get_null() -> Null {\n\tNull\n}\n\n#[napi]\nfn get_env(env: String) -> Option<String> {\n\tmatch std::env::var(env) {\n\t\tOk(val) => Some(val),\n\t\tErr(e) => None,\n\t}\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function getNull(): null\nexport function getEnv(env: string): string | null\n```\n\n### Numbers [Permalink for this section](\\#numbers)\n\nJavaScript `Number` type with Rust Int/Float types: `u32`, `i32`, `i64`, `f64`.\n\nFor Rust types like `u64`, `u128`, `i128`, checkout [`BigInt`](/docs/concepts/values#bigint) section.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn sum(a: u32, b: i32) -> i64 {\n\t(b + a as i32).into()\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function sum(a: number, b: number): number\n```\n\n### String [Permalink for this section](\\#string)\n\nRepresents JavaScript `String` type.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn greet(name: String) -> String {\n\tformat!(\"greeting, {}\", name)\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function greet(name: string): string\n```\n\n### Boolean [Permalink for this section](\\#boolean)\n\nRepresents JavaScript `Boolean` type.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn is_good() -> bool {\n\ttrue\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function isGood(): boolean\n```\n\n### Buffer [Permalink for this section](\\#buffer)\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn with_buffer(buf: Buffer) {\n  let buf: Vec<u8> = buf.into();\n  // do something\n}\n\n#[napi]\nfn read_buffer(file: String) -> Buffer {\n\tBuffer::from(std::fs::read(file).unwrap())\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function withBuffer(buf: Buffer): void\nexport function readBuffer(file: string): Buffer\n```\n\n### Object [Permalink for this section](\\#object)\n\nRepresents JavaScript anonymous object values.\n\n⚠️\n\n**Performance**\n\nThe costs of `Object` conversions between JavaScript and Rust are higher than other primitive types.\n\nEvery call of `Object.get(\"key\")` is actually dispatched to node side including two steps: fetch value, convert JS to rust value, and so is `Object.set(\"key\", v)`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn keys(obj: Object) -> Vec<String> {\n\tObject::keys(&obj).unwrap()\n}\n\n#[napi]\nfn log_string_field(obj: Object, field: String) {\n\tprintln!(\"{}: {:?}\", &field, obj.get::<String>::(field.as_ref()));\n}\n\n#[napi]\nfn create_obj(env: Env) -> Object {\n\tlet mut obj = env.create_object().unwrap();\n\tobj.set(\"test\", 1).unwrap();\n\tobj\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function keys(obj: object): Array<string>\nexport function logStringField(obj: object): void\nexport function createObj(): object\n```\n\nIf you want **NAPI-RS** to convert objects from JavaScript with the same shape defined in Rust, you can use the `#[napi]` macro with the `object` attribute.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n/// #[napi(object)] requires all struct fields to be public\n#[napi(object)]\nstruct PackageJson {\n\tpub name: String,\n\tpub version: String,\n\tpub dependencies: Option<HashMap<String, String>>,\n\tpub dev_dependencies: Option<HashMap<String, String>>,\n}\n\n#[napi]\nfn log_package_name(package_json: PackageJson) {\n\tprintln!(\"name: {}\", package_json.name);\n}\n\n#[napi]\nfn read_package_json() -> PackageJson {\n\t// ...\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport interface PackageJson {\n  name: string\n  version: string\n  dependencies: Record<string, string> | null\n  devDependencies: Record<string, string> | null\n}\nexport function logPackageName(packageJson: PackageJson): void\nexport function readPackageJson(): PackageJson\n```\n\n⚠️\n\n**Clone over Reference**\n\nThe `#[napi(object)]` struct passed in Rust `fn` is cloned from **_JavaScript Object_**. Any mutation on it will not be reflected to the original **_JavaScript_** object.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n/// #[napi(object)] requires all struct fields to be public\n#[napi(object)]\nstruct Animal {\n\tpub name: String,\n}\n\n#[napi]\nfn change_animal_name(mut animal: Animal) {\n  animal.name = \"cat\".to_string();\n}\n```\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nconst animal = { name: 'dog' }\nchangeAnimalName(animal)\nconsole.log(animal.name) // \"dog\"\n```\n\n### Array [Permalink for this section](\\#array)\n\nBecause `Array` values in JavaScript can hold elements with different types, but rust `Vec<T>`\ncan only contains same type elements. So there two different way for array types.\n\n⚠️\n\n**Performance**\n\nBecause JavaScript `Array` type is backed with `Object` actually, so the performance of manipulating `Array` s would be the same as `Object` s.\n\nThe conversion between `Array` and `Vec<T>` is even heavier, which is in `O(2n)` complexity.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn arr_len(arr: Array) -> u32 {\n  arr.len()\n}\n\n#[napi]\nfn get_tuple_array(env: Env) -> Array {\n  let mut arr = env.create_array(2).unwrap();\n\n  arr.insert(1).unwrap();\n  arr.insert(\"test\").unwrap();\n\n  arr\n}\n\n#[napi]\nfn vec_len(nums: Vec<u32>) -> u32 {\n  u32::try_from(nums.len()).unwrap()\n}\n\n#[napi]\nfn get_nums() -> Vec<u32> {\n  vec![1, 1, 2, 3, 5, 8]\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function arrLen(arr: unknown[]): number\nexport function getTupleArray(): unknown[]\nexport function vecLen(nums: Array<number>): number\nexport function getNums(): Array<number>\n```\n\n### BigInt [Permalink for this section](\\#bigint)\n\nThis requires the `napi6` feature.\n\n⚠️\n\nThe only way to pass `BigInt` in `Rust` is using `BigInt` type. But you can\nreturn `BigInt`, `i64n`, `u64`, `i128`, `u128`. Return `i64` will be treated\nas `JavaScript` number, not `BigInt`.\n\n💡\n\nThe reason why Rust fn can't receive `i128` `u128` `u64` `i64n` as arguments\nis that they may lose precision while converting JavaScript `BigInt` into\nthem. You can use `BigInt::get_u128`, `BigInt::get_i128` ... to get the value\nin `BigInt`. The return value of these methods also indicates if precision is\nlost.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n/// the return value of `get_u128` is (signed: bool, value: u128, lossless: bool)\n#[napi]\nfn bigint_add(a: BigInt, b: BigInt) -> u128 {\n  a.get_u128().1 + b.get_u128().1\n}\n\n#[napi]\nfn create_big_int_i128() -> i128 {\n  100\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function bigintAdd(a: BigInt, b: BigInt): BigInt\nexport function createBigIntI128(): BigInt\n```\n\n### TypedArray [Permalink for this section](\\#typedarray)\n\n💡\n\nUnlike JavaScript Object, the `TypedArray` passed into Rust fn is a\n**Reference**. No data `Copy` or `Clone` will be performed. Every mutation on\nthe `TypedArray` will be reflected to the original JavaScript `TypedArray`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn convert_u32_array(input: Uint32Array) -> Vec<u32> {\n  input.to_vec()\n}\n\n#[napi]\nfn create_external_typed_array() -> Uint32Array {\n  Uint32Array::new(vec![1, 2, 3, 4, 5])\n}\n\n#[napi]\nfn mutate_typed_array(mut input: Float32Array) {\n  for item in input.as_mut() {\n    *item *= 2.0;\n  }\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function convertU32Array(input: Uint32Array): Array<number>\nexport function createExternalTypedArray(): Uint32Array\nexport function mutateTypedArray(input: Float32Array): void\n```\n\ntest.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { convertU32Array, mutateTypedArray } from './index.js'\n\nconvertU32Array(new Uint32Array([1, 2, 3, 4, 5])) // [1, 2, 3, 4, 5]\nmutateTypedArray(new Float32Array([1, 2, 3, 4, 5])) // Float32Array(5) [ 2, 4, 6, 8, 10 ]\n```\n\nLast updated on December 18, 2023\n\n[Naming conventions](/docs/concepts/naming-conventions \"Naming conventions\") [Class](/docs/concepts/class \"Class\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/values",
+      "ogUrl": "https://napi.rs",
+      "title": "Values – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Values – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Values – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "60d528ca-0690-4b4f-962b-2ad59ef6e894",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/values",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Conversions between Rust and JavaScript types.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Conversions between Rust and JavaScript types.",
+      "og:description": [
+        "Conversions between Rust and JavaScript types.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nInject Env\n\n# Inject Env\n\nThe `#[napi]` macro is a very high level abstraction for the `Node-API`. Most of the time, you use the Rust native API and crates.\n\nBut sometimes you still need to access the low-level `Node-API`, for example, to call [`napi_async_cleanup_hook` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_async_cleanup_hook) or [`napi_adjust_external_memory` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_adjust_external_memory).\n\nFor this scenario, **NAPI-RS** allows you to inject `Env` into your `fn` which is decorated by the `#[napi]`.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::{Env, bindgen_prelude::*};\n\n#[napi]\nfn call_env(env: Env, length: u32) -> Result<External<Vec<u32>>> {\n  env.adjust_external_memory(length as i64)?;\n  Ok(External::new(vec![0; length as usize]))\n}\n```\n\nAnd the `Env` will be auto injected by **NAPI-RS**, it does not affect the `arguments` types in the JavaScript side:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function callEnv(length: number) -> ExternalObject<number[]>\n```\n\nYou can also inject `Env` in `impl` block:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\n\n// A complex struct which can not be exposed into JavaScript directly.\nstruct QueryEngine {}\n\n#[napi(js_name = \"QueryEngine\")]\nstruct JsQueryEngine {\n  engine: QueryEngine,\n}\n\n#[napi]\nimpl JsQueryEngine {\n  #[napi(factory)]\n  pub fn with_initial_count(count: u32) -> Self {\n    JsQueryEngine { engine: QueryEngine::with_initial_count(count) }\n  }\n\n  /// Class method\n  #[napi]\n  pub fn query(&self, env: Env, query: String) -> napi::Result<String> {\n    self.engine.query(query).map_err(|err| Error::new(Status::GenericFailure, format!(\"Query failed {}\", err)))\n  }\n}\n```\n\nThe behavior is just the same with the pure `fn`.\n\nLast updated on May 16, 2022\n\n[AsyncTask](/docs/concepts/async-task \"AsyncTask\") [Inject This](/docs/concepts/inject-this \"Inject This\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/inject-env",
+      "ogUrl": "https://napi.rs",
+      "title": "Inject Env – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Inject Env – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Inject Env – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "ed424ee5-cc41-49d0-81e4-bcfece80eea7",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/inject-env",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Inject Node-API Env into functions and methods.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Inject Node-API Env into functions and methods.",
+      "og:description": [
+        "Inject Node-API Env into functions and methods.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nClass\n\n# Class\n\n💡\n\nThere is no concept of a class in Rust. We use `struct` to represent a\nJavaScript `Class`.\n\n## `Constructor` [Permalink for this section](\\#constructor)\n\n### Default `constructor` [Permalink for this section](\\#default-constructor)\n\nIf all fields in a `Rust` struct are `pub`, then you can use `#[napi(constructor)]` to make the `struct` have a default `constructor`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(constructor)]\npub struct AnimalWithDefaultConstructor {\n  pub name: String,\n  pub kind: u32,\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport class AnimalWithDefaultConstructor {\n  name: string\n  kind: number\n  constructor(name: string, kind: number)\n}\n```\n\n### Custom `constructor` [Permalink for this section](\\#custom-constructor)\n\nIf you want to define a custom `constructor`, you can use `#[napi(constructor)]` on your constructor `fn` in the struct `impl` block.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n// A complex struct which cannot be exposed to JavaScript directly.\npub struct QueryEngine {}\n\n#[napi(js_name = \"QueryEngine\")]\npub struct JsQueryEngine {\n  engine: QueryEngine,\n}\n\n#[napi]\nimpl JsQueryEngine {\n  #[napi(constructor)]\n  pub fn new() -> Self {\n    JsQueryEngine { engine: QueryEngine::new() }\n  }\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport class QueryEngine {\n  constructor()\n}\n```\n\n⚠️\n\n**NAPI-RS** does not currently support `private constructor`. Your custom\nconstructor must be `pub` in Rust.\n\n## Factory [Permalink for this section](\\#factory)\n\nBesides `constructor`, you can also define factory methods on `Class` by using `#[napi(factory)]`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n// A complex struct which cannot be exposed to JavaScript directly.\npub struct QueryEngine {}\n\n#[napi(js_name = \"QueryEngine\")]\npub struct JsQueryEngine {\n  engine: QueryEngine,\n}\n\n#[napi]\nimpl JsQueryEngine {\n  #[napi(factory)]\n  pub fn with_initial_count(count: u32) -> Self {\n    JsQueryEngine { engine: QueryEngine::with_initial_count(count) }\n  }\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport class QueryEngine {\n  static withInitialCount(count: number): QueryEngine\n  constructor()\n}\n```\n\n⚠️\n\nIf no `#[napi(constructor)]` is defined in the `struct`, and you attempt to\ncreate an instance ( `new`) of the `Class` in JavaScript, an error will be\nthrown.\n\ntest.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { QueryEngine } from './index.js'\n\nnew QueryEngine() // Error: Class contains no `constructor`, cannot create it!\n```\n\n## `class method` [Permalink for this section](\\#class-method)\n\nYou can define a JavaScript class method with `#[napi]` on a struct method in **Rust**.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n// A complex struct which cannot be exposed to JavaScript directly.\npub struct QueryEngine {}\n\n#[napi(js_name = \"QueryEngine\")]\npub struct JsQueryEngine {\n  engine: QueryEngine,\n}\n\n#[napi]\nimpl JsQueryEngine {\n  #[napi(factory)]\n  pub fn with_initial_count(count: u32) -> Self {\n    JsQueryEngine { engine: QueryEngine::with_initial_count(count) }\n  }\n\n  /// Class method\n  #[napi]\n  pub async fn query(&self, query: String) -> napi::Result<String> {\n    self.engine.query(query).await\n  }\n\n  #[napi]\n  pub fn status(&self) -> napi::Result<u32> {\n    self.engine.status()\n  }\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport class QueryEngine {\n  static withInitialCount(count: number): QueryEngine\n  constructor()\n  query(query: string) => Promise<string>\n  status() => number\n}\n```\n\n⚠️\n\n`async fn` needs the `napi4` and `tokio_rt` features to be enabled.\n\n💡\n\nAny `fn` in `Rust` that returns `Result<T>` will be treated as `T` in JavaScript/TypeScript. If the `Result<T>` is `Err`, a JavaScript Error will be thrown.\n\n## `Getter` [Permalink for this section](\\#getter)\n\nDefine [JavaScript class `getter` (opens in a new tab)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) using `#[napi(getter)]`. The Rust `fn` must be a struct method, not an associated function.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n// A complex struct which cannot be exposed to JavaScript directly.\npub struct QueryEngine {}\n\n#[napi(js_name = \"QueryEngine\")]\npub struct JsQueryEngine {\n  engine: QueryEngine,\n}\n\n#[napi]\nimpl JsQueryEngine {\n  #[napi(factory)]\n  pub fn with_initial_count(count: u32) -> Self {\n    JsQueryEngine { engine: QueryEngine::with_initial_count(count) }\n  }\n\n  /// Class method\n  #[napi]\n  pub async fn query(&self, query: String) -> napi::Result<String> {\n    self.engine.query(query).await\n  }\n\n  #[napi(getter)]\n  pub fn status(&self) -> napi::Result<u32> {\n    self.engine.status()\n  }\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport class QueryEngine {\n  static withInitialCount(count: number): QueryEngine\n  constructor()\n  get status(): number\n}\n```\n\n## `Setter` [Permalink for this section](\\#setter)\n\nDefine [JavaScript class `setter` (opens in a new tab)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) using `#[napi(setter)]`. The Rust `fn` must be a struct method, not an associated function.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n// A complex struct which cannot be exposed to JavaScript directly.\npub struct QueryEngine {}\n\n#[napi(js_name = \"QueryEngine\")]\npub struct JsQueryEngine {\n  engine: QueryEngine,\n}\n\n#[napi]\nimpl JsQueryEngine {\n  #[napi(factory)]\n  pub fn with_initial_count(count: u32) -> Self {\n    JsQueryEngine { engine: QueryEngine::with_initial_count(count) }\n  }\n\n  /// Class method\n  #[napi]\n  pub async fn query(&self, query: String) -> napi::Result<String> {\n    self.engine.query(query).await\n  }\n\n  #[napi(getter)]\n  pub fn status(&self) -> napi::Result<u32> {\n    self.engine.status()\n  }\n\n  #[napi(setter)]\n  pub fn count(&mut self, count: u32) {\n    self.engine.count = count;\n  }\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport class QueryEngine {\n  static withInitialCount(count: number): QueryEngine\n  constructor()\n  get status(): number\n  set count(count: number)\n}\n```\n\n## Class as argument [Permalink for this section](\\#class-as-argument)\n\n`Class` is different from [`Object`](/docs/concepts/object). `Class` can have Rust methods and associated functions on it. Every field in `Class` can mutated in JavaScript.\n\nSo the ownership of the `Class` is actually transferred to the JavaScript side while you are creating it. It is managed by the JavaScript GC, and you can only pass it back by passing its `reference`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\npub fn accept_class(engine: &QueryEngine) {\n  // ...\n}\n\npub fn accept_class_mut(engine: &mut QueryEngine) {\n  // ...\n}\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function acceptClass(engine: QueryEngine): void\nexport function acceptClassMut(engine: QueryEngine): void\n```\n\n## Property attributes [Permalink for this section](\\#property-attributes)\n\nThe default Property attributes are `writable = true`, `enumerable = true` and `configurable = true`. You can control the Property attributes over the `#[napi]` macro:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\nuse napi_derive::napi;\n\n// A complex struct which cannot be exposed to JavaScript directly.\n#[napi]\npub struct QueryEngine {\n  num: i32,\n}\n\n#[napi]\nimpl QueryEngine {\n  #[napi(constructor)]\n  pub fn new() -> Result<Self> {\n    Ok(Self {\n      num: 42,\n    })\n  }\n\n  // writable / enumerable / configurable\n  #[napi(writable = false)]\n  pub fn get_num(&self) -> i32 {\n    self.num\n  }\n}\n```\n\nIn this case, the `getNum` method of `QueryEngine` is not writable:\n\nmain.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { QueryEngine } from './index.js'\n\nconst qe = new QueryEngine()\nqe.getNum = function () {} // TypeError: Cannot assign to read only property 'getNum' of object '#<QueryEngine>'\n```\n\n## Custom Finalize logic [Permalink for this section](\\#custom-finalize-logic)\n\nNAPI-RS will drop the Rust struct wrapped in the JavaScript object when the JavaScript object is garbage collected. You can also specify a custom finalize logic for the Rust struct.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\nuse napi_derive::napi;\n\n#[napi(custom_finalize)]\npub struct CustomFinalize {\n  width: u32,\n  height: u32,\n  inner: Vec<u8>,\n}\n\n#[napi]\nimpl CustomFinalize {\n  #[napi(constructor)]\n  pub fn new(mut env: Env, width: u32, height: u32) -> Result<Self> {\n    let inner = vec![0; (width * height * 4) as usize];\n    let inner_size = inner.len();\n    env.adjust_external_memory(inner_size as i64)?;\n    Ok(Self {\n      width,\n      height,\n      inner,\n    })\n  }\n}\n\nimpl ObjectFinalize for CustomFinalize {\n  fn finalize(self, mut env: Env) -> Result<()> {\n    env.adjust_external_memory(-(self.inner.len() as i64))?;\n    Ok(())\n  }\n}\n```\n\nFirst, you can set `custom_finalize` attribute in `#[napi]` macro, and NAPI-RS will not generate the default `ObjectFinalize` for the Rust struct.\n\nThen, you can implement `ObjectFinalize` yourself for the Rust struct.\n\nIn this case, the `CustomFinalize` struct increase external memory in the **constructor** and decrease it in `fn finalize`.\n\n## `instance of` [Permalink for this section](\\#instance-of)\n\nThere is `fn instance_of` on all `#[napi]` class:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\nuse napi_derive::napi;\n\n#[napi]\npub struct NativeClass {}\n\n#[napi]\npub fn is_native_class_instance(env: Env, value: Unknown) -> Result<bool> {\n  NativeClass::instance_of(env, value)\n}\n```\n\nmain.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { NativeClass, isNativeClassInstance } from './index.js'\n\nconst nc = new NativeClass()\nconsole.log(isNativeClassInstance(nc)) // true\nconsole.log(isNativeClassInstance(1)) // false\n```\n\nLast updated on August 17, 2022\n\n[Values](/docs/concepts/values \"Values\") [Enum](/docs/concepts/enum \"Enum\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/class",
+      "ogUrl": "https://napi.rs",
+      "title": "Class – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Class – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Class – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "27ecf962-4824-4493-8ca7-163c7bd8cc05",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/class",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": "a framework for building pre-compiled Node.js addons in Rust",
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "og:description": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nExports\n\n# Exports\n\nUnlike defining modules in Node.js, we don't need to explicitly register exports like `module.exports.xxx = xxx`.\n\nThe `#[napi]` macro will automatically generate module registering code for you.\nThis auto registering idea was inspired by [node-bindgen (opens in a new tab)](https://github.com/infinyon/node-bindgen).\n\n## `Function` [Permalink for this section](\\#function)\n\nExporting a function is incredibly simple. Just decorate a normal rust function with `#[napi]`:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn sum(a: u32, b: u32) -> u32 {\n\ta + b\n}\n```\n\n## `Const` [Permalink for this section](\\#const)\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\npub const DEFAULT_COST: u32 = 12;\n```\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport const DEFAULT_COST: number\n```\n\n## `Class` [Permalink for this section](\\#class)\n\nSee [`class section`](/docs/concepts/class) for more details.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi(constructor)]\nstruct Animal {\n  pub name: String,\n  pub kind: u32,\n}\n\n#[napi]\nimpl Animal {\n  #[napi]\n  pub fn change_name(&mut self, new_name: String) {\n    self.name = new_name;\n  }\n}\n```\n\n## `Enum` [Permalink for this section](\\#enum)\n\nSee [`enum section`](/docs/concepts/enum) for more details.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\npub enum Kind {\n  Dog,\n  Cat,\n  Duck,\n}\n```\n\nLast updated on March 22, 2023\n\n[A simple package](/docs/introduction/simple-package \"A simple package\") [Naming conventions](/docs/concepts/naming-conventions \"Naming conventions\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/exports",
+      "ogUrl": "https://napi.rs",
+      "title": "Exports – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Exports – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Exports – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "d2467881-ba3b-4c68-bee9-31f9117486d0",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/exports",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": "a framework for building pre-compiled Node.js addons in Rust",
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "og:description": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nThreadsafeFunction\n\n# ThreadsafeFunction\n\n[`ThreadSafe Function` (opens in a new tab)](https://nodejs.org/api/n-api.html#asynchronous-thread-safe-function-calls) is a complex concept in Node.js. As we all know, Node.js is single threaded, so you can't access [`napi_env` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_env), [`napi_value` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_value), and [`napi_ref` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_ref) on another thread.\n\n💡\n\n[`napi_env` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_env),\n[`napi_value` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_value), and\n[`napi_ref` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_ref) are low level\nconcepts in `Node-API`, which the `#[napi]` macro of **NAPI-RS** is built on\ntop of. **NAPI-RS** also provides a [low level\\\\\nAPI](/docs/compat-mode/concepts/env) to access the original `Node-API`.\n\n`Node-API` provides the complex `Threadsafe Function` APIs to call JavaScript functions on other threads. It's very complex so many developers don't understand how to use it correctly. **NAPI-RS** provides a limited version of `Threadsafe Function` APIs to make it easier to use:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse std::thread;\n\nuse napi::{\n  bindgen_prelude::*,\n  threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},\n};\n\n#[napi]\npub fn call_threadsafe_function(callback: JsFunction) -> Result<()> {\n  let tsfn: ThreadsafeFunction<u32, ErrorStrategy::CalleeHandled> = callback\n    .create_threadsafe_function(0, |ctx| {\n      ctx.env.create_uint32(ctx.value + 1).map(|v| vec![v])\n    })?;\n  for n in 0..100 {\n    let tsfn = tsfn.clone();\n    thread::spawn(move || {\n      tsfn.call(Ok(n), ThreadsafeFunctionCallMode::Blocking);\n    });\n  }\n  Ok(())\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function callThreadsafeFunction(callback: (...args: any[]) => any): void\n```\n\n`ThreadsafeFunction` is very complex so **NAPI-RS** does not provide the precise TypeScript definition generation of it. If you want to have a better TypeScript type, you can use `#[napi(ts_args_type)]` to override the type of `JsFunction` argument:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse std::thread;\n\nuse napi::{\n  bindgen_prelude::*,\n  threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},\n};\n\n#[napi(ts_args_type = \"callback: (err: null | Error, result: number) => void\")]\npub fn call_threadsafe_function(callback: JsFunction) -> Result<()> {\n  let tsfn: ThreadsafeFunction<u32, ErrorStrategy::CalleeHandled> = callback\n    .create_threadsafe_function(0, |ctx| {\n      ctx.env.create_uint32(ctx.value + 1).map(|v| vec![v])\n    })?;\n  for n in 0..100 {\n    let tsfn = tsfn.clone();\n    thread::spawn(move || {\n      tsfn.call(Ok(n), ThreadsafeFunctionCallMode::Blocking);\n    });\n  }\n  Ok(())\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function callThreadsafeFunction(\n  callback: (err: null | Error, result: number) => void,\n): void\n```\n\n## ErrorStrategy [Permalink for this section](\\#errorstrategy)\n\nThere are two different error handling strategies for `Threadsafe Function`. The strategy can be defined in the second generic parameter of `ThreadsafeFunction`:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nlet tsfn: ThreadsafeFunction<u32, ErrorStrategy::CalleeHandled> = ...\n```\n\nThe first argument in the generic parameter of course is the return type of the `Threadsafe Function`.\n\n### `ErrorStrategy::CalleeHandled` [Permalink for this section](\\#errorstrategycalleehandled)\n\n`Err` from Rust code will be passed into the first argument of the JavaScript callback. This behaviour follows the async callback conventions from Node.js: [https://nodejs.org/en/learn/asynchronous-work/javascript-asynchronous-programming-and-callbacks#handling-errors-in-callbacks (opens in a new tab)](https://nodejs.org/en/learn/asynchronous-work/javascript-asynchronous-programming-and-callbacks#handling-errors-in-callbacks). Many async APIs in Node.js are designed in this shape, like `fs.read`.\n\nWith `ErrorStrategy::CalleeHandled`, you must call the `ThreadsafeFunction` with the `Result` type, so that the `Error` will be handled and passed back to the JavaScript callback:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse std::thread;\n\nuse napi::{\n  bindgen_prelude::*,\n  threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},\n};\n\n#[napi(ts_args_type = \"callback: (err: null | Error, result: number) => void\")]\npub fn call_threadsafe_function(callback: JsFunction) -> Result<()> {\n  let tsfn: ThreadsafeFunction<u32, ErrorStrategy::CalleeHandled> = callback\n    .create_threadsafe_function(0, |ctx| {\n      ctx.env.create_uint32(ctx.value + 1).map(|v| vec![v])\n    })?;\n  for n in 0..100 {\n    let tsfn = tsfn.clone();\n    thread::spawn(move || {\n      tsfn.call(Ok(n), ThreadsafeFunctionCallMode::Blocking);\n    });\n  }\n  Ok(())\n}\n```\n\n### `ErrorStrategy::Fatal` [Permalink for this section](\\#errorstrategyfatal)\n\nNo `Error` will be passed back to the JavaScript side. You can use this strategy to avoid the `Ok` wrapping in the Rust side if your code will never return `Err`.\n\nWith this strategy, `ThreadsafeFunction` doesn't need to be called with `Result<T>`, and the first argument of JavaScript callback is the value from the Rust, not `Error | null`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse std::thread;\n\nuse napi::{\n  bindgen_prelude::*,\n  threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},\n};\n\n#[napi(ts_args_type = \"callback: (result: number) => void\")]\npub fn call_threadsafe_function(callback: JsFunction) -> Result<()> {\n  let tsfn: ThreadsafeFunction<u32, ErrorStrategy::Fatal> = callback\n    .create_threadsafe_function(0, |ctx| {\n      ctx.env.create_uint32(ctx.value + 1).map(|v| vec![v])\n    })?;\n  for n in 0..100 {\n    let tsfn = tsfn.clone();\n    thread::spawn(move || {\n      tsfn.call(n, ThreadsafeFunctionCallMode::Blocking);\n    });\n  }\n  Ok(())\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function callThreadsafeFunction(callback: (result: number) => void): void\n```\n\nLast updated on April 5, 2024\n\n[Function](/docs/concepts/function \"Function\") [AsyncTask](/docs/concepts/async-task \"AsyncTask\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/threadsafe-function",
+      "ogUrl": "https://napi.rs",
+      "title": "ThreadsafeFunction – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "ThreadsafeFunction – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "ThreadsafeFunction – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "fc139394-3fff-40f1-951f-ce869e443be8",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/threadsafe-function",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Call a JavaScript callback in other threads.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Call a JavaScript callback in other threads.",
+      "og:description": [
+        "Call a JavaScript callback in other threads.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nIntroduction\n\nGetting started\n\n# Getting started\n\n## Start from `@napi-rs/cli` [Permalink for this section](\\#start-from-napi-rscli)\n\n> The recommend way.\n\n### Install cli [Permalink for this section](\\#install-cli)\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nyarn global add @napi-rs/cli\n# or\nnpm install -g @napi-rs/cli\n# or\npnpm add -g @napi-rs/cli\n```\n\n### Create project [Permalink for this section](\\#create-project)\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi new\n```\n\n#### Package name [Permalink for this section](\\#package-name)\n\nThe name filed in `package.json`.\n\n#### Choose targets you want to support [Permalink for this section](\\#choose-targets-you-want-to-support)\n\nPlatforms you want support to.\n\n#### Enable GitHub actions [Permalink for this section](\\#enable-github-actions)\n\nGenerate GitHub actions config for you.\n\n### Deep dive [Permalink for this section](\\#deep-dive)\n\nHere it is recommended to distribute your package under [npm scope (opens in a new tab)](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/) because `@napi-rs/cli` by default appends the different platform suffixes to the npm package name as the package name for the different platform binary distribution. Using npm scope will reduce the case of package name was taken.\n\nFor example if you want publish package `@cool/core`, with the `macOS x64`, `Windows x64` and `Linux aarch64` supported, `@napi-rs/cli` will create and publish four packages for you:\n\n- `@cool/core` includes just `JavaScript` codes, which actually load the native binary from per platforms.\n- `@cool/core-darwin-x64` for `macOS x64` platform.\n- `@cool/core-win32-x64` for `Windows x64` platform.\n- `@cool/core-linux-arm64-gnu` for `Linux aarch64` platform.\n\nIn every platform binary package, there are `cpu` and `os` fields in there `package.json`:\n\npackage.json\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n{\n  \"name\": \"@cool/core-darwin-x64\",\n  \"version\": \"1.0.0\",\n  \"os\": [\"darwin\"],\n  \"cpu\": [\"x64\"]\n}\n```\n\nAnd `@cool/core` using these native packages as `optionalDependencies`:\n\npackage.json\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n{\n  \"name\": \"@cool/core\",\n  \"version\": \"1.0.0\",\n  \"optionalDependencies\": {\n    \"@cool/core-darwin-x64\": \"^1.0.0\",\n    \"@cool/core-win32-x64\": \"^1.0.0\",\n    \"@cool/core-linux-arm64\": \"^1.0.0\"\n  }\n}\n```\n\nAnd your `index.js` in `@cool/core` will be this:\n\nindex.js\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nconst { existsSync, readFileSync } = require('fs')\nconst { join } = require('path')\n\nconst { platform, arch } = process\n\nlet nativeBinding = null\nlet localFileExisted = false\nlet isMusl = false\nlet loadError = null\n\nswitch (platform) {\n  case 'darwin':\n    switch (arch) {\n      case 'x64':\n        localFileExisted = existsSync(join(__dirname, 'core.darwin-x64.node'))\n        try {\n          if (localFileExisted) {\n            nativeBinding = require('./core.darwin-x64.node')\n          } else {\n            nativeBinding = require('@cool/core-darwin-x64')\n          }\n        } catch (e) {\n          loadError = e\n        }\n        break\n      case 'arm64':\n        localFileExisted = existsSync(join(__dirname, 'core.darwin-arm64.node'))\n        try {\n          if (localFileExisted) {\n            nativeBinding = require('./core.darwin-arm64.node')\n          } else {\n            nativeBinding = require('@cool/core-darwin-arm64')\n          }\n        } catch (e) {\n          loadError = e\n        }\n        break\n      default:\n        throw new Error(`Unsupported architecture on macOS: ${arch}`)\n    }\n    break\n  // ...\n  default:\n    throw new Error(`Unsupported OS: ${platform}, architecture: ${arch}`)\n}\n\nif (!nativeBinding) {\n  if (loadError) {\n    throw loadError\n  }\n  throw new Error(`Failed to load native binding`)\n}\n\nconst { plus100 } = nativeBinding\n\nmodule.exports.plus100 = plus100\n```\n\nThe generated `index.js` file will help you to load the **_right_** binary file wherever you are. And the `index.js` handle two cases:\n\n#### Package installed in users `node_modules` [Permalink for this section](\\#package-installed-in-users-node_modules)\n\nTo load the correct binary, the `index.js` function tries to load all possible packages for that platform (there may be multiple possible binary packages for a given system and CPU architecture), for example, on the `Linux x64` platform, `index.js` tries to load `@cool/core-linux-x64-gnu` and `@cool/core-linux-x64-musl`. The package `@cool/core-linux-x64-gnu` will be loaded if the user is using an operating system like `Ubuntu` `Debian` with `gnu libc` pre-installed. And if the user is using an operating system like `Alpine` with `musl libc` pre-installed, then `@cool/core-linux-x64-musl` will be loaded.\n\n#### Local development [Permalink for this section](\\#local-development)\n\nThe `build` command in package.json in the project generated by the `@napi-rs/cli` new command will generate the binary dynamic link library compiled from the `Rust` code into the current directory for debugging purposes. `index.js` will also try to load the corresponding binary from the current directory in this case. Again using `Linux x64` as an example, the `index.js` function will try to load the `core.linux-x64-gnu.node` and `core.linux-x64-musl.node` files in turn.\n\n#### IDE support problem [Permalink for this section](\\#ide-support-problem)\n\nIf your IDE refuses to autocomplete/autosuggest code when using the `#[napi]` macro, you can use the following setting to fix this:\n\nFor vscode in `settings.json`:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n{\n  \"rust-analyzer.procMacro.ignored\": { \"napi-derive\": [\"napi\"] }\n}\n```\n\nFor Neovim.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n['rust-analyzer'] = {\n    procMacro = {\n        ignored = {\n            ['napi-derive'] = { 'napi' },\n        },\n    },\n},\n```\n\nThis problem emits the following error in rust-analyser:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n[ERROR proc_macro_api::msg] proc-macro tried to print : `napi` macro expand failed.\n```\n\n## Start from **GitHub template project** [Permalink for this section](\\#start-from-github-template-project)\n\n![package-template](/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fpackage-template.37bf6e48.png&w=3840&q=75)\n\n1. Go to [GitHub template project (opens in a new tab)](https://github.com/napi-rs/package-template)\n2. **Click Use this template**.\n3. Clone your project.\n4. Run `yarn install` to install dependencies.\n5. Run `npx napi rename` command under the project folder to rename your package.\n\nLast updated on October 30, 2023\n\n[A simple package](/docs/introduction/simple-package \"A simple package\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/introduction/getting-started",
+      "ogUrl": "https://napi.rs",
+      "title": "Getting started – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Getting started – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Getting started – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "1bdf1ad8-bc5c-44a2-a821-411f06bc9257",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/introduction/getting-started",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Learn how to get started with napi-rs.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Learn how to get started with napi-rs.",
+      "og:description": [
+        "Learn how to get started with napi-rs.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nIntroduction\n\nA simple package\n\n# A simple package\n\n## Create `@napi-rs/cool` [Permalink for this section](\\#create-napi-rscool)\n\nLet's start from the `@napi-rs/cli`.\n\nCreate a new project with `napi new`:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi new\n? Package name: (The name field in your package.json)\n```\n\nLet's give the package a cool name **@napi-rs/cool**:\n\n⚠️\n\nIt's recommend to use npm scope to name your package. Because `@napi-rs/cli`\nwill create and publish many packages per platform for you. If these packages\nare not under a npm scope, it will trigger npm [**_spam_**\\\\\n**_detection_** (opens in a new tab)](https://stackoverflow.com/a/54135900/5684750) while your are\npublishing them for the first time.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi new\n? Package name: (The name field in your package.json) @napi-rs/cool\n? Dir name: (cool)\n```\n\nNext step you need to choose the directory name for your cool package, the default value of it is the suffix of your package name. Let's just press **enter** and use the default value.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi new\n? Package name: (The name field in your package.json) @napi-rs/cool\n? Dir name: cool\n? Choose targets you want to support (Press <space> to select, <a> to toggle all, <i> to invert selection,\nand <enter> to proceed)\n❯ ◯ aarch64-apple-darwin\n  ◯ aarch64-linux-android\n  ◯ aarch64-unknown-linux-gnu\n  ◯ aarch64-unknown-linux-musl\n  ◯ aarch64-pc-windows-msvc\n  ◯ armv7-unknown-linux-gnueabihf\n  ◉ x86_64-apple-darwin\n(Move up and down to reveal more choices)\n```\n\nThe next step is to choose which platform you want to support. I want all of them, so press **A** to choose all targets and press **enter**.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi new\n? Package name: (The name field in your package.json) @napi-rs/cool\n? Dir name: cool\n? Choose targets you want to support aarch64-apple-darwin, aarch64-linux-android, aarch64-unknown-linux-gnu\n, aarch64-unknown-linux-musl, aarch64-pc-windows-msvc, armv7-unknown-linux-gnueabihf, x86_64-apple-darwin,\nx86_64-pc-windows-msvc, x86_64-unknown-linux-gnu, x86_64-unknown-linux-musl, x86_64-unknown-freebsd, i686-p\nc-windows-msvc, armv7-linux-androideabi\n? Enable github actions? (Y/n)\n```\n\nThe next step you need to choose whether to enable the `GitHub CI` configuration. If your project will alive on `GitHub` then you need to enable it. Let's type the **Y** and press **enter** here:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi new\n? Package name: (The name field in your package.json) @napi-rs/cool\n? Dir name: cool\n? Choose targets you want to support aarch64-apple-darwin, aarch64-linux-android, aarch64-unknown-linux-gnu\n, aarch64-unknown-linux-musl, aarch64-pc-windows-msvc, armv7-unknown-linux-gnueabihf, x86_64-apple-darwin,\nx86_64-pc-windows-msvc, x86_64-unknown-linux-gnu, x86_64-unknown-linux-musl, x86_64-unknown-freebsd, i686-p\nc-windows-msvc, armv7-linux-androideabi\n? Enable github actions? Yes\nWriting Cargo.toml\nWriting .npmignore\nWriting build.rs\nWriting package.json\nWriting src/lib.rs\nWriting .github/workflows/CI.yml\nWriting .cargo/config.toml\nWriting rustfmt.toml\n```\n\nAnd now `@napi-rs/cli` has created a new package named `@napi-rs/cool` and under the `cool` directory.\n\nLet's enter it and do some preparation:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\ncd cool\nyarn install\n```\n\nI'm using `yarn` to install the dependencies here, you can replace it by your favorite package manager.\n\nAnd now the directory structure is like this:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\ntree -a\n.\n├── .cargo\n│   └── config.toml\n├── .github\n│   └── workflows\n│       └── CI.yml\n├── .npmignore\n├── Cargo.toml\n├── build.rs\n├── npm\n├── package.json\n├── rustfmt.toml\n└── src\n    └── lib.rs\n```\n\nYour native codes are in `src/lib.rs`. The `.cargo/config.toml` file is used in `GitHub CI` for cross compiling. In general, this file does not affect your development on your local machine.\nThe `.github/workflows/CI.yml` file is the configuration file for [`GitHub Actions` (opens in a new tab)](https://docs.github.com/en/actions).\nThe `build.rs` file is necessary for building a native addon for `Node.js`. Don't delete it or move it to the other place.\n\nAfter the `yarn` installation finished, you can run the `build` command to build your first native package:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nyarn build\nyarn run v1.22.17\n$ napi build --platform --release\n    Updating crates.io index\n  Downloaded proc-macro2 v1.0.34\n  Downloaded once_cell v1.9.0\n  Downloaded napi v2.0.0-beta.7\n  Downloaded 3 crates (129.4 KB) in 2.35s\n   Compiling proc-macro2 v1.0.34\n   Compiling unicode-xid v0.2.2\n   Compiling memchr v2.4.1\n   Compiling syn v1.0.82\n   Compiling regex-syntax v0.6.25\n   Compiling convert_case v0.4.0\n   Compiling once_cell v1.9.0\n   Compiling napi-build v1.2.0\n   Compiling napi-sys v2.1.0\n   Compiling napi-rs_cool v0.0.0 (/cool)\n   Compiling quote v1.0.10\n   Compiling aho-corasick v0.7.18\n   Compiling regex v1.5.4\n   Compiling napi-derive-backend v1.0.17\n   Compiling ctor v0.1.21\n   Compiling napi-derive v2.0.0-beta.5\n   Compiling napi v2.0.0-beta.7\n    Finished release [optimized] target(s) in 37.11s\n✨  Done in 37.80s.\n```\n\nAnd now the folder structure is like this:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\ntree -a -I target\n.\n├── .cargo\n│   └── config.toml\n├── .github\n│   └── workflows\n│       └── CI.yml\n├── .npmignore\n├── Cargo.toml\n├── build.rs\n├── cool.darwin-x64.node\n├── index.d.ts\n├── index.js\n├── node_modules\n├── npm\n├── package.json\n├── rustfmt.toml\n└── src\n    └── lib.rs\n```\n\nHere is three more files that `yarn build` command generated for you.\n\n`cool.darwin-x64.node` is the Node.js addon binary file, the `index.js` is the generated JavaScript binding file which helps you export all the stuffs in the addon to the package caller. And the `index.d.ts` is the generated TypeScript definition file.\n\nThe `new` command generated a simple `sum` function for you in the `src/lib.rs`:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#![deny(clippy::all)]\n\n#[macro_use]\nextern crate napi_derive;\n\n#[napi]\nfn sum(a: i32, b: i32) -> i32 {\n  a + b\n}\n```\n\nAnd you can inspect the `index.d.ts` file and see the `sum` function has generated for you:\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n/* eslint-disable */\n\nexport class ExternalObject<T> {\n  readonly '': {\n    readonly '': unique symbol\n    [K: symbol]: T\n  }\n}\nexport function sum(a: number, b: number): number\n```\n\nLet's create a `main.mjs` file to test the generated `sum` function:\n\nmain.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { sum } from './index.js'\n\nconsole.log('From native', sum(40, 2))\n```\n\nExecute it!\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnode main.mjs\nFrom native 42\n```\n\nCongratulations! You have successfully created a native addon for `Node.js`!\n\n## Publish it [Permalink for this section](\\#publish-it)\n\nUnfortunately, you can't publish the `@napi-rs/cool` because you don't have permission to publish packages to the `@napi-rs` npm scope.\n\nHowever, you can create your own `npm scope`: [https://docs.npmjs.com/creating-and-publishing-scoped-public-packages (opens in a new tab)](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages).\n\nOnce you have created your own npm scope, you can use the `napi rename` command to rename the project just created.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi rename\n? name: name field in package.json\n```\n\nAssume you just created a npm scope named `jarvis`, you can type `@jarvis/cool` here:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi rename\n? name: name field in package.json @jarvis/cool\n? napi name: (cool)\n```\n\nYou don't need change the `napi name` field in the `package.json` because the package suffix is not changed. Just type **Enter** to keep the `cool` name.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi rename\n? name: name field in package.json @jarvis/cool\n? napi name: cool\n? repository: Leave empty to skip\n```\n\nAnd you need a `GitHub` repository if you want publish a **NAPI-RS** package, because you need the `GitHub Actions` to do the compiling jobs for you. Just type your GitHub repo URL here.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnapi rename\n? name: name field in package.json @jarvis/cool\n? napi name: cool\n? repository: Leave empty to skip\n? description: Leave empty to skip\n```\n\nAnd the `description` field in the `package.json`. Leave it empty to skip.\n\nNow your package name is renamed to `@jarvis/cool`, you can finally publish it.\n\nNow init the `git` configuration and push it into GitHub.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\ngit init\ngit remote add origin git@github.com/yourname/cool.git\ngit add .\ngit commit -m \"Init\"\ngit push\n```\n\n⚠️\n\nIn order to publish packages in `GitHub Actions`, you need to configure the `NPM_TOKEN` environment variable in your `GitHub` repo.\n\nIn the project **Settings -> Secrets**, add your **_NPM\\_TOKEN_** into it.\n\nIf everything works fine, you will see the following CI matrix:\n\n![](/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FCI.07728f02.png&w=3840&q=75)\n\nThis is just a test CI matrix, let's finally publishing this package:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nnpm version patch\ngit push --follow-tags\n```\n\nAnd the `CI` matrix will build and publish your `@jarvis/cool` package.\n\nLast updated on November 19, 2024\n\n[Getting started](/docs/introduction/getting-started \"Getting started\") [Exports](/docs/concepts/exports \"Exports\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/introduction/simple-package",
+      "ogUrl": "https://napi.rs",
+      "title": "A simple package – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "A simple package – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "A simple package – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "69abb1dc-9f9c-4aff-a16f-0546352d5d5a",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/introduction/simple-package",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Build and publish a simple package with NAPI-RS.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Build and publish a simple package with NAPI-RS.",
+      "og:description": [
+        "Build and publish a simple package with NAPI-RS.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nInject This\n\n# Inject This\n\nIn class methods, you may want to access the raw `Object` value of the `Class` instance.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::{bindgen_prelude::*, JsObject};\nuse napi_derive::napi;\n\n#[napi]\npub struct QueryEngine {}\n\n#[napi]\nimpl QueryEngine {\n  #[napi(constructor)]\n  pub fn new() -> Result<Self> {\n    Ok(Self {})\n  }\n\n  #[napi]\n  pub fn get_ref_count(&self, this: This<JsObject>) -> Result<Option<i32>> {\n    this.get::<i32>(\"refCount\")\n  }\n}\n```\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { QueryEngine } from './index.js'\n\nconst qe = new QueryEngine()\nqe.refCount = 3\nconsole.log(qe.getRefCount()) // 3\n```\n\nIn functions, it may be bind with some objects in JavaScript:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\nuse napi_derive::napi;\n\n#[napi(constructor)]\npub struct Width {\n  pub value: i32,\n}\n\n#[napi]\npub fn plus_one(this: This<&Width>) -> i32 {\n  this.value + 1\n}\n```\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { Width, plusOne } from './index.js'\n\nconst width = new Width(1)\nconsole.log(plusOne.call(width)) // 2\n```\n\nLast updated on January 8, 2024\n\n[Inject Env](/docs/concepts/inject-env \"Inject Env\") [Reference](/docs/concepts/reference \"Reference\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/inject-this",
+      "ogUrl": "https://napi.rs",
+      "title": "Inject This – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Inject This – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Inject This – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "deb6b491-6a01-4a38-97d3-e8b0fa330685",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/inject-this",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Inject This Object into functions and methods.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Inject This Object into functions and methods.",
+      "og:description": [
+        "Inject This Object into functions and methods.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nasync fn\n\n# async fn\n\n💡\n\nYou must enable the _**async**_ or _**tokio\\_rt**_ feature in `napi` to use `async fn`:\n\nCargo.toml\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n[dependencies]\nnapi = { version = \"2\", features = [\"async\"] }\n```\n\nYou can do a lot of async/multi-threaded work with `AsyncTask` and `ThreadsafeFunction`, but sometimes you may want to use the crates from the Rust async ecosystem directly.\n\n**NAPI-RS** supports the `tokio` runtime by default. If you `await` a tokio `future` in `async fn`, **NAPI-RS** will execute it in the tokio runtime and convert it into a JavaScript `Promise`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse futures::prelude::*;\nuse napi::bindgen_prelude::*;\nuse tokio::fs;\n\n#[napi]\nasync fn read_file_async(path: String) -> Result<Buffer> {\n  fs::read(path)\n    .map(|r| match r {\n      Ok(content) => Ok(content.into()),\n      Err(e) => Err(Error::new(\n        Status::GenericFailure,\n        format!(\"failed to read file, {}\", e),\n      )),\n    })\n    .await\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function readFileAsync(path: string): Promise<Buffer>\n```\n\nLast updated on March 22, 2023\n\n[Reference](/docs/concepts/reference \"Reference\") [External](/docs/concepts/external \"External\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/async-fn",
+      "ogUrl": "https://napi.rs",
+      "title": "async fn – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "async fn – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "async fn – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "a20ff8da-b8dc-4ba2-8b5b-bb2eb7faf9c8",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/async-fn",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Run a Rust async fn with the tokio runtime.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Run a Rust async fn with the tokio runtime.",
+      "og:description": [
+        "Run a Rust async fn with the tokio runtime.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nTyped Array\n\n# TypedArray\n\n`TypedArray` describes an array-like view of an underlying [binary data buffer (opens in a new tab)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer). Using `TypedArray` allows you to share data between Node.js and Rust without copy or move data underlying.\n\n## Buffer [Permalink for this section](\\#buffer)\n\n[`Buffer` (opens in a new tab)](https://nodejs.org/api/buffer.html) is a subclass of JavaScript's [`Uint8Array` (opens in a new tab)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array). It is often used to share data between Node.js and Rust.\n\n`Buffer` could be created with `Vec<u8>`, if you created `Buffer` in this way, the ownership of the `Vec<8>` will be transferred into the `v8`, and the `Vec<u8>` will be dropped when `v8` GC the `Buffer`.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\nuse napi_derive::napi;\n\n#[napi]\npub fn create_buffer() -> Buffer {\n  vec![0, 1, 2].into()\n}\n```\n\n💡\n\nThe underlying `Vec<u8>` will not be moved or copied in this way.\n\nLast updated on August 17, 2022\n\n[Types Overwrite](/docs/concepts/types-overwrite \"Types Overwrite\") [Env](/docs/compat-mode/concepts/env \"Env\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/typed-array",
+      "ogUrl": "https://napi.rs",
+      "title": "TypedArray – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "TypedArray – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "TypedArray – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "f5b63715-1271-4c12-af3b-3301b85bd3c7",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/typed-array",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "JavaScript TypedArray primitive.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "JavaScript TypedArray primitive.",
+      "og:description": [
+        "JavaScript TypedArray primitive.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nAsyncTask\n\n# AsyncTask\n\nWe need to talk about `Task` before talking about `AsyncTask`.\n\n## `Task` [Permalink for this section](\\#task)\n\nAddon modules often need to leverage async helpers from libuv as part of their implementation. This allows them to schedule work to be executed asynchronously so that their methods can return in advance of the work being completed. This allows them to avoid blocking the overall execution of the Node.js application.\n\nThe `Task` trait provides a way to define such an asynchronous task that needs to run in the libuv thread. You can implement the `compute` method, which will be called in the libuv thread.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::{Task, Env, Result, JsNumber};\n\nstruct AsyncFib {\n  input: u32,\n}\n\nimpl Task for AsyncFib {\n  type Output = u32;\n  type JsValue = JsNumber;\n\n  fn compute(&mut self) -> Result<Self::Output> {\n    Ok(fib(self.input))\n  }\n\n  fn resolve(&mut self, env: Env, output: u32) -> Result<Self::JsValue> {\n    env.create_uint32(output)\n  }\n}\n```\n\n`fn compute` ran on the libuv thread, you can run some heavy computation here, which will not block the main JavaScript thread.\n\nYou may notice there are two associated types on the `Task` trait. The `type Output` and the `type JsValue`. `Output` is the return type of the `compute` method. `JsValue` is the return type of the `resolve` method.\n\n💡\n\nWe need separate `type Output` and `type JsValue` because we can not call the\nJavaScript function back in `fn compute`, it is not executed on the main\nthread. So we need `fn resolve`, which runs on the main thread, to create the\n`JsValue` from `Output` and `Env` and call it back in JavaScript.\n\nYou can use the low-level API `Env::spawn` to spawn a defined `Task` in the libuv thread pool. See example in [Reference](/docs/compat-mode/concepts/ref).\n\nIn addition to `compute` and `resolve`, you can also provide `reject` method to do some clean up when `Task` runs into error, like `unref` some object:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nstruct CountBufferLength {\n  data: Ref<JsBufferValue>,\n}\n\nimpl CountBufferLength {\n  pub fn new(data: Ref<JsBufferValue>) -> Self {\n    Self { data }\n  }\n}\n\nimpl Task for CountBufferLength {\n  type Output = usize;\n  type JsValue = JsNumber;\n\n  fn compute(&mut self) -> Result<Self::Output> {\n    if self.data.len() == 10 {\n      return Err(Error::from_reason(\"len can't be 10\".to_string()));\n    }\n    Ok((&self.data).len())\n  }\n\n  fn resolve(&mut self, env: Env, output: Self::Output) -> Result<Self::JsValue> {\n    self.data.unref(env)?;\n    env.create_uint32(output as _)\n  }\n\n  fn reject(&mut self, env: Env, err: Error) -> Result<Self::JsValue> {\n    self.data.unref(env)?;\n    Err(err)\n  }\n}\n```\n\nYou can also provide a `finally` method to do something after `Task` is `resolved` or `rejected`:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nstruct CountBufferLength {\n  data: Ref<JsBufferValue>,\n}\n\nimpl CountBufferLength {\n  pub fn new(data: Ref<JsBufferValue>) -> Self {\n    Self { data }\n  }\n}\n\n#[napi]\nimpl Task for CountBufferLength {\n  type Output = usize;\n  type JsValue = JsNumber;\n\n  fn compute(&mut self) -> Result<Self::Output> {\n    if self.data.len() == 10 {\n      return Err(Error::from_reason(\"len can't be 5\".to_string()));\n    }\n    Ok((&self.data).len())\n  }\n\n  fn resolve(&mut self, env: Env, output: Self::Output) -> Result<Self::JsValue> {\n    env.create_uint32(output as _)\n  }\n\n  fn finally(&mut self, env: Env) -> Result<()> {\n    self.data.unref(env)?;\n    Ok(())\n  }\n}\n```\n\n💡\n\nThe `#[napi]` macro above the `impl Task for AsyncFib` is just for `.d.ts` generation. If no `#[napi]` is defined here, the generated TypeScript type of returned `AsyncTask` will be `Promise<unknown>`.\n\n## `AsyncTask` [Permalink for this section](\\#asynctask)\n\nThe `Task` you define cannot be returned to JavaScript directly, the JavaScript engine has no idea how to run and resolve the value from your `struct`. `AsyncTask` is a wrapper of `Task` which can return to the JavaScript engine. It can be created with `Task` and an optional [`AbortSignal` (opens in a new tab)](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal).\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\n#[napi]\nfn async_fib(input: u32) -> AsyncTask<AsyncFib> {\n  AsyncTask::new(AsyncFib { input })\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function asyncFib(input: number) => Promise<number>\n```\n\n### Create `AsyncTask` With `AbortSignal` [Permalink for this section](\\#create-asynctask-with-abortsignal)\n\nIn some scenarios, you may want to abort the queued `AsyncTask`, for example, using `debounce` on some compute tasks. You can provide `AbortSignal` to `AsyncTask`, so that you can abort the `AsyncTask` if it has not been started.\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::AbortSignal;\n\n#[napi]\nfn async_fib(input: u32, signal: AbortSignal) -> AsyncTask<AsyncFib> {\n  AsyncTask::with_signal(AsyncFib { input }, signal)\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function asyncFib(input: number, signal: AbortSignal) => Promise<number>\n```\n\nIf you invoke `AbortController.abort` in the JavaScript code and the `AsyncTask` has not been started yet, the `AsyncTask` will be aborted immediately, and reject with `AbortError`.\n\ntest.mjs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimport { asyncFib } from './index.js'\n\nconst controller = new AbortController()\n\nasyncFib(20, controller.signal).catch((e) => {\n  console.error(e) // Error: AbortError\n})\n\ncontroller.abort()\n```\n\nYou can also provide `Option<AbortSignal>` to `AsyncTask` if you don't know if the `AsyncTask` needs to be aborted:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::AbortSignal;\n\n#[napi]\nfn async_fib(input: u32, signal: Option<AbortSignal>) -> AsyncTask<AsyncFib> {\n  AsyncTask::with_optional_signal(AsyncFib { input }, signal)\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport function asyncFib(\n  input: number,\n  signal?: AbortSignal | undefined | null,\n): Promise<number>\n```\n\n💡\n\nIf `AsyncTask` has already been started or completed, the\n`AbortController.abort` will have no effect.\n\nLast updated on June 15, 2023\n\n[ThreadsafeFunction](/docs/concepts/threadsafe-function \"ThreadsafeFunction\") [Inject Env](/docs/concepts/inject-env \"Inject Env\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/async-task",
+      "ogUrl": "https://napi.rs",
+      "title": "AsyncTask – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "AsyncTask – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "AsyncTask – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "24127022-08bc-44e7-b7d1-aeae310f12fe",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/async-task",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Run a task in the libuv thread pool and abort it with AbortSignal.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Run a task in the libuv thread pool and abort it with AbortSignal.",
+      "og:description": [
+        "Run a task in the libuv thread pool and abort it with AbortSignal.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/enum",
+      "ogUrl": "https://napi.rs",
+      "title": "Enum – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Enum – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Enum – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "dc4968f7-6525-4e0f-a629-d4f00c943cce",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/enum",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": "a framework for building pre-compiled Node.js addons in Rust",
+      "theme-color": "#111",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "og:description": "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust",
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nExternal\n\n# External\n\n[`External` (opens in a new tab)](https://nodejs.org/api/n-api.html#napi_create_external) is very similar to [`Object Wrap` (opens in a new tab)](https://nodejs.org/api/n-api.html#object-wrap), which is used in [Class](/docs/concepts/class) under the hood.\n\n`Object Wrap` attaches a native value to a JavaScript Object and can notify you when the attached JavaScript Object is recycled by GC. `External` creates an empty, blank JavaScript Object which holds the native value under the hood. It only works by passing the object back to Rust:\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\nuse napi_derive::napi;\n\n#[napi]\nfn create_source_map(length: u32) -> External<Buffer> {\n  External::new(vec![0; length as usize].into())\n}\n```\n\n⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️\n\nindex.d.ts\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nexport class ExternalObject<T> {\n  readonly '': {\n    readonly '': unique symbol\n    [K: symbol]: T\n  }\n}\n\nexport function createSourceMap(length: number): ExternalObject<Buffer>\n```\n\n`External` is very useful when you want to return a JavaScript Object with some methods on it to interact with the native Rust code.\nHere is a real-world example:\n\n[https://github.com/h-a-n-a/magic-string-rs/blob/v0.3.0/node/src/lib.rs#L96-L103 (opens in a new tab)](https://github.com/h-a-n-a/magic-string-rs/blob/v0.3.0/node/src/lib.rs#L96-L103)\n\n[https://github.com/h-a-n-a/magic-string-rs/blob/v0.3.0/node/index.js#L7-L23 (opens in a new tab)](https://github.com/h-a-n-a/magic-string-rs/blob/v0.3.0/node/index.js#L7-L23)\n\nlib.rs\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nimpl MagicString {\n  #[napi(ts_return_type = \"{ toString: () => string, toUrl: () => string }\")]\n  pub fn generate_map(\n    &mut self,\n    options: Option<magic_string::GenerateDecodedMapOptions>,\n  ) -> Result<External<SourceMap>> {\n    let external = create_external(self.0.generate_map(options.unwrap_or_default())?);\n    Ok(external)\n  }\n\n  /// @internal\n  #[napi]\n  pub fn to_sourcemap_string(&mut self, sourcemap: External<SourceMap>) -> Result<String> {\n    Ok((*sourcemap.as_ref()).to_string()?)\n  }\n\n  /// @internal\n  #[napi]\n  pub fn to_sourcemap_url(&mut self, sourcemap: External<SourceMap>) -> Result<String> {\n    Ok((*sourcemap.as_ref()).to_url()?)\n  }\n}\n```\n\nFirst the `generate_map` method returns an `External` object, and then the JavaScript function holds the `External` object in closure:\n\nindex.js\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nmodule.exports.MagicString = class MagicString extends MagicStringNative {\n  generateMap(options) {\n    const sourcemap = super.generateMap({\n      file: null,\n      source: null,\n      sourceRoot: null,\n      includeContent: false,\n      ...options,\n    })\n\n    const toString = () => super.toSourcemapString(sourcemap)\n    const toUrl = () => super.toSourcemapUrl(sourcemap)\n\n    return {\n      toString,\n      toUrl,\n    }\n  }\n}\n```\n\nLast updated on May 16, 2022\n\n[async fn](/docs/concepts/async-fn \"async fn\") [Await Promise](/docs/concepts/await-promise \"Await Promise\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/external",
+      "ogUrl": "https://napi.rs",
+      "title": "External – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "External – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "External – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "cc361ac2-ba34-45e8-bad5-15a0b1c2de0a",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/external",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "External Object holds the native value in a JavaScript Object.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "External Object holds the native value in a JavaScript Object.",
+      "og:description": [
+        "External Object holds the native value in a JavaScript Object.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  },
+  {
+    "markdown": "Docs\n\nConcepts\n\nReference\n\n# `Reference` / `WeakReference`\n\n## `Reference` [Permalink for this section](\\#reference)\n\nIn some scenarios, you may want to hold a reference to an `Object` created in `Rust`. For example:\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\npub struct Repository {\n  dir: String,\n}\n\nimpl Repository {\n  fn remote(&self) -> Remote {\n    Remote { inner: self }\n  }\n}\n\npub struct Remote<'repo> {\n  inner: &'repo Repository,\n}\n\nimpl<'repo> Remote<'repo> {\n  fn name(&self) -> String {\n    \"origin\".to_owned()\n  }\n}\n```\n\nThe `Repository` struct below is easy to create `#[napi]` Class around it, because it doesn't contains any **lifetime** in the definition.\n\nBut the `Remote<'repo>` struct could not be created `#[napi]` Class around it, because there is `'repo` lifetime on it.\n\nWith `Reference` API, you can create a `'static` lifetime struct, which means the created struct will life as long as you can access it in your `Rust` code.\n\nLike the [`Env`](/docs/concepts/inject-env) and [`This`](/docs/concepts/inject-this), the `Reference` is injected into parameters of `#[napi]` functions.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse napi::bindgen_prelude::*;\n\npub struct Repository {\n  dir: String,\n}\n\nimpl Repository {\n  fn remote(&self) -> Remote {\n    Remote { inner: self }\n  }\n}\n\npub struct Remote<'repo> {\n  inner: &'repo Repository,\n}\n\nimpl<'repo> Remote<'repo> {\n  fn name(&self) -> String {\n    \"origin\".to_owned()\n  }\n}\n\n#[napi]\npub struct JsRepo {\n  inner: Repository,\n}\n\n#[napi]\nimpl JsRepo {\n  #[napi(constructor)]\n  pub fn new(dir: String) -> Self {\n    JsRepo {\n      inner: Repository { dir },\n    }\n  }\n\n  #[napi]\n  pub fn remote(&self, reference: Reference<JsRepo>, env: Env) -> Result<JsRemote> {\n    Ok(JsRemote {\n      inner: reference.share_with(env, |repo| Ok(repo.inner.remote()))?,\n    })\n  }\n}\n\n#[napi]\npub struct JsRemote {\n  inner: SharedReference<JsRepo, Remote<'static>>,\n}\n\n#[napi]\nimpl JsRemote {\n  #[napi]\n  pub fn name(&self) -> String {\n    self.inner.name()\n  }\n}\n```\n\nAs you can see, the injected `Reference<JsRepo>` has the `share_with` fn on it, which can be used to create a `'static` lifetime `JsRepo` struct in the closure.\n\n![](/_next/static/media/reference.d5b78623.svg)\n\nThe created `Reference` will make the Node.js to hold the `JsRepo` instance until all the references are dropped.\n\n## `WeakReference` [Permalink for this section](\\#weakreference)\n\n`WeakReference` is very useful when you are creating circular references.\n\n```nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10\nuse std::{cell::RefCell, rc::Rc};\n\nuse napi::bindgen_prelude::*;\nuse napi_derive::napi;\n\npub struct OwnedStyleSheet {\n  rules: Vec<String>,\n}\n\n#[napi]\npub struct CSSRuleList {\n  owned: Rc<RefCell<OwnedStyleSheet>>,\n  parent: WeakReference<CSSStyleSheet>,\n}\n\n#[napi]\nimpl CSSRuleList {\n  #[napi]\n  pub fn get_rules(&self) -> Vec<String> {\n    self.owned.borrow().rules.to_vec()\n  }\n\n  #[napi(getter)]\n  pub fn parent_style_sheet(&self) -> WeakReference<CSSStyleSheet> {\n    self.parent.clone()\n  }\n\n  #[napi(getter)]\n  pub fn name(&self, env: Env) -> Result<Option<String>> {\n    Ok(\n      self\n        .parent\n        .upgrade(env)?\n        .map(|stylesheet| stylesheet.name.clone()),\n    )\n  }\n}\n\n#[napi]\npub struct CSSStyleSheet {\n  name: String,\n  inner: OwnedStyleSheet,\n  rules: Option<Reference<CSSRuleList>>,\n}\n\n#[napi]\nimpl CSSStyleSheet {\n  #[napi(constructor)]\n  pub fn new(name: String, rules: Vec<String>) -> Result<Self> {\n    let inner = OwnedStyleSheet { rules };\n    Ok(CSSStyleSheet {\n      name,\n      inner,\n      rules: None,\n    })\n  }\n\n  #[napi(getter)]\n  pub fn rules(\n    &mut self,\n    env: Env,\n    reference: Reference<CSSStyleSheet>,\n  ) -> Result<Reference<CSSRuleList>> {\n    if let Some(rules) = &self.rules {\n      return rules.clone(env);\n    }\n\n    let rules = CSSRuleList::into_reference(\n      CSSRuleList {\n        owned: self.inner.clone(),\n        parent: reference.downgrade(),\n      },\n      env,\n    )?;\n\n    self.rules = Some(rules.clone(env)?);\n    Ok(rules)\n  }\n}\n```\n\nIn the example above, the `CSSRuleList` struct is created with a `WeakReference<CSSStyleSheet>` as its `parent` field. Because the `CSSRuleList` is created by the `CSSStyleSheet` in this case, the `CSSStyleSheet` instance is circular reference to the `CSSRuleList` instance it created.\n\nThe `WeakReference` will not increase the reference count of the raw Object, so the `upgrade` fn of `WeakReference` may return `None` if the raw Object is dropped.\n\nLast updated on August 17, 2022\n\n[Inject This](/docs/concepts/inject-this \"Inject This\") [async fn](/docs/concepts/async-fn \"async fn\")",
+    "metadata": {
+      "url": "https://napi.rs/docs/concepts/reference",
+      "ogUrl": "https://napi.rs",
+      "title": "Reference / WeakReference – NAPI-RS",
+      "og:url": "https://napi.rs",
+      "robots": "index,follow",
+      "favicon": "https://napi.rs/img/favicon-32x32.png",
+      "og:type": "website",
+      "ogImage": "https://napi.rs/img/og.png",
+      "ogTitle": "Reference / WeakReference – NAPI-RS",
+      "keywords": "Nodejs, Rust, Node.js, neon, performance, napi-rs, napi",
+      "language": "en",
+      "og:image": "https://napi.rs/img/og.png",
+      "og:title": [
+        "Reference / WeakReference – NAPI-RS",
+        "NAPI-RS"
+      ],
+      "scrapeId": "71b7c7a8-49a4-4fc0-8c82-ab3af9ed4de9",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "sourceURL": "https://napi.rs/docs/concepts/reference",
+      "ogSiteName": "NAPI-RS",
+      "statusCode": 200,
+      "description": [
+        "Create and use Object References.",
+        "a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "theme-color": "#fff",
+      "og:site_name": "NAPI-RS",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@napi_rs",
+      "ogDescription": "Create and use Object References.",
+      "og:description": [
+        "Create and use Object References.",
+        "NAPI-RS, a framework for building pre-compiled Node.js addons in Rust"
+      ],
+      "twitter:creator": "@napi_rs",
+      "ogLocaleAlternate": [],
+      "msapplication-TileColor": "#ffffff"
+    }
+  }
+]
