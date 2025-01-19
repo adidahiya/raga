@@ -78,7 +78,7 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "cross-env": "^7.0.3",
-    "electron": "^33.3.1",
+    "electron": "^34.0.0",
     "electron-extension-installer": "^1.2.0",
     "eslint": "^9.18.0",
     "postcss": "^8.5.1",
