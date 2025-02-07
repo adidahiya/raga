@@ -2,7 +2,7 @@ import type { TrackDefinition } from "@adahiya/raga-lib";
 import { CaretLeft } from "@blueprintjs/icons";
 import { ActionIcon, Paper, Slider, Text, Tooltip } from "@mantine/core";
 import classNames from "classnames";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { debounce } from "radash";
 import { useCallback } from "react";
 import { useBoolean } from "usehooks-ts";
