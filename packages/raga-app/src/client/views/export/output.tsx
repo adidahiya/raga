@@ -1,6 +1,6 @@
-import { Export } from "@blueprintjs/icons";
-import { Button, FileInput } from "@mantine/core";
-import React, { useCallback } from "react";
+import { Export, Tick } from "@blueprintjs/icons";
+import { Badge, Button, FileInput } from "@mantine/core";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -9,17 +9,34 @@ export function Output() {
   const libraryOutputFilepath = appStore.use.libraryOutputFilepath();
   const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
   const writeModifiedLibrary = appStore.use.writeModifiedLibrary();
+  const libraryWriteState = appStore.use.libraryWriteState();
+  const lastLibraryWriteState = useRef(libraryWriteState);
+  const [isExportComplete, setIsExportComplete] = useState(false);
 
   const handleOutputFilepathInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files?.length) {
         const filePath = window.api.getFilePath(event.target.files[0]);
         setLibraryOutputFilepath(filePath);
+        setIsExportComplete(false);
       }
     },
     [setLibraryOutputFilepath],
   );
   const handleWriteModifiedLibrary = useOperationCallback(writeModifiedLibrary);
+
+  useEffect(() => {
+    if (libraryWriteState === "none" && lastLibraryWriteState.current === "busy") {
+      setIsExportComplete(true);
+    }
+
+    if (libraryWriteState === "ready" && lastLibraryWriteState.current !== "ready") {
+      setIsExportComplete(false);
+    }
+
+    lastLibraryWriteState.current = libraryWriteState;
+  }, [libraryWriteState]);
+
   return (
     <>
       <FileInput
@@ -30,9 +47,19 @@ export function Output() {
         rightSectionWidth={70}
       />
 
-      <Button leftSection={<Export />} onClick={handleWriteModifiedLibrary}>
-        Export library for Rekordbox
-      </Button>
+      {isExportComplete ? (
+        <Button leftSection={<Tick />} color="green" disabled={true}>
+          Export complete
+        </Button>
+      ) : (
+        <Button
+          leftSection={<Export />}
+          onClick={handleWriteModifiedLibrary}
+          loading={libraryWriteState === "busy"}
+        >
+          Export library for Rekordbox
+        </Button>
+      )}
     </>
   );
 }

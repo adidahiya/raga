@@ -27,6 +27,6 @@ export const createExporterSlice: AppStoreSliceCreator<ExporterState & ExporterA
   },
 
   setSelectedPlaylistIdsForExport: (playlistIds) => {
-    set({ selectedPlaylistIdsForExport: playlistIds });
+    set({ selectedPlaylistIdsForExport: playlistIds, libraryWriteState: "ready" });
   },
 });
