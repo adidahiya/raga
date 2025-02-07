@@ -21,14 +21,14 @@ import {
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
 export type LibraryLoadingState = "none" | "loading" | "loaded" | "error";
-export type libraryWriteState = "none" | "ready" | "busy";
+export type LibraryWriteState = "none" | "ready" | "busy";
 
 export interface LibraryState {
   /** A track may be "active" in the table through right-click (context menu) or arrow key interactions */
   activeTrackId: number | undefined;
   library: SwinsianLibraryPlist | undefined;
   libraryLoadingState: LibraryLoadingState;
-  libraryWriteState: libraryWriteState;
+  libraryWriteState: LibraryWriteState;
   /** Augmentation of MusicLibraryPlaylist which keeps a record of Playlist persistent ID -> definition */
   libraryPlaylists: PartialRecord<string, PlaylistDefinition> | undefined;
   /** Augmentation of MusicLibraryPlaylist which keeps a record of track ID -> list of playlists IDs in which it appears */
