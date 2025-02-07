@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import type { AudioFileConverter } from "@adahiya/raga-lib";
 import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
-import { action, type Operation, run, suspend } from "effection";
+import { action, type Operation, run } from "effection";
 import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
 import type { ConvertTrackToMP3RequestBody } from "../../common/api/audioFilesServerAPI";
@@ -71,13 +71,18 @@ export function getConvertToMP3RequestHandler(converter: AudioFileConverter): Ha
 
 // See https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio#AudioencodersFFmpegcanuse
 const MP3_CODECS = ["libmp3lame", "libshine"] as const;
+const CODEC_CHECK_TIMEOUT_MS = 5000;
 
 /**
  * Does not throw if unavailable, just returns `undefined`.
  * Caller is responsible for throwing an error in this case.
  */
 function getBestAvailableMP3Codec(): Operation<string | undefined> {
-  return action<string | undefined>(function* (resolve, reject) {
+  return action<string | undefined>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error("Timed out checking for MP3 codecs"));
+    }, CODEC_CHECK_TIMEOUT_MS);
+
     /* eslint-disable @typescript-eslint/no-unnecessary-condition -- @types/fluent-ffmpeg is not accurate with strict null checks */
     ffmpeg.getAvailableCodecs((err, codecs) => {
       if (err != null) {
@@ -89,6 +94,8 @@ function getBestAvailableMP3Codec(): Operation<string | undefined> {
     });
     /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
-    yield* suspend();
+    return () => {
+      clearTimeout(timeout);
+    };
   });
 }
