@@ -1,5 +1,5 @@
 import { Export, Tick } from "@blueprintjs/icons";
-import { Badge, Button, FileInput } from "@mantine/core";
+import { Button, FileInput } from "@mantine/core";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useOperationCallback } from "../../hooks";
