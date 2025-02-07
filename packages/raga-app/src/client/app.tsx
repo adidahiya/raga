@@ -14,7 +14,7 @@ import AppChrome from "./components/chrome/appChrome";
 import GlobalHotkeysDialog from "./components/globalHotkeysDialog";
 import LibraryLoader from "./components/library/libraryLoader";
 import { appStore } from "./store/appStore";
-import ExportView from "./views/exportView";
+import ExportView from "./views/export";
 import LibraryView from "./views/libraryView";
 
 const theme = createTheme({
