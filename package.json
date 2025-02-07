@@ -16,14 +16,14 @@
     "fix-lint": "nx run-many -t lint-fix"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.5",
-    "@eslint/js": "^9.18.0",
+    "@eslint/compat": "^1.2.6",
+    "@eslint/js": "^9.19.0",
     "@lerna-lite/cli": "^3.11.0",
     "@lerna-lite/version": "^3.11.0",
     "@types/eslint__js": "^8.42.3",
     "@types/minimist": "^1.2.5",
     "@yarnpkg/types": "^4.0.0",
-    "eslint": "^9.18.0",
+    "eslint": "^9.19.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
@@ -32,7 +32,7 @@
     "nx": "^20.3.2",
     "prettier": "^3.4.2",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.23.0"
   },
   "engines": {
     "node": ">=22"
