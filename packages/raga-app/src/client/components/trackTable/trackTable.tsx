@@ -24,7 +24,7 @@ import type {
 import { type RowHeight, Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/shallow";
 
@@ -106,7 +106,7 @@ const _virtualizedRowHeight: RowHeight = (_node, index) =>
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-export default function TrackTable({ playlistId }: TrackTableProps) {
+const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   const allTrackDefNodes = useTrackDefinitionNodes(playlistId);
   const numTracksInPlaylist = allTrackDefNodes.nodes.length;
   const theme = useTableTheme(numTracksInPlaylist);
@@ -181,15 +181,16 @@ export default function TrackTable({ playlistId }: TrackTableProps) {
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
     </Stack>
   );
-}
+});
 TrackTable.displayName = "TrackTable";
+export default TrackTable;
 
 const RESIZER_OPTIONS = {
   minWidth: 50,
   resizerWidth: 8,
 };
 
-function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
+const TrackTableHeader = memo(({ playlistId }: Pick<TrackTableProps, "playlistId">) => {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const { colorScheme } = useMantineColorScheme();
   const { colors } = useMantineTheme();
@@ -287,7 +288,8 @@ function TrackTableHeader({ playlistId }: Pick<TrackTableProps, "playlistId">) {
       </HeaderRow>
     </Header>
   );
-}
+});
+TrackTableHeader.displayName = "TrackTableHeader";
 
 interface TrackTableRowProps
   extends TrackTableProps,
@@ -295,7 +297,7 @@ interface TrackTableRowProps
   item: ExtendedNode<TrackDefinitionNode>;
 }
 
-const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
+const TrackTableRow = memo(({ item: track, playlistId }: TrackTableRowProps) => {
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const activeTrackId = appStore.use.activeTrackId();
   // if we previously failed to fetch Discogs genres for a track, we save that information
@@ -345,16 +347,17 @@ const TrackTableRow = ({ item: track, playlistId }: TrackTableRowProps) => {
       </Cell>
     </Row>
   );
-};
+});
 TrackTableRow.displayName = "TrackTableRow";
 
-function TrackFileTypeCell({ track }: { track: TrackDefinition }) {
+const TrackFileTypeCell = memo(({ track }: { track: TrackDefinition }) => {
   const isReadyForAnalysis = useIsTrackReadyForAnalysis(track["Track ID"]);
   const fileType = getTrackFileType(track);
   return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={fileType} />;
-}
+});
+TrackFileTypeCell.displayName = "TrackFileTypeCell";
 
-function TrackFileSourceCell({ track }: { track: TrackDefinition }) {
+const TrackFileSourceCell = memo(({ track }: { track: TrackDefinition }) => {
   const fileSource = getTrackFileSource(track);
   const color =
     fileSource === AudioFileSource.BANDCAMP
@@ -367,9 +370,10 @@ function TrackFileSourceCell({ track }: { track: TrackDefinition }) {
       {fileSource}
     </Badge>
   );
-}
+});
+TrackFileSourceCell.displayName = "TrackFileSourceCell";
 
-function TrackTableEmpty({ playlistId }: TrackTableProps) {
+const TrackTableEmpty = memo(({ playlistId }: TrackTableProps) => {
   const libraryPlaylists = appStore.use.libraryPlaylists();
   if (libraryPlaylists === undefined) {
     throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
@@ -393,7 +397,8 @@ function TrackTableEmpty({ playlistId }: TrackTableProps) {
       )}
     </div>
   );
-}
+});
+TrackTableEmpty.displayName = "TrackTableEmpty";
 
 // HOOKS
 // -------------------------------------------------------------------------------------------------
