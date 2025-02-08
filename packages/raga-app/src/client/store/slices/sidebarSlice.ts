@@ -1,21 +1,18 @@
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 export interface SidebarState {
-  isPlaylistTreeExpanded: boolean;
+  // nothing
 }
 
 export interface SidebarActions {
-  togglePlaylistTreeExpanded: () => void;
+  // nothing
 }
+/* eslint-enable @typescript-eslint/no-empty-object-type */
 
 export const createSidebarSlice: AppStoreSliceCreator<SidebarState & SidebarActions> = (
-  set,
-  get,
+  _set,
+  _get,
 ) => ({
-  isPlaylistTreeExpanded: true,
-
-  togglePlaylistTreeExpanded: () => {
-    const { isPlaylistTreeExpanded } = get();
-    set({ isPlaylistTreeExpanded: !isPlaylistTreeExpanded });
-  },
+  // nothing
 });

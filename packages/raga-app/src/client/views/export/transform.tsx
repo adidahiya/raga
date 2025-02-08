@@ -29,7 +29,6 @@ export function Transform() {
         <Text>All playlists will be exported</Text>
       )}
       <PlaylistTable
-        collapsible={false}
         showHeader={false}
         selectionMode="multiple"
         onSelect={handlePlaylistsSelected}

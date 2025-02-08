@@ -1,7 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { CaretDown, CaretUp } from "@blueprintjs/icons";
-import { ActionIcon, Box, Collapse, Divider, type MantineStyleProps, Text } from "@mantine/core";
-import { useCallback, useMemo } from "react";
+import { Box, Divider, type MantineStyleProps, Text } from "@mantine/core";
+import { memo, useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
 import { formatStatNumber } from "../../../common/format";
@@ -15,9 +14,6 @@ import styles from "./playlistTable.module.scss";
 
 interface PlaylistTableProps extends MantineStyleProps {
   /** @default true */
-  collapsible?: boolean;
-
-  /** @default true */
   showHeader?: boolean;
 
   /** @default "none" */
@@ -27,8 +23,7 @@ interface PlaylistTableProps extends MantineStyleProps {
   onSelect?: (playlistIds: string[]) => void;
 }
 
-export default function PlaylistTable({
-  collapsible = true,
+function PlaylistTable({
   showHeader = true,
   selectionMode = "none",
   onSelect,
@@ -38,9 +33,6 @@ export default function PlaylistTable({
   const playlistDefNodes = usePlaylistTreeNodes();
 
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
-
-  const isPlaylistTreeExpanded = appStore.use.isPlaylistTreeExpanded();
-  const togglePlaylistTreeExpanded = appStore.use.togglePlaylistTreeExpanded();
 
   const selectedNodeIds = useMemo(() => {
     return selectionMode === "none" || selectedPlaylistId === undefined ? [] : [selectedPlaylistId];
@@ -72,34 +64,24 @@ export default function PlaylistTable({
                   ({formatStatNumber(numTotalPlaylists)})
                 </Text>
               </span>
-              {collapsible && (
-                <ActionIcon
-                  size="compact-sm"
-                  color="gray"
-                  variant="subtle"
-                  onClick={togglePlaylistTreeExpanded}
-                >
-                  {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
-                </ActionIcon>
-              )}
             </div>
           </div>
           <Divider orientation="horizontal" />
         </>
       )}
       <div className={styles.body}>
-        <Collapse in={collapsible ? isPlaylistTreeExpanded : true}>
-          <Tree
-            nodes={playlistDefNodes}
-            selectionMode={selectionMode}
-            selectedNodeIds={selectedNodeIds}
-            onSelect={selectionMode === "none" ? undefined : handleSelect}
-          />
-        </Collapse>
+        <Tree
+          nodes={playlistDefNodes}
+          selectionMode={selectionMode}
+          selectedNodeIds={selectedNodeIds}
+          onSelect={selectionMode === "none" ? undefined : handleSelect}
+        />
       </div>
     </Box>
   );
 }
+
+export default memo(PlaylistTable);
 
 // HOOKS
 // -------------------------------------------------------------------------------------------------
