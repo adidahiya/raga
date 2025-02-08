@@ -1,5 +1,5 @@
-import { Play } from "@blueprintjs/icons";
 import { Box, Button, Center, Skeleton } from "@mantine/core";
+import { Play } from "lucide-react";
 import { lazy, Suspense } from "react";
 
 import { useSelectedTrackFileURL } from "../../hooks";

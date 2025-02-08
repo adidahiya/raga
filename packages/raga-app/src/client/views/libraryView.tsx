@@ -1,5 +1,5 @@
-import { ListDetailView } from "@blueprintjs/icons";
 import { Box, Divider, Group, Paper, Stack, Text } from "@mantine/core";
+import { TableProperties } from "lucide-react";
 import { useCallback } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
@@ -57,7 +57,7 @@ export default function LibraryView() {
                 className={styles.emptyState}
                 title="Playlist tracks"
                 description="Select a playlist to view tracks"
-                icon={<ListDetailView size={48} />}
+                icon={<TableProperties size={48} />}
               />
             ) : (
               <TrackTable playlistId={selectedPlaylistId} />

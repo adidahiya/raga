@@ -1,5 +1,5 @@
-import { Export, Tick } from "@blueprintjs/icons";
 import { Button, FileInput } from "@mantine/core";
+import { Check, Save } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useOperationCallback } from "../../hooks";
@@ -48,12 +48,12 @@ export function Output() {
       />
 
       {isExportComplete ? (
-        <Button leftSection={<Tick />} color="green" disabled={true}>
+        <Button leftSection={<Check />} color="green" disabled={true}>
           Export complete
         </Button>
       ) : (
         <Button
-          leftSection={<Export />}
+          leftSection={<Save />}
           onClick={handleWriteModifiedLibrary}
           loading={libraryWriteState === "busy"}
         >

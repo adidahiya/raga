@@ -1,5 +1,5 @@
-import { ChevronUp } from "@blueprintjs/icons";
 import { ActionIcon, Collapse, Divider, Group, Text, TextInput } from "@mantine/core";
+import { ChevronUp } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 
 import { appStore } from "../../store/appStore";

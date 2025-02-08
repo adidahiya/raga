@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@adahiya/raga-lib": "workspace:^",
-    "@blueprintjs/icons": "^5.17.1",
     "@emotion/react": "^11.14.0",
     "@mantine/colors-generator": "^7.16.2",
     "@mantine/core": "^7.16.2",
@@ -45,6 +44,7 @@
     "disconnect": "^1.2.2",
     "effection": "^3.2.1",
     "immer": "^10.1.1",
+    "lucide-react": "^0.475.0",
     "mantine-contextmenu": "^7.15.3",
     "milliparsec": "^5.0.1",
     "motion": "^12.4.1",

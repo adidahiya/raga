@@ -1,6 +1,6 @@
 import type { PlaylistDefinition } from "@adahiya/raga-lib";
-import { CaretDown, CaretUp } from "@blueprintjs/icons";
 import { ActionIcon, Box, Collapse, Divider, type MantineStyleProps, Text } from "@mantine/core";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -79,7 +79,7 @@ export default function PlaylistTable({
                   variant="subtle"
                   onClick={togglePlaylistTreeExpanded}
                 >
-                  {isPlaylistTreeExpanded ? <CaretUp /> : <CaretDown />}
+                  {isPlaylistTreeExpanded ? <ChevronUp /> : <ChevronDown />}
                 </ActionIcon>
               )}
             </div>

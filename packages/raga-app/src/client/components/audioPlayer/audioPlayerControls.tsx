@@ -1,5 +1,5 @@
-import { Pause, Play, VolumeOff, VolumeUp } from "@blueprintjs/icons";
 import { ActionIcon, ButtonGroup, Group, Slider } from "@mantine/core";
+import { Pause, Play, Volume, Volume2 } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import { useOperationCallback } from "../../hooks";
@@ -45,7 +45,7 @@ export function AudioPlayerControls() {
         )}
       </ButtonGroup>
       <ActionIcon variant="subtle" color="gray" onClick={handleVolumeOff}>
-        <VolumeOff />
+        <Volume />
       </ActionIcon>
       <div className={styles.volumeSlider}>
         <Slider
@@ -58,7 +58,7 @@ export function AudioPlayerControls() {
         />
       </div>
       <ActionIcon variant="subtle" color="gray" onClick={handleVolumeFull}>
-        <VolumeUp />
+        <Volume2 />
       </ActionIcon>
     </Group>
   );

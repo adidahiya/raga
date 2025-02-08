@@ -1,6 +1,6 @@
-import { Cross, DocumentOpen } from "@blueprintjs/icons";
 import { Box, Button, Divider, Fieldset, FileInput, Stack } from "@mantine/core";
 import classNames from "classnames";
+import { Cross, FileInput as FileInputIcon } from "lucide-react";
 import { useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { Roarr as log } from "roarr";
@@ -96,7 +96,7 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
               onClick={() => {
                 setLibraryInputFilepath(filePath);
               }}
-              leftSection={<DocumentOpen />}
+              leftSection={<FileInputIcon />}
               title={filePath}
             >
               {truncateFilePath(filePath, maxFilePathLength)}

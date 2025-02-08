@@ -1,5 +1,4 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { Badge, Stack, Text, Tooltip, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
@@ -23,6 +22,7 @@ import type {
 } from "@table-library/react-table-library/types";
 import { type RowHeight, Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
+import { ChevronDown, ChevronsUpDown, ChevronUp } from "lucide-react";
 import { unique } from "radash";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
@@ -92,7 +92,7 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
 };
 
 const sortIcon: SortOptionsIcon = {
-  iconDefault: <ExpandAll />,
+  iconDefault: <ChevronsUpDown />,
   iconDown: <ChevronDown />,
   iconUp: <ChevronUp />,
 };

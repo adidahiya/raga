@@ -1,4 +1,3 @@
-import { ChevronDown, ChevronRight } from "@blueprintjs/icons";
 import {
   ActionIcon,
   Checkbox,
@@ -11,6 +10,7 @@ import {
   useTree,
 } from "@mantine/core";
 import classNames from "classnames";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
 
 import styles from "./tree.module.scss";
