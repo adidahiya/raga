@@ -19,7 +19,6 @@ import styles from "./libraryView.module.scss";
 
 export default function LibraryView() {
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
-  const waveSurfer = appStore.use.waveSurfer();
   const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
   const selectedTrack = getSelectedTrackDef();
   const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
@@ -34,15 +33,13 @@ export default function LibraryView() {
   return (
     <Paper w="100%" h="100%" shadow="sm" withBorder={true} radius="sm" className={styles.library}>
       <Stack gap={0} w="100%" h="100%">
-        {selectedTrack === undefined || waveSurfer === undefined ? null : (
-          <>
-            <Group justify="space-between" p={5}>
-              <AudioPlayerNowPlaying selectedTrack={selectedTrack} />
-              <AudioPlayerControls />
-            </Group>
-            <Divider orientation="horizontal" />
-          </>
-        )}
+        <Group justify="space-between" p={5}>
+          {selectedTrack === undefined ? null : (
+            <AudioPlayerNowPlaying selectedTrack={selectedTrack} />
+          )}
+          <AudioPlayerControls />
+        </Group>
+        <Divider orientation="horizontal" />
         <AudioPlayer />
         <Divider orientation="horizontal" />
         <PanelGroup direction="horizontal">
