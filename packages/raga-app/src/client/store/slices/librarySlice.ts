@@ -103,8 +103,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     set({ activeTrackId });
   },
   setSelectedPlaylistId: (selectedPlaylistId: string | undefined) => {
-    // ensure that playlist tree is expanded when switching playlists
-    set({ selectedPlaylistId, isPlaylistTreeExpanded: true });
+    set({ selectedPlaylistId });
   },
   setLibraryPlist: (libraryPlist) => {
     set({ library: libraryPlist });
