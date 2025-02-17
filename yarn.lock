@@ -401,8 +401,8 @@ __metadata:
   linkType: hard
 
 "@blueprintjs/icons@npm:^5.17.1":
-  version: 5.17.1
-  resolution: "@blueprintjs/icons@npm:5.17.1"
+  version: 5.18.1
+  resolution: "@blueprintjs/icons@npm:5.18.1"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -414,20 +414,20 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/f382da23746dccc7b2e87040cb64b5cfafd4076d144188173ee89d7c71cbddc2722716c967818f56e03239a4ca7b253682ca27ac225307027920488e7a568f75
+  checksum: 10/42fd37bf45748a747293e363b5d77088b606af24478fc5c7f9fc8f980e79bac7d959283e2b1f955c8381fcd1484455cc42f057597b0823ad91c58902b92a3a94
   languageName: node
   linkType: hard
 
 "@blueprintjs/node-build-scripts@npm:^9.2.4":
-  version: 9.2.4
-  resolution: "@blueprintjs/node-build-scripts@npm:9.2.4"
+  version: 9.2.6
+  resolution: "@blueprintjs/node-build-scripts@npm:9.2.6"
   dependencies:
     autoprefixer: "npm:^10.4.17"
     chokidar: "npm:^3.5.3"
     cross-spawn: "npm:^7.0.3"
     css-select: "npm:^5.1.0"
     dom-serializer: "npm:^2.0.0"
-    eslint: "npm:^8.56.0"
+    eslint: "npm:^8.57.0"
     eslint-formatter-codeframe: "npm:^7.32.1"
     fs-extra: "npm:^11.2.0"
     glob: "npm:^10.3.10"
@@ -455,7 +455,7 @@ __metadata:
     generate-css-variables: ./generate-css-variables.mjs
     sass-compile: ./sass-compile.mjs
     sass-lint: ./sass-lint.mjs
-  checksum: 10/3ab2c807344c2f61c63ee9e692a49fad7f436bcdf1908f4c215c890290caba6fe0fee5a0085fb8d5949c173e93a4f9f77c71e0a0ef1fd57006c3fadcf3678553
+  checksum: 10/f2810ed48c0550f728c407631e01989cf0fe02e05b79083e4dc61e1aaa8500d742f7b667c83d25f8deaa8b2ac3054bf77d713148c3ed2827b642f7e6d88fb7f7
   languageName: node
   linkType: hard
 
@@ -6284,7 +6284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.56.0":
+"eslint@npm:^8.57.0":
   version: 8.57.1
   resolution: "eslint@npm:8.57.1"
   dependencies:
