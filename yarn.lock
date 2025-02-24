@@ -2004,8 +2004,8 @@ __metadata:
   linkType: hard
 
 "@mantine/core@npm:^7.16.2":
-  version: 7.16.2
-  resolution: "@mantine/core@npm:7.16.2"
+  version: 7.17.0
+  resolution: "@mantine/core@npm:7.17.0"
   dependencies:
     "@floating-ui/react": "npm:^0.26.28"
     clsx: "npm:^2.1.1"
@@ -2014,10 +2014,10 @@ __metadata:
     react-textarea-autosize: "npm:8.5.6"
     type-fest: "npm:^4.27.0"
   peerDependencies:
-    "@mantine/hooks": 7.16.2
+    "@mantine/hooks": 7.17.0
     react: ^18.x || ^19.x
     react-dom: ^18.x || ^19.x
-  checksum: 10/9a1a42d1e912963f1820e41dd541058fb1daf63a4c016ab9693c99e4fdf17f5196ab036e59b92d6fa8dee836a2725bf24e946547efc0363a521b1c2616617aed
+  checksum: 10/a778a670378f1313781243ba3cea6e05189e8cd37eed63060f52b7f2d90ad7b8b137fdf71bee6c601ed4669b9ad70acec8d01feeb2f5b1de770a0ecfc701a68d
   languageName: node
   linkType: hard
 
