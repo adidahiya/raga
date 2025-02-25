@@ -1,4 +1,3 @@
-import { CaretDown, Cog, Cross, Tick } from "@blueprintjs/icons";
 import {
   ActionIcon,
   Box,
@@ -13,6 +12,7 @@ import {
   TextInput,
   useMantineColorScheme,
 } from "@mantine/core";
+import { Check, ChevronDown, Cog, Cross } from "lucide-react";
 import { type ChangeEvent, useCallback, useState } from "react";
 
 import { appStore } from "../../store/appStore";
@@ -35,7 +35,7 @@ export default function UserSettingsDropdown() {
           color="gray"
           variant="subtle"
           leftSection={<Cog />}
-          rightSection={<CaretDown />}
+          rightSection={<ChevronDown />}
         >
           Settings
         </Button>
@@ -97,7 +97,7 @@ function UserEmailFormGroup() {
       color={emailInputValue === "" ? "gray" : isEmailValid ? "green" : "red"}
       rightSection={
         emailInputValue === "" ? undefined : isEmailValid ? (
-          <Tick />
+          <Check />
         ) : (
           <ActionIcon variant="subtle" onClick={clearEmail}>
             <Cross />

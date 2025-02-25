@@ -1,5 +1,5 @@
-import { Blank, Tick } from "@blueprintjs/icons";
 import { Badge, Group, Text } from "@mantine/core";
+import { Check, Loader } from "lucide-react";
 
 import { appStore } from "../../store/appStore";
 
@@ -15,7 +15,7 @@ export default function AudioAnalyzerStatus() {
         size="sm"
         variant="light"
         color={status === "busy" ? "blue" : "green"}
-        leftSection={status === "busy" ? <Blank /> : <Tick />}
+        leftSection={status === "busy" ? <Loader /> : <Check />}
         radius="sm"
       >
         {status === "busy" ? "Busy…" : "Ready"}

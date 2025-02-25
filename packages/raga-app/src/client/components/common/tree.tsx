@@ -1,4 +1,3 @@
-import { ChevronDown, ChevronRight } from "@blueprintjs/icons";
 import {
   ActionIcon,
   Checkbox,
@@ -11,6 +10,7 @@ import {
   useTree,
 } from "@mantine/core";
 import classNames from "classnames";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { memo, useCallback, useEffect, useMemo } from "react";
 
 import styles from "./tree.module.scss";
@@ -131,9 +131,7 @@ function ControlledTree<T extends object>({
         >
           {selectionMode === "multiple" && (
             <Checkbox.Indicator
-              className={classNames(styles.checkbox, {
-                [styles.filled]: checked || indeterminate,
-              })}
+              className={classNames(styles.checkbox, { [styles.filled]: checked || indeterminate })}
               checked={checked}
               indeterminate={indeterminate}
               onClick={() => {
@@ -207,9 +205,7 @@ function ControlledTree<T extends object>({
       {selectionMode === "multiple" && (
         <Group gap={5} className={classNames(styles.node)}>
           <Checkbox.Indicator
-            className={classNames(styles.checkbox, {
-              [styles.filled]: someNodesChecked,
-            })}
+            className={classNames(styles.checkbox, { [styles.filled]: someNodesChecked })}
             checked={allNodesChecked}
             indeterminate={!allNodesChecked && someNodesChecked}
             onClick={() => {

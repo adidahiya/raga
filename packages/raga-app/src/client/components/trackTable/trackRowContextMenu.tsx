@@ -1,6 +1,6 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { FolderOpen } from "@blueprintjs/icons";
 import { Button, Divider, Group, Stack, Text } from "@mantine/core";
+import { FolderOpen } from "lucide-react";
 import { useCallback } from "react";
 import { Roarr as log } from "roarr";
 

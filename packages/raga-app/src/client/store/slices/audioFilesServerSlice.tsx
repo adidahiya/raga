@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { Cross, Tick } from "@blueprintjs/icons";
 import { notifications } from "@mantine/notifications";
 import { call, type Operation, run } from "effection";
+import { Check, Cross } from "lucide-react";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";
 
@@ -288,7 +288,7 @@ function initAudioFilesServer(set: AppStoreSet) {
             title: "Audio files server started",
             message: state.audioFilesRootFolder,
             color: "green",
-            icon: <Tick />,
+            icon: <Check />,
           });
           state.audioFilesConverterTemporaryFolder = data?.audioConverterTemporaryFolder;
           state.audioFilesServerStatus = "started";

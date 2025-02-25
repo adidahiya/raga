@@ -1,5 +1,5 @@
-import { Error, Music } from "@blueprintjs/icons";
 import { Progress, Stack } from "@mantine/core";
+import { CircleAlert, Music } from "lucide-react";
 
 import { useTaskEffect } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -43,7 +43,7 @@ export default function LibraryLoader(props: { children: React.ReactNode }) {
         <EmptyState
           className={styles.emptyState}
           title="Error loading Swinsian library"
-          icon={<Error size={48} />}
+          icon={<CircleAlert size={48} />}
         />
       ) : (
         <div className={styles.libraryLoaded}>{props.children}</div>

@@ -1,6 +1,6 @@
-import { CaretDown, Error, FloppyDisk, FolderOpen, Reset, Tick } from "@blueprintjs/icons";
 import { Button, Group, Menu, MenuDivider, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
+import { Check, ChevronDown, CircleAlert, FolderOpen, Redo, Save } from "lucide-react";
 import { useCallback, useRef } from "react";
 
 import { useOperationCallback } from "../../hooks";
@@ -50,7 +50,7 @@ export default function LibraryControls() {
           <NotificationMessage
             message="There are changes which have not been written to disk."
             action={{
-              icon: <Tick />,
+              icon: <Check />,
               text: "Confirm reload",
               onClick: confirmedLoadFromDisk,
               color: "yellow",
@@ -77,7 +77,7 @@ export default function LibraryControls() {
           <NotificationMessage
             message="There are changes which have not been written to disk, are you sure you want to unload this library?"
             action={{
-              icon: <Tick />,
+              icon: <Check />,
               text: "Confirm unload",
               onClick: unloadSwinsianLibrary,
               color: "yellow",
@@ -102,8 +102,8 @@ export default function LibraryControls() {
             <Button
               variant="subtle"
               size="compact-sm"
-              leftSection={isLibraryLoaded ? <Tick /> : <Error />}
-              rightSection={<CaretDown />}
+              leftSection={isLibraryLoaded ? <Check /> : <CircleAlert />}
+              rightSection={<ChevronDown />}
               color={isLibraryLoaded ? "green" : "blue"}
             >
               {isLibraryLoaded ? "Loaded" : "Not loaded"}
@@ -115,10 +115,10 @@ export default function LibraryControls() {
                 <LibraryLastModifiedText />
               </Menu.Label>
               <MenuDivider />
-              <Menu.Item leftSection={<Reset />} onClick={handleLoad}>
+              <Menu.Item leftSection={<Redo />} onClick={handleLoad}>
                 {`${isLibraryLoaded ? "Reload" : "Load"} library`}
               </Menu.Item>
-              <Menu.Item leftSection={<FloppyDisk />} onClick={handleLoadFromDisk}>
+              <Menu.Item leftSection={<Save />} onClick={handleLoadFromDisk}>
                 Reload from disk
               </Menu.Item>
               <Menu.Item leftSection={<FolderOpen />} onClick={handleSelectNewLibrary}>

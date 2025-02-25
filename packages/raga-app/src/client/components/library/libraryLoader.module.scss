@@ -11,7 +11,7 @@
     --icon-stroke-color: var(--mantine-color-dark-1);
   }
 
-  :global(.bp5-icon svg) {
+  svg {
     fill-opacity: 0.25;
     // need to show overflow for some strokes on paths that reach the edge of the icon bounding box
     overflow: visible;

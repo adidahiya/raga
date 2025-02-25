@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { CaretLeft } from "@blueprintjs/icons";
 import { ActionIcon, Paper, Slider, Text, Tooltip } from "@mantine/core";
 import classNames from "classnames";
+import { ChevronLeft } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { debounce } from "radash";
 import { useCallback } from "react";
@@ -61,7 +61,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
           onClick={toggleTempoSlider}
         >
           <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
-            <CaretLeft />
+            <ChevronLeft />
           </motion.span>
         </ActionIcon>
       </Tooltip>

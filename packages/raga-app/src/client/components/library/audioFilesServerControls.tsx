@@ -1,4 +1,3 @@
-import { CaretDown, CrossCircle, Error, Play, Refresh, Tick, Time } from "@blueprintjs/icons";
 import {
   ActionIcon,
   Badge,
@@ -12,6 +11,15 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { run } from "effection";
+import {
+  Check,
+  ChevronDown,
+  CircleAlert,
+  OctagonPause,
+  Play,
+  RotateCcw,
+  Timer,
+} from "lucide-react";
 import { useCallback } from "react";
 import { useInterval } from "usehooks-ts";
 
@@ -46,11 +54,11 @@ export default function AudioFilesServerControls() {
           : "Not running";
   const statusIcon =
     status === "failed" ? (
-      <Error />
+      <CircleAlert />
     ) : status === "starting" ? (
-      <Time />
+      <Timer />
     ) : status === "started" ? (
-      <Tick />
+      <Check />
     ) : undefined;
 
   const { lineHeights } = useMantineTheme();
@@ -71,7 +79,7 @@ export default function AudioFilesServerControls() {
             size="sm"
             variant="light"
             leftSection={statusIcon}
-            rightSection={<CaretDown />}
+            rightSection={<ChevronDown />}
             color={status === "failed" ? "red" : status === "started" ? "green" : "blue"}
             radius="sm"
           >
@@ -124,13 +132,13 @@ function AudioFilesServerButtons() {
           loading={status === "starting"}
           onClick={startServer}
         >
-          {status === "started" ? <Refresh /> : status === "failed" ? <Refresh /> : <Play />}
+          {status === "started" ? <RotateCcw /> : status === "failed" ? <RotateCcw /> : <Play />}
         </ActionIcon>
       </Tooltip>
       {status === "started" && (
         <Tooltip position="top" label="Stop audio files server">
           <ActionIcon variant="subtle" color="red" onClick={stopServer}>
-            <CrossCircle />
+            <OctagonPause />
           </ActionIcon>
         </Tooltip>
       )}
