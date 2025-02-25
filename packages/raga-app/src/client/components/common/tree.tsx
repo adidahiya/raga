@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import classNames from "classnames";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useCallback, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 
 import styles from "./tree.module.scss";
 
@@ -40,7 +40,7 @@ export interface ControlledTreeProps<T> {
   selectionMode: TreeSelectionMode;
 
   /** IDs of the selected node(s). */
-  selectedNodeIds?: string[];
+  selectedNodeIds: string[];
 
   /** Callback invoked when one or more nodes are selected. */
   onSelect?: (nodes: TreeNode<T>[]) => void;
@@ -56,10 +56,10 @@ export interface ControlledTreeProps<T> {
  * - Node value string represent not just the id of the current node, but the full path (delimited by
  *   slashes) of all the node ids from the root node to the current node.
  */
-export default function ControlledTree<T extends object>({
+function ControlledTree<T extends object>({
   nodes,
   selectionMode,
-  selectedNodeIds = [],
+  selectedNodeIds,
   onSelect,
 }: ControlledTreeProps<T>) {
   // Convert our node structure to Mantine's expected format
@@ -121,8 +121,7 @@ export default function ControlledTree<T extends object>({
       const indeterminate = tree.isNodeIndeterminate(node.value);
 
       return (
-        <Group
-          gap={5}
+        <div
           key={node.value}
           {...elementProps}
           className={classNames(styles.node, elementProps.className, {
@@ -132,9 +131,7 @@ export default function ControlledTree<T extends object>({
         >
           {selectionMode === "multiple" && (
             <Checkbox.Indicator
-              className={classNames(styles.checkbox, {
-                [styles.filled]: checked || indeterminate,
-              })}
+              className={classNames(styles.checkbox, { [styles.filled]: checked || indeterminate })}
               checked={checked}
               indeterminate={indeterminate}
               onClick={() => {
@@ -165,9 +162,8 @@ export default function ControlledTree<T extends object>({
             </ActionIcon>
           )}
 
-          <Group
-            gap={5}
-            pl={hasChildren ? 0 : 5}
+          <div
+            className={styles.labelContainer}
             onClick={() => {
               if (selectionMode !== "single") {
                 return;
@@ -185,8 +181,8 @@ export default function ControlledTree<T extends object>({
             }}
           >
             <span>{node.label}</span>
-          </Group>
-        </Group>
+          </div>
+        </div>
       );
     },
     [nodes, onSelect, selectionMode],
@@ -209,9 +205,7 @@ export default function ControlledTree<T extends object>({
       {selectionMode === "multiple" && (
         <Group gap={5} className={classNames(styles.node)}>
           <Checkbox.Indicator
-            className={classNames(styles.checkbox, {
-              [styles.filled]: someNodesChecked,
-            })}
+            className={classNames(styles.checkbox, { [styles.filled]: someNodesChecked })}
             checked={allNodesChecked}
             indeterminate={!allNodesChecked && someNodesChecked}
             onClick={() => {
@@ -237,6 +231,8 @@ export default function ControlledTree<T extends object>({
     </>
   );
 }
+
+export default memo(ControlledTree) as typeof ControlledTree;
 
 // UTILITIES
 // -------------------------------------------------------------------------------------------------
