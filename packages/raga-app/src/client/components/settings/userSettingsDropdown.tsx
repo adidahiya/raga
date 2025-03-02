@@ -12,8 +12,8 @@ import {
   TextInput,
   useMantineColorScheme,
 } from "@mantine/core";
-import { Check, ChevronDown, Cog, Cross } from "lucide-react";
 import { type ChangeEvent, useCallback, useState } from "react";
+import { IoCheckmark, IoChevronDown, IoClose, IoSettingsOutline } from "react-icons/io5";
 
 import { appStore } from "../../store/appStore";
 import { AnalyzerSettings } from "./analyzerSettings";
@@ -34,8 +34,8 @@ export default function UserSettingsDropdown() {
           size="compact-sm"
           color="gray"
           variant="subtle"
-          leftSection={<Cog />}
-          rightSection={<ChevronDown />}
+          leftSection={<IoSettingsOutline size={14} />}
+          rightSection={<IoChevronDown size={14} />}
         >
           Settings
         </Button>
@@ -97,10 +97,12 @@ function UserEmailFormGroup() {
       color={emailInputValue === "" ? "gray" : isEmailValid ? "green" : "red"}
       rightSection={
         emailInputValue === "" ? undefined : isEmailValid ? (
-          <Check />
+          <ActionIcon variant="subtle" onClick={clearEmail}>
+            <IoCheckmark />
+          </ActionIcon>
         ) : (
           <ActionIcon variant="subtle" onClick={clearEmail}>
-            <Cross />
+            <IoClose />
           </ActionIcon>
         )
       }

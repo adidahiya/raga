@@ -1,6 +1,6 @@
 import { Box, Button, Center, Skeleton } from "@mantine/core";
-import { Play } from "lucide-react";
 import { lazy, Suspense } from "react";
+import { IoPlay } from "react-icons/io5";
 
 import { useSelectedTrackFileURL } from "../../hooks";
 import useSelectedTrackDef from "../../hooks/useSelectedTrackDef";
@@ -51,7 +51,7 @@ function StartAudioFilesServerButton() {
   const startAudioFilesServer = appStore.use.startAudioFilesServer();
 
   return (
-    <Button variant="outline" leftSection={<Play />} onClick={startAudioFilesServer}>
+    <Button variant="outline" leftSection={<IoPlay />} onClick={startAudioFilesServer}>
       Start serving files from {audioFilesRootFolder}
     </Button>
   );

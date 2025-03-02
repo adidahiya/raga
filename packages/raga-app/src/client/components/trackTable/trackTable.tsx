@@ -22,9 +22,9 @@ import type {
 } from "@table-library/react-table-library/types";
 import { type RowHeight, Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
-import { ChevronDown, ChevronsUpDown, ChevronUp } from "lucide-react";
 import { unique } from "radash";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { IoChevronDown, IoChevronDownOutline, IoChevronUp } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/shallow";
 
@@ -92,9 +92,9 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
 };
 
 const sortIcon: SortOptionsIcon = {
-  iconDefault: <ChevronsUpDown />,
-  iconDown: <ChevronDown />,
-  iconUp: <ChevronUp />,
+  iconDefault: <IoChevronDownOutline />,
+  iconDown: <IoChevronDown />,
+  iconUp: <IoChevronUp />,
 };
 
 // N.B. there is a bug in the <Virtualized> component `rowHeight` prop where it does not calculate

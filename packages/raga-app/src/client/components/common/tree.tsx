@@ -10,8 +10,8 @@ import {
   useTree,
 } from "@mantine/core";
 import classNames from "classnames";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import { memo, useCallback, useEffect, useMemo } from "react";
+import { IoChevronDown, IoChevronForward } from "react-icons/io5";
 
 import styles from "./tree.module.scss";
 
@@ -158,7 +158,7 @@ function ControlledTree<T extends object>({
                 }
               }}
             >
-              {expanded ? <ChevronDown /> : <ChevronRight />}
+              {expanded ? <IoChevronDown /> : <IoChevronForward />}
             </ActionIcon>
           )}
 

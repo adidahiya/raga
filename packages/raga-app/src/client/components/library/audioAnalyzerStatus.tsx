@@ -1,5 +1,5 @@
 import { Badge, Group, Text } from "@mantine/core";
-import { Check, Loader } from "lucide-react";
+import { IoCheckmark, IoReload } from "react-icons/io5";
 
 import { appStore } from "../../store/appStore";
 
@@ -15,7 +15,7 @@ export default function AudioAnalyzerStatus() {
         size="sm"
         variant="light"
         color={status === "busy" ? "blue" : "green"}
-        leftSection={status === "busy" ? <Loader /> : <Check />}
+        leftSection={status === "busy" ? <IoReload /> : <IoCheckmark />}
         radius="sm"
       >
         {status === "busy" ? "Busy…" : "Ready"}

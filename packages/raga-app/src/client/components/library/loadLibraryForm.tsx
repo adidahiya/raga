@@ -1,8 +1,8 @@
 import { Box, Button, Divider, Fieldset, FileInput, Stack } from "@mantine/core";
 import classNames from "classnames";
-import { Cross, FileInput as FileInputIcon } from "lucide-react";
 import { useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
+import { IoClose, IoDocument } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 import { useResizeObserver } from "usehooks-ts";
 
@@ -96,7 +96,7 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
               onClick={() => {
                 setLibraryInputFilepath(filePath);
               }}
-              leftSection={<FileInputIcon />}
+              leftSection={<IoDocument size={14} />}
               title={filePath}
             >
               {truncateFilePath(filePath, maxFilePathLength)}
@@ -108,7 +108,7 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
               color="red"
               variant="subtle"
               onClick={handleClear}
-              rightSection={<Cross />}
+              rightSection={<IoClose size={14} />}
             >
               Clear all recent libraries
             </Button>

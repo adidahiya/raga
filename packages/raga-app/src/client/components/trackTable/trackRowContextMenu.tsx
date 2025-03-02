@@ -1,7 +1,7 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
 import { Button, Divider, Group, Stack, Text } from "@mantine/core";
-import { FolderOpen } from "lucide-react";
 import { useCallback } from "react";
+import { IoFolderOpen } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 
 import { ClientEventChannel } from "../../../common/events";
@@ -82,7 +82,7 @@ export default function TrackRowContextMenu({
         justify="flex-start"
         color="gray"
         m={5}
-        leftSection={<FolderOpen />}
+        leftSection={<IoFolderOpen />}
         onClick={handleOpenFile}
         classNames={{ label: styles.buttonLabel }}
       >

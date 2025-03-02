@@ -11,16 +11,16 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { run } from "effection";
-import {
-  Check,
-  ChevronDown,
-  CircleAlert,
-  OctagonPause,
-  Play,
-  RotateCcw,
-  Timer,
-} from "lucide-react";
 import { useCallback } from "react";
+import {
+  IoCheckmark,
+  IoChevronDown,
+  IoPlay,
+  IoRefresh,
+  IoStop,
+  IoTimer,
+  IoWarning,
+} from "react-icons/io5";
 import { useInterval } from "usehooks-ts";
 
 import { AUDIO_FILES_SERVER_PING_INTERVAL } from "../../../common/constants";
@@ -54,11 +54,11 @@ export default function AudioFilesServerControls() {
           : "Not running";
   const statusIcon =
     status === "failed" ? (
-      <CircleAlert />
+      <IoWarning />
     ) : status === "starting" ? (
-      <Timer />
+      <IoTimer />
     ) : status === "started" ? (
-      <Check />
+      <IoCheckmark />
     ) : undefined;
 
   const { lineHeights } = useMantineTheme();
@@ -79,7 +79,7 @@ export default function AudioFilesServerControls() {
             size="sm"
             variant="light"
             leftSection={statusIcon}
-            rightSection={<ChevronDown />}
+            rightSection={<IoChevronDown />}
             color={status === "failed" ? "red" : status === "started" ? "green" : "blue"}
             radius="sm"
           >
@@ -132,13 +132,13 @@ function AudioFilesServerButtons() {
           loading={status === "starting"}
           onClick={startServer}
         >
-          {status === "started" ? <RotateCcw /> : status === "failed" ? <RotateCcw /> : <Play />}
+          {status === "started" ? <IoRefresh /> : status === "failed" ? <IoRefresh /> : <IoPlay />}
         </ActionIcon>
       </Tooltip>
       {status === "started" && (
         <Tooltip position="top" label="Stop audio files server">
           <ActionIcon variant="subtle" color="red" onClick={stopServer}>
-            <OctagonPause />
+            <IoStop />
           </ActionIcon>
         </Tooltip>
       )}
