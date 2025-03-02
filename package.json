@@ -25,12 +25,12 @@
     "eslint": "^9.21.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^15.14.0",
+    "globals": "^15.15.0",
     "nx": "^20.4.6",
     "prettier": "^3.5.2",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "typescript-eslint": "^8.25.0"
   },
   "engines": {
