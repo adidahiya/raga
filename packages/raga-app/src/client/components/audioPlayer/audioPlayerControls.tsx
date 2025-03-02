@@ -1,6 +1,6 @@
 import { ActionIcon, ButtonGroup, Group, Slider } from "@mantine/core";
 import { useCallback, useState } from "react";
-import { IoPause, IoPlay, IoVolumeHigh, IoVolumeMedium } from "react-icons/io5";
+import { IoPause, IoPlay, IoVolumeHigh, IoVolumeLow, IoVolumeMedium } from "react-icons/io5";
 
 import { useOperationCallback } from "../../hooks";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
@@ -36,16 +36,16 @@ export function AudioPlayerControls() {
       <ButtonGroup>
         {isPlaying ? (
           <ActionIcon variant="subtle" color="gray" onClick={handlePause}>
-            <IoPause />
+            <IoPause size={16} />
           </ActionIcon>
         ) : (
           <ActionIcon variant="subtle" color="gray" onClick={handlePlay}>
-            <IoPlay />
+            <IoPlay size={16} />
           </ActionIcon>
         )}
       </ButtonGroup>
       <ActionIcon variant="subtle" color="gray" onClick={handleVolumeOff}>
-        <IoVolumeMedium />
+        <IoVolumeLow size={16} />
       </ActionIcon>
       <div className={styles.volumeSlider}>
         <Slider
@@ -58,7 +58,7 @@ export function AudioPlayerControls() {
         />
       </div>
       <ActionIcon variant="subtle" color="gray" onClick={handleVolumeFull}>
-        <IoVolumeHigh />
+        <IoVolumeHigh size={16} />
       </ActionIcon>
     </Group>
   );

@@ -60,9 +60,12 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
           size="sm"
           onClick={toggleTempoSlider}
         >
-          <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
-            <IoChevronBack />
-          </motion.span>
+          <motion.div
+            className={styles.tempoSliderToggleButtonIcon}
+            animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}
+          >
+            <IoChevronBack size={16} />
+          </motion.div>
         </ActionIcon>
       </Tooltip>
       <Text component="span" c="dimmed">
