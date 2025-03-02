@@ -122,13 +122,13 @@ export default function LibraryControls() {
                 <LibraryLastModifiedText />
               </Menu.Label>
               <MenuDivider />
-              <Menu.Item leftSection={<IoArrowRedo />} onClick={handleLoad}>
+              <Menu.Item leftSection={<IoArrowRedo size={14} />} onClick={handleLoad}>
                 {`${isLibraryLoaded ? "Reload" : "Load"} library`}
               </Menu.Item>
-              <Menu.Item leftSection={<IoSave />} onClick={handleLoadFromDisk}>
+              <Menu.Item leftSection={<IoSave size={14} />} onClick={handleLoadFromDisk}>
                 Reload from disk
               </Menu.Item>
-              <Menu.Item leftSection={<IoFolder />} onClick={handleSelectNewLibrary}>
+              <Menu.Item leftSection={<IoFolder size={14} />} onClick={handleSelectNewLibrary}>
                 Select new library…
               </Menu.Item>
             </Menu>
