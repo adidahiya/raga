@@ -55,7 +55,7 @@
     "react-dropzone": "^14.3.8",
     "react-icons": "^5.5.0",
     "react-resizable-panels": "^2.1.7",
-    "react-scan": "^0.1.4",
+    "react-scan": "^0.2.8",
     "roarr": "^7.21.1",
     "serialize-error": "^12.0.0",
     "sirv": "^3.0.1",

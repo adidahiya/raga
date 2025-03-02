@@ -74,7 +74,7 @@ __metadata:
     react-dropzone: "npm:^14.3.8"
     react-icons: "npm:^5.5.0"
     react-resizable-panels: "npm:^2.1.7"
-    react-scan: "npm:^0.1.4"
+    react-scan: "npm:^0.2.8"
     roarr: "npm:^7.21.1"
     sass: "npm:^1.85.1"
     serialize-error: "npm:^12.0.0"
@@ -10645,9 +10645,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scan@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "react-scan@npm:0.1.4"
+"react-scan@npm:^0.2.8":
+  version: 0.2.8
+  resolution: "react-scan@npm:0.2.8"
   dependencies:
     "@babel/core": "npm:^7.26.0"
     "@babel/generator": "npm:^7.26.2"
@@ -10688,7 +10688,7 @@ __metadata:
       optional: true
   bin:
     react-scan: bin/cli.js
-  checksum: 10/e4b761f4c55528d18f8443b9eb02312fc80df6c077e3f119d07b0630532eb97b47675b36196fd4d2cfe0f287b4a848b72ef5b46d522f9e0176660a8fb2221196
+  checksum: 10/8ce7a23ada5f3a85e07f6630c1ff27afa32151d854669f9d217c992ab1626b1b0247ac04b193c77451dbe8259adc2ae807069ad70e4c87b71130f488e60a2140
   languageName: node
   linkType: hard
 
