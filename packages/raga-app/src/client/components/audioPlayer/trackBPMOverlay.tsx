@@ -1,10 +1,10 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { CaretLeft } from "@blueprintjs/icons";
 import { ActionIcon, Paper, Slider, Text, Tooltip } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "motion/react";
 import { debounce } from "radash";
 import { useCallback } from "react";
+import { IoChevronBack } from "react-icons/io5";
 import { useBoolean } from "usehooks-ts";
 
 import { appStore } from "../../store/appStore";
@@ -60,9 +60,12 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
           size="sm"
           onClick={toggleTempoSlider}
         >
-          <motion.span animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}>
-            <CaretLeft />
-          </motion.span>
+          <motion.div
+            className={styles.tempoSliderToggleButtonIcon}
+            animate={{ rotate: isTempoSliderOpen ? 180 : 0 }}
+          >
+            <IoChevronBack size={16} />
+          </motion.div>
         </ActionIcon>
       </Tooltip>
       <Text component="span" c="dimmed">

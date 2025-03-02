@@ -1,6 +1,6 @@
-import { Pause, Play, VolumeOff, VolumeUp } from "@blueprintjs/icons";
 import { ActionIcon, ButtonGroup, Group, Slider } from "@mantine/core";
 import { useCallback, useState } from "react";
+import { IoPause, IoPlay, IoVolumeHigh, IoVolumeLow } from "react-icons/io5";
 
 import { useOperationCallback } from "../../hooks";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
@@ -36,16 +36,16 @@ export function AudioPlayerControls() {
       <ButtonGroup>
         {isPlaying ? (
           <ActionIcon variant="subtle" color="gray" onClick={handlePause}>
-            <Pause />
+            <IoPause size={16} />
           </ActionIcon>
         ) : (
           <ActionIcon variant="subtle" color="gray" onClick={handlePlay}>
-            <Play />
+            <IoPlay size={16} />
           </ActionIcon>
         )}
       </ButtonGroup>
       <ActionIcon variant="subtle" color="gray" onClick={handleVolumeOff}>
-        <VolumeOff />
+        <IoVolumeLow size={16} />
       </ActionIcon>
       <div className={styles.volumeSlider}>
         <Slider
@@ -58,7 +58,7 @@ export function AudioPlayerControls() {
         />
       </div>
       <ActionIcon variant="subtle" color="gray" onClick={handleVolumeFull}>
-        <VolumeUp />
+        <IoVolumeHigh size={16} />
       </ActionIcon>
     </Group>
   );

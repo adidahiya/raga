@@ -28,7 +28,6 @@
 
 /* eslint-disable simple-import-sort/imports */
 
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "./client/index.scss";
 
 import { scan } from "react-scan"; // import this BEFORE react

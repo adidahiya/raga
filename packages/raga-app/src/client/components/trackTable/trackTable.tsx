@@ -1,5 +1,4 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
-import { ChevronDown, ChevronUp, ExpandAll } from "@blueprintjs/icons";
 import { Badge, Stack, Text, Tooltip, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
@@ -25,6 +24,7 @@ import { type RowHeight, Virtualized } from "@table-library/react-table-library/
 import classNames from "classnames";
 import { unique } from "radash";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { IoChevronDown, IoChevronDownOutline, IoChevronUp } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/shallow";
 
@@ -92,9 +92,9 @@ const sortFns: Record<TrackPropertySortKey, SortFn> = {
 };
 
 const sortIcon: SortOptionsIcon = {
-  iconDefault: <ExpandAll />,
-  iconDown: <ChevronDown />,
-  iconUp: <ChevronUp />,
+  iconDefault: <IoChevronDownOutline />,
+  iconDown: <IoChevronDown />,
+  iconUp: <IoChevronUp />,
 };
 
 // N.B. there is a bug in the <Virtualized> component `rowHeight` prop where it does not calculate

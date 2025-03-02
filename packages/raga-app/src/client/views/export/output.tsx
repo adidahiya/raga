@@ -1,6 +1,6 @@
-import { Export, Tick } from "@blueprintjs/icons";
 import { Button, FileInput } from "@mantine/core";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { IoCheckmark, IoSave } from "react-icons/io5";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -48,12 +48,12 @@ export function Output() {
       />
 
       {isExportComplete ? (
-        <Button leftSection={<Tick />} color="green" disabled={true}>
+        <Button leftSection={<IoCheckmark size={16} />} color="green" disabled={true}>
           Export complete
         </Button>
       ) : (
         <Button
-          leftSection={<Export />}
+          leftSection={<IoSave size={16} />}
           onClick={handleWriteModifiedLibrary}
           loading={libraryWriteState === "busy"}
         >

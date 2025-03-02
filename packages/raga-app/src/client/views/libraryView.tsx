@@ -1,6 +1,6 @@
-import { ListDetailView } from "@blueprintjs/icons";
 import { Box, Divider, Group, Paper, Stack, Text } from "@mantine/core";
 import { useCallback } from "react";
+import { IoList } from "react-icons/io5";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
 import { formatStatNumber } from "../../common/format";
@@ -54,7 +54,7 @@ export default function LibraryView() {
                 className={styles.emptyState}
                 title="Playlist tracks"
                 description="Select a playlist to view tracks"
-                icon={<ListDetailView size={48} />}
+                icon={<IoList size={48} />}
               />
             ) : (
               <TrackTable playlistId={selectedPlaylistId} />

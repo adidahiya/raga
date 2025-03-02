@@ -1,5 +1,5 @@
-import { Tick } from "@blueprintjs/icons";
 import { Badge, Button, Text } from "@mantine/core";
+import { IoCheckmark } from "react-icons/io5";
 import { useBoolean } from "usehooks-ts";
 
 import LoadLibraryForm from "../../components/library/loadLibraryForm";
@@ -15,7 +15,7 @@ export function Input() {
 
   return (
     <>
-      <Badge leftSection={<Tick />} color="green" variant="light" radius="sm">
+      <Badge leftSection={<IoCheckmark />} color="green" variant="light" radius="sm">
         Loaded
       </Badge>
       <Text>{libraryInputFilepath}</Text>

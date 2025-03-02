@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@adahiya/raga-lib": "workspace:^",
-    "@blueprintjs/icons": "^5.17.1",
     "@emotion/react": "^11.14.0",
     "@mantine/colors-generator": "^7.17.1",
     "@mantine/core": "^7.17.1",
@@ -54,6 +53,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.8",
+    "react-icons": "^5.5.0",
     "react-resizable-panels": "^2.1.7",
     "react-scan": "^0.1.4",
     "roarr": "^7.21.1",

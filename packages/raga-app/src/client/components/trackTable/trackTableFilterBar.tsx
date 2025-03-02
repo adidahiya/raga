@@ -1,6 +1,6 @@
-import { ChevronUp } from "@blueprintjs/icons";
 import { ActionIcon, Collapse, Divider, Group, Text, TextInput } from "@mantine/core";
 import { memo, useCallback, useEffect, useRef } from "react";
+import { IoChevronUp } from "react-icons/io5";
 
 import { appStore } from "../../store/appStore";
 import styles from "./trackTableFilterBar.module.scss";
@@ -52,7 +52,7 @@ export const TrackTableFilterBar = memo(
             onChange={handleInputChange}
           />
           <ActionIcon onClick={hideTableFilterBar} size="compact-sm" color="gray" variant="subtle">
-            <ChevronUp />
+            <IoChevronUp />
           </ActionIcon>
         </Group>
         <Divider orientation="horizontal" />

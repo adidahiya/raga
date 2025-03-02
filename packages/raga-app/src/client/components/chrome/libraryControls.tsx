@@ -1,7 +1,14 @@
-import { CaretDown, Error, FloppyDisk, FolderOpen, Reset, Tick } from "@blueprintjs/icons";
 import { Button, Group, Menu, MenuDivider, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useCallback, useRef } from "react";
+import {
+  IoArrowRedo,
+  IoCheckmark,
+  IoChevronDown,
+  IoFolder,
+  IoSave,
+  IoWarning,
+} from "react-icons/io5";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -50,7 +57,7 @@ export default function LibraryControls() {
           <NotificationMessage
             message="There are changes which have not been written to disk."
             action={{
-              icon: <Tick />,
+              icon: <IoCheckmark size={16} />,
               text: "Confirm reload",
               onClick: confirmedLoadFromDisk,
               color: "yellow",
@@ -77,7 +84,7 @@ export default function LibraryControls() {
           <NotificationMessage
             message="There are changes which have not been written to disk, are you sure you want to unload this library?"
             action={{
-              icon: <Tick />,
+              icon: <IoCheckmark size={16} />,
               text: "Confirm unload",
               onClick: unloadSwinsianLibrary,
               color: "yellow",
@@ -102,8 +109,8 @@ export default function LibraryControls() {
             <Button
               variant="subtle"
               size="compact-sm"
-              leftSection={isLibraryLoaded ? <Tick /> : <Error />}
-              rightSection={<CaretDown />}
+              leftSection={isLibraryLoaded ? <IoCheckmark size={14} /> : <IoWarning size={14} />}
+              rightSection={<IoChevronDown size={14} />}
               color={isLibraryLoaded ? "green" : "blue"}
             >
               {isLibraryLoaded ? "Loaded" : "Not loaded"}
@@ -115,13 +122,13 @@ export default function LibraryControls() {
                 <LibraryLastModifiedText />
               </Menu.Label>
               <MenuDivider />
-              <Menu.Item leftSection={<Reset />} onClick={handleLoad}>
+              <Menu.Item leftSection={<IoArrowRedo size={14} />} onClick={handleLoad}>
                 {`${isLibraryLoaded ? "Reload" : "Load"} library`}
               </Menu.Item>
-              <Menu.Item leftSection={<FloppyDisk />} onClick={handleLoadFromDisk}>
+              <Menu.Item leftSection={<IoSave size={14} />} onClick={handleLoadFromDisk}>
                 Reload from disk
               </Menu.Item>
-              <Menu.Item leftSection={<FolderOpen />} onClick={handleSelectNewLibrary}>
+              <Menu.Item leftSection={<IoFolder size={14} />} onClick={handleSelectNewLibrary}>
                 Select new library…
               </Menu.Item>
             </Menu>

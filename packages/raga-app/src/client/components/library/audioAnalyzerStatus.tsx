@@ -1,5 +1,5 @@
-import { Blank, Tick } from "@blueprintjs/icons";
 import { Badge, Group, Text } from "@mantine/core";
+import { IoCheckmark, IoReload } from "react-icons/io5";
 
 import { appStore } from "../../store/appStore";
 
@@ -15,7 +15,7 @@ export default function AudioAnalyzerStatus() {
         size="sm"
         variant="light"
         color={status === "busy" ? "blue" : "green"}
-        leftSection={status === "busy" ? <Blank /> : <Tick />}
+        leftSection={status === "busy" ? <IoReload /> : <IoCheckmark />}
         radius="sm"
       >
         {status === "busy" ? "Busy…" : "Ready"}

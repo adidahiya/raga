@@ -1,5 +1,5 @@
-import { Error, Music } from "@blueprintjs/icons";
 import { Progress, Stack } from "@mantine/core";
+import { IoMusicalNotes, IoWarning } from "react-icons/io5";
 
 import { useTaskEffect } from "../../hooks";
 import { appStore } from "../../store/appStore";
@@ -27,7 +27,7 @@ export default function LibraryLoader(props: { children: React.ReactNode }) {
         <EmptyState
           className={styles.emptyState}
           title="Select a Swinsian library"
-          icon={<Music size={48} />}
+          icon={<IoMusicalNotes size={48} />}
         >
           <LoadLibraryForm />
         </EmptyState>
@@ -35,7 +35,7 @@ export default function LibraryLoader(props: { children: React.ReactNode }) {
         <EmptyState
           className={styles.emptyState}
           title="Loading Swinsian library..."
-          icon={<Music size={48} />}
+          icon={<IoMusicalNotes size={48} />}
         >
           <Progress size="sm" color="blue" animated={true} value={100} />
         </EmptyState>
@@ -43,7 +43,7 @@ export default function LibraryLoader(props: { children: React.ReactNode }) {
         <EmptyState
           className={styles.emptyState}
           title="Error loading Swinsian library"
-          icon={<Error size={48} />}
+          icon={<IoWarning size={48} />}
         />
       ) : (
         <div className={styles.libraryLoaded}>{props.children}</div>

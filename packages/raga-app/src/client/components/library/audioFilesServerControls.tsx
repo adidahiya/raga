@@ -1,4 +1,3 @@
-import { CaretDown, CrossCircle, Error, Play, Refresh, Tick, Time } from "@blueprintjs/icons";
 import {
   ActionIcon,
   Badge,
@@ -13,6 +12,15 @@ import {
 } from "@mantine/core";
 import { run } from "effection";
 import { useCallback } from "react";
+import {
+  IoCheckmark,
+  IoChevronDown,
+  IoPlay,
+  IoRefresh,
+  IoStop,
+  IoTimer,
+  IoWarning,
+} from "react-icons/io5";
 import { useInterval } from "usehooks-ts";
 
 import { AUDIO_FILES_SERVER_PING_INTERVAL } from "../../../common/constants";
@@ -46,11 +54,11 @@ export default function AudioFilesServerControls() {
           : "Not running";
   const statusIcon =
     status === "failed" ? (
-      <Error />
+      <IoWarning />
     ) : status === "starting" ? (
-      <Time />
+      <IoTimer />
     ) : status === "started" ? (
-      <Tick />
+      <IoCheckmark />
     ) : undefined;
 
   const { lineHeights } = useMantineTheme();
@@ -71,7 +79,7 @@ export default function AudioFilesServerControls() {
             size="sm"
             variant="light"
             leftSection={statusIcon}
-            rightSection={<CaretDown />}
+            rightSection={<IoChevronDown />}
             color={status === "failed" ? "red" : status === "started" ? "green" : "blue"}
             radius="sm"
           >
@@ -124,13 +132,13 @@ function AudioFilesServerButtons() {
           loading={status === "starting"}
           onClick={startServer}
         >
-          {status === "started" ? <Refresh /> : status === "failed" ? <Refresh /> : <Play />}
+          {status === "started" ? <IoRefresh /> : status === "failed" ? <IoRefresh /> : <IoPlay />}
         </ActionIcon>
       </Tooltip>
       {status === "started" && (
         <Tooltip position="top" label="Stop audio files server">
           <ActionIcon variant="subtle" color="red" onClick={stopServer}>
-            <CrossCircle />
+            <IoStop />
           </ActionIcon>
         </Tooltip>
       )}
