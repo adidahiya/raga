@@ -1,7 +1,8 @@
-import { sassNodeModulesLoadPaths } from "@blueprintjs/node-build-scripts";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import htmlPlugin from "vite-plugin-html-config";
+
+import { loadPaths as sassNodeModulesLoadPaths } from "./script/sassNodeModulesLoadPaths.mjs";
 
 // https://vitejs.dev/config
 export default defineConfig({

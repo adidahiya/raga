@@ -38,9 +38,6 @@ updates:
           - "@electron-forge/*"
           - "electron"
           - "electron-*"
-      blueprint:
-        patterns:
-          - "@blueprintjs/*"
       types:
         patterns:
           - "@types/*"
@@ -51,6 +48,10 @@ updates:
           - "react-test-renderer"
           - "react-testing-library"
           - "react-transition-group"
+      ui-libraries:
+        patterns:
+          - "@mantine/*"
+          - "react-icons"
       node-server:
         patterns:
           - "@tinyhttp/*"
