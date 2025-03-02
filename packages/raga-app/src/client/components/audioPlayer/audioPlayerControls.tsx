@@ -1,6 +1,6 @@
 import { ActionIcon, ButtonGroup, Group, Slider } from "@mantine/core";
 import { useCallback, useState } from "react";
-import { IoPause, IoPlay, IoVolumeHigh, IoVolumeLow, IoVolumeMedium } from "react-icons/io5";
+import { IoPause, IoPlay, IoVolumeHigh, IoVolumeLow } from "react-icons/io5";
 
 import { useOperationCallback } from "../../hooks";
 import { useAudioPlayerControls } from "../../store/selectors/useAudioPlayerControls";
