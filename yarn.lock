@@ -19,10 +19,10 @@ __metadata:
     "@adahiya/raga-lib": "workspace:^"
     "@blueprintjs/icons": "npm:^5.17.1"
     "@blueprintjs/node-build-scripts": "npm:^9.2.4"
-    "@electron-forge/cli": "npm:^7.6.1"
-    "@electron-forge/maker-deb": "npm:^7.6.1"
-    "@electron-forge/maker-zip": "npm:^7.6.1"
-    "@electron-forge/plugin-vite": "npm:^7.6.1"
+    "@electron-forge/cli": "npm:^7.7.0"
+    "@electron-forge/maker-deb": "npm:^7.7.0"
+    "@electron-forge/maker-zip": "npm:^7.7.0"
+    "@electron-forge/plugin-vite": "npm:^7.7.0"
     "@emotion/react": "npm:^11.14.0"
     "@mantine/colors-generator": "npm:^7.16.2"
     "@mantine/core": "npm:^7.16.2"
@@ -40,7 +40,7 @@ __metadata:
     "@tinyhttp/app": "npm:^2.5.0"
     "@types/app-root-dir": "npm:^0.1.4"
     "@types/chroma-js": "npm:^3.1.1"
-    "@types/node": "npm:^22.13.1"
+    "@types/node": "npm:^22.13.8"
     "@types/pluralize": "npm:^0.0.33"
     "@types/react": "npm:^19.0.8"
     "@types/react-devtools": "npm:^3.6.2"
@@ -56,7 +56,7 @@ __metadata:
     dayjs: "npm:^1.11.13"
     disconnect: "npm:^1.2.2"
     effection: "npm:^3.2.1"
-    electron: "npm:^34.1.1"
+    electron: "npm:^34.3.0"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^9.21.0"
     immer: "npm:^10.1.1"
@@ -96,7 +96,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^22.13.1"
+    "@types/node": "npm:^22.13.8"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.5.3"
     eslint: "npm:^9.21.0"
@@ -114,7 +114,7 @@ __metadata:
   dependencies:
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.27"
-    "@types/node": "npm:^22.13.1"
+    "@types/node": "npm:^22.13.8"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^3.10.0"
@@ -488,7 +488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/cli@npm:^7.6.1":
+"@electron-forge/cli@npm:^7.7.0":
   version: 7.7.0
   resolution: "@electron-forge/cli@npm:7.7.0"
   dependencies:
@@ -579,7 +579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/maker-deb@npm:^7.6.1":
+"@electron-forge/maker-deb@npm:^7.7.0":
   version: 7.7.0
   resolution: "@electron-forge/maker-deb@npm:7.7.0"
   dependencies:
@@ -593,7 +593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/maker-zip@npm:^7.6.1":
+"@electron-forge/maker-zip@npm:^7.7.0":
   version: 7.7.0
   resolution: "@electron-forge/maker-zip@npm:7.7.0"
   dependencies:
@@ -615,7 +615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/plugin-vite@npm:^7.6.1":
+"@electron-forge/plugin-vite@npm:^7.7.0":
   version: 7.7.0
   resolution: "@electron-forge/plugin-vite@npm:7.7.0"
   dependencies:
@@ -2067,9 +2067,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/version@npm:^3.12.1":
-  version: 3.12.1
-  resolution: "@lerna-lite/version@npm:3.12.1"
+"@lerna-lite/version@npm:^3.12.2":
+  version: 3.12.2
+  resolution: "@lerna-lite/version@npm:3.12.2"
   dependencies:
     "@lerna-lite/cli": "npm:3.12.1"
     "@lerna-lite/core": "npm:3.12.1"
@@ -2102,9 +2102,9 @@ __metadata:
     slash: "npm:^5.1.0"
     temp-dir: "npm:^3.0.0"
     tinyrainbow: "npm:^2.0.0"
-    uuid: "npm:^11.0.5"
+    uuid: "npm:^11.1.0"
     write-json-file: "npm:^6.0.0"
-  checksum: 10/aef4335aa90fa9a8d2d5c767d5a0401a301e09940fd9b481435128c11a2d661dbe84f84cd8e38a1ef092665eb0dda8d36af342c18de5304b47fc6c22d6b7f139
+  checksum: 10/8ea4fe16db413c3667a102583cbcf5b20fb0b6ee93b4fc2df2224135c5c4964c90730954816cedfc7dd0f052f06c8cc8d524d24ff25710cfef93c3258636789c
   languageName: node
   linkType: hard
 
@@ -3336,12 +3336,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.13.1":
-  version: 22.13.5
-  resolution: "@types/node@npm:22.13.5"
+"@types/node@npm:*, @types/node@npm:^22.13.8":
+  version: 22.13.8
+  resolution: "@types/node@npm:22.13.8"
   dependencies:
     undici-types: "npm:~6.20.0"
-  checksum: 10/a69ec8dba36a58a93e3ec3709a6a362ca0cdd8443310bb5e43b0c1f560c57bcc120c96fabb301ef42c2901f46103adad5158b6923ea14e8e14a432af20a2bb24
+  checksum: 10/b69de3caab80336747bf41b5063478d23b196b9594c6f2eb819791380cc571676087dceb0fde9531ef7a1293f3eae12a9aaf79d8de349378c29a17c5e657bc78
   languageName: node
   linkType: hard
 
@@ -3617,12 +3617,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/types@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@yarnpkg/types@npm:4.0.0"
+"@yarnpkg/types@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@yarnpkg/types@npm:4.0.1"
   dependencies:
     tslib: "npm:^2.4.0"
-  checksum: 10/f9670e120761a4d17461df2f01aa4b92213fbdd063501a36145d11ea01bd87ba01d44615cba3d6bc8f9bfc39a03a9a6452bf0436c7fb0c9c5311352b975349e6
+  checksum: 10/f391763cd955356e9aad551b29e8de7bbf68a6c8992af7cdc950ccf53f8aff6695ad81aa4c8a8e7c582786a840a4f30617732e2cb49f4109b971a9242c31c9fc
   languageName: node
   linkType: hard
 
@@ -5821,16 +5821,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^34.1.1":
-  version: 34.2.0
-  resolution: "electron@npm:34.2.0"
+"electron@npm:^34.3.0":
+  version: 34.3.0
+  resolution: "electron@npm:34.3.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/a0695f2095b5c03c9064b195997752e3c3bc3f3e5c2dfaae216130a920c7496877f9350c92644c84b7c084c106c552657c77718659e8b4eef9e9413c80c86167
+  checksum: 10/82a7cf87406573c68a86bf9b9291edaefbca4c9c86230ac8e71009cbe01ac63bc3e6f4e67095a3a73771f6a3c26600d7418124ac3bbaf9104b0bb801c92d6711
   languageName: node
   linkType: hard
 
@@ -12394,9 +12394,9 @@ __metadata:
     "@eslint/compat": "npm:^1.2.7"
     "@eslint/js": "npm:^9.21.0"
     "@lerna-lite/cli": "npm:^3.12.1"
-    "@lerna-lite/version": "npm:^3.12.1"
+    "@lerna-lite/version": "npm:^3.12.2"
     "@types/minimist": "npm:^1.2.5"
-    "@yarnpkg/types": "npm:^4.0.0"
+    "@yarnpkg/types": "npm:^4.0.1"
     eslint: "npm:^9.21.0"
     eslint-plugin-eslint-comments: "npm:^3.2.0"
     eslint-plugin-react: "npm:^7.37.4"
@@ -14150,12 +14150,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.0.5":
-  version: 11.0.5
-  resolution: "uuid@npm:11.0.5"
+"uuid@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "uuid@npm:11.1.0"
   bin:
     uuid: dist/esm/bin/uuid
-  checksum: 10/0594ecdff3051e15d4a2c614b4c72e73af373bde0a5d156512353c01156975295d024ae8d7151846d7bd4d22ccd251b16ed51b4318fa71505fb20ad984102dc1
+  checksum: 10/d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5
   languageName: node
   linkType: hard
 
