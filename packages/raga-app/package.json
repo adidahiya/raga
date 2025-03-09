@@ -82,7 +82,7 @@
     "cross-env": "^7.0.3",
     "electron": "^34.3.0",
     "electron-extension-installer": "^1.2.0",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "package-up": "^5.0.0",
     "postcss": "^8.5.3",
     "postcss-preset-mantine": "^1.17.0",
