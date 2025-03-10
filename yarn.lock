@@ -10667,8 +10667,8 @@ __metadata:
   linkType: hard
 
 "react-scan@npm:^0.2.13":
-  version: 0.2.13
-  resolution: "react-scan@npm:0.2.13"
+  version: 0.2.14
+  resolution: "react-scan@npm:0.2.14"
   dependencies:
     "@babel/core": "npm:^7.26.0"
     "@babel/generator": "npm:^7.26.2"
@@ -10709,7 +10709,7 @@ __metadata:
       optional: true
   bin:
     react-scan: bin/cli.js
-  checksum: 10/91290ecf2781f235f21decf6cd0b28250903939714939868d462d9d4d02d4370727822522fe67b9169aadac32966012a9a52227737cfae0134cc8dd016eb97f3
+  checksum: 10/9aaf4d113224235d81c9a4028c6b757b604c291228d206432834ce8e743d9775759f3797c9c62950342f995c16b494f4a33ae1c321ecb94987b6d108ac217026
   languageName: node
   linkType: hard
 
