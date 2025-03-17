@@ -46,6 +46,7 @@ function PlaylistTable({
         log.debug(`[client] selected playlist ${firstNode.id}: '${firstNode.data.Name}'`);
         onSelect?.([firstNode.id]);
       } else if (selectionMode === "multiple") {
+        log.debug(`[client] selected ${nodes.length.toString()} playlists`);
         onSelect?.(nodes.map((n) => n.id));
       }
     },
