@@ -73,7 +73,7 @@ interface TreeNodeRendererProps {
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-const TreeNodeRenderer = memo(function TreeNodeRenderer({
+const TreeNodeRenderer = memo(function TreeNodeRendererImpl({
   node,
   expanded,
   selected,
@@ -132,8 +132,8 @@ const TreeNodeRenderer = memo(function TreeNodeRenderer({
 
       {hasChildren && (
         <ActionIcon
+          className={styles.expandIcon}
           size="compact-sm"
-          ml={2}
           color="gray"
           variant="subtle"
           onClick={handleExpandClick}
