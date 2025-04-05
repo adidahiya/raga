@@ -289,8 +289,7 @@ function getLibraryPlaylistsContainingTrack(
     for (const item of playlist["Playlist Items"]) {
       const trackID = item["Track ID"];
       libraryPlaylistsContainingTrack[trackID] ??= new Set<string>();
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- false positive
-      libraryPlaylistsContainingTrack[trackID]!.add(playlist["Playlist Persistent ID"]);
+      libraryPlaylistsContainingTrack[trackID].add(playlist["Playlist Persistent ID"]);
     }
   }
   return libraryPlaylistsContainingTrack;
