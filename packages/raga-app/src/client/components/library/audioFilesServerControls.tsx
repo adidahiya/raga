@@ -25,6 +25,7 @@ import { useInterval } from "usehooks-ts";
 
 import { AUDIO_FILES_SERVER_PING_INTERVAL } from "../../../common/constants";
 import { appStore } from "../../store/appStore";
+import styles from "./audioFilesServerControls.module.scss";
 
 export default function AudioFilesServerControls() {
   const status = appStore.use.audioFilesServerStatus();
@@ -92,7 +93,7 @@ export default function AudioFilesServerControls() {
               value={rootFolder}
               onChange={handleRootFolderInputChange}
               color={status === "failed" ? "red" : status === "started" ? "green" : undefined}
-              style={{ minWidth: 300 }}
+              className={styles.input}
               size="sm"
               label="Root folder"
             />
