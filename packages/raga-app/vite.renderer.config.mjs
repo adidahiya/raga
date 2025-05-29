@@ -18,6 +18,9 @@ export default defineConfig({
   publicDir: "../raga-web-app/src/assets",
   build: {
     target: "esnext",
+    rollupOptions: {
+      external: ["react-scan"],
+    },
   },
   resolve: {
     alias: {
