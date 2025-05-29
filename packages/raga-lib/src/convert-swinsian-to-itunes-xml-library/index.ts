@@ -30,7 +30,7 @@ export default function (
     log.info(
       `Filtering playlists to only include ${selectedPlaylistIds.length.toString()} playlists`,
     );
-    
+
     if (!Array.isArray(musicAppLibrary.Playlists)) {
       log.warn("No playlists found in library or Playlists is not an array");
       musicAppLibrary.Playlists = [];
