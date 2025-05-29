@@ -28,7 +28,7 @@
 
 /* eslint-disable simple-import-sort/imports */
 
-import "./client/index.scss";
+import "@adahiya/raga-web-app/src/index.scss";
 
 import { scan } from "react-scan"; // import this BEFORE react
 import "react";
@@ -40,6 +40,6 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   });
 }
 
-import "./client/main";
+import "@adahiya/raga-web-app/src/main";
 
 /* eslint-enable simple-import-sort/imports */

@@ -52,6 +52,19 @@ can:
 The source code for the app lives in the
 [`raga-app` package](https://github.com/adidahiya/raga/blob/main/packages/raga-app/README.md).
 
+### For Web Developers: `raga-web-app`
+
+The web UI components of _raga_ have been extracted into a separate package called
+[`raga-web-app`](https://github.com/adidahiya/raga/blob/main/packages/raga-web-app/README.md).
+This allows the UI to be:
+
+- Run as a standalone web application for testing and development
+- Deployed to static web servers for preview and demonstration
+- Embedded within the Electron app for the full desktop experience
+
+The web app provides a limited set of features when running outside of Electron due to browser
+security restrictions, but it's useful for UI development and testing.
+
 ### For developers: `raga-lib` and `raga-cli`
 
 Much of _raga_'s data management functionality lives in a separate Node.js library called
@@ -79,6 +92,8 @@ Getting started:
 
 Dev tasks:
 
+- `yarn dev:web` - runs the web app in standalone mode at http://localhost:3000
+- `yarn dev:electron` - runs the full Electron app with all features enabled
 - `yarn build` - builds TypeScript sources and bundles up the Electron app
 - `yarn dist` - creates the Electron app distributable package
 
