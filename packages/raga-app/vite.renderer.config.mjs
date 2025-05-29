@@ -14,9 +14,16 @@ export default defineConfig({
     }),
     react(),
   ],
-  publicDir: "./src/client/assets",
+  // Use the web app's assets directory
+  publicDir: "../raga-web-app/src/assets",
   build: {
     target: "esnext",
+  },
+  resolve: {
+    alias: {
+      // Ensure proper resolution of the web app package
+      "@adahiya/raga-web-app": "../raga-web-app",
+    },
   },
   cssPreprocessOptions: {
     sass: {
