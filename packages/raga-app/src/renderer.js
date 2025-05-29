@@ -40,6 +40,6 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   });
 }
 
-import "@adahiya/raga-web-app/src/main";
+import "@adahiya/raga-web-app/src/main.tsx";
 
 /* eslint-enable simple-import-sort/imports */
