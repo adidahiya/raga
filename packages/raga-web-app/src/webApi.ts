@@ -23,17 +23,17 @@ class WebApi implements WebContextBridgeApi {
 
   private pendingCallbacks = new Map<string, ((payload: unknown) => void)[]>();
 
-  constructor() {
-    // Detect actual platform if possible
-    const userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.includes("mac")) {
-      this.platform = "darwin";
-    } else if (userAgent.includes("win")) {
-      this.platform = "win32";
-    } else if (userAgent.includes("linux")) {
-      this.platform = "linux";
-    }
-  }
+  // constructor() {
+  //   // Detect actual platform if possible
+  //   const userAgent = navigator.userAgent.toLowerCase();
+  //   if (userAgent.includes("mac")) {
+  //     this.platform = "darwin";
+  //   } else if (userAgent.includes("win")) {
+  //     this.platform = "win32";
+  //   } else if (userAgent.includes("linux")) {
+  //     this.platform = "linux";
+  //   }
+  // }
 
   send(channel: ClientEventChannel, ...args: unknown[]): void {
     console.warn(`[WebApi] IPC send called with channel: ${String(channel)}`, args);
