@@ -30,9 +30,9 @@ import { useShallow } from "zustand/shallow";
 
 import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
-import { AudioFileSource, getTrackFileSource, getTrackFileType } from "../../common/trackUtils";
 import { stopPropagation } from "../../common/reactUtils";
 import { TrackPropertySortKey } from "../../common/trackPropertySortKey";
+import { AudioFileSource, getTrackFileSource, getTrackFileType } from "../../common/trackUtils";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore, useAppStore } from "../../store/appStore";
 import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
