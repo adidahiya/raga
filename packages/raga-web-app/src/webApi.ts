@@ -65,6 +65,9 @@ class WebApi implements WebContextBridgeApi {
 export const webApi = new WebApi();
 
 // Install it on the window object for compatibility
-if (typeof window !== "undefined") {
+if (
+  typeof window !== "undefined" &&
+  typeof (window as Window & { api: WebContextBridgeApi }).api === "undefined"
+) {
   (window as Window & { api: WebContextBridgeApi }).api = webApi;
 }
