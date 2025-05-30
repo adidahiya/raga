@@ -14,6 +14,10 @@ declare global {
   };
 }
 
+// Check if we're in a web-only environment (no Electron)
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+const isWebOnly = typeof window !== "undefined" && (!window.api || window.api.platform === "web");
+
 function main() {
   // set up client logging
   localStorage.setItem("ROARR_LOG", "true");
@@ -29,7 +33,7 @@ function main() {
   const root = createRoot(domNode);
   root.render(
     <StrictMode>
-      <App />
+      <App useMockData={isWebOnly} />
     </StrictMode>,
   );
 }

@@ -36,6 +36,7 @@ import {
   type UserSettingsActions,
   type UserSettingsState,
 } from "./slices/userSettingsSlice";
+import { createWebAppSlice, type WebAppActions, type WebAppState } from "./slices/webAppSlice";
 import {
   createWorkspaceSlice,
   type WorkspaceActions,
@@ -51,7 +52,8 @@ export type AppState = AudioFilesServerState &
   TrackTableState &
   UserSettingsState &
   ExporterState &
-  WorkspaceState;
+  WorkspaceState &
+  WebAppState;
 export type AppActions = AudioFilesServerActions &
   LibraryActions &
   AudioAnalyzerActions &
@@ -60,7 +62,8 @@ export type AppActions = AudioFilesServerActions &
   TrackTableActions &
   UserSettingsActions &
   ExporterActions &
-  WorkspaceActions;
+  WorkspaceActions &
+  WebAppActions;
 export type AppStore = AppState & AppActions;
 
 export const useAppStore = create<AppStore>()(
@@ -77,6 +80,7 @@ export const useAppStore = create<AppStore>()(
       ...createUserSettingsSlice(...args),
       ...createExporterSlice(...args),
       ...createWorkspaceSlice(...args),
+      ...createWebAppSlice(...args),
     })),
     {
       name: `${LOCAL_STORAGE_KEY}-appStore`,

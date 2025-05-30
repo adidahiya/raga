@@ -14,6 +14,7 @@ import {
   type LoadSwinsianLibraryOptions,
   ServerEventChannel,
 } from "../../common/events";
+import { generateMockLibrary } from "../../common/mockData";
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
 export type LibraryLoadingState = "none" | "loading" | "loaded" | "error";
@@ -159,14 +160,36 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   loadSwinsianLibrary: function* (options: LoadSwinsianLibraryOptions): Operation<void> {
     set({ libraryLoadingState: "loading" });
 
-    window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
-
     try {
-      const data = yield* call(() =>
-        window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
-          ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
-        ),
-      );
+      let data: LoadedSwinsianLibraryEventPayload;
+
+      if (get().useMockData) {
+        // In web mode with mock data enabled, generate mock library
+        const mockLibrary = generateMockLibrary();
+        data = {
+          library: mockLibrary,
+          libraryMeta: {
+            longestCommonAudioFilePath: "/mock/audio/files",
+            totalTracks: Object.keys(mockLibrary.Tracks).length,
+            totalPlaylists: mockLibrary.Playlists.length,
+            totalDuration: Object.values(mockLibrary.Tracks).reduce(
+              (sum, track) => sum + (track["Total Time"] ?? 0),
+              0,
+            ),
+            lastModified: new Date().toISOString(),
+          },
+          filepath: "/mock/library.xml",
+        };
+      } else {
+        // In desktop mode, use IPC
+        window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
+        data = yield* call(() =>
+          window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
+            ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+          ),
+        );
+      }
+
       log.trace("[client] got loaded library");
       if (DEBUG) {
         console.log(data);

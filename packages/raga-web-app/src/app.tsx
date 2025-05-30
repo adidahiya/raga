@@ -8,6 +8,7 @@ import { createTheme, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import classNames from "classnames";
 import { ContextMenuProvider } from "mantine-contextmenu";
+import React from "react";
 
 import styles from "./app.module.scss";
 import AppChrome from "./components/chrome/appChrome";
@@ -39,10 +40,20 @@ const theme = createTheme({
   primaryShade: { light: 7, dark: 8 },
 });
 
-export default function App() {
+interface AppProps {
+  useMockData?: boolean;
+}
+
+export default function App({ useMockData = false }: AppProps) {
   const fontWeight = appStore.use.fontWeight();
   const userThemePreference = appStore.use.userThemePreference();
   const workspaceMode = appStore.use.workspaceMode();
+  const setUseMockData = appStore.use.setUseMockData();
+
+  // Set mock data configuration on mount
+  React.useEffect(() => {
+    setUseMockData(useMockData);
+  }, [useMockData, setUseMockData]);
 
   return (
     <MantineProvider theme={theme} defaultColorScheme={userThemePreference}>
