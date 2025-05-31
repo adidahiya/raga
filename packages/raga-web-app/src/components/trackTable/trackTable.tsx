@@ -486,7 +486,7 @@ function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefin
     (_action: Action, state: State) => {
       // TODO: better typedef for `state`
       log.debug(`[client] selected track ${state.id as string} in current playlist ${playlistId}`);
-      setSelectedTrackId(state.id);
+      setSelectedTrackId(state.id as number);
     },
     [playlistId, setSelectedTrackId],
   );

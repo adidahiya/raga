@@ -3,9 +3,8 @@ import type {
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
 } from "@adahiya/raga-lib";
-
-// Generate a random string ID
-const generateId = () => Math.random().toString(36).substring(2, 15);
+import { faker } from "@faker-js/faker";
+import { v4 as uuid } from "uuid";
 
 // Generate a random date within the last year
 const generateRandomDate = () => {
@@ -20,32 +19,52 @@ const generateRandomDate = () => {
 
 // Generate a mock track
 const generateMockTrack = (id: number): SwinsianTrackDefinition => {
-  const genres = ["House", "Techno", "Deep House", "Progressive House", "Tech House", "Minimal"];
-  const artists = ["Artist A", "Artist B", "Artist C", "Artist D", "Artist E"];
-  const albums = ["Album X", "Album Y", "Album Z", "Compilation 1", "Compilation 2"];
+  const genres = [
+    "House",
+    "Techno",
+    "Deep House",
+    "Progressive House",
+    "Tech House",
+    "Minimal",
+    "Melodic Techno",
+    "Afro House",
+    "Organic House",
+    "Downtempo",
+  ];
+
+  const artist = faker.person.fullName();
+  const album = faker.music.songName();
+  const genre = faker.helpers.arrayElement(genres);
+  const year = faker.number.int({ min: 1990, max: 2024 });
+  const bpm = faker.number.int({ min: 120, max: 160 });
+  const rating = faker.number.int({ min: 0, max: 4 });
+  const playCount = faker.number.int({ min: 0, max: 1000 });
+  const trackNumber = faker.number.int({ min: 1, max: 20 });
+  const totalTime = faker.number.int({ min: 180000, max: 480000 }); // 3-8 minutes
+  const size = faker.number.int({ min: 1000000, max: 11000000 }); // 1-11MB
 
   return {
     "Track ID": id,
-    "Persistent ID": generateId(),
-    Name: `Track ${id.toString()}`,
-    Artist: artists[Math.floor(Math.random() * artists.length)],
-    Album: albums[Math.floor(Math.random() * albums.length)],
-    Genre: genres[Math.floor(Math.random() * genres.length)],
-    BPM: Math.floor(Math.random() * 40) + 120, // Random BPM between 120-160
-    Rating: Math.floor(Math.random() * 5), // Random rating 0-4
+    "Persistent ID": uuid(),
+    Name: faker.music.songName(),
+    Artist: artist,
+    Album: album,
+    Genre: genre,
+    BPM: bpm,
+    Rating: rating,
     "Date Added": generateRandomDate(),
-    Location: `/Users/music/Track${id.toString()}.mp3`,
+    Location: `/Users/music/${artist.replace(/\s+/g, "_")}/${album.replace(/\s+/g, "_")}/${faker.system.fileName({ extensionCount: 0 })}.mp3`,
     "Track Type": "File",
-    Size: Math.floor(Math.random() * 10000000) + 1000000, // Random size between 1-11MB
-    "Total Time": Math.floor(Math.random() * 300000) + 180000, // Random duration between 3-8 minutes
+    Size: size,
+    "Total Time": totalTime,
     "Bit Rate": 320,
     "Sample Rate": 44100,
-    "Play Count": Math.floor(Math.random() * 100),
+    "Play Count": playCount,
     "Date Modified": generateRandomDate(),
-    "Track Number": Math.floor(Math.random() * 20) + 1,
-    Year: Math.floor(Math.random() * 30) + 1990,
+    "Track Number": trackNumber,
+    Year: year,
     "Volume Adjustment": 0,
-    "Album Artist": artists[Math.floor(Math.random() * artists.length)],
+    "Album Artist": artist,
   };
 };
 
@@ -55,7 +74,7 @@ const generateMockPlaylists = (numTracks: number): PlaylistDefinition[] => {
     {
       Name: "Library",
       "Playlist ID": "1",
-      "Playlist Persistent ID": generateId(),
+      "Playlist Persistent ID": uuid(),
       "All Items": true,
       Master: true,
       "Playlist Items": Array.from({ length: numTracks }, (_, i) => ({ "Track ID": i + 1 })),
@@ -63,35 +82,52 @@ const generateMockPlaylists = (numTracks: number): PlaylistDefinition[] => {
     {
       Name: "Recently Added",
       "Playlist ID": "2",
-      "Playlist Persistent ID": generateId(),
+      "Playlist Persistent ID": uuid(),
       "Playlist Items": Array.from({ length: 20 }, (_, i) => ({ "Track ID": i + 1 })),
     },
     {
       Name: "House",
       "Playlist ID": "3",
-      "Playlist Persistent ID": generateId(),
+      "Playlist Persistent ID": uuid(),
       "Playlist Items": Array.from({ length: 15 }, (_, i) => ({ "Track ID": i + 1 })),
     },
     {
       Name: "Techno",
       "Playlist ID": "4",
-      "Playlist Persistent ID": generateId(),
+      "Playlist Persistent ID": uuid(),
       "Playlist Items": Array.from({ length: 15 }, (_, i) => ({ "Track ID": i + 16 })),
     },
     {
       Name: "Deep House",
       "Playlist ID": "5",
-      "Playlist Persistent ID": generateId(),
+      "Playlist Persistent ID": uuid(),
       "Playlist Items": Array.from({ length: 15 }, (_, i) => ({ "Track ID": i + 31 })),
     },
   ];
+
+  // Add some random playlists
+  const randomPlaylistCount = faker.number.int({ min: 3, max: 7 });
+  for (let i = 0; i < randomPlaylistCount; i++) {
+    const playlistName = faker.music.genre();
+    const trackCount = faker.number.int({ min: 10, max: 30 });
+    const startTrackId = faker.number.int({ min: 1, max: numTracks - trackCount });
+
+    playlists.push({
+      Name: playlistName,
+      "Playlist ID": (playlists.length + 1).toString(),
+      "Playlist Persistent ID": uuid(),
+      "Playlist Items": Array.from({ length: trackCount }, (_, i) => ({
+        "Track ID": startTrackId + i,
+      })),
+    });
+  }
 
   return playlists;
 };
 
 // Generate a complete mock library
 export const generateMockLibrary = (): SwinsianLibraryPlist => {
-  const numTracks = 50;
+  const numTracks = faker.number.int({ min: 50, max: 100 });
   const tracks: Record<number, SwinsianTrackDefinition> = {};
 
   // Generate tracks
@@ -103,7 +139,7 @@ export const generateMockLibrary = (): SwinsianLibraryPlist => {
     "Application Version": "1.0.0",
     Date: new Date(),
     Features: 5,
-    "Library Persistent ID": generateId(),
+    "Library Persistent ID": uuid(),
     "Major Version": 1,
     "Minor Version": 0,
     "Music Folder": "/Users/music",

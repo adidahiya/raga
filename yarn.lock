@@ -136,6 +136,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@emotion/react": "npm:^11.14.0"
+    "@faker-js/faker": "npm:^9.8.0"
     "@mantine/colors-generator": "npm:^7.17.3"
     "@mantine/core": "npm:^7.17.3"
     "@mantine/dates": "npm:^7.17.3"
@@ -1291,6 +1292,13 @@ __metadata:
     "@eslint/core": "npm:^0.14.0"
     levn: "npm:^0.4.1"
   checksum: 10/ab0c4cecadc6c38c7ae5f71b9831d3521d08237444d8f327751d1133a4369ccd42093a1c06b26fd6c311015807a27d95a0184a761d1cdd264b090896dcf0addb
+  languageName: node
+  linkType: hard
+
+"@faker-js/faker@npm:^9.8.0":
+  version: 9.8.0
+  resolution: "@faker-js/faker@npm:9.8.0"
+  checksum: 10/d7d7940ba7f2bd0d266d507bb7a33ec5099654da624dc8647d7cfd2e908b75ba06ed7dd0ec3b771a18600a734f420370b3cecd1ee5d4799993b1ee3505f866d8
   languageName: node
   linkType: hard
 

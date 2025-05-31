@@ -166,6 +166,14 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       if (get().useMockData) {
         // In web mode with mock data enabled, generate mock library
         const mockLibrary = generateMockLibrary();
+
+        // Ensure the library playlists are properly set up
+        const libraryPlaylists = getLibraryPlaylists(mockLibrary);
+        const libraryPlaylistsContainingTrack = getLibraryPlaylistsContainingTrack(mockLibrary);
+
+        // Set the first playlist as selected by default
+        const firstPlaylistId = Object.keys(libraryPlaylists)[0];
+
         data = {
           library: mockLibrary,
           libraryMeta: {
@@ -180,6 +188,17 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
           },
           filepath: "/mock/library.xml",
         };
+
+        // Set the library state with mock data
+        set((state) => {
+          state.libraryLoadingState = "loaded";
+          state.library = mockLibrary;
+          state.libraryPlaylists = libraryPlaylists;
+          state.libraryPlaylistsContainingTrack = libraryPlaylistsContainingTrack;
+          state.selectedPlaylistId = firstPlaylistId;
+        });
+
+        return;
       } else {
         // In desktop mode, use IPC
         window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);

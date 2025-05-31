@@ -17,6 +17,7 @@
   "dependencies": {
     "@adahiya/raga-lib": "workspace:^",
     "@emotion/react": "^11.14.0",
+    "@faker-js/faker": "^9.8.0",
     "@mantine/colors-generator": "^7.17.3",
     "@mantine/core": "^7.17.3",
     "@mantine/dates": "^7.17.3",
