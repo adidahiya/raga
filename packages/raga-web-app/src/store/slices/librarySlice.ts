@@ -6,7 +6,11 @@ import type {
 import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 
-import { DEBUG, LOAD_SWINSIAN_LIBRARY_TIMEOUT } from "../../common/constants";
+import {
+  DEBUG,
+  LOAD_SWINSIAN_LIBRARY_TIMEOUT,
+  WRITE_MODIFIED_LIBRARY_TIMEOUT,
+} from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
 import {
   ClientEventChannel,
@@ -232,10 +236,8 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       set((state) => {
         const { longestCommonAudioFilePath } = data.libraryMeta;
         if (longestCommonAudioFilePath !== "") {
-          log.debug(
-            `[client] setting audio tracks root folder to ${String(longestCommonAudioFilePath)}`,
-          );
-          state.audioFilesRootFolder = String(longestCommonAudioFilePath);
+          log.debug(`[client] setting audio tracks root folder to ${longestCommonAudioFilePath}`);
+          state.audioFilesRootFolder = longestCommonAudioFilePath;
         }
         state.startAudioFilesServer();
         state.libraryLoadingState = "loaded";
@@ -277,7 +279,12 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     });
 
     try {
-      yield* call(window.api.waitForResponse(ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE));
+      yield* call(
+        window.api.waitForResponse(
+          ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE,
+          WRITE_MODIFIED_LIBRARY_TIMEOUT,
+        ),
+      );
       set({ libraryWriteState: "none" });
     } catch {
       log.error(ClientErrors.LIBRARY_WRITE_TIMED_OUT);
