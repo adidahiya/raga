@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn build)",
+      "Bash(yarn test)",
+      "Bash(yarn check-types)",
+      "Bash(yarn check-lint)",
+      "Bash(yarn lint-fix)"
+    ]
+  },
+  "enableAllProjectMcpServers": false
+}

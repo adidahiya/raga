@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 
-import { build, parse, type PlistObject } from "plist";
+import plist, { type PlistObject } from "plist";
+const { build, parse } = plist;
 
 import { log } from "./log.js";
 import { collapsePropertiesIntoSingleLine } from "./xmlUtils.js";

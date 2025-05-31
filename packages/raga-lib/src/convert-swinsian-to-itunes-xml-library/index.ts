@@ -26,14 +26,20 @@ export default function (
     musicAppLibrary.Tracks[track["Track ID"]] = newTrackDefinition;
   });
 
-  if (selectedPlaylistIds) {
+  if (selectedPlaylistIds && selectedPlaylistIds.length > 0) {
     log.info(
       `Filtering playlists to only include ${selectedPlaylistIds.length.toString()} playlists`,
     );
-    // Optionally filter playlists to only include those that have been selected for export
-    musicAppLibrary.Playlists = musicAppLibrary.Playlists.filter((playlist) =>
-      selectedPlaylistIds.includes(playlist["Playlist Persistent ID"]),
-    );
+
+    if (!Array.isArray(musicAppLibrary.Playlists)) {
+      log.warn("No playlists found in library or Playlists is not an array");
+      musicAppLibrary.Playlists = [];
+    } else {
+      // Optionally filter playlists to only include those that have been selected for export
+      musicAppLibrary.Playlists = musicAppLibrary.Playlists.filter((playlist) =>
+        selectedPlaylistIds.includes(playlist["Playlist Persistent ID"]),
+      );
+    }
   }
 
   return musicAppLibrary;
