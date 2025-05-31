@@ -40,10 +40,6 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   });
 }
 
-<<<<<<< HEAD
 import "../../raga-web-app/src/main";
-=======
-import "@adahiya/raga-web-app/src/main.tsx";
->>>>>>> 4ccbb06 (fix build)
 
 /* eslint-enable simple-import-sort/imports */
