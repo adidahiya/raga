@@ -62,7 +62,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["packages/raga-app/src/client/**/*.{ts,tsx}"],
+    files: ["packages/raga-web-app/src/**/*.{ts,tsx}"],
     plugins: {
       react: reactPlugin,
       "react-hooks": fixupPluginRules(reactHooksPlugin),
@@ -71,10 +71,6 @@ export default tseslint.config(
       ...reactPlugin.configs["recommended"].rules,
       ...reactPlugin.configs["jsx-runtime"].rules,
       ...reactHooksPlugin.configs.recommended.rules,
-      // HACKHACK: until we can get Sass CSS modules type-checked
-      "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-unsafe-member-access": "off",
-      "@typescript-eslint/no-unsafe-argument": "off",
       // unnecessary with TypeScript
       "react/prop-types": "off",
     },
