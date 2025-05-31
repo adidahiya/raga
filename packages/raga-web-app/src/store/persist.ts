@@ -68,15 +68,15 @@ export const storage: PersistStorage<AppStore> = {
       return null;
     }
 
-    const { state } = JSON.parse(str);
+    const { state } = JSON.parse(str) as { state: AppStore };
     const parsedMapAndSetEntries: Record<string, Map<unknown, unknown> | Set<unknown>> = {};
 
     for (const key of MAP_PROPERTIES) {
-      parsedMapAndSetEntries[key] = new Map(Object.entries(state[key]));
+      parsedMapAndSetEntries[key] = new Map(Object.entries(state[key] as Record<string, unknown>));
     }
 
     for (const key of SET_PROPERTIES) {
-      parsedMapAndSetEntries[key] = new Set(state[key]);
+      parsedMapAndSetEntries[key] = new Set(state[key] as unknown[]);
     }
 
     return {
@@ -95,7 +95,10 @@ export const storage: PersistStorage<AppStore> = {
     // arrays, respectively
     for (const [key, value] of Object.entries(newValue.state)) {
       if (value instanceof Map) {
-        encodedMapAndSetEntries[key] = Object.fromEntries(value.entries());
+        encodedMapAndSetEntries[key] = Object.fromEntries(value.entries()) as Record<
+          string,
+          unknown
+        >;
       } else if (value instanceof Set) {
         encodedMapAndSetEntries[key] = Array.from(value);
       }
