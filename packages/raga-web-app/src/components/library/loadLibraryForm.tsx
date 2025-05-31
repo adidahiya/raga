@@ -118,3 +118,17 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
     </>
   );
 }
+
+export function LoadMockLibraryForm() {
+  const setLibraryInputFilepath = appStore.use.setLibraryInputFilepath();
+
+  const handleClick = useCallback(() => {
+    setLibraryInputFilepath("/mock/library.xml");
+  }, [setLibraryInputFilepath]);
+
+  return (
+    <Stack gap="xs">
+      <Button onClick={handleClick}>Load Mock Library</Button>
+    </Stack>
+  );
+}
