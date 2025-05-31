@@ -12,7 +12,10 @@ export interface WebContextBridgeApi {
   // Mock IPC methods
   send: (channel: ClientEventChannel, ...args: unknown[]) => void;
   handleOnce: <T = unknown>(channel: ServerEventChannel, callback: (payload: T) => void) => void;
-  waitForResponse: <T = unknown>(channel: ServerEventChannel) => Promise<T>;
+  waitForResponse: <T = unknown>(
+    channel: ServerEventChannel,
+    timeoutMs?: number,
+  ) => () => Promise<T>;
 
   // File operations
   getFilePath: (file: File | null | undefined) => string | undefined;
@@ -22,18 +25,6 @@ class WebApi implements WebContextBridgeApi {
   platform: "darwin" | "win32" | "linux" | "web" = "web";
 
   private pendingCallbacks = new Map<string, ((payload: unknown) => void)[]>();
-
-  // constructor() {
-  //   // Detect actual platform if possible
-  //   const userAgent = navigator.userAgent.toLowerCase();
-  //   if (userAgent.includes("mac")) {
-  //     this.platform = "darwin";
-  //   } else if (userAgent.includes("win")) {
-  //     this.platform = "win32";
-  //   } else if (userAgent.includes("linux")) {
-  //     this.platform = "linux";
-  //   }
-  // }
 
   send(channel: ClientEventChannel, ...args: unknown[]): void {
     console.warn(`[WebApi] IPC send called with channel: ${String(channel)}`, args);
@@ -48,10 +39,11 @@ class WebApi implements WebContextBridgeApi {
     this.pendingCallbacks.set(channelKey, callbacks);
   }
 
-  async waitForResponse<T = unknown>(channel: ServerEventChannel): Promise<T> {
+  waitForResponse<T = unknown>(channel: ServerEventChannel, _timeoutMs = 0): () => Promise<T> {
     console.warn(`[WebApi] IPC waitForResponse called with channel: ${String(channel)}`);
-    // Return a rejected promise for now - in a real implementation this would wait for backend response
-    return Promise.reject(new Error(`Web API does not support IPC channel: ${String(channel)}`));
+    // Return a function that returns a rejected promise for now - in a real implementation this would wait for backend response
+    return () =>
+      Promise.reject(new Error(`Web API does not support IPC channel: ${String(channel)}`));
   }
 
   getFilePath(file: File | null | undefined): string | undefined {

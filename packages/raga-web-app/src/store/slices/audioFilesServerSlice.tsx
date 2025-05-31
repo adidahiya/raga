@@ -10,6 +10,7 @@ import { withTimeout } from "../../common/asyncUtils";
 import {
   AUDIO_FILES_SERVER_PING_TIMEOUT,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
+  WRITE_AUDIO_FILE_TAG_TIMEOUT,
 } from "../../common/constants";
 import {
   type AudioFilesServerStartedEventPayload,
@@ -218,8 +219,11 @@ export const createAudioFilesServerSlice: AppStoreSliceCreator<
       } satisfies WriteAudioFileTagOptions);
 
       try {
-        yield* call(() =>
-          window.api.waitForResponse(ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE),
+        yield* call(
+          window.api.waitForResponse(
+            ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE,
+            WRITE_AUDIO_FILE_TAG_TIMEOUT,
+          ),
         );
 
         log.info(`[client] completed updating '${tagName}' tag for track ${trackID.toString()}`);

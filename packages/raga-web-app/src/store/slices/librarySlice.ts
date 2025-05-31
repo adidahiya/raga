@@ -6,7 +6,7 @@ import type {
 import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 
-import { DEBUG } from "../../common/constants";
+import { DEBUG, LOAD_SWINSIAN_LIBRARY_TIMEOUT } from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
 import {
   ClientEventChannel,
@@ -201,10 +201,12 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         return;
       } else {
         // In desktop mode, use IPC
+        log.debug("[client] Sending load library request via IPC");
         window.api.send(ClientEventChannel.LOAD_SWINSIAN_LIBRARY, options);
-        data = yield* call(() =>
+        data = yield* call(
           window.api.waitForResponse<LoadedSwinsianLibraryEventPayload>(
             ServerEventChannel.LOADED_SWINSIAN_LIBRARY,
+            LOAD_SWINSIAN_LIBRARY_TIMEOUT,
           ),
         );
       }
@@ -275,9 +277,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
     });
 
     try {
-      yield* call(() =>
-        window.api.waitForResponse(ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE),
-      );
+      yield* call(window.api.waitForResponse(ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE));
       set({ libraryWriteState: "none" });
     } catch {
       log.error(ClientErrors.LIBRARY_WRITE_TIMED_OUT);
