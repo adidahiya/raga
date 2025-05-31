@@ -5,12 +5,13 @@ import { useTaskEffect } from "../../hooks";
 import { appStore } from "../../store/appStore";
 import EmptyState from "../common/emptyState";
 import styles from "./libraryLoader.module.scss";
-import LoadLibraryForm from "./loadLibraryForm";
+import LoadLibraryForm, { LoadMockLibraryForm } from "./loadLibraryForm";
 
 export default function LibraryLoader(props: { children: React.ReactNode }) {
   const libraryInputFilepath = appStore.use.libraryInputFilepath();
   const libraryState = appStore.use.libraryLoadingState();
   const loadLibrary = appStore.use.loadSwinsianLibrary();
+  const useMockData = appStore.use.useMockData();
 
   useTaskEffect(
     function* () {
@@ -29,7 +30,7 @@ export default function LibraryLoader(props: { children: React.ReactNode }) {
           title="Select a Swinsian library"
           icon={<IoMusicalNotes size={48} />}
         >
-          <LoadLibraryForm />
+          {useMockData ? <LoadMockLibraryForm /> : <LoadLibraryForm />}
         </EmptyState>
       ) : libraryState === "loading" ? (
         <EmptyState
