@@ -21,7 +21,7 @@
     "@adahiya/raga-lib": "workspace:^",
     "@adahiya/raga-web-app": "workspace:^",
     "@tinyhttp/app": "^2.5.2",
-    "ansis": "^3.17.0",
+    "ansis": "^4.1.0",
     "app-root-dir": "^1.0.2",
     "disconnect": "^1.2.2",
     "effection": "^3.4.0",

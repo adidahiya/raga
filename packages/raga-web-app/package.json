@@ -31,7 +31,7 @@
     "@number-flow/react": "^0.5.8",
     "@roarr/browser-log-writer": "^1.3.0",
     "@table-library/react-table-library": "^4.1.12",
-    "ansis": "^3.17.0",
+    "ansis": "^4.1.0",
     "chroma-js": "^3.1.2",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
