@@ -29,7 +29,7 @@ export default function LoadLibraryForm() {
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      log.debug(`[client] accepted input library file: ${acceptedFiles[0].path}`);
+      log.debug(`[client] accepted input library file: ${acceptedFiles[0].name}`);
       const filePath = window.api.getFilePath(acceptedFiles[0]);
       setLibraryInputFilepath(filePath);
     },
