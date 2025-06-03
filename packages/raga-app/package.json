@@ -24,7 +24,7 @@
     "ansis": "^4.1.0",
     "app-root-dir": "^1.0.2",
     "disconnect": "^1.2.2",
-    "effection": "^3.4.0",
+    "effection": "^3.5.0",
     "milliparsec": "^5.0.2",
     "node-taglib-sharp": "^6.0.1",
     "radash": "^12.1.0",
