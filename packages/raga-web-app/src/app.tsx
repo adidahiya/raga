@@ -4,7 +4,7 @@ import "mantine-contextmenu/styles.layer.css";
 import "./common/mantine-overrides.scss";
 
 import { generateColors } from "@mantine/colors-generator";
-import { createTheme, MantineProvider } from "@mantine/core";
+import { createTheme, MantineProvider, Switch } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import classNames from "classnames";
 import { ContextMenuProvider } from "mantine-contextmenu";
@@ -38,6 +38,13 @@ const theme = createTheme({
     green: generateColors("#2e6f40"),
   },
   primaryShade: { light: 7, dark: 8 },
+  components: {
+    Switch: Switch.extend({
+      defaultProps: {
+        withThumbIndicator: false,
+      },
+    }),
+  },
 });
 
 interface AppProps {
