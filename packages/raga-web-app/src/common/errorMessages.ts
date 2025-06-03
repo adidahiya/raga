@@ -30,12 +30,3 @@ export const ClientErrors = {
   LIBRARY_WRITE_NO_OUTPUT_FILEPATH: `${CLIENT} No output filepath specified`,
   LIBRARY_WRITE_TIMED_OUT: `${CLIENT} Timed out while writing library to disk`,
 };
-
-export const ServerErrors = {
-  AUDIO_FILE_NOT_FOUND: `Audio file not found`,
-  AUDIO_FILES_ROOT_FOLDER_NOT_FOUND: `Audio files root folder does not exist or is empty`,
-  FFMPEG_UNAVAILABLE: `ffmpeg is not available, cannot convert audio files`,
-  MP3_CODEC_UNAVAILABLE: `No MP3 codec is available`,
-  INVALID_CONVERSION_REQUEST: `Invalid MP3 conversion request`,
-  CONVERTED_AUDIO_FILE_NOT_FOUND: `Converted audio file not found`,
-};

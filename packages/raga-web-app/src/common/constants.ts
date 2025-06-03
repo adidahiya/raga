@@ -2,7 +2,6 @@ export const DEBUG = process.env.NODE_ENV === "development";
 
 export const LOCAL_STORAGE_KEY = "raga-app";
 export const DEFAULT_AUDIO_FILES_SERVER_PORT = 8457;
-export const DEFAULT_ID3_TAG_USER_EMAIL = "abc@123.com";
 
 // communication intervals & timeouts
 export const AUDIO_FILES_SERVER_PING_INTERVAL = 10_000;

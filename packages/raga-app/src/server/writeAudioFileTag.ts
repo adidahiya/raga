@@ -11,7 +11,7 @@ import {
 import { isString } from "radash";
 
 import { DEFAULT_ID3_TAG_USER_EMAIL } from "../common/constants";
-import { ClientErrors } from "../common/errorMessages";
+import { ServerErrors } from "../common/errorMessages";
 import { type WriteAudioFileTagOptions } from "../common/events";
 
 /** @throws if unsuccessful */
@@ -24,7 +24,7 @@ export function writeAudioFileTag({
   const filepath = fileLocation.includes("file://") ? fileURLToPath(fileLocation) : fileLocation;
 
   if (!existsSync(filepath)) {
-    throw new Error(ClientErrors.libraryWriteTagFailedFileNotFound(filepath));
+    throw new Error(ServerErrors.libraryWriteTagFailedFileNotFound(filepath));
   }
 
   const file = TaglibFile.createFromPath(filepath);
