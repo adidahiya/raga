@@ -1,12 +1,9 @@
 import type { TrackDefinition } from "@adahiya/raga-types";
+import { type CellClickedEventArgs } from "@glideapps/glide-data-grid";
 import { useContextMenu } from "mantine-contextmenu";
 import { useCallback } from "react";
 
-import {
-  TRACK_TABLE_FILTER_BAR_HEIGHT,
-  TRACK_TABLE_HEADER_HEIGHT,
-  TRACK_TABLE_ROW_HEIGHT,
-} from "../../common/constants";
+import { TRACK_TABLE_FILTER_BAR_HEIGHT, TRACK_TABLE_HEADER_HEIGHT } from "../../common/constants";
 import { appStore } from "../../store/appStore";
 import TrackRowContextMenu from "./trackRowContextMenu";
 import { getTableScrollingContainer } from "./trackTableDOMUtils";
@@ -17,7 +14,7 @@ export interface UseTrackTableContextMenuOptions {
 }
 
 export interface UseTrackTableContextMenuReturnValue {
-  handleContextMenu: React.MouseEventHandler<HTMLElement>;
+  handleContextMenu: (args: CellClickedEventArgs) => void;
   isContextMenuOpen: boolean;
 }
 
@@ -30,7 +27,7 @@ export default function useTrackTableContextMenu({
   const { showContextMenu, isContextMenuVisible } = useContextMenu();
 
   const handleContextMenu = useCallback(
-    (event: React.MouseEvent) => {
+    (args: CellClickedEventArgs) => {
       const scrollingContainer = getTableScrollingContainer(containerElement.current);
       if (containerElement.current == null || scrollingContainer == null) {
         // should be an unreachable case
@@ -41,18 +38,49 @@ export default function useTrackTableContextMenu({
       const containerTopOffset = containerElement.current.getBoundingClientRect().top;
       const topOffsetInList =
         scrollingContainer.scrollTop +
-        event.clientY -
+        args.localEventY -
         containerTopOffset -
         TRACK_TABLE_HEADER_HEIGHT -
         (isTableFilterVisible ? TRACK_TABLE_FILTER_BAR_HEIGHT : 0);
-      const trackIndex = Math.floor(topOffsetInList / TRACK_TABLE_ROW_HEIGHT);
-      const newActiveTrackDef = sortedTrackDefs[trackIndex] as TrackDefinition | undefined;
+      const [_, rowIndex] = args.location;
+
+      const newActiveTrackDef = sortedTrackDefs[rowIndex] as TrackDefinition | undefined;
 
       setActiveTrackId(newActiveTrackDef?.["Track ID"]);
 
       if (newActiveTrackDef !== undefined) {
+        const syntheticMouseEvent = {
+          clientX: args.localEventX,
+          clientY: topOffsetInList,
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          button: 2,
+          buttons: 2,
+          relatedTarget: null,
+          currentTarget: containerElement.current,
+          target: containerElement.current,
+          nativeEvent: new MouseEvent("contextmenu", {
+            clientX: args.localEventX,
+            clientY: topOffsetInList,
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            button: 2,
+            buttons: 2,
+            relatedTarget: null,
+          }),
+          isDefaultPrevented: () => false,
+          isPropagationStopped: () => false,
+          persist: () => {},
+          preventDefault: () => {},
+          stopPropagation: () => {},
+          type: "contextmenu",
+          timeStamp: Date.now(),
+        } as unknown as React.MouseEvent;
+
         showContextMenu((close) => <TrackRowContextMenu track={newActiveTrackDef} close={close} />)(
-          event,
+          syntheticMouseEvent,
         );
       }
     },

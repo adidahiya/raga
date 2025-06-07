@@ -14,5 +14,11 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!--
+      Portal element for glide-data-grid.
+      See https://github.com/glideapps/glide-data-grid/blob/96d1830be921db97d0e8a50139fea3b3ead24536/packages/core/API.md#htmlcss-prerequisites
+    -->
+    <div id="portal" style="position: fixed; left: 0; top: 0; z-index: 9999" />
   </body>
 </html>
