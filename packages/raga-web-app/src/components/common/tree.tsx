@@ -55,6 +55,11 @@ export interface ControlledTreeProps<T> {
  * Notable differences from older tree implementations (like Blueprint's Tree component):
  * - Node value string represent not just the id of the current node, but the full path (delimited by
  *   slashes) of all the node ids from the root node to the current node.
+ *
+ * Performance notes:
+ * - Event handlers are memoized to prevent re-renders on hover
+ * - Component uses custom memo comparison to avoid re-renders when array contents haven't changed
+ * - If still experiencing performance issues, check parent components for frequently changing props
  */
 function ControlledTree<T extends object>({
   nodes,
@@ -115,8 +120,61 @@ function ControlledTree<T extends object>({
     }
   }, [checkedState, nodes, onSelect, selectionMode]);
 
+  // Memoized event handlers to prevent re-renders
+  const handleCheckboxClick = useCallback(
+    (nodeValue: string, checked: boolean) => {
+      if (checked) {
+        tree.uncheckNode(nodeValue);
+      } else {
+        tree.checkNode(nodeValue);
+      }
+    },
+    [tree],
+  );
+
+  const handleExpandClick = useCallback(
+    (nodeValue: string, expanded: boolean) => {
+      if (expanded) {
+        tree.collapse(nodeValue);
+      } else {
+        tree.expand(nodeValue);
+      }
+    },
+    [tree],
+  );
+
+  const handleLabelClick = useCallback(
+    (nodeValue: string, selected: boolean) => {
+      if (selectionMode !== "single") {
+        return;
+      }
+
+      if (selected) {
+        tree.deselect(nodeValue);
+      } else {
+        tree.select(nodeValue);
+        const selectedNode = findNodeById(nodes, mantineNodeValueToId(nodeValue));
+        if (selectedNode) {
+          onSelect?.([selectedNode]);
+        }
+      }
+    },
+    [selectionMode, tree, nodes, onSelect],
+  );
+
+  const handleSelectAllClick = useCallback(
+    (allChecked: boolean) => {
+      if (allChecked) {
+        tree.uncheckAllNodes();
+      } else {
+        tree.checkAllNodes();
+      }
+    },
+    [tree],
+  );
+
   const renderTreeNode = useCallback(
-    ({ node, expanded, selected, hasChildren, elementProps, tree }: RenderTreeNodePayload) => {
+    ({ node, expanded, selected, hasChildren, elementProps }: RenderTreeNodePayload) => {
       const checked = tree.isNodeChecked(node.value);
       const indeterminate = tree.isNodeIndeterminate(node.value);
 
@@ -135,11 +193,7 @@ function ControlledTree<T extends object>({
               checked={checked}
               indeterminate={indeterminate}
               onClick={() => {
-                if (checked) {
-                  tree.uncheckNode(node.value);
-                } else {
-                  tree.checkNode(node.value);
-                }
+                handleCheckboxClick(node.value, checked);
               }}
             />
           )}
@@ -151,11 +205,7 @@ function ControlledTree<T extends object>({
               color="gray"
               variant="subtle"
               onClick={() => {
-                if (expanded) {
-                  tree.collapse(node.value);
-                } else {
-                  tree.expand(node.value);
-                }
+                handleExpandClick(node.value, expanded);
               }}
             >
               {expanded ? <IoChevronDown /> : <IoChevronForward />}
@@ -165,19 +215,7 @@ function ControlledTree<T extends object>({
           <div
             className={styles.labelContainer}
             onClick={() => {
-              if (selectionMode !== "single") {
-                return;
-              }
-
-              if (selected) {
-                tree.deselect(node.value);
-              } else {
-                tree.select(node.value);
-                const selectedNode = findNodeById(nodes, mantineNodeValueToId(node.value));
-                if (selectedNode) {
-                  onSelect?.([selectedNode]);
-                }
-              }
+              handleLabelClick(node.value, selected);
             }}
           >
             <span>{node.label}</span>
@@ -185,7 +223,7 @@ function ControlledTree<T extends object>({
         </div>
       );
     },
-    [nodes, onSelect, selectionMode],
+    [selectionMode, tree, handleCheckboxClick, handleExpandClick, handleLabelClick],
   );
 
   // Update tree state controlled selection changes
@@ -209,11 +247,7 @@ function ControlledTree<T extends object>({
             checked={allNodesChecked}
             indeterminate={!allNodesChecked && someNodesChecked}
             onClick={() => {
-              if (allNodesChecked) {
-                tree.uncheckAllNodes();
-              } else {
-                tree.checkAllNodes();
-              }
+              handleSelectAllClick(allNodesChecked);
             }}
           />
           <Text pl={5} fw={600}>
@@ -232,7 +266,33 @@ function ControlledTree<T extends object>({
   );
 }
 
-export default memo(ControlledTree) as typeof ControlledTree;
+export default memo(ControlledTree, (prevProps, nextProps) => {
+  // Custom comparison to prevent re-renders when array contents haven't changed
+  if (prevProps.selectionMode !== nextProps.selectionMode) {
+    return false;
+  }
+
+  if (prevProps.nodes !== nextProps.nodes) {
+    return false;
+  }
+
+  if (prevProps.onSelect !== nextProps.onSelect) {
+    return false;
+  }
+
+  // Deep comparison for selectedNodeIds array
+  if (prevProps.selectedNodeIds.length !== nextProps.selectedNodeIds.length) {
+    return false;
+  }
+
+  for (let i = 0; i < prevProps.selectedNodeIds.length; i++) {
+    if (prevProps.selectedNodeIds[i] !== nextProps.selectedNodeIds[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}) as typeof ControlledTree;
 
 // UTILITIES
 // -------------------------------------------------------------------------------------------------

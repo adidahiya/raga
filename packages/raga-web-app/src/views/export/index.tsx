@@ -40,17 +40,7 @@ interface ExportColumnProps extends PaperProps {
 
 function ExportColumn({ children, title, ...props }: ExportColumnProps) {
   return (
-    <Paper
-      shadow="sm"
-      withBorder
-      radius="sm"
-      miw={250}
-      maw={500}
-      w="100%"
-      h="100%"
-      p={10}
-      {...props}
-    >
+    <Paper shadow="sm" withBorder radius="sm" className={styles.exportColumn} {...props}>
       <Stack h="100%">
         {title && <Text>{title}</Text>}
         {children}

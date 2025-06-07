@@ -6,6 +6,7 @@ import { useSelectedTrackFileURL } from "../../hooks";
 import useSelectedTrackDef from "../../hooks/useSelectedTrackDef";
 import { appStore } from "../../store/appStore";
 import EmptyState from "../common/emptyState";
+import styles from "./audioPlayer.module.scss";
 import { TrackBPMOverlay } from "./trackBPMOverlay";
 
 // TODO: reconsider if this lazy-loading is worth it...
@@ -36,7 +37,7 @@ export function AudioPlayer() {
   }
 
   return (
-    <Box pos="relative" h={90}>
+    <Box className={styles.root}>
       <Suspense fallback={<Skeleton width="100%" height="100%" />}>
         <AudioWaveform mediaURL={selectedFileURL} />
       </Suspense>

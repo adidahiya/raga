@@ -31,8 +31,8 @@ export default function LibraryView() {
   );
 
   return (
-    <Paper w="100%" h="100%" shadow="sm" withBorder={true} radius="sm" className={styles.library}>
-      <Stack gap={0} w="100%" h="100%">
+    <Paper shadow="sm" withBorder={true} radius="sm" className={styles.library}>
+      <Stack gap={0} className={styles.libraryStack}>
         <Group justify="space-between" p={5}>
           {selectedTrack === undefined ? null : (
             <AudioPlayerNowPlaying selectedTrack={selectedTrack} />
@@ -77,15 +77,15 @@ function LibrarySidebarFooter() {
   return (
     <Box className={styles.librarySidebarFooter}>
       <Divider orientation="horizontal" />
-      <Box py={5} px={7}>
+      <Box className={styles.sidebarFooterItem}>
         <AudioFilesServerControls />
       </Box>
       <Divider orientation="horizontal" />
-      <Box py={5} px={7}>
+      <Box className={styles.sidebarFooterItem}>
         <AudioAnalyzerStatus />
       </Box>
       <Divider orientation="horizontal" />
-      <Box py={5} px={7}>
+      <Box className={styles.sidebarFooterItem}>
         <Group align="center" justify="space-between">
           <Text component="span" truncate={true} size="sm" c="dimmed">
             Total # tracks
