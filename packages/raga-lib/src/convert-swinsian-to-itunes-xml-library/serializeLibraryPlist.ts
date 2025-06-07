@@ -1,4 +1,5 @@
-import { type MusicLibraryPlist } from "../models/library.js";
+import type { MusicLibraryPlist } from "@adahiya/raga-types";
+
 import { buildPlistOutput } from "../utils/plistUtils.js";
 import { reEncodeHtmlEntities } from "../utils/xmlUtils.js";
 

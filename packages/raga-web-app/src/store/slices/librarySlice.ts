@@ -1,8 +1,11 @@
 import type {
+  LoadedSwinsianLibraryEventPayload,
+  LoadSwinsianLibraryOptions,
   PlaylistDefinition,
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
-} from "@adahiya/raga-lib";
+} from "@adahiya/raga-types";
+import { ClientEventChannel, ServerEventChannel } from "@adahiya/raga-types";
 import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 
@@ -12,12 +15,6 @@ import {
   WRITE_MODIFIED_LIBRARY_TIMEOUT,
 } from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
-import {
-  ClientEventChannel,
-  type LoadedSwinsianLibraryEventPayload,
-  type LoadSwinsianLibraryOptions,
-  ServerEventChannel,
-} from "../../common/events";
 import { generateMockLibrary } from "../../common/mockData";
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
@@ -184,10 +181,6 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
             longestCommonAudioFilePath: "/mock/audio/files",
             totalTracks: Object.keys(mockLibrary.Tracks).length,
             totalPlaylists: mockLibrary.Playlists.length,
-            totalDuration: Object.values(mockLibrary.Tracks).reduce(
-              (sum, track) => sum + (track["Total Time"] ?? 0),
-              0,
-            ),
             lastModified: new Date().toISOString(),
           },
           filepath: "/mock/library.xml",
@@ -224,6 +217,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       const { selectedTrackId } = get();
       if (selectedTrackId != null) {
         const trackDef = data.library.Tracks[selectedTrackId];
+
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (trackDef === undefined) {
           log.trace(

@@ -1,4 +1,4 @@
-import type { AudioFileType, TrackDefinition } from "@adahiya/raga-lib";
+import type { AudioFileType, TrackDefinition } from "@adahiya/raga-types";
 import { isString } from "radash";
 
 // see https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Containers

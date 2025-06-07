@@ -1,11 +1,10 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
-import { call, type Operation } from "effection";
-import { pick } from "radash";
-
+import type { TrackDefinition } from "@adahiya/raga-types";
 import {
   AudioFilesServerRoutes as Routes,
   type ConvertTrackToMP3RequestBody,
-} from "../../common/api/audioFilesServerAPI";
+} from "@adahiya/raga-types";
+import { call, type Operation } from "effection";
+import { pick } from "radash";
 
 export default function* convertTrackToMP3Request(
   serverBaseURL: string,

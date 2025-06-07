@@ -1,6 +1,8 @@
-import { type MusicLibraryPlist } from "../models/library.js";
-import { type PlaylistDefinition } from "../models/playlists.js";
-import { type BasicTrackDefinition } from "../models/tracks.js";
+import type {
+  BasicTrackDefinition,
+  MusicLibraryPlist,
+  PlaylistDefinition,
+} from "@adahiya/raga-types";
 
 type TrackDefinitionVisitor = (track: BasicTrackDefinition) => void;
 

@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { TrackDefinition } from "@adahiya/raga-types";
 import { useMemo } from "react";
 
 import { appStore } from "../store/appStore";

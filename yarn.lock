@@ -17,6 +17,7 @@ __metadata:
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
+    "@adahiya/raga-types": "workspace:*"
     "@adahiya/raga-web-app": "workspace:^"
     "@electron-forge/cli": "npm:^7.8.1"
     "@electron-forge/maker-deb": "npm:^7.8.1"
@@ -80,6 +81,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-lib@workspace:packages/raga-lib"
   dependencies:
+    "@adahiya/raga-types": "workspace:*"
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.27"
     "@types/node": "npm:^22.15.29"
@@ -97,11 +99,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@adahiya/raga-types@workspace:*, @adahiya/raga-types@workspace:packages/raga-types":
+  version: 0.0.0-use.local
+  resolution: "@adahiya/raga-types@workspace:packages/raga-types"
+  dependencies:
+    eslint: "npm:^9.28.0"
+    typescript: "npm:^5.8.3"
+  languageName: unknown
+  linkType: soft
+
 "@adahiya/raga-web-app@workspace:^, @adahiya/raga-web-app@workspace:packages/raga-web-app":
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-web-app@workspace:packages/raga-web-app"
   dependencies:
-    "@adahiya/raga-lib": "workspace:^"
+    "@adahiya/raga-types": "workspace:*"
     "@emotion/react": "npm:^11.14.0"
     "@faker-js/faker": "npm:^9.8.0"
     "@mantine/colors-generator": "npm:^8.0.2"

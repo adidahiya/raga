@@ -1,4 +1,4 @@
-import type { SwinsianLibraryPlist } from "@adahiya/raga-lib";
+import type { SwinsianLibraryPlist } from "@adahiya/raga-types";
 
 import { ClientErrors } from "../common/errorMessages";
 import { appStore } from "./appStore";

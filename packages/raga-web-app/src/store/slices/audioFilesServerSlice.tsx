@@ -1,24 +1,24 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import {
+  AudioFilesServerRoutes as ServerRoutes,
+  type AudioFilesServerStartedEventPayload,
+  ClientEventChannel,
+  ServerEventChannel,
+  type SupportedTagName,
+  type TrackDefinition,
+  type WriteAudioFileTagOptions,
+} from "@adahiya/raga-types";
 import { notifications } from "@mantine/notifications";
 import { call, type Operation, run } from "effection";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";
 
-import { AudioFilesServerRoutes as ServerRoutes } from "../../common/api/audioFilesServerAPI";
 import { withTimeout } from "../../common/asyncUtils";
 import {
   AUDIO_FILES_SERVER_PING_TIMEOUT,
   DEFAULT_AUDIO_FILES_SERVER_PORT,
   WRITE_AUDIO_FILE_TAG_TIMEOUT,
 } from "../../common/constants";
-import {
-  type AudioFilesServerStartedEventPayload,
-  ClientEventChannel,
-  ServerEventChannel,
-  type SupportedTagName,
-  type WriteAudioFileTagOptions,
-} from "../../common/events";
 import getAllConvertedMP3sRequest from "../requestFactories/allConvertedMP3sRequest";
 import convertTrackToMP3Request from "../requestFactories/convertTrackToMP3Request";
 import getDiscogsGenreTagsRequest from "../requestFactories/getDiscogsGenreTagsRequest";

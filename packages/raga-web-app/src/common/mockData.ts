@@ -2,7 +2,7 @@ import type {
   PlaylistDefinition,
   SwinsianLibraryPlist,
   SwinsianTrackDefinition,
-} from "@adahiya/raga-lib";
+} from "@adahiya/raga-types";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
 

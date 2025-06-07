@@ -1,8 +1,8 @@
-import { type PlaylistDefinition } from "./playlists.js";
-import {
-  type BasicTrackDefinition,
-  type MusicAppTrackDefinition,
-  type SwinsianTrackDefinition,
+import type { PlaylistDefinition } from "./playlists.js";
+import type {
+  BasicTrackDefinition,
+  MusicAppTrackDefinition,
+  SwinsianTrackDefinition,
 } from "./tracks.js";
 
 export interface MusicLibraryPlist {
@@ -24,4 +24,11 @@ export interface SwinsianLibraryPlist extends MusicLibraryPlist {
 
 export interface MusicAppLibraryPlist extends MusicLibraryPlist {
   Tracks: Record<number, MusicAppTrackDefinition>;
+}
+
+export interface LibraryMetadata {
+  totalTracks: number;
+  totalPlaylists: number;
+  lastModified: string;
+  longestCommonAudioFilePath: string;
 }

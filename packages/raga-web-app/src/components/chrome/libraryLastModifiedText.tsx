@@ -1,4 +1,4 @@
-import type { MusicLibraryPlist } from "@adahiya/raga-lib";
+import type { MusicLibraryPlist } from "@adahiya/raga-types";
 import { Text } from "@mantine/core";
 import { format, parseISO } from "date-fns";
 import { isString } from "radash";

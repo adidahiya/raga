@@ -1,10 +1,9 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import { ClientEventChannel, type TrackDefinition } from "@adahiya/raga-types";
 import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 import { useCallback } from "react";
 import { IoFolderOpen } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 
-import { ClientEventChannel } from "../../common/events";
 import { appStore } from "../../store/appStore";
 import styles from "./trackRowContextMenu.module.scss";
 

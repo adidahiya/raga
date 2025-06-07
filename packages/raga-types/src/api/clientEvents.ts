@@ -1,5 +1,10 @@
-import type { SwinsianLibraryPlist } from "@adahiya/raga-lib";
-import type { MessageEvent } from "electron";
+import type { SwinsianLibraryPlist } from "../models/library.js";
+
+// raga-lib should not have electron as a dependency, so we define a minimal MessageEvent type here
+interface MessageEvent {
+  data: unknown;
+  ports: unknown[];
+}
 
 // Event channels
 

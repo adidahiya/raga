@@ -1,12 +1,13 @@
-import {
-  type MusicAppLibraryPlist,
-  type MusicLibraryPlist,
-  type SwinsianLibraryPlist,
-} from "../index.js";
-import {
-  convertSwinsianTrackToMusicAppTrack,
-  type SwinsianTrackDefinition,
-} from "../models/tracks.js";
+import { extname } from "node:path";
+
+import type {
+  MusicAppLibraryPlist,
+  MusicAppTrackDefinition,
+  MusicLibraryPlist,
+  SwinsianLibraryPlist,
+  SwinsianTrackDefinition,
+} from "@adahiya/raga-types";
+
 import { log } from "../utils/log.js";
 import { forEachTrackInLibrary } from "./visitDefinitions.js";
 
@@ -43,4 +44,33 @@ export default function (
   }
 
   return musicAppLibrary;
+}
+
+export function convertSwinsianTrackToMusicAppTrack(
+  track: SwinsianTrackDefinition,
+): MusicAppTrackDefinition {
+  const extension = extname(track.Location);
+  let kind = "MPEG";
+  switch (extension) {
+    case ".aif":
+    case ".aiff":
+      kind = "AIFF";
+      break;
+    case ".flac":
+      kind = "FLAC";
+      break;
+    case ".wav":
+      kind = "WAV";
+      break;
+  }
+  return {
+    ...track,
+    "Artwork Count": 1,
+    "File Folder Count": -1,
+    "Library Folder Count": -1,
+    Kind: `${kind} audio file`,
+    Normalization: 0,
+    "Persistent ID": parseInt(track["Persistent ID"], 10).toString(16).padStart(16, "0"),
+    Loved: false,
+  };
 }

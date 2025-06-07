@@ -4,16 +4,18 @@ import { type Server } from "node:http";
 import { env } from "node:process";
 
 import { AudioFileConverter } from "@adahiya/raga-lib";
+import {
+  AudioFilesServerRoutes as ServerRoutes,
+  type AudioFilesServerStartedEventPayload,
+} from "@adahiya/raga-types";
 import { App, type Request, type Response } from "@tinyhttp/app";
 import { Client as Discogs } from "disconnect";
 import { call, type Operation, run } from "effection";
 import sirv from "sirv";
 
-import { AudioFilesServerRoutes as ServerRoutes } from "../common/api/audioFilesServerAPI";
 import { withTimeout } from "../common/asyncUtils";
 import { DEFAULT_AUDIO_FILES_SERVER_PORT } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
-import { type AudioFilesServerStartedEventPayload } from "../common/events";
 import ffmpeg from "./common/ffmpeg";
 import { log } from "./common/serverLogger";
 import { getConvertToMP3RequestHandler } from "./handlers/convertToMP3Handler";

@@ -1,10 +1,6 @@
 import { fileURLToPath } from "node:url";
 
-import type { SwinsianLibraryPlist } from "@adahiya/raga-lib";
-
-export interface LibraryMetadata {
-  longestCommonAudioFilePath: string;
-}
+import type { LibraryMetadata, SwinsianLibraryPlist } from "@adahiya/raga-types";
 
 export function computeLibraryMetadata(library: SwinsianLibraryPlist): LibraryMetadata {
   const trackLocations = Object.values(library.Tracks).map((track) => track.Location);
@@ -13,6 +9,9 @@ export function computeLibraryMetadata(library: SwinsianLibraryPlist): LibraryMe
 
   return {
     longestCommonAudioFilePath,
+    totalTracks: Object.keys(library.Tracks).length,
+    totalPlaylists: library.Playlists.length,
+    lastModified: library.Date.toISOString(),
   };
 }
 

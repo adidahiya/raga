@@ -1,11 +1,11 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
+import { ClientEventChannel, ServerEventChannel } from "@adahiya/raga-types";
 import { blueBright } from "ansis";
 import { contextBridge, ipcRenderer, type IpcRendererEvent, webUtils } from "electron";
 import { platform } from "os";
 
-import { ClientEventChannel, ServerEventChannel } from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 import { type ContextBridgeApi } from "./contextBridgeApi";
 

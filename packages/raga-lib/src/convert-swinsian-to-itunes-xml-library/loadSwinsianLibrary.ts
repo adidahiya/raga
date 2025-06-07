@@ -1,7 +1,8 @@
 import { existsSync } from "node:fs";
 
+import type { SwinsianLibraryPlist } from "@adahiya/raga-types";
+
 import { LibErrors } from "../common/errrorMessages.js";
-import type { SwinsianLibraryPlist } from "../models/library.js";
 import { loadPlistFile } from "../utils/plistUtils.js";
 
 export default function loadSwinsianLibrary(inputLibraryPath: string): SwinsianLibraryPlist {

@@ -1,6 +1,5 @@
+import { AudioFilesServerRoutes as Routes } from "@adahiya/raga-types";
 import { call, type Operation } from "effection";
-
-import { AudioFilesServerRoutes as Routes } from "../../common/api/audioFilesServerAPI";
 
 export default function* pingRequest(
   serverBaseURL: string,

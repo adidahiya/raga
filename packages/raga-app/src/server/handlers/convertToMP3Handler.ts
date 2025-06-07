@@ -1,12 +1,12 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import type { AudioFileConverter } from "@adahiya/raga-lib";
+import { type AudioFileConverter } from "@adahiya/raga-lib";
+import type { ConvertTrackToMP3RequestBody } from "@adahiya/raga-types";
 import { type Handler, type NextFunction, type Response } from "@tinyhttp/app";
 import { action, type Operation, run } from "effection";
 import { json, type ReqWithBody as RequestWithBody } from "milliparsec";
 
-import type { ConvertTrackToMP3RequestBody } from "../../common/api/audioFilesServerAPI";
 import { ServerErrors } from "../../common/errorMessages";
 import ffmpeg, { isFfmpegAvailable } from "../common/ffmpeg";
 import { log } from "../common/serverLogger";

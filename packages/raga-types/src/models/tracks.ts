@@ -1,7 +1,3 @@
-import { extname } from "node:path";
-
-import { log } from "../utils/log.js";
-
 /**
  * Basic track properties, the bare minimum required for these scripts to function and for various applications
  * to locate & manage tracks.
@@ -28,7 +24,6 @@ export function isBasicTrackDefinition(
   const expectedProperties = Object.values(BasicTrackProperty);
   const missingProperties = expectedProperties.filter((prop) => track[prop] === undefined);
   if (missingProperties.length > 0) {
-    log.info(`Track missing expected properties: ${missingProperties.join(", ")}`);
     return false;
   }
   return true;
@@ -104,7 +99,6 @@ export function isTrackDefinition(
   const expectedProperties = Object.values(TrackProperty);
   const missingProperties = expectedProperties.filter((prop) => track[prop] === undefined);
   if (missingProperties.length > 0) {
-    log.info(`Track missing expected properties: ${missingProperties.join(", ")}`);
     return false;
   }
   return true;
@@ -125,35 +119,6 @@ export type MusicAppTrackProperty =
 
 export type MusicAppTrackDefinition = TrackDefinition &
   Partial<Record<MusicAppTrackProperty, string | number | boolean>>;
-
-export function convertSwinsianTrackToMusicAppTrack(
-  track: SwinsianTrackDefinition,
-): MusicAppTrackDefinition {
-  const extension = extname(track.Location);
-  let kind = "MPEG";
-  switch (extension) {
-    case ".aif":
-    case ".aiff":
-      kind = "AIFF";
-      break;
-    case ".flac":
-      kind = "FLAC";
-      break;
-    case ".wav":
-      kind = "WAV";
-      break;
-  }
-  return {
-    ...track,
-    "Artwork Count": 1,
-    "File Folder Count": -1,
-    "Library Folder Count": -1,
-    Kind: `${kind} audio file`,
-    Normalization: 0,
-    "Persistent ID": parseInt(track["Persistent ID"], 10).toString(16).padStart(16, "0"),
-    Loved: false,
-  };
-}
 
 /** Track properties present in Swinsian library */
 export const SwinsianTrackProperty = {

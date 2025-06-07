@@ -1,6 +1,7 @@
 import "dotenv/config";
 
-import { ServerEventChannel } from "./common/events";
+import { ServerEventChannel } from "@adahiya/raga-types";
+
 import { initAppServer } from "./server/appServer";
 import { log } from "./server/common/serverLogger";
 

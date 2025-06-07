@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { TrackDefinition } from "@adahiya/raga-types";
 import { useContextMenu } from "mantine-contextmenu";
 import { useCallback } from "react";
 
