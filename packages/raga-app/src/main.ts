@@ -3,6 +3,11 @@ import "dotenv/config";
 import { join, resolve } from "node:path";
 import { platform } from "node:process";
 
+import {
+  ClientEventChannel,
+  isServerEventChannel,
+  type OpenFileLocationOptions,
+} from "@adahiya/raga-types";
 import { cyan } from "ansis";
 import {
   app,
@@ -15,11 +20,6 @@ import {
 } from "electron";
 
 import { DEBUG } from "./common/constants";
-import {
-  ClientEventChannel,
-  isServerEventChannel,
-  type OpenFileLocationOptions,
-} from "./common/events";
 import { createScopedLogger } from "./common/logUtils";
 
 // see https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr

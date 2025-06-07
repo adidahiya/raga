@@ -3,8 +3,7 @@
  * but works in a standard web browser environment.
  */
 
-import type { ClientEventChannel } from "./common/events/clientEvents";
-import type { ServerEventChannel } from "./common/events/serverEvents";
+import type { ClientEventChannel, ServerEventChannel } from "@adahiya/raga-types";
 
 export interface WebContextBridgeApi {
   platform: "darwin" | "win32" | "linux" | "web";

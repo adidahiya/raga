@@ -1,4 +1,4 @@
-import { AudioFilesServerRoutes as Routes } from "@adahiya/raga-lib";
+import { AudioFilesServerRoutes as Routes } from "@adahiya/raga-types";
 import { call, type Operation } from "effection";
 
 export default function* getAllConvertedMP3sRequest(serverBaseURL: string): Operation<Response> {

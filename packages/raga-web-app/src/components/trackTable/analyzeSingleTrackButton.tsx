@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { TrackDefinition } from "@adahiya/raga-types";
 import { Button, Tooltip } from "@mantine/core";
 
 import { useOperationCallback } from "../../hooks";

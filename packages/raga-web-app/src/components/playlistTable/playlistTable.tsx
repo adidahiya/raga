@@ -1,4 +1,4 @@
-import type { PlaylistDefinition } from "@adahiya/raga-lib";
+import type { PlaylistDefinition } from "@adahiya/raga-types";
 import { Box, Divider, type MantineStyleProps, Text } from "@mantine/core";
 import { memo, useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";

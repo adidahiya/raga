@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { TrackDefinition } from "@adahiya/raga-types";
 import { ActionIcon, Paper, Slider, Text, Tooltip } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "motion/react";

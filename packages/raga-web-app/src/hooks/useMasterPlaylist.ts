@@ -1,4 +1,4 @@
-import type { PlaylistDefinition } from "@adahiya/raga-lib";
+import type { PlaylistDefinition } from "@adahiya/raga-types";
 import { useMemo } from "react";
 
 import { appStore } from "../store/appStore";

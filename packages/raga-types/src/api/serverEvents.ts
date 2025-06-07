@@ -1,8 +1,4 @@
-import type { SwinsianLibraryPlist } from "@adahiya/raga-lib";
-
-import type { LibraryMetadata } from "../../server/libraryMeta/computeLibraryMetadata";
-
-// Event channels
+import type { LibraryMetadata, SwinsianLibraryPlist } from "../models/library.js";
 
 export const ServerEventChannel = {
   APP_SERVER_READY: "appServerReady" as const,
@@ -26,7 +22,7 @@ export interface ServerEventPayloadMap {
   [ServerEventChannel.AUDIO_FILES_SERVER_ERROR]: Error;
   [ServerEventChannel.AUDIO_FILES_SERVER_STARTED]: AudioFilesServerStartedEventPayload;
   [ServerEventChannel.AUDIO_FILES_SERVER_READY_FOR_RESTART]: never;
-  [ServerEventChannel.LOADED_SWINSIAN_LIBRARY]: LoadedSwinsianLibraryEventPayload;
+  [ServerEventChannel.LOADED_SWINSIAN_LIBRARY]: unknown; // this will be properly typed in raga-app
   [ServerEventChannel.WRITE_AUDIO_FILE_TAG_COMPLETE]: never;
   [ServerEventChannel.WRITE_MODIFIED_LIBRARY_COMPLETE]: never;
 }
@@ -38,10 +34,8 @@ export interface AudioFilesServerStartedEventPayload {
 export interface LoadedSwinsianLibraryEventPayload {
   /** Library XML plist */
   library: SwinsianLibraryPlist;
-
   /** Library metadata, computed by raga-app */
   libraryMeta: LibraryMetadata;
-
   /** Location of library XML on disk */
   filepath: string;
 }

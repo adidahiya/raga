@@ -80,6 +80,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-lib@workspace:packages/raga-lib"
   dependencies:
+    "@adahiya/raga-types": "workspace:*"
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.27"
     "@types/node": "npm:^22.15.29"
@@ -93,6 +94,15 @@ __metadata:
     npm-run-all: "npm:^4.1.5"
     plist: "npm:^3.1.0"
     prompts: "npm:^2.4.2"
+    typescript: "npm:^5.8.3"
+  languageName: unknown
+  linkType: soft
+
+"@adahiya/raga-types@workspace:*, @adahiya/raga-types@workspace:packages/raga-types":
+  version: 0.0.0-use.local
+  resolution: "@adahiya/raga-types@workspace:packages/raga-types"
+  dependencies:
+    eslint: "npm:^9.28.0"
     typescript: "npm:^5.8.3"
   languageName: unknown
   linkType: soft

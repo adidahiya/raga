@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@adahiya/raga-lib": "workspace:^",
+    "@adahiya/raga-types": "workspace:*",
     "@adahiya/raga-web-app": "workspace:^",
     "@tinyhttp/app": "^2.5.2",
     "ansis": "^4.1.0",

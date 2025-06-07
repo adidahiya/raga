@@ -1,7 +1,6 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { SupportedTagName, TrackDefinition } from "@adahiya/raga-types";
 import { useCallback, useMemo } from "react";
 
-import type { SupportedTagName } from "../../common/events";
 import { appStore } from "../../store/appStore";
 import EditableOnHover from "../common/editableOnHover";
 import styles from "./editableTrackTagValue.module.scss";

@@ -15,7 +15,7 @@
     "clean": "rm -rf dist .vite"
   },
   "dependencies": {
-    "@adahiya/raga-lib": "workspace:^",
+    "@adahiya/raga-types": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@faker-js/faker": "^9.8.0",
     "@mantine/colors-generator": "^8.0.2",

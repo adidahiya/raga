@@ -1,4 +1,4 @@
-import type { AudioFileType, TrackDefinition } from "@adahiya/raga-lib";
+import type { AudioFileType, TrackDefinition } from "@adahiya/raga-types";
 
 export const AUDIO_FILE_TYPES: AudioFileType[] = [
   "mp3",

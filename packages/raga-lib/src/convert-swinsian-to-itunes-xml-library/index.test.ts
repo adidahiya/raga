@@ -1,7 +1,8 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
 
-import type { SwinsianLibraryPlist, SwinsianTrackDefinition } from "../index.js";
+import type { SwinsianLibraryPlist, SwinsianTrackDefinition } from "@adahiya/raga-types";
+
 import convertSwinsianToItunesXmlLibrary from "./index.js";
 
 void describe("convertSwinsianToItunesXmlLibrary", () => {

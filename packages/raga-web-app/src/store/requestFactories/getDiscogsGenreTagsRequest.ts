@@ -1,8 +1,8 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { TrackDefinition } from "@adahiya/raga-types";
 import {
   AudioFilesServerRoutes as Routes,
   type GetDiscogsGenresRequestParams,
-} from "@adahiya/raga-lib";
+} from "@adahiya/raga-types";
 import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 

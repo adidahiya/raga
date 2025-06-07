@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
+import type { WriteAudioFileTagOptions } from "@adahiya/raga-types";
 import {
   File as TaglibFile,
   Id3v2FrameClassType,
@@ -12,7 +13,6 @@ import { isString } from "radash";
 
 import { DEFAULT_ID3_TAG_USER_EMAIL } from "../common/constants";
 import { ServerErrors } from "../common/errorMessages";
-import { type WriteAudioFileTagOptions } from "../common/events";
 
 /** @throws if unsuccessful */
 export function writeAudioFileTag({

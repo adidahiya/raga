@@ -1,8 +1,8 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { TrackDefinition } from "@adahiya/raga-types";
 import {
   AudioFilesServerRoutes as Routes,
   type ConvertTrackToMP3RequestBody,
-} from "@adahiya/raga-lib";
+} from "@adahiya/raga-types";
 import { call, type Operation } from "effection";
 import { pick } from "radash";
 

@@ -1,4 +1,4 @@
-import type { TrackDefinition } from "@adahiya/raga-lib";
+import type { TrackDefinition } from "@adahiya/raga-types";
 import { Text } from "@mantine/core";
 import { format } from "date-fns";
 import { useMemo } from "react";

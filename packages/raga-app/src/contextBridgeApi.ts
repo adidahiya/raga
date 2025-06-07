@@ -1,6 +1,5 @@
+import type { ClientEventChannel, ServerEventChannel } from "@adahiya/raga-types";
 import type { IpcRendererEvent } from "electron";
-
-import type { ClientEventChannel, ServerEventChannel } from "./common/events";
 
 /**
  * N.B. Effection generators were tricky to get working in the preload script, so this API uses

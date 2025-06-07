@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import type { BasicTrackDefinition } from "@adahiya/raga-types";
 import ffmpeg from "fluent-ffmpeg";
 
 import {
@@ -11,7 +12,6 @@ import {
   LIB_PACKAGE_NAME,
 } from "../common/constants.js";
 import { LibErrors } from "../common/errrorMessages.js";
-import type { BasicTrackDefinition } from "../models/tracks.js";
 import { log } from "../utils/log.js";
 
 export interface MP3ConversionOptions {

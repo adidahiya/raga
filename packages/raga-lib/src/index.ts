@@ -2,7 +2,6 @@ export {
   default as AudioFileConverter,
   type MP3ConversionOptions,
 } from "./audio-file-converter/audioFileConverter.js";
-export * from "./common/api/audioFilesServerAPI.js";
 export {
   getDefaultSwinsianExportFolder,
   getOutputLibraryPath,
@@ -13,7 +12,4 @@ export {
   loadSwinsianLibrary,
   serializeLibraryPlist,
 } from "./convert-swinsian-to-itunes-xml-library/index.js";
-export { AudioFileType } from "./models/audioFile.js";
-export type * from "./models/library.js";
-export type * from "./models/playlists.js";
-export * from "./models/tracks.js";
+export * from "./utils/index.js";

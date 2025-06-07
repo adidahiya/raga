@@ -1,0 +1,31 @@
+{
+  "name": "@adahiya/raga-types",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "check-lint": "eslint .",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf lib/*",
+    "dev": "yarn build --watch",
+    "lint-fix": "eslint --fix ."
+  },
+  "devDependencies": {
+    "eslint": "^9.28.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "author": {
+    "name": "Adi Dahiya",
+    "email": "adi.dahiya14@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/adidahiya/raga.git"
+  },
+  "license": "MIT"
+}

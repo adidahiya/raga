@@ -1,4 +1,4 @@
-import type { AudioFileType } from "@adahiya/raga-lib";
+import type { AudioFileType } from "@adahiya/raga-types";
 import { Badge, type BadgeProps, Tooltip } from "@mantine/core";
 
 export interface AudioFileTypeTagProps extends BadgeProps {
