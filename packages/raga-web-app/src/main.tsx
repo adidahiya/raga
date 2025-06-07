@@ -1,3 +1,4 @@
+import "./setupReactScan"; // Initialize react-scan
 import "./webApi"; // Initialize the web API
 
 import { createLogWriter } from "@roarr/browser-log-writer";
