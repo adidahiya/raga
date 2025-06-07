@@ -1,11 +1,11 @@
 import type { TrackDefinition } from "@adahiya/raga-lib";
+import { AudioFilesServerRoutes as ServerRoutes } from "@adahiya/raga-lib";
 import { notifications } from "@mantine/notifications";
 import { call, type Operation, run } from "effection";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 import type { ErrorObject } from "serialize-error";
 
-import { AudioFilesServerRoutes as ServerRoutes } from "../../common/api/audioFilesServerAPI";
 import { withTimeout } from "../../common/asyncUtils";
 import {
   AUDIO_FILES_SERVER_PING_TIMEOUT,

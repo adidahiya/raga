@@ -2,6 +2,7 @@ export {
   default as AudioFileConverter,
   type MP3ConversionOptions,
 } from "./audio-file-converter/audioFileConverter.js";
+export * from "./common/api/audioFilesServerAPI.js";
 export {
   getDefaultSwinsianExportFolder,
   getOutputLibraryPath,
