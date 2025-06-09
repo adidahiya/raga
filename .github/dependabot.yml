@@ -8,8 +8,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "adidahiya"
     groups:
       build-tooling:
         patterns:
