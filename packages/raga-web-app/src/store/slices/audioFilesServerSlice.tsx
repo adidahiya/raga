@@ -283,7 +283,7 @@ function initAudioFilesServer(set: AppStoreSet) {
     window.api.handleOnce<AudioFilesServerStartedEventPayload>(
       ServerEventChannel.AUDIO_FILES_SERVER_STARTED,
       (data) => {
-        console.log("[AudioFilesServerSlice] Audio files server started", data);
+        log.info(`[client] Audio files server started: ${data.audioConverterTemporaryFolder}`);
         set((state) => {
           notifications.show({
             title: "Audio files server started",

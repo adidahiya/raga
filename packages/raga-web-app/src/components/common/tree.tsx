@@ -143,7 +143,7 @@ function ControlledTree<T extends object>({
     [tree],
   );
 
-  const handleLabelClick = useCallback(
+  const handleSingleSelection = useCallback(
     (nodeValue: string, selected: boolean) => {
       if (selectionMode !== "single") {
         return;
@@ -151,6 +151,7 @@ function ControlledTree<T extends object>({
 
       if (selected) {
         tree.deselect(nodeValue);
+        onSelect?.([]);
       } else {
         tree.select(nodeValue);
         const selectedNode = findNodeById(nodes, mantineNodeValueToId(nodeValue));
@@ -186,6 +187,10 @@ function ControlledTree<T extends object>({
             [styles.selectOnClick]: selectionMode === "single",
             [styles.selectedPath]: selected,
           })}
+          onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+            handleSingleSelection(node.value, selected);
+            elementProps.onClick(event);
+          }}
         >
           {selectionMode === "multiple" && (
             <Checkbox.Indicator
@@ -212,18 +217,13 @@ function ControlledTree<T extends object>({
             </ActionIcon>
           )}
 
-          <div
-            className={styles.labelContainer}
-            onClick={() => {
-              handleLabelClick(node.value, selected);
-            }}
-          >
+          <div className={styles.labelContainer}>
             <span>{node.label}</span>
           </div>
         </div>
       );
     },
-    [selectionMode, tree, handleCheckboxClick, handleExpandClick, handleLabelClick],
+    [selectionMode, tree, handleCheckboxClick, handleExpandClick, handleSingleSelection],
   );
 
   // Update tree state controlled selection changes
@@ -266,33 +266,7 @@ function ControlledTree<T extends object>({
   );
 }
 
-export default memo(ControlledTree, (prevProps, nextProps) => {
-  // Custom comparison to prevent re-renders when array contents haven't changed
-  if (prevProps.selectionMode !== nextProps.selectionMode) {
-    return false;
-  }
-
-  if (prevProps.nodes !== nextProps.nodes) {
-    return false;
-  }
-
-  if (prevProps.onSelect !== nextProps.onSelect) {
-    return false;
-  }
-
-  // Deep comparison for selectedNodeIds array
-  if (prevProps.selectedNodeIds.length !== nextProps.selectedNodeIds.length) {
-    return false;
-  }
-
-  for (let i = 0; i < prevProps.selectedNodeIds.length; i++) {
-    if (prevProps.selectedNodeIds[i] !== nextProps.selectedNodeIds[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}) as typeof ControlledTree;
+export default memo(ControlledTree) as typeof ControlledTree;
 
 // UTILITIES
 // -------------------------------------------------------------------------------------------------

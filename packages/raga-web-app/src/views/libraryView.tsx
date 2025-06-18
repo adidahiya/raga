@@ -24,8 +24,12 @@ export default function LibraryView() {
   const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
 
   const handlePlaylistSelect = useCallback(
-    ([playlistId]: string[]) => {
-      setSelectedPlaylistId(playlistId);
+    (playlistIds: string[]) => {
+      if (playlistIds.length === 0) {
+        setSelectedPlaylistId(undefined);
+      } else {
+        setSelectedPlaylistId(playlistIds[0]);
+      }
     },
     [setSelectedPlaylistId],
   );
