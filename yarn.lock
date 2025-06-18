@@ -9973,9 +9973,9 @@ __metadata:
   linkType: hard
 
 "radash@npm:^12.1.0":
-  version: 12.1.0
-  resolution: "radash@npm:12.1.0"
-  checksum: 10/4add14a04b5a82811f2d18d3d3b9244c1f08bfc0ee4cec8093040077ad5bc82884f63c29952a3b29f424ef1f2188475b2d5c6005d9620c9f200378e6cfdcb2f6
+  version: 12.1.1
+  resolution: "radash@npm:12.1.1"
+  checksum: 10/2145709ac952009b58ff9135661cffd695ee02ee0820c8de577c10372d8c91549a74c97e2743e58910572ed3ea3aab598a8c03217313b04f6073f9257f3d965b
   languageName: node
   linkType: hard
 
