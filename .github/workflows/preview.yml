@@ -17,8 +17,8 @@ jobs:
           node-version: "22"
       - name: Enable Corepack
         run: corepack enable
-      - name: Use Yarn 4.7.0
-        run: corepack prepare yarn@4.7.0 --activate
+      - name: Use Yarn 4.9.2
+        run: corepack prepare yarn@4.9.2 --activate
       - run: yarn
       - run: yarn build:web
       - uses: rossjrw/pr-preview-action@v1.6.1
