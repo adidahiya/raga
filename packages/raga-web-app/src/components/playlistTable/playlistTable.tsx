@@ -42,9 +42,14 @@ function PlaylistTable({
   const handleSelect = useCallback(
     (nodes: TreeNode<PlaylistDefinition>[]) => {
       if (selectionMode === "single") {
-        const firstNode = nodes[0];
-        log.debug(`[client] selected playlist ${firstNode.id}: '${firstNode.data.Name}'`);
-        onSelect?.([firstNode.id]);
+        if (nodes.length === 0) {
+          // No playlist selected
+          onSelect?.([]);
+        } else {
+          const firstNode = nodes[0];
+          log.debug(`[client] selected playlist ${firstNode.id}: '${firstNode.data.Name}'`);
+          onSelect?.([firstNode.id]);
+        }
       } else if (selectionMode === "multiple") {
         onSelect?.(nodes.map((n) => n.id));
       }
@@ -74,7 +79,7 @@ function PlaylistTable({
           nodes={playlistDefNodes}
           selectionMode={selectionMode}
           selectedNodeIds={selectedNodeIds}
-          onSelect={selectionMode === "none" ? undefined : handleSelect}
+          onSelect={handleSelect}
         />
       </div>
     </Box>
