@@ -11,7 +11,7 @@ import { appStore } from "../../store/appStore";
 import AnalyzeSingleTrackButton from "../trackTable/analyzeSingleTrackButton";
 import styles from "./trackBPMOverlay.module.scss";
 
-const SLIDER_TRANSITION = { type: "tween", duration: 0.2, ease: "easeInOut" };
+const SLIDER_TRANSITION = { type: "tween" as const, duration: 0.2, ease: "easeInOut" as const };
 
 export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
   const playbackRate = appStore.use.audioPlaybackRate();
