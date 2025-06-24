@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@types/chroma-js": "^3.1.1",
-    "@types/node": "^22.15.32",
+    "@types/node": "^24.0.3",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
