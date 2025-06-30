@@ -35,7 +35,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     disconnect: "npm:^1.2.2"
     effection: "npm:^3.5.0"
-    electron: "npm:^36.4.0"
+    electron: "npm:^37.1.0"
     electron-extension-installer: "npm:^1.2.0"
     eslint: "npm:^9.29.0"
     milliparsec: "npm:^5.0.2"
@@ -5056,16 +5056,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^36.4.0":
-  version: 36.5.0
-  resolution: "electron@npm:36.5.0"
+"electron@npm:^37.1.0":
+  version: 37.1.0
+  resolution: "electron@npm:37.1.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^22.7.7"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/856c3f6aa4d557c7d652471e84f4964c2eea55ba7d2b63118ed12ac8040ad245d2b4a16a54b84d275dcb1001e31821533e0a68862eaf3c5985b5e996848f12aa
+  checksum: 10/0df0a6608e1e57342ad42280fff0abe524bf82d131cb858a826624af20165c6037b100dbdb207ea7ac746a5ca521438708e9f1c05f37a73c985e960a2a34e6e6
   languageName: node
   linkType: hard
 
