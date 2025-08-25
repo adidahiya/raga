@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/dedent": "^0.7.2",
-    "@types/node": "^22.15.32",
+    "@types/node": "^24.3.0",
     "@types/prompts": "^2.4.9",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3"
