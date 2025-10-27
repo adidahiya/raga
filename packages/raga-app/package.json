@@ -59,7 +59,7 @@
     "react-devtools": "^6.1.2",
     "sass": "^1.89.2",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^7.1.12"
   },
   "keywords": [],
   "author": {
