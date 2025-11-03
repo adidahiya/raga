@@ -25,7 +25,7 @@ __metadata:
     "@electron-forge/plugin-vite": "npm:^7.8.1"
     "@tinyhttp/app": "npm:^2.5.2"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^22.15.32"
+    "@types/node": "npm:^24.10.0"
     "@types/react": "npm:^19.1.8"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^19.1.6"
@@ -65,7 +65,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^22.15.32"
+    "@types/node": "npm:^24.10.0"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.6.0"
     eslint: "npm:^9.29.0"
@@ -84,7 +84,7 @@ __metadata:
     "@adahiya/raga-types": "workspace:*"
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.27"
-    "@types/node": "npm:^22.15.32"
+    "@types/node": "npm:^24.10.0"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^4.1.0"
@@ -129,7 +129,7 @@ __metadata:
     "@roarr/browser-log-writer": "npm:^1.3.0"
     "@table-library/react-table-library": "npm:^4.1.15"
     "@types/chroma-js": "npm:^3.1.1"
-    "@types/node": "npm:^22.15.32"
+    "@types/node": "npm:^24.10.0"
     "@types/pluralize": "npm:^0.0.33"
     "@types/react": "npm:^19.1.8"
     "@types/react-dom": "npm:^19.1.6"
@@ -2835,9 +2835,9 @@ __metadata:
   linkType: hard
 
 "@types/chroma-js@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "@types/chroma-js@npm:3.1.1"
-  checksum: 10/24770bd645425a1d90e3651dbb18bc5977290a2d2fc6e9f32d3892d4c43c1e9f554fb324cd0f4e20a23b734ee652278330a0d331973a7da824e0c15192ba129b
+  version: 3.1.2
+  resolution: "@types/chroma-js@npm:3.1.2"
+  checksum: 10/f94b9c398d026198c2840bd5dc7243cd0f6ace7f18843b8cdb91946be909b527455da23c1ed55a3fd46f42f57f8ec8b1f304620d3444389c5cc87fb5d3f6e3c2
   languageName: node
   linkType: hard
 
@@ -2856,11 +2856,11 @@ __metadata:
   linkType: hard
 
 "@types/fluent-ffmpeg@npm:^2.1.27":
-  version: 2.1.27
-  resolution: "@types/fluent-ffmpeg@npm:2.1.27"
+  version: 2.1.28
+  resolution: "@types/fluent-ffmpeg@npm:2.1.28"
   dependencies:
     "@types/node": "npm:*"
-  checksum: 10/270e428381b18b2049f5bbd77deeaae3ca80cca95006e998596c5403c7fcaabeb5f93958f423e6d27dd6709ce9d2b8c32541e49cbec73f7a9d9e74648509fe82
+  checksum: 10/62efeac85b510e5175a0cff1277a25412636fa5b734089d6319db182ab5aeea9fa635944a0614f132a9f04bc425b4093cacab516812df53be2fd43430ef0ba8f
   languageName: node
   linkType: hard
 
@@ -2929,7 +2929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.15.32, @types/node@npm:^22.7.7":
+"@types/node@npm:*, @types/node@npm:^22.7.7":
   version: 22.15.32
   resolution: "@types/node@npm:22.15.32"
   dependencies:
@@ -2951,6 +2951,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10/76cc44487faa0bf5302c84e5317de4b9727ea4e4b86d59d18d25435f4ccd7e6c584614dea061256f24a097c25a1d82dac1cd134357b42ae28006ba113c97f490
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^24.10.0":
+  version: 24.10.0
+  resolution: "@types/node@npm:24.10.0"
+  dependencies:
+    undici-types: "npm:~7.16.0"
+  checksum: 10/bc3abd9adc61423b1a72324208f3fcfe4f957b9fc8b9e81bf3fed584deb0b40f0e2af63cd0e2afa8f408d06f14bdba899ac638ac619f646badf8e72de246c052
   languageName: node
   linkType: hard
 
@@ -11976,6 +11985,13 @@ __metadata:
   version: 6.21.0
   resolution: "undici-types@npm:6.21.0"
   checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~7.16.0":
+  version: 7.16.0
+  resolution: "undici-types@npm:7.16.0"
+  checksum: 10/db43439f69c2d94cc29f75cbfe9de86df87061d6b0c577ebe9bb3255f49b22c50162a7d7eb413b0458b6510b8ca299ac7cff38c3a29fbd31af9f504bcf7fbc0d
   languageName: node
   linkType: hard
 
