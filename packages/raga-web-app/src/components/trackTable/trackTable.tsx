@@ -225,6 +225,9 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   const clearFilterQuery = useCallback(() => {
     setFilterQuery("");
   }, []);
+
+  // Track hovered row for hover styling
+  const [hoveredRow, setHoveredRow] = useState<number | undefined>(undefined);
   const filteredTrackDefNodes = useMemo(() => {
     if (filterQuery.trim() === "") {
       return allTrackDefNodes;
@@ -393,7 +396,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   // Theme
   const theme = useGridTheme();
 
-  // Handle row highlighting for active track
+  // Handle row highlighting for active track and hover
   const activeTrackId = appStore.use.activeTrackId();
   const getRowThemeOverride = useCallback(
     (row: number) => {
@@ -404,10 +407,27 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
           bgCell: theme.bgCellMedium,
         };
       }
+      // Apply hover styling
+      if (row === hoveredRow) {
+        return {
+          bgCell: theme.bgHeaderHovered,
+        };
+      }
       return undefined;
     },
-    [sortedTrackDefs, activeTrackId, theme.bgCellMedium],
+    [sortedTrackDefs, activeTrackId, theme.bgCellMedium, theme.bgHeaderHovered, hoveredRow],
   );
+
+  // Handle item hover to track which row is being hovered
+  const handleItemHovered = useCallback((args: { location: readonly [number, number] }) => {
+    const [, row] = args.location;
+    // Row is -1 when hovering over header, ignore those
+    if (row >= 0) {
+      setHoveredRow(row);
+    } else {
+      setHoveredRow(undefined);
+    }
+  }, []);
 
   // const colorScheme = useComputedColorScheme("light");
   const mantineTheme = useMantineTheme();
@@ -443,7 +463,9 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         }}
         getCellsForSelection={true}
         rowMarkers="none"
+        rowSelect="multi"
         freezeColumns={1}
+        onItemHovered={handleItemHovered}
       />
     </div>
   );
@@ -665,14 +687,18 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
 
   const handleSelectionChange = useCallback(
     (newSelection: GridSelection) => {
-      if (newSelection.rows.length === 1) {
-        const selectedRow = newSelection.rows.toArray()[0];
+      // Derive selected row from cell selection when rowMarkers="none"
+      // current.cell is [col, row], so we get the row from index 1
+      let selectedRow: number | undefined;
+      if (newSelection.current?.cell) {
+        selectedRow = newSelection.current.cell[1];
+      }
+
+      if (selectedRow !== undefined) {
         const track = sortedTrackDefs[selectedRow];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (track) {
-          log.debug(
-            `[client] selected track ${String(track.id)} in current playlist ${playlistId}`,
-          );
+          log.debug(`[client] selected track ${String(track.id)} in playlist ${playlistId}`);
           setSelectedTrackId(track.id);
         }
       }
@@ -680,16 +706,23 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
     [playlistId, setSelectedTrackId, sortedTrackDefs],
   );
 
-  // Create selection object
+  // Create selection based on selectedTrackId
+  // With rowMarkers="none", we use cell selection (current) not row selection (rows)
   const selection = useMemo((): GridSelection => {
     const selectedIndex = sortedTrackDefs.findIndex((track) => track.id === selectedTrackId);
     if (selectedIndex >= 0) {
+      // Use cell selection for visual highlighting
       return {
         columns: CompactSelection.empty(),
         rows: CompactSelection.fromSingleSelection(selectedIndex),
-        current: undefined,
+        current: {
+          cell: [0, selectedIndex] as [number, number],
+          range: { x: 0, y: selectedIndex, width: 1, height: 1 },
+          rangeStack: [],
+        },
       };
     }
+    // No valid selection
     return {
       columns: CompactSelection.empty(),
       rows: CompactSelection.empty(),
