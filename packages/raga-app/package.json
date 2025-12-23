@@ -38,10 +38,10 @@
     "vite-plugin-html-config": "^2.0.2"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.8.1",
-    "@electron-forge/maker-deb": "^7.8.1",
-    "@electron-forge/maker-zip": "^7.8.1",
-    "@electron-forge/plugin-vite": "^7.8.1",
+    "@electron-forge/cli": "^7.10.2",
+    "@electron-forge/maker-deb": "^7.10.2",
+    "@electron-forge/maker-zip": "^7.10.2",
+    "@electron-forge/plugin-vite": "^7.10.2",
     "@types/app-root-dir": "^0.1.4",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
