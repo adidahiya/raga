@@ -523,6 +523,8 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
 
   // Theme
   const theme = useGridTheme();
+  const colorScheme = useComputedColorScheme();
+  const { colors } = useMantineTheme();
 
   // Handle row highlighting for active track and hover
   const activeTrackId = appStore.use.activeTrackId();
@@ -537,6 +539,12 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
       const isSelectionEdge = (isSelected && !isPrevSelected) || (!isSelected && isPrevSelected);
       if (isSelectionEdge) {
         themeOverride.horizontalBorderColor = theme.textDark;
+      }
+
+      // Apply alternating row background (odd rows get dim gray)
+      const isDark = colorScheme === "dark";
+      if (row % 2 === 1) {
+        themeOverride.bgCell = isDark ? colors.dark[6] : colors.gray[0];
       }
 
       // Apply active track background
@@ -559,6 +567,8 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
       theme.textDark,
       hoveredRow,
       selection,
+      colorScheme,
+      colors,
     ],
   );
 
@@ -573,9 +583,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
     }
   }, []);
 
-  // const colorScheme = useComputedColorScheme("light");
   const mantineTheme = useMantineTheme();
-  const colorScheme = useComputedColorScheme();
   const ratingCellRenderer = useMemo(() => {
     return getRatingCellRenderer(mantineTheme, colorScheme);
   }, [mantineTheme, colorScheme]);
@@ -794,10 +802,11 @@ function useGridTheme(): Partial<GridTheme> {
       bgHeader: isDark ? colors.dark[7] : colors.gray[0],
       bgHeaderHasFocus: isDark ? colors.dark[6] : colors.gray[1],
       bgHeaderHovered: isDark ? colors.dark[6] : colors.gray[1],
-      borderColor: isDark ? colors.gray[7] : colors.gray[3],
-      textDark: isDark ? colors.gray[0] : colors.dark[9],
-      textHeader: isDark ? colors.gray[0] : colors.dark[9],
-      textMedium: isDark ? colors.gray[3] : colors.gray[7],
+      borderColor: "transparent",
+      headerBottomBorderColor: isDark ? colors.gray[8] : colors.gray[3],
+      textDark: isDark ? colors.gray[3] : colors.gray[8],
+      textHeader: isDark ? colors.gray[1] : colors.dark[8],
+      textMedium: isDark ? colors.gray[4] : colors.gray[6],
       textLight: isDark ? colors.gray[5] : colors.gray[5],
       textBubble: isDark ? colors.gray[0] : colors.dark[9],
       bgBubble: isDark ? colors.dark[5] : colors.gray[2],
