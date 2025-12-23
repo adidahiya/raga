@@ -25,8 +25,9 @@ export function isClientEventChannel(channel: string): channel is ClientEventCha
 
 // Event payloads
 
-export interface ClientMessageEvent<C extends ClientEventChannel = ClientEventChannel>
-  extends MessageEvent {
+export interface ClientMessageEvent<
+  C extends ClientEventChannel = ClientEventChannel,
+> extends MessageEvent {
   data: {
     channel: C;
     data: ClientEventPayloadMap[C];
