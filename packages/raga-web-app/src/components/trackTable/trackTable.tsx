@@ -693,6 +693,7 @@ function useGridTheme(): Partial<GridTheme> {
 
 function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackDefinitionNode[] }) {
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
+  const setActiveTrackId = appStore.use.setActiveTrackId();
   const trackTableSort = appStore.use.trackTableSort();
   const setTrackTableSort = appStore.use.setTrackTableSort();
 
@@ -701,6 +702,10 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
     selectedRows: new Set(),
     lastClickedRow: undefined,
   });
+
+  // Track last click for double-click detection (since onCellActivated doesn't fire reliably)
+  const lastClickRef = useRef<{ row: number; timestamp: number } | null>(null);
+  const DOUBLE_CLICK_THRESHOLD_MS = 400;
 
   const sortedTrackDefs = useMemo(() => {
     const { sortKey, reverse } = trackTableSort;
@@ -731,15 +736,51 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
     setSelectedTrackId(undefined);
   }, [setSelectedTrackId]);
 
-  // Handle cell click with modifier key support for multi-selection
+  // Handle cell click with modifier key support for multi-selection and double-click detection
   const handleCellClicked = useCallback(
     (cell: Item, event: CellClickedEventArgs) => {
       const [, row] = cell;
+      const now = Date.now();
+      const hasModifier = event.shiftKey || event.metaKey || event.ctrlKey;
+
       // If clicking on empty space (row out of bounds), clear selection
       if (row >= sortedTrackDefs.length) {
         clearSelection();
+        lastClickRef.current = null;
         return;
       }
+
+      // Detect double-click: same row, within threshold, no modifier keys
+      //
+      // NOTE: We implement manual double-click detection here instead of using glide-data-grid's
+      // `onCellActivated` event because that event does not fire reliably in our configuration.
+      // We tried setting `cellActivationBehavior="double-click"` and adding an `onCellActivated`
+      // handler, but the event never fired despite double-clicks being registered. This may be
+      // related to our cell configuration (allowOverlay, readonly settings) or row selection mode.
+      // As a workaround, we track click timestamps ourselves to detect double-clicks.
+      const lastClick = lastClickRef.current;
+      const isDoubleClick =
+        !hasModifier &&
+        lastClick !== null &&
+        lastClick.row === row &&
+        now - lastClick.timestamp < DOUBLE_CLICK_THRESHOLD_MS;
+
+      if (isDoubleClick) {
+        // Double-click detected: load track in player
+        const track = sortedTrackDefs[row];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (track) {
+          setActiveTrackId(track.id);
+          setSelectedTrackId(track.id);
+        }
+        lastClickRef.current = null; // Reset to prevent triple-click triggering again
+        return;
+      }
+
+      // Update last click for future double-click detection
+      lastClickRef.current = { row, timestamp: now };
+
+      // Handle selection
       const nextState = computeNextSelection(selectionState, {
         row,
         shiftKey: event.shiftKey,
@@ -747,16 +788,8 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
         ctrlKey: event.ctrlKey,
       });
       setSelectionState(nextState);
-
-      // Update primary selection in app store (for backwards compatibility)
-      const track = sortedTrackDefs[row];
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (track) {
-        log.debug(`[client] selected track ${String(track.id)} in playlist ${playlistId}`);
-        setSelectedTrackId(track.id);
-      }
     },
-    [selectionState, sortedTrackDefs, setSelectedTrackId, playlistId, clearSelection],
+    [selectionState, sortedTrackDefs, clearSelection, setActiveTrackId, setSelectedTrackId],
   );
 
   // Create selection based on selectionState for multi-row selection
