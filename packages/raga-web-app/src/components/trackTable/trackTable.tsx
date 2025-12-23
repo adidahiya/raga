@@ -25,8 +25,8 @@ import { run } from "effection";
 import { unique } from "radash";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
-import { useShallow } from "zustand/shallow";
 import { useResizeObserver } from "usehooks-ts";
+import { useShallow } from "zustand/shallow";
 
 import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
