@@ -26,23 +26,21 @@ class WebApi implements WebContextBridgeApi {
   private pendingCallbacks = new Map<string, ((payload: unknown) => void)[]>();
 
   send(channel: ClientEventChannel, ...args: unknown[]): void {
-    console.warn(`[WebApi] IPC send called with channel: ${String(channel)}`, args);
+    console.warn(`[WebApi] IPC send called with channel: ${channel}`, args);
     // In a real implementation, this could send requests to a backend API
   }
 
   handleOnce<T = unknown>(channel: ServerEventChannel, callback: (payload: T) => void): void {
-    console.warn(`[WebApi] IPC handleOnce called with channel: ${String(channel)}`);
-    const channelKey = String(channel);
-    const callbacks = this.pendingCallbacks.get(channelKey) ?? [];
+    console.warn(`[WebApi] IPC handleOnce called with channel: ${channel}`);
+    const callbacks = this.pendingCallbacks.get(channel) ?? [];
     callbacks.push(callback as (payload: unknown) => void);
-    this.pendingCallbacks.set(channelKey, callbacks);
+    this.pendingCallbacks.set(channel, callbacks);
   }
 
   waitForResponse<T = unknown>(channel: ServerEventChannel, _timeoutMs = 0): () => Promise<T> {
-    console.warn(`[WebApi] IPC waitForResponse called with channel: ${String(channel)}`);
+    console.warn(`[WebApi] IPC waitForResponse called with channel: ${channel}`);
     // Return a function that returns a rejected promise for now - in a real implementation this would wait for backend response
-    return () =>
-      Promise.reject(new Error(`Web API does not support IPC channel: ${String(channel)}`));
+    return () => Promise.reject(new Error(`Web API does not support IPC channel: ${channel}`));
   }
 
   getFilePath(file: File | null | undefined): string | undefined {

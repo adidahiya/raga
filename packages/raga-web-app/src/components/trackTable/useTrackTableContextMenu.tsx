@@ -72,9 +72,15 @@ export default function useTrackTableContextMenu({
           }),
           isDefaultPrevented: () => false,
           isPropagationStopped: () => false,
-          persist: () => {},
-          preventDefault: () => {},
-          stopPropagation: () => {},
+          persist: () => {
+            // do nothing
+          },
+          preventDefault: () => {
+            // do nothing
+          },
+          stopPropagation: () => {
+            // do nothing
+          },
           type: "contextmenu",
           timeStamp: Date.now(),
         } as unknown as React.MouseEvent;

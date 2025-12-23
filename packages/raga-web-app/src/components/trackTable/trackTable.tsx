@@ -17,7 +17,7 @@ import {
 import { Stack, Text, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import classNames from "classnames";
 import { unique } from "radash";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/shallow";
 
@@ -294,7 +294,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         smoothScrollX={true}
         smoothScrollY={true}
         theme={theme}
-        onCellContextMenu={(cell, args) => {
+        onCellContextMenu={(_cell, args) => {
           args.preventDefault();
           handleContextMenu(args);
         }}
@@ -493,14 +493,12 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
   const trackTableSort = appStore.use.trackTableSort();
   const setTrackTableSort = appStore.use.setTrackTableSort();
-  const [sortedTrackDefs, setSortedTrackDefs] = useState(trackDefNodes.nodes);
 
-  // react to changes in track list and sort column (as well as initial sort column read from local storage)
-  useEffect(() => {
+  const sortedTrackDefs = useMemo(() => {
     const { sortKey, reverse } = trackTableSort;
-    // N.B. need to copy the array since sorting is done in place
-    const sorted = [...trackDefNodes.nodes].sort(sortFns[sortKey]);
-    setSortedTrackDefs(reverse ? sorted.reverse() : sorted);
+    const sortFn = sortFns[sortKey];
+    const sorted = trackDefNodes.nodes.slice().sort(sortFn);
+    return reverse ? sorted.reverse() : sorted;
   }, [trackDefNodes.nodes, trackTableSort]);
 
   const handleHeaderClick = useCallback(

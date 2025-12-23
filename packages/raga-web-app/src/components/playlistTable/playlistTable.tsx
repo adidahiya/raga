@@ -121,21 +121,22 @@ function usePlaylistTreeNodes(): TreeNode<PlaylistDefinition>[] {
     [folderChildrenByParentId],
   );
 
-  const recursivelyGetFolderChildren: (
-    playlistId: string,
-  ) => TreeNode<PlaylistDefinition>[] | undefined = useCallback(
-    (playlistId: string) =>
-      playlistIsFolderWithChildren(playlistId)
-        ? folderChildrenByParentId[playlistId]!.map(
-            (def: PlaylistDefinition): TreeNode<PlaylistDefinition> => ({
-              children: recursivelyGetFolderChildren(def["Playlist Persistent ID"]),
-              data: def,
-              id: def["Playlist Persistent ID"],
-              label: def.Name,
-              parentId: def["Parent Persistent ID"],
-            }),
-          )
-        : undefined,
+  const recursivelyGetFolderChildren = useCallback(
+    function buildChildren(playlistId: string): TreeNode<PlaylistDefinition>[] | undefined {
+      if (!playlistIsFolderWithChildren(playlistId)) {
+        return undefined;
+      }
+
+      return folderChildrenByParentId[playlistId]!.map(
+        (def: PlaylistDefinition): TreeNode<PlaylistDefinition> => ({
+          children: buildChildren(def["Playlist Persistent ID"]),
+          data: def,
+          id: def["Playlist Persistent ID"],
+          label: def.Name,
+          parentId: def["Parent Persistent ID"],
+        }),
+      );
+    },
     [folderChildrenByParentId, playlistIsFolderWithChildren],
   );
 

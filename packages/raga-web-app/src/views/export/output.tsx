@@ -1,5 +1,5 @@
 import { Button, FileInput } from "@mantine/core";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { IoCheckmark, IoSave } from "react-icons/io5";
 
 import { useOperationCallback } from "../../hooks";
@@ -10,7 +10,9 @@ export function Output() {
   const setLibraryOutputFilepath = appStore.use.setLibraryOutputFilepath();
   const writeModifiedLibrary = appStore.use.writeModifiedLibrary();
   const libraryWriteState = appStore.use.libraryWriteState();
-  const lastLibraryWriteState = useRef(libraryWriteState);
+  // isCompletingRef prevents overlapping export triggers without causing rerenders;
+  // isExportComplete drives the UI state for showing the completion message.
+  const isCompletingRef = useRef(false);
   const [isExportComplete, setIsExportComplete] = useState(false);
 
   const handleOutputFilepathInputChange = useCallback(
@@ -23,19 +25,23 @@ export function Output() {
     },
     [setLibraryOutputFilepath],
   );
-  const handleWriteModifiedLibrary = useOperationCallback(writeModifiedLibrary);
-
-  useEffect(() => {
-    if (libraryWriteState === "none" && lastLibraryWriteState.current === "busy") {
-      setIsExportComplete(true);
-    }
-
-    if (libraryWriteState === "ready" && lastLibraryWriteState.current !== "ready") {
+  const handleWriteModifiedLibrary = useOperationCallback(
+    function* () {
+      // prevent racing click interactions from toggling completion incorrectly
+      if (isCompletingRef.current) {
+        return;
+      }
+      isCompletingRef.current = true;
       setIsExportComplete(false);
-    }
-
-    lastLibraryWriteState.current = libraryWriteState;
-  }, [libraryWriteState]);
+      try {
+        yield* writeModifiedLibrary();
+        setIsExportComplete(true);
+      } finally {
+        isCompletingRef.current = false;
+      }
+    },
+    [writeModifiedLibrary],
+  );
 
   return (
     <>
