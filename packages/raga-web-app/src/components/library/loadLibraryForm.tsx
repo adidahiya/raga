@@ -76,7 +76,6 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
   const previouslyUsedLibaries = appStore.use.previouslyUsedLibraries();
   const setLibraryInputFilepath = appStore.use.setLibraryInputFilepath();
   const clearPreviouslyUsedLibraries = appStore.use.clearPreviouslyUsedLibraries();
-  const handleClear = useCallback(clearPreviouslyUsedLibraries, [clearPreviouslyUsedLibraries]);
 
   if (previouslyUsedLibaries.size === 0) {
     return null;
@@ -107,7 +106,7 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
               size="compact-sm"
               color="red"
               variant="subtle"
-              onClick={handleClear}
+              onClick={clearPreviouslyUsedLibraries}
               rightSection={<IoClose size={14} />}
             >
               Clear all recent libraries

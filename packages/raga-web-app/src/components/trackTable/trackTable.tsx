@@ -23,7 +23,7 @@ import type {
 import { type RowHeight, Virtualized } from "@table-library/react-table-library/virtualized";
 import classNames from "classnames";
 import { unique } from "radash";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { IoChevronDown, IoChevronDownOutline, IoChevronUp } from "react-icons/io5";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/shallow";
@@ -461,14 +461,11 @@ function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefin
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
   const trackTableSort = appStore.use.trackTableSort();
   const setTrackTableSort = appStore.use.setTrackTableSort();
-  const [sortedTrackDefs, setSortedTrackDefs] = useState(trackDefNodes.nodes);
 
-  // react to changes in track list and sort column (as well as initial sort column read from local storage)
-  useEffect(() => {
+  const sortedTrackDefs = useMemo(() => {
     const { sortKey, reverse } = trackTableSort;
-    // N.B. need to copy the array since `sortFns` do sorting in place
-    const sortedTrackDefs = sortFns[sortKey](trackDefNodes.nodes.slice()) as TrackDefinitionNode[];
-    setSortedTrackDefs(reverse ? sortedTrackDefs.reverse() : sortedTrackDefs);
+    const sorted = sortFns[sortKey](trackDefNodes.nodes.slice()) as TrackDefinitionNode[];
+    return reverse ? sorted.reverse() : sorted;
   }, [trackDefNodes.nodes, trackTableSort]);
 
   const handleSortChange = useCallback(

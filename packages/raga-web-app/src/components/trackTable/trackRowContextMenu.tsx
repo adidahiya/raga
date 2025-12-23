@@ -18,7 +18,7 @@ export default function TrackRowContextMenu({
   const libraryPlaylistsContainingTrack = appStore.use.libraryPlaylistsContainingTrack();
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
 
-  const handleOpenFile = useCallback(() => {
+  const handleOpenFile = () => {
     if (track === undefined) {
       close();
       return;
@@ -28,7 +28,7 @@ export default function TrackRowContextMenu({
     log.debug(`[client] Opening file at path: '${filepath}'`);
     window.api.send(ClientEventChannel.OPEN_FILE_LOCATION, { filepath });
     close();
-  }, [track, close]);
+  };
 
   // TODO: check if autofocus still works with Mantine context menu
   // we manually implement autoFocus here ContextMenuPopover does not support the `autoFocus` prop
