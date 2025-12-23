@@ -292,8 +292,7 @@ const TrackTableHeader = memo(({ playlistId }: Pick<TrackTableProps, "playlistId
 TrackTableHeader.displayName = "TrackTableHeader";
 
 interface TrackTableRowProps
-  extends TrackTableProps,
-    Pick<React.HTMLAttributes<HTMLDivElement>, "onContextMenu"> {
+  extends TrackTableProps, Pick<React.HTMLAttributes<HTMLDivElement>, "onContextMenu"> {
   item: ExtendedNode<TrackDefinitionNode>;
 }
 
