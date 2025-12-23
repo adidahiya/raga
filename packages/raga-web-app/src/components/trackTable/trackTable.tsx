@@ -2,8 +2,8 @@ import "@glideapps/glide-data-grid/dist/index.css";
 
 import type { TrackDefinition } from "@adahiya/raga-types";
 import {
-  CompactSelection,
   type CellClickedEventArgs,
+  CompactSelection,
   type CustomCell,
   type CustomRenderer,
   DataEditor,

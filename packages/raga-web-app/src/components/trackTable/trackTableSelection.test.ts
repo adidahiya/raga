@@ -1,11 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect,it } from "vitest";
 
 import {
   computeNextSelection,
   createRowRange,
-  toggleRowInSelection,
-  type SelectionState,
   type SelectionAction,
+  type SelectionState,
+  toggleRowInSelection,
 } from "./trackTableSelection";
 
 describe("trackTableSelection", () => {
@@ -106,4 +106,3 @@ describe("trackTableSelection", () => {
     });
   });
 });
-
