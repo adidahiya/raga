@@ -534,17 +534,17 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
       const isSelected = selection.rows.hasIndex(row);
       const isPrevSelected = row > 0 && selection.rows.hasIndex(row - 1);
       const themeOverride: Partial<GridTheme> = {};
+      const isDark = colorScheme === "dark";
 
       // Highlight first row of selection range OR row immediately after selection range
       const isSelectionEdge = (isSelected && !isPrevSelected) || (!isSelected && isPrevSelected);
       if (isSelectionEdge) {
-        themeOverride.horizontalBorderColor = theme.textDark;
+        themeOverride.horizontalBorderColor = isDark ? colors.blue[8] : colors.blue[2];
       }
 
       // Apply alternating row background (odd rows get dim gray)
-      const isDark = colorScheme === "dark";
       if (row % 2 === 1) {
-        themeOverride.bgCell = isDark ? colors.dark[6] : colors.gray[0];
+        themeOverride.bgCell = isDark ? colors.dark[8] : colors.gray[0];
       }
 
       // Apply active track background
@@ -811,9 +811,9 @@ function useGridTheme(): Partial<GridTheme> {
       textBubble: isDark ? colors.gray[0] : colors.dark[9],
       bgBubble: isDark ? colors.dark[5] : colors.gray[2],
       bgBubbleSelected: isDark ? colors.blue[8] : colors.blue[1],
-      accentColor: colors.blue[6],
-      accentLight: isDark ? colors.blue[8] : colors.blue[1],
-      accentFg: "#FFFFFF",
+      accentColor: "transparent",
+      accentLight: isDark ? colors.blue[8] + "60" : colors.blue[1] + "90",
+      accentFg: "transparent",
       fontFamily: fontFamily,
       cellHorizontalPadding: 8,
       cellVerticalPadding: 3,
