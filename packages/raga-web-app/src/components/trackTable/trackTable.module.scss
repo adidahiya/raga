@@ -16,49 +16,12 @@
   }
 }
 
-.bpmColumnHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.indexCell {
-  font-size: var(--mantine-font-size-sm);
-  text-align: right;
-}
-
-.bpmCell {
-  display: block;
-  text-align: right;
-}
-
 .analyzeAllButton {
   font-weight: bold;
 }
 
 .smallOutlinedButton {
   height: 18px;
-}
-
-:global(.resizer) {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 3px;
-  background: var(--mantine-color-dark-1);
-  opacity: 0.8;
-  cursor: col-resize;
-  user-select: none;
-  touch-action: none;
-
-  &:global(.isResizing) {
-    opacity: 1;
-  }
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    background: var(--mantine-color-dark-8);
-  }
 }
 
 .trackTableEmpty {

@@ -454,6 +454,8 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
           };
         case 5: {
           // Genre
+          // TODO: Add back Discogs genre fetching button for tracks with no genre
+          // Previously had a FetchDiscogsGenreButton component that appeared when genre was empty
           const hasNoGenres = hasNoDiscogsGenres(track["Track ID"]);
           return {
             kind: GridCellKind.Text,
@@ -528,8 +530,13 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
 
   // Provide React component editors for custom cells
   const provideEditor = useCallback<ProvideEditorCallback<GridCell>>((_cell) => {
-    // For now, let's disable custom editors and use the default text editor
-    // This avoids the complex type issues while still allowing editing
+    // TODO: Implement custom cell editors for editable track tags
+    // Previously had EditableTrackTagValue component for inline editing of:
+    // - Track names
+    // - Artist names
+    // - Genre tags
+    // - BPM values
+    // Need to implement custom overlay editors for these cell types
     return undefined;
   }, []);
 
@@ -697,7 +704,7 @@ TrackTableEmpty.displayName = "TrackTableEmpty";
 // HOOKS
 // -------------------------------------------------------------------------------------------------
 
-/** Gets the list of track definitions for the given playlist as react-table-library data notes */
+/** Gets the list of track definitions for the given playlist as data nodes for the table */
 function useTrackDefinitionNodes(playlistId: string): { nodes: TrackDefinitionNode[] } {
   const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
   if (trackDefs === undefined) {
