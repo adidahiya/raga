@@ -80,6 +80,15 @@ jobs:
       - run: sudo corepack enable
       - run: yarn check-types
 
+  test:
+    docker: *docker-node-image
+    steps:
+      - checkout
+      - restore_cache: *restore-node-modules-cache
+      - attach_workspace: { at: "." }
+      - run: sudo corepack enable
+      - run: yarn test
+
   dist:
     docker: *docker-node-image
     environment:
@@ -117,6 +126,8 @@ workflows:
           # ESLint rules with type checking require dependent packages to be built
           requires: [build]
       - check-types:
+          requires: [build]
+      - test:
           requires: [build]
       - dist:
           requires: [build]

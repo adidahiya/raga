@@ -1,170 +1,19 @@
-@use "sass:color";
-@use "../../common/variables";
-
 .trackTableContainer {
   --divider-color: var(--mantine-color-gray-3);
   --row-hover-color: var(--mantine-color-gray-2);
 
-  .headerRow {
-    font-size: var(--mantine-font-size-sm);
-  }
-
-  :global(.resizer-handle) {
-    background-color: var(--divider-color);
-  }
-
-  .row {
-    &:global(.row-select-clickable):hover {
-      background-color: var(--row-hover-color);
-    }
-
-    &:global(.row-select-single-selected) {
-      background-color: var(--mantine-primary-color-light);
-      font-weight: 600; // override react-table-library default which sets '800'
-
-      &:hover {
-        background-color: var(--mantine-primary-color-light-hover);
-      }
-    }
-
-    &.rowActive {
-      // N.B. it would be great to style the active row here, but this element has no box in the DOM;
-      // its parent div has the box which takes up correct space, so we a border shadow there instead
-    }
-  }
-
-  [role="columnheader"] {
-    border-bottom: solid 1px var(--divider-color);
-  }
-
-  .headerCell {
-    padding: 1px variables.$table-header-padding;
-
-    &.editableColumn {
-      padding-left: 10px;
-    }
-  }
-
-  [role="gridcell"] {
-    padding: variables.$table-cell-padding;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-
-    > div {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-  }
-
-  [role="row"] {
-    background: none;
-
-    .selected {
-      background-color: var(--mantine-primary-color-light);
-    }
-  }
-
-  :global(.tbody) {
-    // HACKHACK: rows are just divs without classes with <Virtualized>
-    > div {
-      &:nth-of-type(odd) {
-        background: var(--mantine-color-gray-1);
-      }
-
-      &:nth-of-type(even) {
-        background: var(--mantine-color-white);
-      }
-
-      &:has(> .rowActive) {
-        box-shadow: inset 0 0 0 1px var(--mantine-primary-color-filled);
-      }
-    }
-  }
-
   :global([data-mantine-color-scheme="dark"]) & {
     --divider-color: var(--mantine-color-gray-7);
     --row-hover-color: var(--mantine-color-dark-5);
-
-    .headerRow {
-      background: var(--mantine-color-dark-7);
-    }
-
-    :global(.resizer-handle) {
-      background-color: var(--divider-color);
-    }
-
-    .row {
-      &:global(.row-select-single-selected) {
-        background-color: var(--mantine-primary-color-light);
-        font-weight: 600; // override react-table-library default which sets '800'
-
-        &:hover {
-          background-color: var(--mantine-primary-color-light-hover);
-        }
-      }
-    }
-
-    [role="columnheader"] {
-      border-bottom: solid 1px var(--divider-color);
-    }
-
-    :global(.tbody) {
-      // HACKHACK: rows are just divs without classes with <Virtualized>
-      > div {
-        &:nth-of-type(odd) {
-          background: var(--mantine-color-dark-8);
-        }
-
-        &:nth-of-type(even) {
-          background: var(--mantine-color-dark-7);
-        }
-
-        &:has(> .rowActive) {
-          box-shadow: inset 0 0 0 1px var(--mantine-primary-color-filled);
-        }
-      }
-    }
   }
 }
 
 .trackTable {
+  height: 100%;
+
   &.contextMenuIsOpen {
     user-select: none;
   }
-
-  // HACKHACK: there is a bug in the <Virtualized> component `rowHeight` prop where it does not calculate
-  // row offsets correctly when configured with different row heights (e.g. header row is taller than body rows).
-  // In order to work around this and avoid cutting off the first row in the table, we apply CSS transforms
-  // to some of the the <Virtualized> container elements (targeted using `:has` selectors).
-
-  // direct parent of header and body containers
-  div:has(> :global(.tbody)) {
-    transform: translateY(6px);
-  }
-
-  // header container
-  div:has(> :global(.thead)[role="rowgroup"]) {
-    transform: translateY(-6px);
-  }
-}
-
-.bpmColumnHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.indexCell {
-  font-size: var(--mantine-font-size-sm);
-  text-align: right;
-}
-
-.bpmCell {
-  display: block;
-  text-align: right;
 }
 
 .analyzeAllButton {
@@ -173,27 +22,6 @@
 
 .smallOutlinedButton {
   height: 18px;
-}
-
-:global(.resizer) {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 3px;
-  background: var(--mantine-color-dark-1);
-  opacity: 0.8;
-  cursor: col-resize;
-  user-select: none;
-  touch-action: none;
-
-  &:global(.isResizing) {
-    opacity: 1;
-  }
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    background: var(--mantine-color-dark-8);
-  }
 }
 
 .trackTableEmpty {

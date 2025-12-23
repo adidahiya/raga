@@ -1,51 +1,42 @@
+import "@glideapps/glide-data-grid/dist/index.css";
+
 import type { TrackDefinition } from "@adahiya/raga-types";
-import { Badge, Stack, Text, Tooltip, useMantineColorScheme, useMantineTheme } from "@mantine/core";
-import { useRowSelect } from "@table-library/react-table-library/select";
-import { HeaderCellSort, useSort } from "@table-library/react-table-library/sort";
 import {
-  Cell,
-  type Data,
-  type ExtendedNode,
-  Header,
-  HeaderCell,
-  HeaderRow,
-  Row,
-  Table,
-} from "@table-library/react-table-library/table";
-import { useTheme } from "@table-library/react-table-library/theme";
-import type {
-  Action,
-  SortFn,
-  SortOptionsIcon,
-  State,
-  Theme,
-} from "@table-library/react-table-library/types";
-import { type RowHeight, Virtualized } from "@table-library/react-table-library/virtualized";
+  type CellClickedEventArgs,
+  CompactSelection,
+  type CustomCell,
+  type CustomRenderer,
+  DataEditor,
+  type DataEditorRef,
+  type GridCell,
+  GridCellKind,
+  type GridColumn,
+  type GridMouseEventArgs,
+  type GridSelection,
+  type HeaderClickedEventArgs,
+  type Item,
+  type ProvideEditorCallback,
+  type Theme as GridTheme,
+} from "@glideapps/glide-data-grid";
+import type { MantineColorScheme, MantineTheme } from "@mantine/core";
+import { Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import classNames from "classnames";
+import { run } from "effection";
 import { unique } from "radash";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
-import { IoChevronDown, IoChevronDownOutline, IoChevronUp } from "react-icons/io5";
 import { Roarr as log } from "roarr";
+import { useResizeObserver } from "usehooks-ts";
 import { useShallow } from "zustand/shallow";
 
 import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
-import { stopPropagation } from "../../common/reactUtils";
 import { TrackPropertySortKey } from "../../common/trackPropertySortKey";
-import { AudioFileSource, getTrackFileSource, getTrackFileType } from "../../common/trackUtils";
-import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
+import { getTrackFileSource, getTrackFileType } from "../../common/trackUtils";
 import { appStore, useAppStore } from "../../store/appStore";
-import type { TrackTableSortState } from "../../store/slices/trackTableSlice";
 import EmptyState from "../common/emptyState";
-import AnalyzeAllPlaylistTracksButton from "./analyzeAllPlaylistTracksButton";
-import AnalyzeSingleTrackButton from "./analyzeSingleTrackButton";
-import AudioFileTypeTag from "./audioFileTypeTag";
-import EditableTrackTagValue from "./editableTrackTagValue";
-import FetchDiscogsGenreButton from "./fetchDiscogsGenreButton";
-import TrackDateAddedText from "./trackDateAddedText";
-import TrackRatingStars from "./trackRatingStars";
 import styles from "./trackTable.module.scss";
 import { TrackTableFilterBar } from "./trackTableFilterBar";
+import { computeNextSelection, type SelectionState } from "./trackTableSelection";
 import useTrackTableContextMenu from "./useTrackTableContextMenu";
 import useTrackTableHotkeys from "./useTrackTableHotkeys";
 
@@ -61,47 +52,291 @@ interface TrackDefinitionNode extends TrackDefinition {
   indexInPlaylist: number;
 }
 
+interface RatingCellData {
+  kind: "rating";
+  trackId: number;
+  rating: number;
+}
+
+type RatingCell = CustomCell<RatingCellData>;
+
+interface BadgeCellData {
+  kind: "badge";
+  value: string;
+  colorKey: string;
+  interactive?: boolean;
+}
+
+type BadgeCell = CustomCell<BadgeCellData>;
+
 // CONFIGURATION
 // -------------------------------------------------------------------------------------------------
 
-const sortFns: Record<TrackPropertySortKey, SortFn> = {
-  [TrackPropertySortKey.INDEX]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) => a.indexInPlaylist - b.indexInPlaylist),
-  [TrackPropertySortKey.NAME]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) => (a.Name ?? "").localeCompare(b.Name ?? "")),
-  [TrackPropertySortKey.ARTIST]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) => (a.Artist ?? "").localeCompare(b.Artist ?? "")),
-  [TrackPropertySortKey.BPM]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) => (a.BPM ?? 0) - (b.BPM ?? 0)),
-  [TrackPropertySortKey.GENRE]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) => (a.Genre ?? "").localeCompare(b.Genre ?? "")),
-  [TrackPropertySortKey.RATING]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) => (a.Rating ?? 0) - (b.Rating ?? 0)),
-  [TrackPropertySortKey.FILETYPE]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) =>
-      (getTrackFileType(a) ?? "").localeCompare(getTrackFileType(b) ?? ""),
-    ),
-  [TrackPropertySortKey.FILESOURCE]: (array) =>
-    (array as TrackDefinitionNode[]).sort((a, b) =>
-      getTrackFileSource(a).localeCompare(getTrackFileSource(b)),
-    ),
-  [TrackPropertySortKey.DATE_ADDED]: (array) =>
-    (array as TrackDefinitionNode[]).sort(
-      (a, b) => (a["Date Added"]?.getTime() ?? 0) - (b["Date Added"]?.getTime() ?? 0),
-    ),
+const sortFns: Record<
+  TrackPropertySortKey,
+  (a: TrackDefinitionNode, b: TrackDefinitionNode) => number
+> = {
+  [TrackPropertySortKey.INDEX]: (a, b) => a.indexInPlaylist - b.indexInPlaylist,
+  [TrackPropertySortKey.NAME]: (a, b) => (a.Name ?? "").localeCompare(b.Name ?? ""),
+  [TrackPropertySortKey.ARTIST]: (a, b) => (a.Artist ?? "").localeCompare(b.Artist ?? ""),
+  [TrackPropertySortKey.BPM]: (a, b) => (a.BPM ?? 0) - (b.BPM ?? 0),
+  [TrackPropertySortKey.GENRE]: (a, b) => (a.Genre ?? "").localeCompare(b.Genre ?? ""),
+  [TrackPropertySortKey.RATING]: (a, b) => (a.Rating ?? 0) - (b.Rating ?? 0),
+  [TrackPropertySortKey.FILETYPE]: (a, b) =>
+    (getTrackFileType(a) ?? "").localeCompare(getTrackFileType(b) ?? ""),
+  [TrackPropertySortKey.FILESOURCE]: (a, b) =>
+    getTrackFileSource(a).localeCompare(getTrackFileSource(b)),
+  [TrackPropertySortKey.DATE_ADDED]: (a, b) =>
+    (a["Date Added"]?.getTime() ?? 0) - (b["Date Added"]?.getTime() ?? 0),
 };
 
-const sortIcon: SortOptionsIcon = {
-  iconDefault: <IoChevronDownOutline />,
-  iconDown: <IoChevronDown />,
-  iconUp: <IoChevronUp />,
+// Column configuration mapping
+const columnSortKeyMap: Record<number, TrackPropertySortKey> = {
+  0: TrackPropertySortKey.INDEX,
+  2: TrackPropertySortKey.BPM,
+  3: TrackPropertySortKey.NAME,
+  4: TrackPropertySortKey.ARTIST,
+  5: TrackPropertySortKey.GENRE,
+  6: TrackPropertySortKey.RATING,
+  7: TrackPropertySortKey.FILETYPE,
+  8: TrackPropertySortKey.FILESOURCE,
+  9: TrackPropertySortKey.DATE_ADDED,
 };
 
-// N.B. there is a bug in the <Virtualized> component `rowHeight` prop where it does not calculate
-// row offsets correctly when configured with different heights like this (e.g. header row is taller than body rows).
-// So we can't use this prop; instead we fix vertical spacing in CSS.
-const _virtualizedRowHeight: RowHeight = (_node, index) =>
-  index === 0 ? TRACK_TABLE_HEADER_HEIGHT : TRACK_TABLE_ROW_HEIGHT;
+// Custom header icons for sort indicators (IoCaretUp/IoCaretDown from react-icons/io5)
+const headerIcons: Record<string, (props: { fgColor: string; bgColor: string }) => string> = {
+  sortAsc: ({ fgColor }) =>
+    `<svg width="12" height="12" viewBox="0 0 512 512" fill="${fgColor}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M414 321.94L274.22 158.82a24 24 0 00-36.44 0L98 321.94c-13.34 15.57-2.28 39.62 18.22 39.62h279.6c20.5 0 31.56-24.05 18.18-39.62z"/>
+    </svg>`,
+  sortDesc: ({ fgColor }) =>
+    `<svg width="12" height="12" viewBox="0 0 512 512" fill="${fgColor}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M98 190.06l139.78 163.12a24 24 0 0036.44 0L414 190.06c13.34-15.57 2.28-39.62-18.22-39.62H116.18C95.68 150.44 84.62 174.49 98 190.06z"/>
+    </svg>`,
+};
+
+// Custom cell renderer for interactive rating stars
+const RATING_CELL_KIND = "rating" as const;
+
+// Star SVG path (24x24 viewBox)
+const STAR_PATH = new Path2D(
+  "M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z",
+);
+const STAR_VIEWBOX_SIZE = 24;
+
+function isRatingCell(cell: CustomCell): cell is RatingCell {
+  const data = cell.data as unknown;
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "kind" in data &&
+    (data as { kind: string }).kind === RATING_CELL_KIND
+  );
+}
+
+const getRatingCellRenderer = (
+  mantineTheme: MantineTheme,
+  colorScheme: MantineColorScheme,
+): CustomRenderer<RatingCell> => ({
+  kind: GridCellKind.Custom,
+  isMatch: isRatingCell,
+  draw: (args, cell) => {
+    const { ctx, rect, theme, hoverX, overrideCursor } = args;
+    // Ensure rating is clamped to 0-5 range
+    const rating = Math.max(0, Math.min(5, cell.data.rating));
+
+    // Calculate star size to fit cell height with padding
+    const padding = theme.cellVerticalPadding;
+    const starSize = rect.height - padding * 2;
+    const scale = starSize / STAR_VIEWBOX_SIZE;
+
+    // Align stars left with horizontal padding (reduced by 2px for rating cell)
+    const paddingOffset = theme.cellHorizontalPadding - 2;
+    const startX = rect.x + paddingOffset;
+    const startY = rect.y + padding;
+
+    // Calculate hovered star (for preview effect)
+    let hoveredStar = -1;
+    if (hoverX !== undefined) {
+      const hoverRelativeX = hoverX - paddingOffset;
+      hoveredStar = Math.ceil(hoverRelativeX / starSize);
+      hoveredStar = Math.max(0, Math.min(5, hoveredStar));
+      // Set pointer cursor when hovering
+      overrideCursor?.("pointer");
+    }
+
+    ctx.save();
+
+    for (let i = 0; i < 5; i++) {
+      ctx.save();
+      ctx.translate(startX + i * starSize, startY);
+      ctx.scale(scale, scale);
+
+      const starIndex = i + 1;
+      const isHovering = hoveredStar > 0;
+      const isHoverPreview = isHovering && starIndex <= hoveredStar;
+      const isFilled = starIndex <= rating;
+
+      if (isHoverPreview) {
+        // Hover preview takes precedence - show dimmed gold
+        ctx.fillStyle = mantineTheme.colors.yellow[7];
+        ctx.globalAlpha = 0.5;
+      } else if (isFilled) {
+        // Filled star uses full gold color
+        ctx.fillStyle = mantineTheme.colors.yellow[7];
+        ctx.globalAlpha = 1.0;
+      } else {
+        // Empty star uses dim gray color
+        ctx.fillStyle =
+          colorScheme === "dark" ? mantineTheme.colors.gray[8] : mantineTheme.colors.gray[2];
+        ctx.globalAlpha = 1.0;
+      }
+
+      ctx.fill(STAR_PATH);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  },
+  needsHover: true,
+  needsHoverPosition: true,
+  onClick: (args) => {
+    const { bounds, posX, cell, theme } = args;
+    // Calculate star size matching the draw function
+    const padding = theme.cellVerticalPadding;
+    const starSize = bounds.height - padding * 2;
+    // Match the reduced padding in draw function
+    const startX = theme.cellHorizontalPadding - 2;
+
+    // Calculate which star was clicked (1-5) based on X position relative to star area
+    const clickX = posX - startX;
+    const clickedStar = Math.ceil(clickX / starSize);
+    const newRating = Math.max(0, Math.min(5, clickedStar));
+
+    // Persist the rating change via app store
+    void run(function* () {
+      const setTrackRating = appStore.getState().setTrackRating;
+      yield* setTrackRating(cell.data.trackId, newRating * 20);
+    });
+
+    // Return updated cell
+    return { ...cell, data: { ...cell.data, rating: newRating } };
+  },
+});
+
+// Custom cell renderer for badge/pill-styled cells (File Type, Source)
+const BADGE_CELL_KIND = "badge" as const;
+
+// Color mappings for badge cells
+const BADGE_COLORS = {
+  // File types
+  mp3: "blue",
+  m4a: "red",
+  aac: "red",
+  aif: "gold",
+  aiff: "gold",
+  wav: "gold",
+  flac: "green",
+  // Sources
+  soulseek: "green",
+  bandcamp: "blue",
+  other: "gray",
+} as const;
+
+function isBadgeCell(cell: CustomCell): cell is BadgeCell {
+  const data = cell.data as unknown;
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "kind" in data &&
+    (data as { kind: string }).kind === BADGE_CELL_KIND
+  );
+}
+
+const getBadgeCellRenderer = (
+  mantineTheme: MantineTheme,
+  colorScheme: MantineColorScheme,
+): CustomRenderer<BadgeCell> => ({
+  kind: GridCellKind.Custom,
+  isMatch: isBadgeCell,
+  draw: (args, cell) => {
+    const { ctx, rect, theme, hoverAmount, overrideCursor } = args;
+    const { value, colorKey, interactive } = cell.data;
+    const { colors } = mantineTheme;
+
+    // Set pointer cursor for interactive badges
+    if (interactive) {
+      overrideCursor?.("pointer");
+    }
+
+    // Determine colors based on colorKey
+    const isDark = colorScheme === "dark";
+    let bgColor: string;
+    let textColor: string;
+
+    // For interactive badges, brighten colors on hover (convert alpha 0-255 to hex)
+    const baseAlpha = 128; // 0x80
+    const hoverAlpha = interactive
+      ? Math.min(255, baseAlpha + Math.round(hoverAmount * 80))
+      : baseAlpha;
+    const alphaHex = hoverAlpha.toString(16).padStart(2, "0");
+
+    switch (colorKey) {
+      case "blue":
+        bgColor = isDark ? colors.blue[9] + "40" : colors.blue[1] + "80";
+        textColor = isDark ? colors.blue[7] : colors.blue[4];
+        break;
+      case "gold":
+        bgColor = isDark ? colors.yellow[9] + "40" : colors.yellow[1] + "90";
+        textColor = isDark ? colors.yellow[9] : colors.yellow[6];
+        break;
+      case "green":
+        bgColor = isDark ? colors.green[9] + "40" : colors.green[1] + "90";
+        textColor = isDark ? colors.green[8] : colors.green[5];
+        break;
+      case "red":
+        bgColor = isDark ? colors.red[9] + "40" : colors.red[1] + "80";
+        textColor = isDark ? colors.red[9] : colors.red[5];
+        break;
+      case "gray":
+      default:
+        bgColor = isDark ? colors.gray[8] + alphaHex : colors.gray[2] + alphaHex;
+        textColor = isDark ? colors.gray[6] : colors.gray[6];
+        break;
+    }
+
+    // Measure text to calculate pill dimensions
+    ctx.font = `${theme.baseFontStyle} ${theme.fontFamily}`;
+    const textMetrics = ctx.measureText(value.toUpperCase());
+    const textWidth = textMetrics.width;
+
+    // Pill dimensions
+    const pillHeight = rect.height - theme.cellVerticalPadding * 2;
+    const pillWidth = textWidth + 16; // 8px padding on each side
+    const pillRadius = pillHeight / 4;
+
+    // Center the pill horizontally in the cell
+    const pillX = rect.x + (rect.width - pillWidth) / 2;
+    const pillY = rect.y + theme.cellVerticalPadding;
+
+    ctx.save();
+
+    // Draw rounded rectangle (pill shape)
+    ctx.fillStyle = bgColor;
+    ctx.beginPath();
+    ctx.roundRect(pillX, pillY, pillWidth, pillHeight, pillRadius);
+    ctx.fill();
+
+    // Draw text centered in pill
+    ctx.fillStyle = textColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(value.toUpperCase(), pillX + pillWidth / 2, pillY + pillHeight / 2);
+
+    ctx.restore();
+  },
+  needsHover: true,
+});
 
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
@@ -109,14 +344,23 @@ const _virtualizedRowHeight: RowHeight = (_node, index) =>
 const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   const allTrackDefNodes = useTrackDefinitionNodes(playlistId);
   const numTracksInPlaylist = allTrackDefNodes.nodes.length;
-  const theme = useTableTheme(numTracksInPlaylist);
   const containerElement = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<DataEditorRef | null>(null);
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const { width: containerWidth = 0 } = useResizeObserver({
+    // @ts-expect-error - incompatible with stricter React 19 types
+    ref: tableContainerRef,
+    box: "border-box",
+  });
 
   // filter trackDefNodes based on filterQuery value
   const [filterQuery, setFilterQuery] = useState<string>("");
   const clearFilterQuery = useCallback(() => {
     setFilterQuery("");
   }, []);
+
+  // Track hovered row for hover styling
+  const [hoveredRow, setHoveredRow] = useState<number | undefined>(undefined);
   const filteredTrackDefNodes = useMemo(() => {
     if (filterQuery.trim() === "") {
       return allTrackDefNodes;
@@ -134,9 +378,9 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
     };
   }, [filterQuery, allTrackDefNodes]);
 
-  // N.B. table interaction hooks need to the list of tracks with the current sort order applied
-  // so that they can locate rows correctly in 2D space
-  const { select, sort, sortedTrackDefs } = useTableInteractions(playlistId, filteredTrackDefNodes);
+  // Table interactions
+  const { sortedTrackDefs, selection, handleHeaderClick, handleCellClicked, clearSelection } =
+    useTableInteractions(playlistId, filteredTrackDefNodes);
   const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
   useTrackTableHotkeys({ containerElement, sortedTrackIds });
   const { handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
@@ -144,24 +388,269 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
     sortedTrackDefs,
   });
 
+  // Column definitions
+  const columns = useColumns(numTracksInPlaylist);
+
+  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+  const hasNoDiscogsGenres = appStore.use.getLibraryTrackHasNoDiscogsGenres();
+
+  // Get cell content
+  const getCellContent = useCallback(
+    ([col, row]: Item): GridCell => {
+      const track = sortedTrackDefs[row];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!track) {
+        return {
+          kind: GridCellKind.Text,
+          data: "",
+          displayData: "",
+          allowOverlay: false,
+        };
+      }
+
+      switch (col) {
+        case 0: // Index
+          return {
+            kind: GridCellKind.Number,
+            data: track.indexInPlaylist + 1,
+            displayData: (track.indexInPlaylist + 1).toString(),
+            allowOverlay: false,
+          };
+        case 1: // Analyze button (badge cell)
+          if (!analyzeBPMPerTrack) {
+            return {
+              kind: GridCellKind.Text,
+              data: "",
+              displayData: "",
+              allowOverlay: false,
+            };
+          }
+          return {
+            kind: GridCellKind.Custom,
+            data: { kind: "badge", value: "Analyze", colorKey: "gray", interactive: true },
+            allowOverlay: false,
+            copyData: "Analyze",
+          } satisfies BadgeCell;
+        case 2: // BPM
+          return {
+            kind: GridCellKind.Text,
+            data: track.BPM?.toString() ?? "",
+            displayData: track.BPM?.toString() ?? "",
+            allowOverlay: true,
+          };
+        case 3: // Name
+          return {
+            kind: GridCellKind.Text,
+            data: track.Name ?? "",
+            displayData: track.Name ?? "",
+            allowOverlay: true,
+          };
+        case 4: // Artist
+          return {
+            kind: GridCellKind.Text,
+            data: track.Artist ?? "",
+            displayData: track.Artist ?? "",
+            allowOverlay: true,
+          };
+        case 5: {
+          // Genre
+          // TODO: Add back Discogs genre fetching button for tracks with no genre
+          // Previously had a FetchDiscogsGenreButton component that appeared when genre was empty
+          const hasNoGenres = hasNoDiscogsGenres(track["Track ID"]);
+          return {
+            kind: GridCellKind.Text,
+            data: track.Genre ?? (hasNoGenres ? "--" : "Fetch"),
+            displayData: track.Genre ?? (hasNoGenres ? "--" : "Fetch"),
+            allowOverlay: true,
+            readonly: hasNoGenres,
+          };
+        }
+        case 6: {
+          // Rating (interactive custom cell) - convert from 0-100 to 0-5 scale
+          const ratingOutOf100 = track.Rating ?? 0;
+          const ratingOutOf5 = Math.round(ratingOutOf100 / 20);
+          return {
+            kind: GridCellKind.Custom,
+            data: { kind: "rating", trackId: track.id, rating: ratingOutOf5 },
+            allowOverlay: false,
+            copyData: String(ratingOutOf5),
+          } satisfies RatingCell;
+        }
+        case 7: {
+          // File Type (badge cell)
+          const fileType = getTrackFileType(track) ?? "--";
+          const fileTypeColor =
+            (BADGE_COLORS[fileType.toLowerCase() as keyof typeof BADGE_COLORS] as
+              | string
+              | undefined) ?? "gray";
+          return {
+            kind: GridCellKind.Custom,
+            data: { kind: "badge", value: fileType, colorKey: fileTypeColor },
+            allowOverlay: false,
+            copyData: fileType,
+          } satisfies BadgeCell;
+        }
+        case 8: {
+          // Source (badge cell)
+          const source = getTrackFileSource(track);
+          const sourceColor =
+            (BADGE_COLORS[source.toLowerCase() as keyof typeof BADGE_COLORS] as
+              | string
+              | undefined) ?? "gray";
+          return {
+            kind: GridCellKind.Custom,
+            data: { kind: "badge", value: source, colorKey: sourceColor },
+            allowOverlay: false,
+            copyData: source,
+          } satisfies BadgeCell;
+        }
+        case 9: {
+          // Date Added
+          const date = track["Date Added"];
+          const dateStr = date ? date.toLocaleDateString() : "--";
+          return {
+            kind: GridCellKind.Text,
+            data: dateStr,
+            displayData: dateStr,
+            allowOverlay: true,
+            readonly: true,
+          };
+        }
+        default:
+          return {
+            kind: GridCellKind.Text,
+            data: "",
+            displayData: "",
+            allowOverlay: false,
+          };
+      }
+    },
+    [sortedTrackDefs, analyzeBPMPerTrack, hasNoDiscogsGenres],
+  );
+
+  // Provide React component editors for custom cells
+  const provideEditor = useCallback<ProvideEditorCallback<GridCell>>((_cell) => {
+    // TODO: Implement custom cell editors for editable track tags
+    // Previously had EditableTrackTagValue component for inline editing of:
+    // - Track names
+    // - Artist names
+    // - Genre tags
+    // - BPM values
+    // Need to implement custom overlay editors for these cell types
+    return undefined;
+  }, []);
+
+  // Theme
+  const theme = useGridTheme();
+  const colorScheme = useComputedColorScheme();
+  const { colors } = useMantineTheme();
+
+  // Handle row highlighting for active track and hover
+  const activeTrackId = appStore.use.activeTrackId();
+  const getRowThemeOverride = useCallback(
+    (row: number) => {
+      const track = sortedTrackDefs[row];
+      const isSelected = selection.rows.hasIndex(row);
+      const isPrevSelected = row > 0 && selection.rows.hasIndex(row - 1);
+      const themeOverride: Partial<GridTheme> = {};
+      const isDark = colorScheme === "dark";
+
+      // Highlight first row of selection range OR row immediately after selection range
+      const isSelectionEdge = (isSelected && !isPrevSelected) || (!isSelected && isPrevSelected);
+      if (isSelectionEdge) {
+        themeOverride.horizontalBorderColor = isDark ? colors.blue[8] : colors.blue[2];
+      }
+
+      // Apply alternating row background (odd rows get dim gray)
+      if (row % 2 === 1) {
+        themeOverride.bgCell = isDark ? colors.dark[8] : colors.gray[0];
+      }
+
+      // Apply active track background
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (track && activeTrackId === track.id) {
+        themeOverride.bgCell = theme.bgCellMedium;
+      }
+      // Apply hover styling
+      else if (row === hoveredRow) {
+        themeOverride.bgCell = theme.bgHeaderHovered;
+      }
+
+      return Object.keys(themeOverride).length > 0 ? themeOverride : undefined;
+    },
+    [
+      sortedTrackDefs,
+      activeTrackId,
+      theme.bgCellMedium,
+      theme.bgHeaderHovered,
+      hoveredRow,
+      selection,
+      colorScheme,
+      colors,
+    ],
+  );
+
+  // Handle item hover to track which row is being hovered
+  const handleItemHovered = useCallback((args: GridMouseEventArgs) => {
+    // Only set hover when actually hovering over a cell, not header or empty space
+    if (args.kind === "cell") {
+      const [, row] = args.location;
+      setHoveredRow(row);
+    } else {
+      setHoveredRow(undefined);
+    }
+  }, []);
+
+  const mantineTheme = useMantineTheme();
+  const ratingCellRenderer = useMemo(() => {
+    return getRatingCellRenderer(mantineTheme, colorScheme);
+  }, [mantineTheme, colorScheme]);
+
+  const badgeCellRenderer = useMemo(() => {
+    return getBadgeCellRenderer(mantineTheme, colorScheme);
+  }, [mantineTheme, colorScheme]);
+
   const table = (
-    <Table
+    <div
+      ref={tableContainerRef}
       className={classNames(styles.trackTable, { [styles.contextMenuIsOpen]: isContextMenuOpen })}
-      data={filteredTrackDefNodes}
-      layout={{ isDiv: true, fixedHeader: true, custom: true }}
-      select={select}
-      sort={sort}
-      theme={theme}
+      onClick={(e) => {
+        // Clear selection when clicking directly on the container div (empty space)
+        // Clicks on cells are handled by onCellClicked and won't bubble here
+        if (e.target === e.currentTarget) {
+          clearSelection();
+        }
+      }}
     >
-      {(trackNodes: ExtendedNode<TrackDefinitionNode>[]) => (
-        <Virtualized
-          tableList={trackNodes}
-          rowHeight={TRACK_TABLE_ROW_HEIGHT}
-          header={() => <TrackTableHeader playlistId={playlistId} />}
-          body={(item) => <TrackTableRow item={item} playlistId={playlistId} />}
-        />
-      )}
-    </Table>
+      <DataEditor
+        ref={gridRef}
+        width={containerWidth}
+        columns={columns}
+        rows={sortedTrackDefs.length}
+        getCellContent={getCellContent}
+        provideEditor={provideEditor}
+        getRowThemeOverride={getRowThemeOverride}
+        gridSelection={selection}
+        onHeaderClicked={handleHeaderClick}
+        onCellClicked={handleCellClicked}
+        rowHeight={TRACK_TABLE_ROW_HEIGHT}
+        headerHeight={TRACK_TABLE_HEADER_HEIGHT}
+        headerIcons={headerIcons}
+        smoothScrollX={true}
+        smoothScrollY={true}
+        theme={theme}
+        customRenderers={[ratingCellRenderer, badgeCellRenderer]}
+        onCellContextMenu={(_cell, args) => {
+          args.preventDefault();
+          handleContextMenu(args);
+        }}
+        getCellsForSelection={true}
+        rowMarkers="none"
+        rowSelect="multi"
+        freezeColumns={1}
+        onItemHovered={handleItemHovered}
+      />
+    </div>
   );
 
   return (
@@ -171,7 +660,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
       gap={0}
       className={styles.trackTableContainer}
       ref={containerElement}
-      onContextMenu={handleContextMenu}
+      // onContextMenu={handleContextMenu}
     >
       <TrackTableFilterBar
         query={filterQuery}
@@ -184,193 +673,6 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
 });
 TrackTable.displayName = "TrackTable";
 export default TrackTable;
-
-const RESIZER_OPTIONS = {
-  minWidth: 50,
-  resizerWidth: 8,
-};
-
-const TrackTableHeader = memo(({ playlistId }: Pick<TrackTableProps, "playlistId">) => {
-  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-  const { colorScheme } = useMantineColorScheme();
-  const { colors } = useMantineTheme();
-
-  const resizerOptions = useMemo(() => {
-    return {
-      ...RESIZER_OPTIONS,
-      resizerHighlight: colorScheme === "dark" ? colors.gray[7] : colors.gray[3],
-    };
-  }, [colorScheme, colors]);
-
-  return (
-    <Header className={styles.header}>
-      <HeaderRow className={styles.headerRow}>
-        <HeaderCellSort
-          className={styles.headerCell}
-          stiff={true}
-          pinLeft={true}
-          sortKey={TrackPropertySortKey.INDEX}
-        >
-          <Text component="span" c="dimmed" size="sm">
-            #
-          </Text>
-        </HeaderCellSort>
-        <HeaderCell
-          className={styles.headerCell}
-          stiff={true}
-          pinLeft={true}
-          hide={!analyzeBPMPerTrack}
-        >
-          <AnalyzeAllPlaylistTracksButton playlistId={playlistId} />
-        </HeaderCell>
-        <HeaderCellSort
-          className={styles.headerCell}
-          stiff={true}
-          sortKey={TrackPropertySortKey.BPM}
-        >
-          <div className={styles.bpmColumnHeader}>
-            <span>BPM</span>{" "}
-            {!analyzeBPMPerTrack && <AnalyzeAllPlaylistTracksButton playlistId={playlistId} />}
-          </div>
-        </HeaderCellSort>
-        <HeaderCellSort
-          className={classNames(styles.headerCell, styles.editableColumn)}
-          resize={resizerOptions}
-          sortKey={TrackPropertySortKey.NAME}
-        >
-          Name
-        </HeaderCellSort>
-        <HeaderCellSort
-          className={classNames(styles.headerCell, styles.editableColumn)}
-          resize={resizerOptions}
-          sortKey={TrackPropertySortKey.ARTIST}
-        >
-          Artist
-        </HeaderCellSort>
-        <HeaderCellSort
-          className={classNames(styles.headerCell)}
-          resize={resizerOptions}
-          sortKey={TrackPropertySortKey.GENRE}
-        >
-          Genres
-        </HeaderCellSort>
-        <HeaderCellSort
-          className={styles.headerCell}
-          stiff={true}
-          sortKey={TrackPropertySortKey.RATING}
-        >
-          Rating
-        </HeaderCellSort>
-        <HeaderCellSort
-          className={styles.headerCell}
-          stiff={true}
-          sortKey={TrackPropertySortKey.FILETYPE}
-        >
-          File Type
-        </HeaderCellSort>
-        <HeaderCellSort
-          className={styles.headerCell}
-          stiff={true}
-          sortKey={TrackPropertySortKey.FILESOURCE}
-        >
-          Source
-        </HeaderCellSort>
-        <HeaderCellSort
-          className={styles.headerCell}
-          stiff={true}
-          pinRight={true}
-          sortKey={TrackPropertySortKey.DATE_ADDED}
-        >
-          <Tooltip label="Date added" position="bottom">
-            <span>Date</span>
-          </Tooltip>
-        </HeaderCellSort>
-      </HeaderRow>
-    </Header>
-  );
-});
-TrackTableHeader.displayName = "TrackTableHeader";
-
-interface TrackTableRowProps
-  extends TrackTableProps, Pick<React.HTMLAttributes<HTMLDivElement>, "onContextMenu"> {
-  item: ExtendedNode<TrackDefinitionNode>;
-}
-
-const TrackTableRow = memo(({ item: track, playlistId }: TrackTableRowProps) => {
-  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
-  const activeTrackId = appStore.use.activeTrackId();
-  // if we previously failed to fetch Discogs genres for a track, we save that information
-  // (and persist it to local storage) so that we don't show the "fetch genres" button again
-  const hasNoDiscogsGenres = appStore.use.getLibraryTrackHasNoDiscogsGenres();
-
-  return (
-    <Row
-      className={classNames(styles.row, { [styles.rowActive]: activeTrackId === track.id })}
-      data-track-id={track.id}
-      item={track}
-      // N.B. key must include the playlist ID because there is row information which changes as we navigate
-      // through different playlists (like the index column)
-      key={`${playlistId}-${track.id.toString()}`}
-    >
-      <Cell className={styles.indexCell}>{track.indexInPlaylist + 1}</Cell>
-      <Cell hide={!analyzeBPMPerTrack} onClick={stopPropagation}>
-        <AnalyzeSingleTrackButton trackDef={track} />
-      </Cell>
-      <Cell className={styles.bpmCell}>
-        <EditableTrackTagValue tagName="BPM" trackDef={track} />
-      </Cell>
-      <Cell>
-        <EditableTrackTagValue tagName="Title" trackDef={track} />
-      </Cell>
-      <Cell>
-        <EditableTrackTagValue tagName="Artist" trackDef={track} />
-      </Cell>
-      <Cell>
-        {track.Genre || hasNoDiscogsGenres(track["Track ID"]) ? (
-          <EditableTrackTagValue tagName="Genre" placeholder="--" trackDef={track} />
-        ) : (
-          <FetchDiscogsGenreButton trackDef={track} />
-        )}
-      </Cell>
-      <Cell onClick={stopPropagation}>
-        <TrackRatingStars trackID={track["Track ID"]} rating={track.Rating} />
-      </Cell>
-      <Cell>
-        <TrackFileTypeCell track={track} />
-      </Cell>
-      <Cell>
-        <TrackFileSourceCell track={track} />
-      </Cell>
-      <Cell>
-        <TrackDateAddedText track={track} />
-      </Cell>
-    </Row>
-  );
-});
-TrackTableRow.displayName = "TrackTableRow";
-
-const TrackFileTypeCell = memo(({ track }: { track: TrackDefinition }) => {
-  const isReadyForAnalysis = useIsTrackReadyForAnalysis(track["Track ID"]);
-  const fileType = getTrackFileType(track);
-  return <AudioFileTypeTag isReadyForAnalysis={isReadyForAnalysis} fileType={fileType} />;
-});
-TrackFileTypeCell.displayName = "TrackFileTypeCell";
-
-const TrackFileSourceCell = memo(({ track }: { track: TrackDefinition }) => {
-  const fileSource = getTrackFileSource(track);
-  const color =
-    fileSource === AudioFileSource.BANDCAMP
-      ? "blue"
-      : fileSource === AudioFileSource.SOULSEEK
-        ? "green"
-        : "gray";
-  return (
-    <Badge size="sm" radius="sm" fullWidth={true} variant="light" color={color}>
-      {fileSource}
-    </Badge>
-  );
-});
-TrackFileSourceCell.displayName = "TrackFileSourceCell";
 
 const TrackTableEmpty = memo(({ playlistId }: TrackTableProps) => {
   const libraryPlaylists = appStore.use.libraryPlaylists();
@@ -402,8 +704,8 @@ TrackTableEmpty.displayName = "TrackTableEmpty";
 // HOOKS
 // -------------------------------------------------------------------------------------------------
 
-/** Gets the list of track definitions for the given playlist as react-table-library data notes */
-function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> {
+/** Gets the list of track definitions for the given playlist as data nodes for the table */
+function useTrackDefinitionNodes(playlistId: string): { nodes: TrackDefinitionNode[] } {
   const trackDefs = useAppStore(useShallow((state) => state.getPlaylistTrackDefs(playlistId)));
   if (trackDefs === undefined) {
     throw new Error(ClientErrors.libraryNoTracksFoundForPlaylist(playlistId));
@@ -423,80 +725,273 @@ function useTrackDefinitionNodes(playlistId: string): Data<TrackDefinitionNode> 
   );
 }
 
-/** Configures CSS grid styles. */
-function useTableTheme(numTracksInPlaylist: number): Theme {
+/** Configures columns */
+function useColumns(numTracksInPlaylist: number): GridColumn[] {
+  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+  const trackTableSort = appStore.use.trackTableSort();
+
   const indexColumnWidth = Math.log10(numTracksInPlaylist) * 10 + 25;
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
   const genresColumnWidth = 120;
-  const ratingColumnWidth = 90;
-  const fileTypeColumnWidth = 80;
-  const fileSourceColumnWidth = 90;
+  const ratingColumnWidth = 100;
+  const fileTypeColumnWidth = 60;
+  const fileSourceColumnWidth = 95;
   const dateAddedColumnWidth = 80;
 
-  const gridTemplateColumns = [
-    `${indexColumnWidth.toString()}px`,
-    `${analyzeColumnWidth.toString()}px`,
-    `${bpmColumnWidth.toString()}px`,
-    `repeat(2, minmax(40px, 1fr))`,
-    `${genresColumnWidth.toString()}px`,
-    `${ratingColumnWidth.toString()}px`,
-    `${fileTypeColumnWidth.toString()}px`,
-    `${fileSourceColumnWidth.toString()}px`,
-    `${dateAddedColumnWidth.toString()}px`,
-  ];
-  return useTheme([
-    {
-      Table: `
-        flex: 1;
-        --data-table-library_grid-template-columns: ${gridTemplateColumns.join(" ")};
-      `,
+  const getSortIcon = useCallback(
+    (sortKey: TrackPropertySortKey): string | undefined => {
+      if (trackTableSort.sortKey === sortKey) {
+        return trackTableSort.reverse ? "sortDesc" : "sortAsc";
+      }
+      return undefined; // No icon for non-sorted columns
     },
-  ]);
+    [trackTableSort],
+  );
+
+  return useMemo(
+    () => [
+      {
+        title: "#",
+        width: indexColumnWidth,
+        icon: getSortIcon(TrackPropertySortKey.INDEX),
+      },
+      {
+        title: analyzeBPMPerTrack ? "Analyze" : "",
+        width: analyzeColumnWidth,
+      },
+      {
+        title: "BPM",
+        width: bpmColumnWidth,
+        icon: getSortIcon(TrackPropertySortKey.BPM),
+      },
+      {
+        title: "Name",
+        width: 200,
+        grow: 1,
+        icon: getSortIcon(TrackPropertySortKey.NAME),
+      },
+      {
+        title: "Artist",
+        width: 200,
+        grow: 1,
+        icon: getSortIcon(TrackPropertySortKey.ARTIST),
+      },
+      {
+        title: "Genres",
+        width: genresColumnWidth,
+        icon: getSortIcon(TrackPropertySortKey.GENRE),
+      },
+      {
+        title: "Rating",
+        width: ratingColumnWidth,
+        icon: getSortIcon(TrackPropertySortKey.RATING),
+      },
+      {
+        title: "File Type",
+        width: fileTypeColumnWidth,
+        icon: getSortIcon(TrackPropertySortKey.FILETYPE),
+      },
+      {
+        title: "Source",
+        width: fileSourceColumnWidth,
+        icon: getSortIcon(TrackPropertySortKey.FILESOURCE),
+      },
+      {
+        title: "Date",
+        width: dateAddedColumnWidth,
+        icon: getSortIcon(TrackPropertySortKey.DATE_ADDED),
+      },
+    ],
+    [indexColumnWidth, getSortIcon, analyzeBPMPerTrack],
+  );
 }
 
-function useTableInteractions(playlistId: string, trackDefNodes: Data<TrackDefinitionNode>) {
-  const selectedTrackId = appStore.use.selectedTrackId();
+/** Configures grid theme */
+function useGridTheme(): Partial<GridTheme> {
+  const colorScheme = useComputedColorScheme("light");
+  const { colors, fontFamily } = useMantineTheme();
+
+  return useMemo(() => {
+    const isDark = colorScheme === "dark";
+    return {
+      bgCell: isDark ? colors.dark[7] : "#FFFFFF",
+      bgCellMedium: isDark ? colors.dark[6] : colors.gray[1],
+      bgHeader: isDark ? colors.dark[7] : colors.gray[0],
+      bgHeaderHasFocus: isDark ? colors.dark[6] : colors.gray[1],
+      bgHeaderHovered: isDark ? colors.dark[6] : colors.gray[1],
+      borderColor: "transparent",
+      headerBottomBorderColor: isDark ? colors.gray[8] : colors.gray[3],
+      textDark: isDark ? colors.gray[3] : colors.gray[8],
+      textHeader: isDark ? colors.gray[1] : colors.dark[8],
+      textMedium: isDark ? colors.gray[4] : colors.gray[6],
+      textLight: isDark ? colors.gray[5] : colors.gray[5],
+      textBubble: isDark ? colors.gray[0] : colors.dark[9],
+      bgBubble: isDark ? colors.dark[5] : colors.gray[2],
+      bgBubbleSelected: isDark ? colors.blue[8] : colors.blue[1],
+      accentColor: "transparent",
+      accentLight: isDark ? colors.blue[8] + "60" : colors.blue[1] + "90",
+      accentFg: "transparent",
+      fontFamily: fontFamily,
+      cellHorizontalPadding: 8,
+      cellVerticalPadding: 3,
+      headerIconSize: 12,
+    };
+  }, [colorScheme, colors, fontFamily]);
+}
+
+function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackDefinitionNode[] }) {
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
+  const setActiveTrackId = appStore.use.setActiveTrackId();
   const trackTableSort = appStore.use.trackTableSort();
   const setTrackTableSort = appStore.use.setTrackTableSort();
+  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+  const analyzeTrack = appStore.use.analyzeTrack();
+
+  // Multi-row selection state
+  const [selectionState, setSelectionState] = useState<SelectionState>({
+    selectedRows: new Set(),
+    lastClickedRow: undefined,
+  });
+
+  // Track last click for double-click detection (since onCellActivated doesn't fire reliably)
+  const lastClickRef = useRef<{ row: number; timestamp: number } | null>(null);
+  const DOUBLE_CLICK_THRESHOLD_MS = 400;
 
   const sortedTrackDefs = useMemo(() => {
     const { sortKey, reverse } = trackTableSort;
-    const sorted = sortFns[sortKey](trackDefNodes.nodes.slice()) as TrackDefinitionNode[];
+    const sortFn = sortFns[sortKey];
+    const sorted = trackDefNodes.nodes.slice().sort(sortFn);
     return reverse ? sorted.reverse() : sorted;
   }, [trackDefNodes.nodes, trackTableSort]);
 
-  const handleSortChange = useCallback(
-    (_action: Action, state: State) => {
-      const { sortKey, reverse } = state as TrackTableSortState;
-      log.debug(
-        `[client] sorted track table by '${sortKey}' column (${reverse ? "descending" : "ascending"})`,
-      );
-      setTrackTableSort({ sortKey, reverse });
+  const handleHeaderClick = useCallback(
+    (colIndex: number, _args: HeaderClickedEventArgs) => {
+      const sortKey = columnSortKeyMap[colIndex];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (sortKey) {
+        const isCurrentSort = trackTableSort.sortKey === sortKey;
+        const reverse = isCurrentSort ? !trackTableSort.reverse : false;
+        log.debug(
+          `[client] sorted track table by '${sortKey}' column (${reverse ? "descending" : "ascending"})`,
+        );
+        setTrackTableSort({ sortKey, reverse });
+      }
     },
-    [setTrackTableSort],
+    [trackTableSort, setTrackTableSort],
   );
 
-  const handleSelectChange = useCallback(
-    (_action: Action, state: State) => {
-      // TODO: better typedef for `state`
-      log.debug(`[client] selected track ${state.id as string} in current playlist ${playlistId}`);
-      setSelectedTrackId(state.id as number);
+  // Clear selection function
+  const clearSelection = useCallback(() => {
+    setSelectionState({ selectedRows: new Set(), lastClickedRow: undefined });
+    setSelectedTrackId(undefined);
+  }, [setSelectedTrackId]);
+
+  // Handle cell click with modifier key support for multi-selection and double-click detection
+  const handleCellClicked = useCallback(
+    (cell: Item, event: CellClickedEventArgs) => {
+      const [col, row] = cell;
+      const now = Date.now();
+      const hasModifier = event.shiftKey || event.metaKey || event.ctrlKey;
+
+      // If clicking on empty space (row out of bounds), clear selection
+      if (row >= sortedTrackDefs.length) {
+        clearSelection();
+        lastClickRef.current = null;
+        return;
+      }
+
+      // Handle Analyze column click - trigger BPM analysis
+      if (col === 1 && analyzeBPMPerTrack) {
+        const track = sortedTrackDefs[row];
+        void run(function* () {
+          yield* analyzeTrack(track["Track ID"]);
+        });
+        return; // Don't continue with selection logic
+      }
+
+      // Detect double-click: same row, within threshold, no modifier keys
+      //
+      // NOTE: We implement manual double-click detection here instead of using glide-data-grid's
+      // `onCellActivated` event because that event does not fire reliably in our configuration.
+      // We tried setting `cellActivationBehavior="double-click"` and adding an `onCellActivated`
+      // handler, but the event never fired despite double-clicks being registered. This may be
+      // related to our cell configuration (allowOverlay, readonly settings) or row selection mode.
+      // As a workaround, we track click timestamps ourselves to detect double-clicks.
+      const lastClick = lastClickRef.current;
+      const isDoubleClick =
+        !hasModifier &&
+        lastClick !== null &&
+        lastClick.row === row &&
+        now - lastClick.timestamp < DOUBLE_CLICK_THRESHOLD_MS;
+
+      if (isDoubleClick) {
+        // Double-click detected: load track in player
+        const track = sortedTrackDefs[row];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (track) {
+          setActiveTrackId(track.id);
+          setSelectedTrackId(track.id);
+        }
+        lastClickRef.current = null; // Reset to prevent triple-click triggering again
+        return;
+      }
+
+      // Update last click for future double-click detection
+      lastClickRef.current = { row, timestamp: now };
+
+      // Handle selection
+      const nextState = computeNextSelection(selectionState, {
+        row,
+        shiftKey: event.shiftKey,
+        metaKey: event.metaKey,
+        ctrlKey: event.ctrlKey,
+      });
+      setSelectionState(nextState);
     },
-    [playlistId, setSelectedTrackId],
+    [
+      selectionState,
+      sortedTrackDefs,
+      clearSelection,
+      setActiveTrackId,
+      setSelectedTrackId,
+      analyzeBPMPerTrack,
+      analyzeTrack,
+    ],
   );
 
-  const sort = useSort(
-    trackDefNodes,
-    { state: trackTableSort, onChange: handleSortChange },
-    { sortFns, sortIcon },
+  // Create selection based on selectionState for multi-row selection
+  const selection = useMemo((): GridSelection => {
+    const { selectedRows, lastClickedRow } = selectionState;
+    if (selectedRows.size === 0) {
+      return {
+        columns: CompactSelection.empty(),
+        rows: CompactSelection.empty(),
+        current: undefined,
+      };
+    }
+
+    const rowsArray = Array.from(selectedRows).sort((a, b) => a - b);
+    let rowSelection = CompactSelection.empty();
+    for (const row of rowsArray) {
+      rowSelection = rowSelection.add(row);
+    }
+
+    // Use last clicked row for current cell position
+    const currentRow = lastClickedRow ?? rowsArray[rowsArray.length - 1];
+    return {
+      columns: CompactSelection.empty(),
+      rows: rowSelection,
+      current: {
+        cell: [0, currentRow] as [number, number],
+        range: { x: 0, y: currentRow, width: 1, height: 1 },
+        rangeStack: [],
+      },
+    };
+  }, [selectionState]);
+
+  return useMemo(
+    () => ({ sortedTrackDefs, selection, handleHeaderClick, handleCellClicked, clearSelection }),
+    [sortedTrackDefs, selection, handleHeaderClick, handleCellClicked, clearSelection],
   );
-
-  const select = useRowSelect(trackDefNodes, {
-    state: { id: selectedTrackId },
-    onChange: handleSelectChange,
-  });
-
-  return useMemo(() => ({ select, sort, sortedTrackDefs }), [sort, select, sortedTrackDefs]);
 }
