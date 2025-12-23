@@ -16,10 +16,10 @@ import {
   type ProvideEditorCallback,
   type Theme as GridTheme,
 } from "@glideapps/glide-data-grid";
-import { run } from "effection";
 import type { MantineColorScheme, MantineTheme } from "@mantine/core";
 import { Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import classNames from "classnames";
+import { run } from "effection";
 import { unique } from "radash";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
@@ -88,6 +88,18 @@ const columnSortKeyMap: Record<number, TrackPropertySortKey> = {
   7: TrackPropertySortKey.FILETYPE,
   8: TrackPropertySortKey.FILESOURCE,
   9: TrackPropertySortKey.DATE_ADDED,
+};
+
+// Custom header icons for sort indicators (IoCaretUp/IoCaretDown from react-icons/io5)
+const headerIcons: Record<string, (props: { fgColor: string; bgColor: string }) => string> = {
+  sortAsc: ({ fgColor }) =>
+    `<svg width="12" height="12" viewBox="0 0 512 512" fill="${fgColor}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M414 321.94L274.22 158.82a24 24 0 00-36.44 0L98 321.94c-13.34 15.57-2.28 39.62 18.22 39.62h279.6c20.5 0 31.56-24.05 18.18-39.62z"/>
+    </svg>`,
+  sortDesc: ({ fgColor }) =>
+    `<svg width="12" height="12" viewBox="0 0 512 512" fill="${fgColor}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M98 190.06l139.78 163.12a24 24 0 0036.44 0L414 190.06c13.34-15.57 2.28-39.62-18.22-39.62H116.18C95.68 150.44 84.62 174.49 98 190.06z"/>
+    </svg>`,
 };
 
 // Custom cell renderer for interactive rating stars
@@ -420,6 +432,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         onHeaderClicked={handleHeaderClick}
         rowHeight={TRACK_TABLE_ROW_HEIGHT}
         headerHeight={TRACK_TABLE_HEADER_HEIGHT}
+        headerIcons={headerIcons}
         smoothScrollX={true}
         smoothScrollY={true}
         theme={theme}
@@ -522,11 +535,11 @@ function useColumns(numTracksInPlaylist: number): GridColumn[] {
   const dateAddedColumnWidth = 80;
 
   const getSortIcon = useCallback(
-    (sortKey: TrackPropertySortKey) => {
+    (sortKey: TrackPropertySortKey): string | undefined => {
       if (trackTableSort.sortKey === sortKey) {
-        return trackTableSort.reverse ? "headerIconIndicatorUp" : "headerIconIndicatorDown";
+        return trackTableSort.reverse ? "sortDesc" : "sortAsc";
       }
-      return "headerIconIndicatorDown";
+      return undefined; // No icon for non-sorted columns
     },
     [trackTableSort],
   );
@@ -616,6 +629,7 @@ function useGridTheme(): Partial<GridTheme> {
       fontFamily: fontFamily,
       cellHorizontalPadding: 8,
       cellVerticalPadding: 3,
+      headerIconSize: 12,
     };
   }, [colorScheme, colors, fontFamily]);
 }
