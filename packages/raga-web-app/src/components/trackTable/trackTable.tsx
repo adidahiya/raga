@@ -11,6 +11,7 @@ import {
   type GridCell,
   GridCellKind,
   type GridColumn,
+  type GridMouseEventArgs,
   type GridSelection,
   type HeaderClickedEventArgs,
   type Item,
@@ -248,10 +249,8 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   }, [filterQuery, allTrackDefNodes]);
 
   // Table interactions
-  const { sortedTrackDefs, selection, handleHeaderClick, handleCellClicked } = useTableInteractions(
-    playlistId,
-    filteredTrackDefNodes,
-  );
+  const { sortedTrackDefs, selection, handleHeaderClick, handleCellClicked, clearSelection } =
+    useTableInteractions(playlistId, filteredTrackDefNodes);
   const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
   useTrackTableHotkeys({ containerElement, sortedTrackIds });
   const { handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
@@ -423,10 +422,10 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   );
 
   // Handle item hover to track which row is being hovered
-  const handleItemHovered = useCallback((args: { location: readonly [number, number] }) => {
-    const [, row] = args.location;
-    // Row is -1 when hovering over header, ignore those
-    if (row >= 0) {
+  const handleItemHovered = useCallback((args: GridMouseEventArgs) => {
+    // Only set hover when actually hovering over a cell, not header or empty space
+    if (args.kind === "cell") {
+      const [, row] = args.location;
       setHoveredRow(row);
     } else {
       setHoveredRow(undefined);
@@ -443,6 +442,13 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   const table = (
     <div
       className={classNames(styles.trackTable, { [styles.contextMenuIsOpen]: isContextMenuOpen })}
+      onClick={(e) => {
+        // Clear selection when clicking directly on the container div (empty space)
+        // Clicks on cells are handled by onCellClicked and won't bubble here
+        if (e.target === e.currentTarget) {
+          clearSelection();
+        }
+      }}
     >
       <DataEditor
         ref={gridRef}
@@ -694,10 +700,21 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
     [trackTableSort, setTrackTableSort],
   );
 
+  // Clear selection function
+  const clearSelection = useCallback(() => {
+    setSelectionState({ selectedRows: new Set(), lastClickedRow: undefined });
+    setSelectedTrackId(undefined);
+  }, [setSelectedTrackId]);
+
   // Handle cell click with modifier key support for multi-selection
   const handleCellClicked = useCallback(
     (cell: Item, event: CellClickedEventArgs) => {
       const [, row] = cell;
+      // If clicking on empty space (row out of bounds), clear selection
+      if (row >= sortedTrackDefs.length) {
+        clearSelection();
+        return;
+      }
       const nextState = computeNextSelection(selectionState, {
         row,
         shiftKey: event.shiftKey,
@@ -714,7 +731,7 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
         setSelectedTrackId(track.id);
       }
     },
-    [selectionState, sortedTrackDefs, setSelectedTrackId, playlistId],
+    [selectionState, sortedTrackDefs, setSelectedTrackId, playlistId, clearSelection],
   );
 
   // Create selection based on selectionState for multi-row selection
@@ -748,7 +765,7 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
   }, [selectionState]);
 
   return useMemo(
-    () => ({ sortedTrackDefs, selection, handleHeaderClick, handleCellClicked }),
-    [sortedTrackDefs, selection, handleHeaderClick, handleCellClicked],
+    () => ({ sortedTrackDefs, selection, handleHeaderClick, handleCellClicked, clearSelection }),
+    [sortedTrackDefs, selection, handleHeaderClick, handleCellClicked, clearSelection],
   );
 }
