@@ -60,6 +60,14 @@ interface RatingCellData {
 
 type RatingCell = CustomCell<RatingCellData>;
 
+interface BadgeCellData {
+  kind: "badge";
+  value: string;
+  colorKey: string;
+}
+
+type BadgeCell = CustomCell<BadgeCellData>;
+
 // CONFIGURATION
 // -------------------------------------------------------------------------------------------------
 
@@ -215,6 +223,108 @@ const getRatingCellRenderer = (
   },
 });
 
+// Custom cell renderer for badge/pill-styled cells (File Type, Source)
+const BADGE_CELL_KIND = "badge" as const;
+
+// Color mappings for badge cells
+const BADGE_COLORS = {
+  // File types
+  mp3: "blue",
+  m4a: "red",
+  aac: "red",
+  aif: "gold",
+  aiff: "gold",
+  wav: "gold",
+  flac: "green",
+  // Sources
+  soulseek: "green",
+  bandcamp: "blue",
+  other: "gray",
+} as const;
+
+function isBadgeCell(cell: CustomCell): cell is BadgeCell {
+  const data = cell.data as unknown;
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "kind" in data &&
+    (data as { kind: string }).kind === BADGE_CELL_KIND
+  );
+}
+
+const getBadgeCellRenderer = (
+  mantineTheme: MantineTheme,
+  colorScheme: MantineColorScheme,
+): CustomRenderer<BadgeCell> => ({
+  kind: GridCellKind.Custom,
+  isMatch: isBadgeCell,
+  draw: (args, cell) => {
+    const { ctx, rect, theme } = args;
+    const { value, colorKey } = cell.data;
+    const { colors } = mantineTheme;
+
+    // Determine colors based on colorKey
+    const isDark = colorScheme === "dark";
+    let bgColor: string;
+    let textColor: string;
+
+    switch (colorKey) {
+      case "blue":
+        bgColor = isDark ? colors.blue[9] + "40" : colors.blue[1] + "80";
+        textColor = isDark ? colors.blue[7] : colors.blue[4];
+        break;
+      case "gold":
+        bgColor = isDark ? colors.yellow[9] + "40" : colors.yellow[1] + "90";
+        textColor = isDark ? colors.yellow[9] : colors.yellow[6];
+        break;
+      case "green":
+        bgColor = isDark ? colors.green[9] + "40" : colors.green[1] + "90";
+        textColor = isDark ? colors.green[8] : colors.green[5];
+        break;
+      case "red":
+        bgColor = isDark ? colors.red[9] + "40" : colors.red[1] + "80";
+        textColor = isDark ? colors.red[9] : colors.red[5];
+        break;
+      case "gray":
+      default:
+        bgColor = isDark ? colors.gray[8] + "80" : colors.gray[2] + "80";
+        textColor = isDark ? colors.gray[6] : colors.gray[6];
+        break;
+    }
+
+    // Measure text to calculate pill dimensions
+    ctx.font = `${theme.baseFontStyle} ${theme.fontFamily}`;
+    const textMetrics = ctx.measureText(value.toUpperCase());
+    const textWidth = textMetrics.width;
+
+    // Pill dimensions
+    const pillHeight = rect.height - theme.cellVerticalPadding * 2;
+    const pillWidth = textWidth + 16; // 8px padding on each side
+    const pillRadius = pillHeight / 4;
+
+    // Center the pill horizontally in the cell
+    const pillX = rect.x + (rect.width - pillWidth) / 2;
+    const pillY = rect.y + theme.cellVerticalPadding;
+
+    ctx.save();
+
+    // Draw rounded rectangle (pill shape)
+    ctx.fillStyle = bgColor;
+    ctx.beginPath();
+    ctx.roundRect(pillX, pillY, pillWidth, pillHeight, pillRadius);
+    ctx.fill();
+
+    // Draw text centered in pill
+    ctx.fillStyle = textColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(value.toUpperCase(), pillX + pillWidth / 2, pillY + pillHeight / 2);
+
+    ctx.restore();
+  },
+  needsHover: false,
+});
+
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
@@ -353,24 +463,32 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
           } as RatingCell;
         }
         case 7: {
-          // File Type
+          // File Type (badge cell)
+          const fileType = getTrackFileType(track) ?? "--";
+          const fileTypeColor =
+            (BADGE_COLORS[fileType.toLowerCase() as keyof typeof BADGE_COLORS] as
+              | string
+              | undefined) ?? "gray";
           return {
-            kind: GridCellKind.Text,
-            data: getTrackFileType(track) ?? "--",
-            displayData: getTrackFileType(track) ?? "--",
-            allowOverlay: true,
-            readonly: true,
-          };
+            kind: GridCellKind.Custom,
+            data: { kind: "badge", value: fileType, colorKey: fileTypeColor },
+            allowOverlay: false,
+            copyData: fileType,
+          } as BadgeCell;
         }
         case 8: {
-          // Source
+          // Source (badge cell)
+          const source = getTrackFileSource(track);
+          const sourceColor =
+            (BADGE_COLORS[source.toLowerCase() as keyof typeof BADGE_COLORS] as
+              | string
+              | undefined) ?? "gray";
           return {
-            kind: GridCellKind.Text,
-            data: getTrackFileSource(track),
-            displayData: getTrackFileSource(track),
-            allowOverlay: true,
-            readonly: true,
-          };
+            kind: GridCellKind.Custom,
+            data: { kind: "badge", value: source, colorKey: sourceColor },
+            allowOverlay: false,
+            copyData: source,
+          } as BadgeCell;
         }
         case 9: {
           // Date Added
@@ -462,6 +580,10 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
     return getRatingCellRenderer(mantineTheme, colorScheme);
   }, [mantineTheme, colorScheme]);
 
+  const badgeCellRenderer = useMemo(() => {
+    return getBadgeCellRenderer(mantineTheme, colorScheme);
+  }, [mantineTheme, colorScheme]);
+
   const table = (
     <div
       ref={tableContainerRef}
@@ -491,7 +613,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         smoothScrollX={true}
         smoothScrollY={true}
         theme={theme}
-        customRenderers={[ratingCellRenderer]}
+        customRenderers={[ratingCellRenderer, badgeCellRenderer]}
         onCellContextMenu={(_cell, args) => {
           args.preventDefault();
           handleContextMenu(args);
@@ -587,8 +709,8 @@ function useColumns(numTracksInPlaylist: number): GridColumn[] {
   const bpmColumnWidth = 60;
   const genresColumnWidth = 120;
   const ratingColumnWidth = 100;
-  const fileTypeColumnWidth = 80;
-  const fileSourceColumnWidth = 90;
+  const fileTypeColumnWidth = 60;
+  const fileSourceColumnWidth = 95;
   const dateAddedColumnWidth = 80;
 
   const getSortIcon = useCallback(
