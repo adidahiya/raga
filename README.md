@@ -79,9 +79,9 @@ Rekordbox-compatible Music.app XML format.
 
 Requirements:
 
-- Node.js v20.x (see version specified in `.nvmrc`)
+- Node.js v24.x (see version specified in `.nvmrc`)
 - Yarn v4.x (see version specified in `package.json`)
-- Deno v1.x (see [installation docs](https://docs.deno.com/runtime/manual/getting_started/installation))
+- Deno v2.x (see [installation docs](https://docs.deno.com/runtime/manual/getting_started/installation))
 
 Getting started:
 
