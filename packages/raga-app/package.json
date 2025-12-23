@@ -21,12 +21,12 @@
     "@adahiya/raga-lib": "workspace:^",
     "@adahiya/raga-types": "workspace:*",
     "@adahiya/raga-web-app": "workspace:^",
-    "@tinyhttp/app": "^2.5.2",
+    "@tinyhttp/app": "^3.0.1",
     "ansis": "^4.2.0",
     "app-root-dir": "^1.0.2",
     "disconnect": "^1.2.2",
     "effection": "^3.6.1",
-    "milliparsec": "^5.0.2",
+    "milliparsec": "^5.1.0",
     "node-taglib-sharp": "^6.0.1",
     "radash": "^12.1.1",
     "react": "^19.2.3",
@@ -34,7 +34,7 @@
     "react-scan": "^0.4.3",
     "roarr": "^7.21.2",
     "serialize-error": "^12.0.0",
-    "sirv": "^3.0.1",
+    "sirv": "^3.0.2",
     "vite-plugin-html-config": "^2.0.2"
   },
   "devDependencies": {
