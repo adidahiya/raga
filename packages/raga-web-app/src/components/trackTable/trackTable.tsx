@@ -3,6 +3,8 @@ import "@glideapps/glide-data-grid/dist/index.css";
 import type { TrackDefinition } from "@adahiya/raga-types";
 import {
   CompactSelection,
+  type CustomCell,
+  type CustomRenderer,
   DataEditor,
   type DataEditorRef,
   type GridCell,
@@ -14,7 +16,9 @@ import {
   type ProvideEditorCallback,
   type Theme as GridTheme,
 } from "@glideapps/glide-data-grid";
-import { Stack, Text, useMantineColorScheme, useMantineTheme } from "@mantine/core";
+import { run } from "effection";
+import type { MantineColorScheme, MantineTheme } from "@mantine/core";
+import { Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import classNames from "classnames";
 import { unique } from "radash";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
@@ -43,6 +47,14 @@ interface TrackDefinitionNode extends TrackDefinition {
   id: number;
   indexInPlaylist: number;
 }
+
+interface RatingCellData {
+  kind: "rating";
+  trackId: number;
+  rating: number;
+}
+
+type RatingCell = CustomCell<RatingCellData>;
 
 // CONFIGURATION
 // -------------------------------------------------------------------------------------------------
@@ -77,6 +89,115 @@ const columnSortKeyMap: Record<number, TrackPropertySortKey> = {
   8: TrackPropertySortKey.FILESOURCE,
   9: TrackPropertySortKey.DATE_ADDED,
 };
+
+// Custom cell renderer for interactive rating stars
+const RATING_CELL_KIND = "rating" as const;
+
+// Star SVG path (24x24 viewBox)
+const STAR_PATH = new Path2D(
+  "M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z",
+);
+const STAR_VIEWBOX_SIZE = 24;
+
+function isRatingCell(cell: CustomCell): cell is RatingCell {
+  const data = cell.data as unknown;
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "kind" in data &&
+    (data as { kind: string }).kind === RATING_CELL_KIND
+  );
+}
+
+const getRatingCellRenderer = (
+  mantineTheme: MantineTheme,
+  colorScheme: MantineColorScheme,
+): CustomRenderer<RatingCell> => ({
+  kind: GridCellKind.Custom,
+  isMatch: isRatingCell,
+  draw: (args, cell) => {
+    const { ctx, rect, theme, hoverX, overrideCursor } = args;
+    // Ensure rating is clamped to 0-5 range
+    const rating = Math.max(0, Math.min(5, cell.data.rating));
+
+    // Calculate star size to fit cell height with padding
+    const padding = theme.cellVerticalPadding;
+    const starSize = rect.height - padding * 2;
+    const scale = starSize / STAR_VIEWBOX_SIZE;
+
+    // Align stars left with horizontal padding (reduced by 2px for rating cell)
+    const paddingOffset = theme.cellHorizontalPadding - 2;
+    const startX = rect.x + paddingOffset;
+    const startY = rect.y + padding;
+
+    // Calculate hovered star (for preview effect)
+    let hoveredStar = -1;
+    if (hoverX !== undefined) {
+      const hoverRelativeX = hoverX - paddingOffset;
+      hoveredStar = Math.ceil(hoverRelativeX / starSize);
+      hoveredStar = Math.max(0, Math.min(5, hoveredStar));
+      // Set pointer cursor when hovering
+      overrideCursor?.("pointer");
+    }
+
+    ctx.save();
+
+    for (let i = 0; i < 5; i++) {
+      ctx.save();
+      ctx.translate(startX + i * starSize, startY);
+      ctx.scale(scale, scale);
+
+      const starIndex = i + 1;
+      const isHovering = hoveredStar > 0;
+      const isHoverPreview = isHovering && starIndex <= hoveredStar;
+      const isFilled = starIndex <= rating;
+
+      if (isHoverPreview) {
+        // Hover preview takes precedence - show dimmed gold
+        ctx.fillStyle = mantineTheme.colors.yellow[7];
+        ctx.globalAlpha = 0.5;
+      } else if (isFilled) {
+        // Filled star uses full gold color
+        ctx.fillStyle = mantineTheme.colors.yellow[7];
+        ctx.globalAlpha = 1.0;
+      } else {
+        // Empty star uses dim gray color
+        ctx.fillStyle =
+          colorScheme === "dark" ? mantineTheme.colors.gray[8] : mantineTheme.colors.gray[2];
+        ctx.globalAlpha = 1.0;
+      }
+
+      ctx.fill(STAR_PATH);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  },
+  needsHover: true,
+  needsHoverPosition: true,
+  onClick: (args) => {
+    const { bounds, posX, cell, theme } = args;
+    // Calculate star size matching the draw function
+    const padding = theme.cellVerticalPadding;
+    const starSize = bounds.height - padding * 2;
+    // Match the reduced padding in draw function
+    const startX = theme.cellHorizontalPadding - 2;
+
+    // Calculate which star was clicked (1-5) based on X position relative to star area
+    const clickX = posX - startX;
+    const clickedStar = Math.ceil(clickX / starSize);
+    const newRating = Math.max(0, Math.min(5, clickedStar));
+
+    // Persist the rating change via app store
+    void run(function* () {
+      const setTrackRating = appStore.getState().setTrackRating;
+      yield* setTrackRating(cell.data.trackId, newRating * 20);
+    });
+
+    // Return updated cell
+    return { ...cell, data: { ...cell.data, rating: newRating } };
+  },
+});
 
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
@@ -196,14 +317,15 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
           };
         }
         case 6: {
-          // Rating
+          // Rating (interactive custom cell) - convert from 0-100 to 0-5 scale
+          const ratingOutOf100 = track.Rating ?? 0;
+          const ratingOutOf5 = Math.round(ratingOutOf100 / 20);
           return {
-            kind: GridCellKind.Text,
-            data: "★".repeat(track.Rating ?? 0) + "☆".repeat(5 - (track.Rating ?? 0)),
-            displayData: "★".repeat(track.Rating ?? 0) + "☆".repeat(5 - (track.Rating ?? 0)),
-            allowOverlay: true,
-            readonly: true,
-          };
+            kind: GridCellKind.Custom,
+            data: { kind: "rating", trackId: track.id, rating: ratingOutOf5 },
+            allowOverlay: false,
+            copyData: String(ratingOutOf5),
+          } as RatingCell;
         }
         case 7: {
           // File Type
@@ -275,6 +397,13 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
     [sortedTrackDefs, activeTrackId, theme.bgCellMedium],
   );
 
+  // const colorScheme = useComputedColorScheme("light");
+  const mantineTheme = useMantineTheme();
+  const colorScheme = useComputedColorScheme();
+  const ratingCellRenderer = useMemo(() => {
+    return getRatingCellRenderer(mantineTheme, colorScheme);
+  }, [mantineTheme, colorScheme]);
+
   const table = (
     <div
       className={classNames(styles.trackTable, { [styles.contextMenuIsOpen]: isContextMenuOpen })}
@@ -294,6 +423,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         smoothScrollX={true}
         smoothScrollY={true}
         theme={theme}
+        customRenderers={[ratingCellRenderer]}
         onCellContextMenu={(_cell, args) => {
           args.preventDefault();
           handleContextMenu(args);
@@ -386,7 +516,7 @@ function useColumns(numTracksInPlaylist: number): GridColumn[] {
   const analyzeColumnWidth = 90;
   const bpmColumnWidth = 60;
   const genresColumnWidth = 120;
-  const ratingColumnWidth = 90;
+  const ratingColumnWidth = 100;
   const fileTypeColumnWidth = 80;
   const fileSourceColumnWidth = 90;
   const dateAddedColumnWidth = 80;
@@ -461,8 +591,8 @@ function useColumns(numTracksInPlaylist: number): GridColumn[] {
 
 /** Configures grid theme */
 function useGridTheme(): Partial<GridTheme> {
-  const { colorScheme } = useMantineColorScheme();
-  const { colors } = useMantineTheme();
+  const colorScheme = useComputedColorScheme("light");
+  const { colors, fontFamily } = useMantineTheme();
 
   return useMemo(() => {
     const isDark = colorScheme === "dark";
@@ -474,6 +604,7 @@ function useGridTheme(): Partial<GridTheme> {
       bgHeaderHovered: isDark ? colors.dark[6] : colors.gray[1],
       borderColor: isDark ? colors.gray[7] : colors.gray[3],
       textDark: isDark ? colors.gray[0] : colors.dark[9],
+      textHeader: isDark ? colors.gray[0] : colors.dark[9],
       textMedium: isDark ? colors.gray[3] : colors.gray[7],
       textLight: isDark ? colors.gray[5] : colors.gray[5],
       textBubble: isDark ? colors.gray[0] : colors.dark[9],
@@ -482,10 +613,11 @@ function useGridTheme(): Partial<GridTheme> {
       accentColor: colors.blue[6],
       accentLight: isDark ? colors.blue[8] : colors.blue[1],
       accentFg: "#FFFFFF",
+      fontFamily: fontFamily,
       cellHorizontalPadding: 8,
       cellVerticalPadding: 3,
     };
-  }, [colorScheme, colors]);
+  }, [colorScheme, colors, fontFamily]);
 }
 
 function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackDefinitionNode[] }) {

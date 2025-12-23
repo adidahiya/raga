@@ -131,6 +131,8 @@
 }
 
 .trackTable {
+  height: 100%;
+
   &.contextMenuIsOpen {
     user-select: none;
   }
