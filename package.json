@@ -11,6 +11,7 @@
     "check-format": "prettier --check \"./**/*.{js,json,md,scss,ts,tsx,yaml,yml}\"",
     "check-lint": "nx run-many -t check-lint",
     "check-types": "nx run-many -t check-types",
+    "test": "nx run-many -t test",
     "clean": "nx run-many -t clean",
     "dev:web": "yarn workspace @adahiya/raga-web-app dev",
     "dev:electron": "yarn workspace @adahiya/raga-app dev",

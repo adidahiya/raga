@@ -3,6 +3,7 @@ import "@glideapps/glide-data-grid/dist/index.css";
 import type { TrackDefinition } from "@adahiya/raga-types";
 import {
   CompactSelection,
+  type CellClickedEventArgs,
   type CustomCell,
   type CustomRenderer,
   DataEditor,
@@ -33,6 +34,7 @@ import { appStore, useAppStore } from "../../store/appStore";
 import EmptyState from "../common/emptyState";
 import styles from "./trackTable.module.scss";
 import { TrackTableFilterBar } from "./trackTableFilterBar";
+import { computeNextSelection, type SelectionState } from "./trackTableSelection";
 import useTrackTableContextMenu from "./useTrackTableContextMenu";
 import useTrackTableHotkeys from "./useTrackTableHotkeys";
 
@@ -246,8 +248,10 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   }, [filterQuery, allTrackDefNodes]);
 
   // Table interactions
-  const { sortedTrackDefs, selection, handleHeaderClick, handleSelectionChange } =
-    useTableInteractions(playlistId, filteredTrackDefNodes);
+  const { sortedTrackDefs, selection, handleHeaderClick, handleCellClicked } = useTableInteractions(
+    playlistId,
+    filteredTrackDefNodes,
+  );
   const sortedTrackIds = useMemo(() => sortedTrackDefs.map((d) => d.id), [sortedTrackDefs]);
   useTrackTableHotkeys({ containerElement, sortedTrackIds });
   const { handleContextMenu, isContextMenuOpen } = useTrackTableContextMenu({
@@ -448,8 +452,8 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         provideEditor={provideEditor}
         getRowThemeOverride={getRowThemeOverride}
         gridSelection={selection}
-        onGridSelectionChange={handleSelectionChange}
         onHeaderClicked={handleHeaderClick}
+        onCellClicked={handleCellClicked}
         rowHeight={TRACK_TABLE_ROW_HEIGHT}
         headerHeight={TRACK_TABLE_HEADER_HEIGHT}
         headerIcons={headerIcons}
@@ -657,10 +661,15 @@ function useGridTheme(): Partial<GridTheme> {
 }
 
 function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackDefinitionNode[] }) {
-  const selectedTrackId = appStore.use.selectedTrackId();
   const setSelectedTrackId = appStore.use.setSelectedTrackId();
   const trackTableSort = appStore.use.trackTableSort();
   const setTrackTableSort = appStore.use.setTrackTableSort();
+
+  // Multi-row selection state
+  const [selectionState, setSelectionState] = useState<SelectionState>({
+    selectedRows: new Set(),
+    lastClickedRow: undefined,
+  });
 
   const sortedTrackDefs = useMemo(() => {
     const { sortKey, reverse } = trackTableSort;
@@ -685,53 +694,61 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
     [trackTableSort, setTrackTableSort],
   );
 
-  const handleSelectionChange = useCallback(
-    (newSelection: GridSelection) => {
-      // Derive selected row from cell selection when rowMarkers="none"
-      // current.cell is [col, row], so we get the row from index 1
-      let selectedRow: number | undefined;
-      if (newSelection.current?.cell) {
-        selectedRow = newSelection.current.cell[1];
-      }
+  // Handle cell click with modifier key support for multi-selection
+  const handleCellClicked = useCallback(
+    (cell: Item, event: CellClickedEventArgs) => {
+      const [, row] = cell;
+      const nextState = computeNextSelection(selectionState, {
+        row,
+        shiftKey: event.shiftKey,
+        metaKey: event.metaKey,
+        ctrlKey: event.ctrlKey,
+      });
+      setSelectionState(nextState);
 
-      if (selectedRow !== undefined) {
-        const track = sortedTrackDefs[selectedRow];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (track) {
-          log.debug(`[client] selected track ${String(track.id)} in playlist ${playlistId}`);
-          setSelectedTrackId(track.id);
-        }
+      // Update primary selection in app store (for backwards compatibility)
+      const track = sortedTrackDefs[row];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (track) {
+        log.debug(`[client] selected track ${String(track.id)} in playlist ${playlistId}`);
+        setSelectedTrackId(track.id);
       }
     },
-    [playlistId, setSelectedTrackId, sortedTrackDefs],
+    [selectionState, sortedTrackDefs, setSelectedTrackId, playlistId],
   );
 
-  // Create selection based on selectedTrackId
-  // With rowMarkers="none", we use cell selection (current) not row selection (rows)
+  // Create selection based on selectionState for multi-row selection
   const selection = useMemo((): GridSelection => {
-    const selectedIndex = sortedTrackDefs.findIndex((track) => track.id === selectedTrackId);
-    if (selectedIndex >= 0) {
-      // Use cell selection for visual highlighting
+    const { selectedRows, lastClickedRow } = selectionState;
+    if (selectedRows.size === 0) {
       return {
         columns: CompactSelection.empty(),
-        rows: CompactSelection.fromSingleSelection(selectedIndex),
-        current: {
-          cell: [0, selectedIndex] as [number, number],
-          range: { x: 0, y: selectedIndex, width: 1, height: 1 },
-          rangeStack: [],
-        },
+        rows: CompactSelection.empty(),
+        current: undefined,
       };
     }
-    // No valid selection
+
+    const rowsArray = Array.from(selectedRows).sort((a, b) => a - b);
+    let rowSelection = CompactSelection.empty();
+    for (const row of rowsArray) {
+      rowSelection = rowSelection.add(row);
+    }
+
+    // Use last clicked row for current cell position
+    const currentRow = lastClickedRow ?? rowsArray[rowsArray.length - 1];
     return {
       columns: CompactSelection.empty(),
-      rows: CompactSelection.empty(),
-      current: undefined,
+      rows: rowSelection,
+      current: {
+        cell: [0, currentRow] as [number, number],
+        range: { x: 0, y: currentRow, width: 1, height: 1 },
+        rangeStack: [],
+      },
     };
-  }, [selectedTrackId, sortedTrackDefs]);
+  }, [selectionState]);
 
   return useMemo(
-    () => ({ sortedTrackDefs, selection, handleHeaderClick, handleSelectionChange }),
-    [sortedTrackDefs, selection, handleHeaderClick, handleSelectionChange],
+    () => ({ sortedTrackDefs, selection, handleHeaderClick, handleCellClicked }),
+    [sortedTrackDefs, selection, handleHeaderClick, handleCellClicked],
   );
 }
