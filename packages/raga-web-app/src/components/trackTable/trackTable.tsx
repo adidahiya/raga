@@ -26,6 +26,7 @@ import { unique } from "radash";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
 import { useShallow } from "zustand/shallow";
+import { useResizeObserver } from "usehooks-ts";
 
 import { TRACK_TABLE_HEADER_HEIGHT, TRACK_TABLE_ROW_HEIGHT } from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
@@ -222,6 +223,12 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   const numTracksInPlaylist = allTrackDefNodes.nodes.length;
   const containerElement = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<DataEditorRef | null>(null);
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const { width: containerWidth = 0 } = useResizeObserver({
+    // @ts-expect-error - incompatible with stricter React 19 types
+    ref: tableContainerRef,
+    box: "border-box",
+  });
 
   // filter trackDefNodes based on filterQuery value
   const [filterQuery, setFilterQuery] = useState<string>("");
@@ -404,21 +411,37 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   const getRowThemeOverride = useCallback(
     (row: number) => {
       const track = sortedTrackDefs[row];
+      const isSelected = selection.rows.hasIndex(row);
+      const isPrevSelected = row > 0 && selection.rows.hasIndex(row - 1);
+      const themeOverride: Partial<GridTheme> = {};
+
+      // Highlight first row of selection range OR row immediately after selection range
+      const isSelectionEdge = (isSelected && !isPrevSelected) || (!isSelected && isPrevSelected);
+      if (isSelectionEdge) {
+        themeOverride.horizontalBorderColor = theme.textDark;
+      }
+
+      // Apply active track background
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (track && activeTrackId === track.id) {
-        return {
-          bgCell: theme.bgCellMedium,
-        };
+        themeOverride.bgCell = theme.bgCellMedium;
       }
       // Apply hover styling
-      if (row === hoveredRow) {
-        return {
-          bgCell: theme.bgHeaderHovered,
-        };
+      else if (row === hoveredRow) {
+        themeOverride.bgCell = theme.bgHeaderHovered;
       }
-      return undefined;
+
+      return Object.keys(themeOverride).length > 0 ? themeOverride : undefined;
     },
-    [sortedTrackDefs, activeTrackId, theme.bgCellMedium, theme.bgHeaderHovered, hoveredRow],
+    [
+      sortedTrackDefs,
+      activeTrackId,
+      theme.bgCellMedium,
+      theme.bgHeaderHovered,
+      theme.textDark,
+      hoveredRow,
+      selection,
+    ],
   );
 
   // Handle item hover to track which row is being hovered
@@ -441,6 +464,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
 
   const table = (
     <div
+      ref={tableContainerRef}
       className={classNames(styles.trackTable, { [styles.contextMenuIsOpen]: isContextMenuOpen })}
       onClick={(e) => {
         // Clear selection when clicking directly on the container div (empty space)
@@ -452,6 +476,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
     >
       <DataEditor
         ref={gridRef}
+        width={containerWidth}
         columns={columns}
         rows={sortedTrackDefs.length}
         getCellContent={getCellContent}
