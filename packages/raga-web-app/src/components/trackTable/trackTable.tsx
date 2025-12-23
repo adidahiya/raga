@@ -64,6 +64,7 @@ interface BadgeCellData {
   kind: "badge";
   value: string;
   colorKey: string;
+  interactive?: boolean;
 }
 
 type BadgeCell = CustomCell<BadgeCellData>;
@@ -259,14 +260,26 @@ const getBadgeCellRenderer = (
   kind: GridCellKind.Custom,
   isMatch: isBadgeCell,
   draw: (args, cell) => {
-    const { ctx, rect, theme } = args;
-    const { value, colorKey } = cell.data;
+    const { ctx, rect, theme, hoverAmount, overrideCursor } = args;
+    const { value, colorKey, interactive } = cell.data;
     const { colors } = mantineTheme;
+
+    // Set pointer cursor for interactive badges
+    if (interactive) {
+      overrideCursor?.("pointer");
+    }
 
     // Determine colors based on colorKey
     const isDark = colorScheme === "dark";
     let bgColor: string;
     let textColor: string;
+
+    // For interactive badges, brighten colors on hover (convert alpha 0-255 to hex)
+    const baseAlpha = 128; // 0x80
+    const hoverAlpha = interactive
+      ? Math.min(255, baseAlpha + Math.round(hoverAmount * 80))
+      : baseAlpha;
+    const alphaHex = hoverAlpha.toString(16).padStart(2, "0");
 
     switch (colorKey) {
       case "blue":
@@ -287,7 +300,7 @@ const getBadgeCellRenderer = (
         break;
       case "gray":
       default:
-        bgColor = isDark ? colors.gray[8] + "80" : colors.gray[2] + "80";
+        bgColor = isDark ? colors.gray[8] + alphaHex : colors.gray[2] + alphaHex;
         textColor = isDark ? colors.gray[6] : colors.gray[6];
         break;
     }
@@ -322,7 +335,7 @@ const getBadgeCellRenderer = (
 
     ctx.restore();
   },
-  needsHover: false,
+  needsHover: true,
 });
 
 // COMPONENTS
@@ -403,7 +416,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
             displayData: (track.indexInPlaylist + 1).toString(),
             allowOverlay: false,
           };
-        case 1: // Analyze button
+        case 1: // Analyze button (badge cell)
           if (!analyzeBPMPerTrack) {
             return {
               kind: GridCellKind.Text,
@@ -413,12 +426,11 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
             };
           }
           return {
-            kind: GridCellKind.Text,
-            data: "Analyze",
-            displayData: "Analyze",
-            allowOverlay: true,
-            readonly: true,
-          };
+            kind: GridCellKind.Custom,
+            data: { kind: "badge", value: "Analyze", colorKey: "gray", interactive: true },
+            allowOverlay: false,
+            copyData: "Analyze",
+          } satisfies BadgeCell;
         case 2: // BPM
           return {
             kind: GridCellKind.Text,
@@ -460,7 +472,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
             data: { kind: "rating", trackId: track.id, rating: ratingOutOf5 },
             allowOverlay: false,
             copyData: String(ratingOutOf5),
-          } as RatingCell;
+          } satisfies RatingCell;
         }
         case 7: {
           // File Type (badge cell)
@@ -474,7 +486,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
             data: { kind: "badge", value: fileType, colorKey: fileTypeColor },
             allowOverlay: false,
             copyData: fileType,
-          } as BadgeCell;
+          } satisfies BadgeCell;
         }
         case 8: {
           // Source (badge cell)
@@ -488,7 +500,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
             data: { kind: "badge", value: source, colorKey: sourceColor },
             allowOverlay: false,
             copyData: source,
-          } as BadgeCell;
+          } satisfies BadgeCell;
         }
         case 9: {
           // Date Added
@@ -564,7 +576,6 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
       activeTrackId,
       theme.bgCellMedium,
       theme.bgHeaderHovered,
-      theme.textDark,
       hoveredRow,
       selection,
       colorScheme,
@@ -827,6 +838,8 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
   const setActiveTrackId = appStore.use.setActiveTrackId();
   const trackTableSort = appStore.use.trackTableSort();
   const setTrackTableSort = appStore.use.setTrackTableSort();
+  const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
+  const analyzeTrack = appStore.use.analyzeTrack();
 
   // Multi-row selection state
   const [selectionState, setSelectionState] = useState<SelectionState>({
@@ -870,7 +883,7 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
   // Handle cell click with modifier key support for multi-selection and double-click detection
   const handleCellClicked = useCallback(
     (cell: Item, event: CellClickedEventArgs) => {
-      const [, row] = cell;
+      const [col, row] = cell;
       const now = Date.now();
       const hasModifier = event.shiftKey || event.metaKey || event.ctrlKey;
 
@@ -879,6 +892,15 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
         clearSelection();
         lastClickRef.current = null;
         return;
+      }
+
+      // Handle Analyze column click - trigger BPM analysis
+      if (col === 1 && analyzeBPMPerTrack) {
+        const track = sortedTrackDefs[row];
+        void run(function* () {
+          yield* analyzeTrack(track["Track ID"]);
+        });
+        return; // Don't continue with selection logic
       }
 
       // Detect double-click: same row, within threshold, no modifier keys
@@ -920,7 +942,15 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
       });
       setSelectionState(nextState);
     },
-    [selectionState, sortedTrackDefs, clearSelection, setActiveTrackId, setSelectedTrackId],
+    [
+      selectionState,
+      sortedTrackDefs,
+      clearSelection,
+      setActiveTrackId,
+      setSelectedTrackId,
+      analyzeBPMPerTrack,
+      analyzeTrack,
+    ],
   );
 
   // Create selection based on selectionState for multi-row selection
