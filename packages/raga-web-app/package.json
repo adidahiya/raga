@@ -38,7 +38,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.19",
-    "immer": "^10.2.0",
+    "immer": "^11.1.0",
     "lodash": "^4.17.21",
     "mantine-contextmenu": "^8.3.11",
     "marked": "^15.0.12",
