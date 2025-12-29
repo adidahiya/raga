@@ -41,7 +41,7 @@
     "immer": "^10.2.0",
     "lodash": "^4.17.21",
     "mantine-contextmenu": "^8.3.11",
-    "marked": "^15.0.12",
+    "marked": "^17.0.1",
     "motion": "^12.23.26",
     "pluralize": "^8.0.0",
     "radash": "^12.1.1",
