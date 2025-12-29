@@ -155,7 +155,7 @@ __metadata:
     react-dom: "npm:^19.2.3"
     react-dropzone: "npm:^14.3.8"
     react-icons: "npm:^5.5.0"
-    react-resizable-panels: "npm:^3.0.3"
+    react-resizable-panels: "npm:^4.0.16"
     react-responsive-carousel: "npm:^3.2.23"
     react-scan: "npm:^0.4.3"
     roarr: "npm:^7.21.2"
@@ -11036,13 +11036,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "react-resizable-panels@npm:3.0.3"
+"react-resizable-panels@npm:^4.0.16":
+  version: 4.0.16
+  resolution: "react-resizable-panels@npm:4.0.16"
   peerDependencies:
-    react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-    react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-  checksum: 10/1797f7f1aa3db3fc3d2882486a05d61d036570784ff43c3d65f2cc7d4eddf28c76d8babea82d49c97f82ce7d2f2f8f7e6ff04208025640c77d230c04d7796aae
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  checksum: 10/a870ce62c48e32c64eb6348fb464e11453c240f55d311d6644069556a88509441d606c4e7082d9750c4f968a720f4c855532dfa8980621aa537d639c454a7961
   languageName: node
   linkType: hard
 
