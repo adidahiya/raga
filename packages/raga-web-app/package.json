@@ -63,7 +63,7 @@
   "devDependencies": {
     "@types/chroma-js": "^3.1.2",
     "@types/lodash": "^4",
-    "@types/node": "^24.10.4",
+    "@types/node": "^25.0.6",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
