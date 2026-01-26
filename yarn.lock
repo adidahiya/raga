@@ -25,7 +25,7 @@ __metadata:
     "@electron-forge/plugin-vite": "npm:^7.10.2"
     "@tinyhttp/app": "npm:^3.0.1"
     "@types/app-root-dir": "npm:^0.1.4"
-    "@types/node": "npm:^24.10.4"
+    "@types/node": "npm:^25.0.10"
     "@types/react": "npm:^19.2.7"
     "@types/react-devtools": "npm:^3.6.2"
     "@types/react-dom": "npm:^19.2.3"
@@ -64,7 +64,7 @@ __metadata:
   dependencies:
     "@adahiya/raga-lib": "workspace:^"
     "@types/dedent": "npm:^0.7.2"
-    "@types/node": "npm:^24.10.4"
+    "@types/node": "npm:^25.0.10"
     "@types/prompts": "npm:^2.4.9"
     dedent: "npm:^1.7.1"
     eslint: "npm:^9.39.2"
@@ -83,7 +83,7 @@ __metadata:
     "@adahiya/raga-types": "workspace:*"
     "@types/dedent": "npm:^0.7.2"
     "@types/fluent-ffmpeg": "npm:^2.1.28"
-    "@types/node": "npm:^24.10.4"
+    "@types/node": "npm:^25.0.10"
     "@types/plist": "npm:^3.0.5"
     "@types/prompts": "npm:^2.4.9"
     ansis: "npm:^4.2.0"
@@ -129,7 +129,7 @@ __metadata:
     "@roarr/browser-log-writer": "npm:^1.3.0"
     "@types/chroma-js": "npm:^3.1.2"
     "@types/lodash": "npm:^4"
-    "@types/node": "npm:^24.10.4"
+    "@types/node": "npm:^25.0.10"
     "@types/pluralize": "npm:^0.0.33"
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
@@ -3513,7 +3513,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^24.10.4":
+"@types/node@npm:*":
   version: 24.10.4
   resolution: "@types/node@npm:24.10.4"
   dependencies:
@@ -3544,6 +3544,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10/ffee06ce6d741fde98a40bc65a57394ed2283c521f57f9143d2356513181162bd4108809be6902a861d098b35e35569f61f14c64d3032e48a0289b74f917669a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^25.0.10":
+  version: 25.0.10
+  resolution: "@types/node@npm:25.0.10"
+  dependencies:
+    undici-types: "npm:~7.16.0"
+  checksum: 10/e5fc1fe0e585957f91ff3ad8ee01b051ce0c9da9658c5ba68d11d557522450783ab61ac2778355e8f566b83bc3bd18e78576569162e9729ed52af36999f81c9a
   languageName: node
   linkType: hard
 
@@ -3621,11 +3630,11 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:^19.2.7":
-  version: 19.2.7
-  resolution: "@types/react@npm:19.2.7"
+  version: 19.2.9
+  resolution: "@types/react@npm:19.2.9"
   dependencies:
     csstype: "npm:^3.2.2"
-  checksum: 10/dc0b756eee2c9782d282ae47eaa8d537b2a569eb889a6808c4b172d70fb690b2b1d8fe6239db451aa1c90d2a947cc21c9b537ce177ba9e6121468e403e4079c5
+  checksum: 10/580a4acf91cb596edfcf280e3d94380bd5bc675fdce257787432cc77ab67440374fd17a1abde869f3bd47ec1705bf2d66e442a9e9e371603f628e34f9d5790a6
   languageName: node
   linkType: hard
 
