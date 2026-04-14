@@ -17,3 +17,43 @@ Follow these rules when you write code:
 ### Static Analysis
 
 You may encounter linter errors when you edit code. Try to resolve them, but don't worry about auto-fixable ESLint errors like sorting imports or whitespace or exhaustive react hooks. Those can be fixed later using linting scripts.
+
+### State Management (raga-web-app)
+
+- State is managed with **Zustand** and split into slices under `src/store/slices/`.
+- Use the `createSelectors` utility for memoized subscriptions; avoid subscribing to the
+  entire store object.
+- Add new state domains as a new slice file and compose it into the root store in
+  `src/store/appStore.ts`.
+
+### IPC Events (raga-app / raga-types)
+
+- All IPC channel names and payload types live in `raga-types`:
+  - Client events (renderer → server): `packages/raga-types/src/api/clientEvents.ts`
+  - Server events (server → renderer): `packages/raga-types/src/api/serverEvents.ts`
+- Register new channels in the `ClientEventChannel` / `ServerEventChannel` const
+  objects before implementing handlers.
+
+### Async Patterns (utility process)
+
+- Use **Effection** generator functions for complex async flows that need cancellation
+  or structured concurrency in the Electron utility process (`raga-app/src/server/`).
+- Plain `async/await` is fine for simple one-shot operations.
+
+### Logging
+
+- Use `roarr` scoped loggers — **not** `console.log`:
+  ```ts
+  import { createLogger } from "../common/logger.js";
+  const log = createLogger("myModule");
+  log.debug("message", { context });
+  ```
+
+### Error Handling (IPC)
+
+- Serialize errors before sending them over IPC using `serialize-error`:
+  ```ts
+  import { serializeError } from "serialize-error";
+  // include in server event payload:
+  { error: serializeError(err) }
+  ```
