@@ -13,13 +13,13 @@ UI, a core Node.js library, and a standalone CLI.
 This is a Yarn v4 workspace monorepo managed with Nx (task orchestration) and Lerna
 (versioning). All packages live under `packages/`.
 
-| Package | Purpose | Published |
-|---------|---------|-----------|
-| `raga-types` | Shared TypeScript interfaces + IPC event channel definitions | No |
-| `raga-lib` | Core data-transformation library (plist parsing, FFmpeg conversion) | Yes (npm) |
-| `raga-web-app` | React/Vite UI — runs standalone in browser or embedded in Electron | No |
-| `raga-app` | Electron desktop app — wraps raga-web-app, adds IPC + file I/O | No |
-| `raga-cli` | CLI tool for Swinsian → Rekordbox batch conversion | No |
+| Package        | Purpose                                                             | Published |
+| -------------- | ------------------------------------------------------------------- | --------- |
+| `raga-types`   | Shared TypeScript interfaces + IPC event channel definitions        | No        |
+| `raga-lib`     | Core data-transformation library (plist parsing, FFmpeg conversion) | Yes (npm) |
+| `raga-web-app` | React/Vite UI — runs standalone in browser or embedded in Electron  | No        |
+| `raga-app`     | Electron desktop app — wraps raga-web-app, adds IPC + file I/O      | No        |
+| `raga-cli`     | CLI tool for Swinsian → Rekordbox batch conversion                  | No        |
 
 **Dependency order:** `raga-types` ← `raga-lib` ← `raga-app` / `raga-cli`; `raga-web-app` uses `raga-types`.
 
@@ -130,7 +130,10 @@ generator pattern:
 
 ```ts
 import { run } from "effection";
-yield* run(function* () { /* ... */ });
+yield *
+  run(function* () {
+    /* ... */
+  });
 ```
 
 Use Effection for operations that need cancellation, timeouts, or structured
@@ -140,15 +143,15 @@ concurrency. Simple one-shot async calls can use plain `async/await`.
 
 ## Key Domain Concepts
 
-| Term | Meaning |
-|------|---------|
-| **Swinsian library** | A plist XML file exported from the Swinsian music player containing tracks and playlists |
-| **TrackDefinition** | The core track data structure (see `raga-types`); has ~25 fields: Track ID, Persistent ID, Location, BPM, Rating, Artist, Album, Genre, etc. |
-| **Persistent ID** | Hex-encoded unique identifier for a track, used by both Swinsian and Music.app/Rekordbox |
-| **Music.app / iTunes XML** | The plist format that Rekordbox ingests; raga converts Swinsian libraries into this format |
-| **BPM** | Beats per minute; analyzed via `web-audio-beat-detector` in the browser or stored as ID3 metadata |
-| **ID3 tags** | Metadata embedded in MP3 files; raga writes them via `node-taglib-sharp` |
-| **Audio Files Server** | The HTTP server in the utility process that serves converted MP3s to the web audio player |
+| Term                       | Meaning                                                                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Swinsian library**       | A plist XML file exported from the Swinsian music player containing tracks and playlists                                                     |
+| **TrackDefinition**        | The core track data structure (see `raga-types`); has ~25 fields: Track ID, Persistent ID, Location, BPM, Rating, Artist, Album, Genre, etc. |
+| **Persistent ID**          | Hex-encoded unique identifier for a track, used by both Swinsian and Music.app/Rekordbox                                                     |
+| **Music.app / iTunes XML** | The plist format that Rekordbox ingests; raga converts Swinsian libraries into this format                                                   |
+| **BPM**                    | Beats per minute; analyzed via `web-audio-beat-detector` in the browser or stored as ID3 metadata                                            |
+| **ID3 tags**               | Metadata embedded in MP3 files; raga writes them via `node-taglib-sharp`                                                                     |
+| **Audio Files Server**     | The HTTP server in the utility process that serves converted MP3s to the web audio player                                                    |
 
 ---
 
@@ -190,7 +193,9 @@ Serialize errors before sending them over IPC using `serialize-error`:
 ```ts
 import { serializeError } from "serialize-error";
 // in server event payload:
-{ error: serializeError(err) }
+{
+  error: serializeError(err);
+}
 ```
 
 ---
