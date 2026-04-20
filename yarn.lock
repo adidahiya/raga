@@ -144,7 +144,7 @@ __metadata:
     immer: "npm:^10.2.0"
     lodash: "npm:^4.17.21"
     mantine-contextmenu: "npm:^8.3.11"
-    marked: "npm:^15.0.12"
+    marked: "npm:^17.0.1"
     motion: "npm:^12.23.26"
     pluralize: "npm:^8.0.0"
     postcss: "npm:^8.5.6"
@@ -9068,12 +9068,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^15.0.12":
-  version: 15.0.12
-  resolution: "marked@npm:15.0.12"
+"marked@npm:^17.0.1":
+  version: 17.0.1
+  resolution: "marked@npm:17.0.1"
   bin:
     marked: bin/marked.js
-  checksum: 10/deeb619405c0c46af00c99b18b3365450abeb309104b24e3658f46142344f6b7c4117608c3b5834084d8738e92f81240c19f596e6ee369260f96e52b3457eaee
+  checksum: 10/8d39cf5a1eb97288d09d47dba57a613b8c45a212287b27aa16b4bc41baaebb147340c359d379da1bc6d351474d169aa3a63f981770b67f7663ed0a479dd950c2
   languageName: node
   linkType: hard
 
