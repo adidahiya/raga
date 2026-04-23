@@ -89,7 +89,7 @@ const TOKENS = {
     blackScrim50: "rgba(0,0,0,0.50)",
   },
   radius: { xs: 3, sm: 5, md: 8, lg: 12, xl: 16, pill: 999 },
-  spacing: { 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40 },
+  spacing: { 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 7: 28, 8: 32, 9: 36, 10: 40 },
   size: {
     controlSm: 28,
     controlMd: 34,
@@ -303,14 +303,113 @@ const RampSwatch = ({
       >
         {k}
       </span>
+      <span
+        className="text-[9px] font-mono"
+        style={{ color: T.text.disabled }}
+      >
+        {hex}
+      </span>
       {showRatio && (
         <span
           className="text-[9px] font-mono"
-          style={{ color: T.text.disabled }}
+          style={{ color: T.text.muted }}
         >
-          {fmtRatio(ratio)}
+          {fmtRatio(ratio)} · {ratingFor(ratio)}
         </span>
       )}
+    </div>
+  );
+};
+
+const TextSampleRow = ({
+  name,
+  hex,
+}: {
+  name: string;
+  hex: string;
+}) => {
+  const ratio = contrastRatio(hex, SURFACE_REF);
+  return (
+    <div
+      className="flex items-baseline justify-between py-2"
+      style={{ borderBottom: `1px dashed ${T.border.subtle}` }}
+    >
+      <span style={{ color: hex, fontSize: T.type.body.size }}>{name}</span>
+      <span
+        className="text-[10px] font-mono"
+        style={{ color: T.text.disabled }}
+      >
+        {hex} · {fmtRatio(ratio)} · {ratingFor(ratio)}
+      </span>
+    </div>
+  );
+};
+
+const BorderSampleRow = ({
+  name,
+  rgba,
+}: {
+  name: string;
+  rgba: string;
+}) => (
+  <div
+    className="flex items-baseline justify-between py-2"
+    style={{ borderBottom: `1px solid ${rgba}` }}
+  >
+    <span
+      className="text-[12px]"
+      style={{ color: T.text.secondary }}
+    >
+      {name}
+    </span>
+    <span
+      className="text-[10px] font-mono"
+      style={{ color: T.text.disabled }}
+    >
+      {rgba}
+    </span>
+  </div>
+);
+
+const SemanticSwatch = ({
+  name,
+  hex,
+}: {
+  name: string;
+  hex: string;
+}) => {
+  const ratio = contrastRatio(hex, SURFACE_REF);
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-2">
+        <span
+          style={{
+            width: T.size.indicatorDot * 1.5,
+            height: T.size.indicatorDot * 1.5,
+            borderRadius: T.radius.pill,
+            background: hex,
+            display: "inline-block",
+          }}
+        />
+        <span
+          className="text-[11px] font-mono"
+          style={{ color: T.text.secondary }}
+        >
+          {name}
+        </span>
+      </div>
+      <span
+        className="text-[10px] font-mono"
+        style={{ color: T.text.disabled }}
+      >
+        {hex}
+      </span>
+      <span
+        className="text-[10px] font-mono"
+        style={{ color: T.text.muted }}
+      >
+        {fmtRatio(ratio)} · {ratingFor(ratio)}
+      </span>
     </div>
   );
 };
@@ -1082,50 +1181,15 @@ export function DesignSystem() {
               }}
             >
               <div>
-                <div style={{ color: T.text.primary, fontSize: 14 }}>
-                  text-primary
-                </div>
-                <div style={{ color: T.text.secondary, fontSize: 13 }}>
-                  text-secondary
-                </div>
-                <div style={{ color: T.text.muted, fontSize: 12 }}>
-                  text-muted
-                </div>
-                <div style={{ color: T.text.disabled, fontSize: 12 }}>
-                  text-disabled
-                </div>
+                <TextSampleRow name="text-primary"   hex={T.text.primary} />
+                <TextSampleRow name="text-secondary" hex={T.text.secondary} />
+                <TextSampleRow name="text-muted"     hex={T.text.muted} />
+                <TextSampleRow name="text-disabled"  hex={T.text.disabled} />
               </div>
-              <div className="flex flex-col gap-2">
-                <div
-                  className="text-[11px]"
-                  style={{
-                    color: T.text.muted,
-                    paddingBottom: 6,
-                    borderBottom: `1px solid ${T.border.subtle}`,
-                  }}
-                >
-                  border-subtle
-                </div>
-                <div
-                  className="text-[11px]"
-                  style={{
-                    color: T.text.muted,
-                    paddingBottom: 6,
-                    borderBottom: `1px solid ${T.border.default}`,
-                  }}
-                >
-                  border-default
-                </div>
-                <div
-                  className="text-[11px]"
-                  style={{
-                    color: T.text.muted,
-                    paddingBottom: 6,
-                    borderBottom: `1px solid ${T.border.strong}`,
-                  }}
-                >
-                  border-strong
-                </div>
+              <div>
+                <BorderSampleRow name="border-subtle"  rgba={T.border.subtle} />
+                <BorderSampleRow name="border-default" rgba={T.border.default} />
+                <BorderSampleRow name="border-strong"  rgba={T.border.strong} />
               </div>
             </div>
           </div>
@@ -1143,12 +1207,20 @@ export function DesignSystem() {
             />
             <div>
               <div
-                className="text-[11px] font-mono mb-2"
+                className="text-[11px] font-mono mb-3"
                 style={{ color: T.text.muted }}
               >
-                Semantic
+                Semantic — token · hex · contrast vs surface-1
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 gap-x-4 gap-y-3">
+                <SemanticSwatch name="success"     hex={T.semantic.success} />
+                <SemanticSwatch name="warning"     hex={T.semantic.warning} />
+                <SemanticSwatch name="danger"      hex={T.semantic.danger} />
+                <SemanticSwatch name="dangerHover" hex={T.semantic.dangerHover} />
+                <SemanticSwatch name="info"        hex={T.semantic.info} />
+                <SemanticSwatch name="idle"        hex={T.semantic.idle} />
+              </div>
+              <div className="flex flex-wrap gap-2 mt-4">
                 <StatusPill color={T.semantic.success} label="ready" />
                 <StatusPill color={T.semantic.warning} label="analyzing" />
                 <StatusPill color={T.semantic.danger} label="error" />
