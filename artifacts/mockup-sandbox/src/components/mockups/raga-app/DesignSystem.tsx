@@ -56,9 +56,15 @@ const TOKENS = {
   },
   accent2: {
     50: "#fff1ec",
+    100: "#ffe0d2",
+    200: "#ffc7af",
     300: "#ffae93",
+    400: "#ff9a7d",
     500: "#ff8a66",
+    600: "#e26a48",
     700: "#cc5e3b",
+    800: "#9c4426",
+    900: "#6e2f17",
   },
   semantic: {
     success: "#4ade80",
@@ -82,8 +88,33 @@ const TOKENS = {
     blackScrim40: "rgba(0,0,0,0.40)",
     blackScrim50: "rgba(0,0,0,0.50)",
   },
-  radius: { xs: 3, sm: 5, md: 8, lg: 12, xl: 16 },
+  radius: { xs: 3, sm: 5, md: 8, lg: 12, xl: 16, pill: 999 },
   spacing: { 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40 },
+  size: {
+    controlSm: 28,
+    controlMd: 34,
+    controlLg: 40,
+    iconSm: 12,
+    iconMd: 14,
+    iconLg: 18,
+    swatchH: 64,
+    knob: 14,
+    railThumb: 14,
+    indicatorDot: 6,
+  },
+  type: {
+    display:  { size: 32, leading: 1.15, weight: 600, family: "sans" as const, tracking: "-0.02em" },
+    headline: { size: 20, leading: 1.25, weight: 600, family: "sans" as const, tracking: "-0.01em" },
+    title:    { size: 15, leading: 1.35, weight: 600, family: "sans" as const, tracking: "0" },
+    body:     { size: 13, leading: 1.55, weight: 400, family: "sans" as const, tracking: "0" },
+    bodySm:   { size: 12, leading: 1.5,  weight: 400, family: "sans" as const, tracking: "0" },
+    caption:  { size: 11, leading: 1.4,  weight: 500, family: "sans" as const, tracking: "0.01em" },
+    micro:    { size: 10, leading: 1.3,  weight: 600, family: "sans" as const, tracking: "0.06em" },
+    monoLg:   { size: 16, leading: 1.3,  weight: 500, family: "mono" as const, tracking: "0" },
+    monoMd:   { size: 13, leading: 1.4,  weight: 500, family: "mono" as const, tracking: "0" },
+    monoSm:   { size: 11, leading: 1.4,  weight: 500, family: "mono" as const, tracking: "0" },
+    monoXs:   { size: 10, leading: 1.3,  weight: 600, family: "mono" as const, tracking: "0.12em" },
+  },
   font: {
     sans: '"Inter", -apple-system, system-ui, sans-serif',
     mono: '"JetBrains Mono", "IBM Plex Mono", "SF Mono", Menlo, monospace',
@@ -91,6 +122,47 @@ const TOKENS = {
 } as const;
 
 const T = TOKENS;
+
+// --- contrast helpers ---
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const v =
+    h.length === 3
+      ? h.split("").map((c) => c + c).join("")
+      : h.length === 8
+      ? h.slice(0, 6)
+      : h;
+  const n = parseInt(v, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function rel(c: number) {
+  const s = c / 255;
+  return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+}
+function luminance(hex: string): number {
+  const [r, g, b] = hexToRgb(hex);
+  return 0.2126 * rel(r) + 0.7152 * rel(g) + 0.0722 * rel(b);
+}
+function contrastRatio(a: string, b: string): number {
+  const la = luminance(a);
+  const lb = luminance(b);
+  const [hi, lo] = la > lb ? [la, lb] : [lb, la];
+  return (hi + 0.05) / (lo + 0.05);
+}
+function fmtRatio(n: number): string {
+  return `${n.toFixed(2)}:1`;
+}
+function ratingFor(ratio: number): string {
+  if (ratio >= 7) return "AAA";
+  if (ratio >= 4.5) return "AA";
+  if (ratio >= 3) return "AA·lg";
+  return "—";
+}
+
+const SURFACE_REF = T.surface[1];
+
+const fontFamilyOf = (k: "sans" | "mono") =>
+  k === "mono" ? T.font.mono : T.font.sans;
 
 const Section = ({
   num,
@@ -160,28 +232,88 @@ const Swatch = ({
   name: string;
   hex: string;
   textHex?: string;
-}) => (
-  <div className="flex flex-col">
-    <div
-      className="h-16 w-full flex items-end p-2"
-      style={{
-        background: hex,
-        borderRadius: T.radius.sm,
-        border: `1px solid ${T.border.subtle}`,
-      }}
-    >
-      {textHex && (
+}) => {
+  const ratio = contrastRatio(hex, SURFACE_REF);
+  const rating = ratingFor(ratio);
+  return (
+    <div className="flex flex-col">
+      <div
+        className="w-full flex items-end p-2"
+        style={{
+          height: T.size.swatchH,
+          background: hex,
+          borderRadius: T.radius.sm,
+          border: `1px solid ${T.border.subtle}`,
+        }}
+      >
+        {textHex && (
+          <span className="font-mono text-[10px]" style={{ color: textHex }}>
+            Aa
+          </span>
+        )}
+      </div>
+      <div className="flex flex-col gap-0.5 mt-2">
         <span
-          className="font-mono text-[10px]"
-          style={{ color: textHex }}
+          className="text-[11px] font-mono"
+          style={{ color: T.text.secondary }}
         >
-          Aa
+          {name}
+        </span>
+        <span
+          className="text-[10px] font-mono"
+          style={{ color: T.text.disabled }}
+        >
+          {hex}
+        </span>
+        <span
+          className="text-[10px] font-mono"
+          style={{ color: T.text.muted }}
+        >
+          {fmtRatio(ratio)} · {rating}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const RampSwatch = ({
+  hex,
+  k,
+  showRatio,
+}: {
+  hex: string;
+  k: number;
+  showRatio?: boolean;
+}) => {
+  const ratio = contrastRatio(hex, SURFACE_REF);
+  return (
+    <div className="flex flex-col items-start flex-1">
+      <div
+        style={{
+          background: hex,
+          height: 36,
+          width: "100%",
+          borderRadius: T.radius.xs,
+          border: `1px solid ${T.border.subtle}`,
+        }}
+      />
+      <span
+        className="text-[9px] font-mono mt-1"
+        style={{ color: T.text.disabled }}
+      >
+        {k}
+      </span>
+      {showRatio && (
+        <span
+          className="text-[9px] font-mono"
+          style={{ color: T.text.disabled }}
+        >
+          {fmtRatio(ratio)}
         </span>
       )}
     </div>
-    <TokenLabel name={name} value={hex} />
-  </div>
-);
+  );
+};
 
 const Kbd = ({ children }: { children: React.ReactNode }) => (
   <kbd
@@ -337,6 +469,76 @@ const Btn = ({
   );
 };
 
+const IconBtn = ({
+  variant = "secondary",
+  state = "default",
+  size = "md",
+  children,
+}: {
+  variant?: "primary" | "secondary" | "ghost" | "destructive" | "warm";
+  state?: "default" | "hover" | "active" | "disabled" | "loading";
+  size?: "sm" | "md";
+  children: React.ReactNode;
+}) => {
+  const dim = size === "sm" ? T.size.controlSm : T.size.controlMd;
+  let bg: string = "transparent";
+  let color: string = T.text.secondary;
+  let border: string = `1px solid transparent`;
+  let shadow: string = "none";
+  if (variant === "primary") {
+    bg = T.accent[500];
+    color = T.fg.onAccent;
+    border = `1px solid ${T.accent[400]}`;
+    shadow = `0 4px 12px ${T.accent[500]}33`;
+    if (state === "hover") bg = T.accent[400];
+    if (state === "active") bg = T.accent[600];
+  } else if (variant === "secondary") {
+    bg = T.overlay.whiteSoft;
+    color = T.text.primary;
+    border = `1px solid ${T.border.default}`;
+    if (state === "hover") bg = T.overlay.whiteFill;
+    if (state === "active") bg = T.overlay.whiteSubtle;
+  } else if (variant === "ghost") {
+    if (state === "hover") {
+      bg = T.overlay.whiteSubtle;
+      color = T.text.primary;
+    }
+  } else if (variant === "destructive") {
+    bg = T.semantic.danger;
+    color = T.fg.onDanger;
+    border = `1px solid ${T.semantic.danger}`;
+    if (state === "hover") bg = T.semantic.dangerHover;
+  } else if (variant === "warm") {
+    bg = T.accent2[500];
+    color = T.fg.onWarm;
+    border = `1px solid ${T.accent2[300]}`;
+    if (state === "hover") bg = T.accent2[300];
+  }
+  return (
+    <button
+      disabled={state === "disabled"}
+      className="inline-flex items-center justify-center"
+      style={{
+        width: dim,
+        height: dim,
+        background: bg,
+        color,
+        border,
+        boxShadow: shadow,
+        borderRadius: T.radius.sm,
+        opacity: state === "disabled" ? 0.4 : 1,
+        cursor: state === "disabled" ? "not-allowed" : "pointer",
+      }}
+    >
+      {state === "loading" ? (
+        <RefreshCw size={T.size.iconMd} className="animate-spin" />
+      ) : (
+        children
+      )}
+    </button>
+  );
+};
+
 const TextInput = ({
   state = "default",
   placeholder,
@@ -391,56 +593,32 @@ const ColorRow = ({
   keys: number[];
 }) => (
   <div className="flex flex-col gap-2">
-    <div
-      className="text-[11px] font-mono"
-      style={{ color: T.text.muted }}
-    >
+    <div className="text-[11px] font-mono" style={{ color: T.text.muted }}>
       {label}
     </div>
     <div className="flex gap-1">
       {keys.map((k) => (
-        <div key={k} className="flex flex-col items-start flex-1">
-          <div
-            style={{
-              background: scale[k],
-              height: 36,
-              width: "100%",
-              borderRadius: T.radius.xs,
-              border: `1px solid ${T.border.subtle}`,
-            }}
-          />
-          <span
-            className="text-[9px] font-mono mt-1"
-            style={{ color: T.text.disabled }}
-          >
-            {k}
-          </span>
-        </div>
+        <RampSwatch key={k} k={k} hex={scale[k]} showRatio />
       ))}
     </div>
   </div>
 );
 
+type TypeKey = keyof typeof T.type;
 const TypeRow = ({
   name,
-  size,
-  weight,
-  family,
+  spec,
   sample,
-  letterSpacing,
 }: {
-  name: string;
-  size: number;
-  weight: number;
-  family: string;
+  name: TypeKey;
+  spec: (typeof T.type)[TypeKey];
   sample: string;
-  letterSpacing?: string;
 }) => (
   <div
     className="flex items-baseline gap-6 py-2"
     style={{ borderBottom: `1px dashed ${T.border.subtle}` }}
   >
-    <div className="w-32 shrink-0">
+    <div className="w-36 shrink-0">
       <div
         className="text-[11px] font-mono"
         style={{ color: T.text.secondary }}
@@ -451,18 +629,18 @@ const TypeRow = ({
         className="text-[10px] font-mono mt-0.5"
         style={{ color: T.text.disabled }}
       >
-        {size}px / {weight}
+        {spec.size}px · {Math.round(spec.size * spec.leading * 10) / 10}px lh · {spec.weight}
       </div>
     </div>
     <div
       className="flex-1 truncate"
       style={{
-        fontFamily: family,
-        fontSize: size,
-        fontWeight: weight,
+        fontFamily: fontFamilyOf(spec.family),
+        fontSize: spec.size,
+        fontWeight: spec.weight,
+        lineHeight: spec.leading,
+        letterSpacing: spec.tracking,
         color: T.text.primary,
-        letterSpacing,
-        lineHeight: 1.25,
       }}
     >
       {sample}
@@ -636,10 +814,11 @@ const ElevationCard = ({
   </div>
 );
 
-const Toggle = ({ on }: { on?: boolean }) => (
+const Toggle = ({ on, disabled }: { on?: boolean; disabled?: boolean }) => (
   <div
     className="relative transition-colors"
     style={{
+      opacity: disabled ? 0.4 : 1,
       width: 32,
       height: 18,
       borderRadius: 999,
@@ -661,30 +840,54 @@ const Toggle = ({ on }: { on?: boolean }) => (
   </div>
 );
 
-const Checkbox = ({ checked }: { checked?: boolean }) => (
+const Checkbox = ({
+  checked,
+  disabled,
+  focused,
+}: {
+  checked?: boolean;
+  disabled?: boolean;
+  focused?: boolean;
+}) => (
   <div
     className="flex items-center justify-center"
     style={{
+      opacity: disabled ? 0.4 : 1,
       width: 16,
       height: 16,
       borderRadius: T.radius.xs,
       background: checked ? T.accent[500] : T.overlay.whiteSubtle,
-      border: `1px solid ${checked ? T.accent[400] : T.border.default}`,
+      border: `1px solid ${
+        focused ? T.accent[400] : checked ? T.accent[400] : T.border.default
+      }`,
+      boxShadow: focused ? `0 0 0 3px ${T.accent[500]}26` : "none",
     }}
   >
     {checked && <Check size={11} color={T.fg.onAccent} strokeWidth={3} />}
   </div>
 );
 
-const Radio = ({ checked }: { checked?: boolean }) => (
+const Radio = ({
+  checked,
+  disabled,
+  focused,
+}: {
+  checked?: boolean;
+  disabled?: boolean;
+  focused?: boolean;
+}) => (
   <div
     className="flex items-center justify-center"
     style={{
+      opacity: disabled ? 0.4 : 1,
       width: 16,
       height: 16,
       borderRadius: 999,
       background: T.overlay.whiteSubtle,
-      border: `1px solid ${checked ? T.accent[500] : T.border.default}`,
+      border: `1px solid ${
+        focused ? T.accent[400] : checked ? T.accent[500] : T.border.default
+      }`,
+      boxShadow: focused ? `0 0 0 3px ${T.accent[500]}26` : "none",
     }}
   >
     {checked && (
@@ -700,12 +903,22 @@ const Radio = ({ checked }: { checked?: boolean }) => (
   </div>
 );
 
-const Slider = ({ pct = 0.45 }: { pct?: number }) => (
+const Slider = ({
+  pct = 0.45,
+  disabled,
+  focused,
+}: {
+  pct?: number;
+  disabled?: boolean;
+  focused?: boolean;
+}) => (
   <div
     className="relative h-1.5 w-full"
     style={{
+      opacity: disabled ? 0.4 : 1,
       background: T.overlay.whiteSoft,
       borderRadius: 999,
+      boxShadow: focused ? `0 0 0 3px ${T.accent[500]}26` : "none",
     }}
   >
     <div
@@ -921,12 +1134,12 @@ export function DesignSystem() {
             <ColorRow
               label="accent (iris) — primary"
               scale={T.accent}
-              keys={[100, 200, 300, 400, 500, 600, 700, 800, 900]}
+              keys={[50, 100, 200, 300, 400, 500, 600, 700, 800, 900]}
             />
             <ColorRow
               label="accent2 (warm coral) — friendly emphasis"
               scale={T.accent2}
-              keys={[50, 300, 500, 700]}
+              keys={[50, 100, 200, 300, 400, 500, 600, 700, 800, 900]}
             />
             <div>
               <div
@@ -961,50 +1174,13 @@ export function DesignSystem() {
             >
               Sans · Inter
             </div>
-            <TypeRow
-              name="display"
-              size={32}
-              weight={600}
-              family={T.font.sans}
-              letterSpacing="-0.02em"
-              sample="House Sets 2025"
-            />
-            <TypeRow
-              name="headline"
-              size={20}
-              weight={600}
-              family={T.font.sans}
-              letterSpacing="-0.01em"
-              sample="Tonight's set, sorted by energy"
-            />
-            <TypeRow
-              name="title"
-              size={15}
-              weight={600}
-              family={T.font.sans}
-              sample="Selected Ambient Works 85–92"
-            />
-            <TypeRow
-              name="body"
-              size={13}
-              weight={400}
-              family={T.font.sans}
-              sample="Drag a folder here to start your library."
-            />
-            <TypeRow
-              name="body-sm"
-              size={12}
-              weight={400}
-              family={T.font.sans}
-              sample="245 tracks · last analyzed 10m ago"
-            />
-            <TypeRow
-              name="caption"
-              size={11}
-              weight={500}
-              family={T.font.sans}
-              sample="Updated automatically"
-            />
+            <TypeRow name="display"  spec={T.type.display}  sample="House Sets 2025" />
+            <TypeRow name="headline" spec={T.type.headline} sample="Tonight's set, sorted by energy" />
+            <TypeRow name="title"    spec={T.type.title}    sample="Selected Ambient Works 85–92" />
+            <TypeRow name="body"     spec={T.type.body}     sample="Drag a folder here to start your library." />
+            <TypeRow name="bodySm"   spec={T.type.bodySm}   sample="245 tracks · last analyzed 10m ago" />
+            <TypeRow name="caption"  spec={T.type.caption}  sample="Updated automatically" />
+            <TypeRow name="micro"    spec={T.type.micro}    sample="OVERLINE · LABEL · TINY" />
           </div>
           <div>
             <div
@@ -1013,35 +1189,10 @@ export function DesignSystem() {
             >
               Mono · JetBrains Mono
             </div>
-            <TypeRow
-              name="mono-lg"
-              size={16}
-              weight={500}
-              family={T.font.mono}
-              sample="BPM 124.5"
-            />
-            <TypeRow
-              name="mono-md"
-              size={13}
-              weight={500}
-              family={T.font.mono}
-              sample="Autechre — VLetrmx"
-            />
-            <TypeRow
-              name="mono-sm"
-              size={11}
-              weight={500}
-              family={T.font.mono}
-              sample="12,847 tracks · 0.3 GB index"
-            />
-            <TypeRow
-              name="mono-xs"
-              size={10}
-              weight={600}
-              family={T.font.mono}
-              letterSpacing="0.12em"
-              sample="LIBRARY · ANALYZER · EXPORT"
-            />
+            <TypeRow name="monoLg" spec={T.type.monoLg} sample="BPM 124.5" />
+            <TypeRow name="monoMd" spec={T.type.monoMd} sample="Autechre — VLetrmx" />
+            <TypeRow name="monoSm" spec={T.type.monoSm} sample="12,847 tracks · 0.3 GB index" />
+            <TypeRow name="monoXs" spec={T.type.monoXs} sample="LIBRARY · ANALYZER · EXPORT" />
             <div className="mt-6">
               <div
                 className="text-[11px] font-mono mb-2"
@@ -1172,6 +1323,21 @@ export function DesignSystem() {
                 <Btn variant="destructive" state={state} icon={<X size={12} />}>
                   Remove
                 </Btn>
+                <IconBtn variant="primary" state={state}>
+                  <Play size={T.size.iconMd} fill="currentColor" />
+                </IconBtn>
+                <IconBtn variant="secondary" state={state}>
+                  <Settings size={T.size.iconMd} />
+                </IconBtn>
+                <IconBtn variant="ghost" state={state}>
+                  <Filter size={T.size.iconMd} />
+                </IconBtn>
+                <IconBtn variant="destructive" state={state}>
+                  <X size={T.size.iconMd} />
+                </IconBtn>
+                <IconBtn variant="warm" state={state}>
+                  <Zap size={T.size.iconMd} />
+                </IconBtn>
               </div>
             )
           )}
@@ -1266,21 +1432,32 @@ export function DesignSystem() {
                 className="text-[10px] font-mono uppercase tracking-wider mb-2"
                 style={{ color: T.text.disabled }}
               >
-                select
+                select · default / focused / disabled
               </div>
-              <div
-                className="flex items-center justify-between px-3"
-                style={{
-                  height: 34,
-                  background: T.surface[2],
-                  border: `1px solid ${T.border.default}`,
-                  borderRadius: T.radius.sm,
-                  color: T.text.primary,
-                  fontSize: 13,
-                }}
-              >
-                <span>Sort by · BPM ascending</span>
-                <span style={{ color: T.text.muted }}>▾</span>
+              <div className="flex flex-col gap-2">
+                {(["default", "focused", "disabled"] as const).map((s) => (
+                  <div
+                    key={s}
+                    className="flex items-center justify-between px-3"
+                    style={{
+                      height: T.size.controlMd,
+                      background:
+                        s === "disabled" ? T.surface[1] : T.surface[2],
+                      border: `1px solid ${
+                        s === "focused" ? T.accent[500] + "80" : T.border.default
+                      }`,
+                      boxShadow:
+                        s === "focused" ? `0 0 0 3px ${T.accent[500]}26` : "none",
+                      borderRadius: T.radius.sm,
+                      color: T.text.primary,
+                      fontSize: T.type.body.size,
+                      opacity: s === "disabled" ? 0.5 : 1,
+                    }}
+                  >
+                    <span>Sort by · BPM ascending</span>
+                    <span style={{ color: T.text.muted }}>▾</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -1289,21 +1466,33 @@ export function DesignSystem() {
                 className="text-[10px] font-mono uppercase tracking-wider mb-2"
                 style={{ color: T.text.disabled }}
               >
-                textarea
+                textarea · default / focused / disabled
               </div>
-              <div
-                className="px-3 py-2"
-                style={{
-                  background: T.surface[2],
-                  border: `1px solid ${T.border.default}`,
-                  borderRadius: T.radius.sm,
-                  color: T.text.secondary,
-                  fontSize: 13,
-                  minHeight: 64,
-                  fontFamily: T.font.sans,
-                }}
-              >
-                Closing set for the warehouse — keep BPM under 124, lean dubby.
+              <div className="flex flex-col gap-2">
+                {(["default", "focused", "disabled"] as const).map((s) => (
+                  <div
+                    key={s}
+                    className="px-3 py-2"
+                    style={{
+                      background:
+                        s === "disabled" ? T.surface[1] : T.surface[2],
+                      border: `1px solid ${
+                        s === "focused" ? T.accent[500] + "80" : T.border.default
+                      }`,
+                      boxShadow:
+                        s === "focused" ? `0 0 0 3px ${T.accent[500]}26` : "none",
+                      borderRadius: T.radius.sm,
+                      color: T.text.secondary,
+                      fontSize: T.type.body.size,
+                      lineHeight: T.type.body.leading,
+                      minHeight: 56,
+                      fontFamily: T.font.sans,
+                      opacity: s === "disabled" ? 0.5 : 1,
+                    }}
+                  >
+                    Closing set for the warehouse — keep BPM under 124, lean dubby.
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1314,22 +1503,20 @@ export function DesignSystem() {
                 className="text-[10px] font-mono uppercase tracking-wider mb-2"
                 style={{ color: T.text.disabled }}
               >
-                checkbox
+                checkbox · default / focused / disabled
               </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  className="flex items-center gap-2 text-[13px]"
-                  style={{ color: T.text.primary }}
-                >
-                  <Checkbox checked />
-                  Include unanalyzed tracks
+              <div className="flex items-center gap-5">
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.primary }}>
+                  <Checkbox checked /> on
                 </label>
-                <label
-                  className="flex items-center gap-2 text-[13px]"
-                  style={{ color: T.text.secondary }}
-                >
-                  <Checkbox />
-                  Re-analyze BPM every import
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.secondary }}>
+                  <Checkbox /> off
+                </label>
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.primary }}>
+                  <Checkbox checked focused /> focused
+                </label>
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.muted }}>
+                  <Checkbox checked disabled /> disabled
                 </label>
               </div>
             </div>
@@ -1339,20 +1526,20 @@ export function DesignSystem() {
                 className="text-[10px] font-mono uppercase tracking-wider mb-2"
                 style={{ color: T.text.disabled }}
               >
-                radio
+                radio · default / focused / disabled
               </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  className="flex items-center gap-2 text-[13px]"
-                  style={{ color: T.text.primary }}
-                >
-                  <Radio checked /> Local files only
+              <div className="flex items-center gap-5">
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.primary }}>
+                  <Radio checked /> on
                 </label>
-                <label
-                  className="flex items-center gap-2 text-[13px]"
-                  style={{ color: T.text.secondary }}
-                >
-                  <Radio /> Mirror Swinsian library
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.secondary }}>
+                  <Radio /> off
+                </label>
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.primary }}>
+                  <Radio checked focused /> focused
+                </label>
+                <label className="flex items-center gap-2 text-[13px]" style={{ color: T.text.muted }}>
+                  <Radio checked disabled /> disabled
                 </label>
               </div>
             </div>
@@ -1362,14 +1549,17 @@ export function DesignSystem() {
                 className="text-[10px] font-mono uppercase tracking-wider mb-2"
                 style={{ color: T.text.disabled }}
               >
-                switch
+                switch · default / focused / disabled
               </div>
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-6 flex-wrap">
                 <div className="flex items-center gap-2 text-[13px]" style={{ color: T.text.primary }}>
-                  <Toggle on /> Auto-analyze
+                  <Toggle on /> on
                 </div>
                 <div className="flex items-center gap-2 text-[13px]" style={{ color: T.text.secondary }}>
-                  <Toggle /> Hide demos
+                  <Toggle /> off
+                </div>
+                <div className="flex items-center gap-2 text-[13px]" style={{ color: T.text.muted }}>
+                  <Toggle on disabled /> disabled
                 </div>
               </div>
             </div>
@@ -1379,19 +1569,33 @@ export function DesignSystem() {
                 className="text-[10px] font-mono uppercase tracking-wider mb-2"
                 style={{ color: T.text.disabled }}
               >
-                slider
+                slider · default / focused / disabled
               </div>
-              <div className="flex items-center gap-3">
-                <Volume2 size={14} style={{ color: T.text.muted }} />
-                <div className="flex-1">
-                  <Slider pct={0.62} />
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <Volume2 size={T.size.iconMd} style={{ color: T.text.muted }} />
+                  <div className="flex-1">
+                    <Slider pct={0.62} />
+                  </div>
                 </div>
-                <span
-                  className="text-[11px] font-mono w-8 text-right"
-                  style={{ color: T.text.secondary }}
-                >
-                  62
-                </span>
+                <div className="flex items-center gap-3">
+                  <Volume2 size={T.size.iconMd} style={{ color: T.accent[300] }} />
+                  <div className="flex-1">
+                    <Slider pct={0.62} focused />
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Volume2 size={T.size.iconMd} style={{ color: T.text.disabled }} />
+                  <div className="flex-1">
+                    <Slider pct={0.62} disabled />
+                  </div>
+                  <span
+                    className="text-[11px] font-mono w-8 text-right"
+                    style={{ color: T.text.disabled }}
+                  >
+                    62
+                  </span>
+                </div>
               </div>
             </div>
           </div>
