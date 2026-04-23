@@ -5,5 +5,6 @@ export const modules: ModuleMap = {
   "./components/mockups/raga-app/CommandBarDocked.tsx": () => import("../components/mockups/raga-app/CommandBarDocked.tsx"),
   "./components/mockups/raga-app/CommandBarFloating.tsx": () => import("../components/mockups/raga-app/CommandBarFloating.tsx"),
   "./components/mockups/raga-app/Curator.tsx": () => import("../components/mockups/raga-app/Curator.tsx"),
+  "./components/mockups/raga-app/DesignSystem.tsx": () => import("../components/mockups/raga-app/DesignSystem.tsx"),
   "./components/mockups/raga-app/Studio.tsx": () => import("../components/mockups/raga-app/Studio.tsx")
 };
