@@ -1,8 +1,11 @@
 .nowPlaying {
   max-width: calc(100vw - 480px);
+  font-size: 12px;
 }
 
 .timeProgress {
   // fixed width to avoid shifting during playback
   width: 80px;
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 11px;
 }

@@ -31,6 +31,7 @@ export default function UserSettingsDropdown() {
     >
       <Menu.Target>
         <Button
+          data-raga-settings-trigger
           size="compact-sm"
           color="gray"
           variant="subtle"

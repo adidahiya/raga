@@ -561,11 +561,6 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         themeOverride.horizontalBorderColor = isDark ? colors.blue[8] : colors.blue[2];
       }
 
-      // Apply alternating row background (odd rows get dim gray)
-      if (row % 2 === 1) {
-        themeOverride.bgCell = isDark ? colors.dark[8] : colors.gray[0];
-      }
-
       // Apply active track background
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (track && activeTrackId === track.id) {
@@ -810,34 +805,40 @@ function useColumns(numTracksInPlaylist: number): GridColumn[] {
 /** Configures grid theme */
 function useGridTheme(): Partial<GridTheme> {
   const colorScheme = useComputedColorScheme("light");
-  const { colors, fontFamily } = useMantineTheme();
+  const { colors, fontFamilyMonospace } = useMantineTheme();
 
   return useMemo(() => {
     const isDark = colorScheme === "dark";
+    const surface = isDark ? "#0a0a0a" : "#ffffff";
+    const surfaceAlt = isDark ? "#0f0f0f" : "#fafafa";
+    const headerBorder = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)";
     return {
-      bgCell: isDark ? colors.dark[7] : "#FFFFFF",
-      bgCellMedium: isDark ? colors.dark[6] : colors.gray[1],
-      bgHeader: isDark ? colors.dark[7] : colors.gray[0],
-      bgHeaderHasFocus: isDark ? colors.dark[6] : colors.gray[1],
-      bgHeaderHovered: isDark ? colors.dark[6] : colors.gray[1],
-      borderColor: "transparent",
-      headerBottomBorderColor: isDark ? colors.gray[8] : colors.gray[3],
-      textDark: isDark ? colors.gray[3] : colors.gray[8],
-      textHeader: isDark ? colors.gray[1] : colors.dark[8],
-      textMedium: isDark ? colors.gray[4] : colors.gray[6],
-      textLight: isDark ? colors.gray[5] : colors.gray[5],
+      bgCell: surface,
+      bgCellMedium: isDark ? "rgba(59,130,246,0.06)" : colors.blue[0],
+      bgHeader: surface,
+      bgHeaderHasFocus: surfaceAlt,
+      bgHeaderHovered: surfaceAlt,
+      borderColor: headerBorder,
+      horizontalBorderColor: headerBorder,
+      headerBottomBorderColor: headerBorder,
+      textDark: isDark ? "#e5e5e5" : "#0a0a0a",
+      textHeader: isDark ? "#737373" : "#525252",
+      textMedium: isDark ? "#a3a3a3" : "#525252",
+      textLight: isDark ? "#525252" : "#a3a3a3",
       textBubble: isDark ? colors.gray[0] : colors.dark[9],
-      bgBubble: isDark ? colors.dark[5] : colors.gray[2],
+      bgBubble: isDark ? "rgba(255,255,255,0.05)" : colors.gray[2],
       bgBubbleSelected: isDark ? colors.blue[8] : colors.blue[1],
-      accentColor: "transparent",
-      accentLight: isDark ? colors.blue[8] + "60" : colors.blue[1] + "90",
-      accentFg: "transparent",
-      fontFamily: fontFamily,
-      cellHorizontalPadding: 8,
-      cellVerticalPadding: 3,
+      accentColor: "#3b82f6",
+      accentLight: isDark ? "rgba(59,130,246,0.10)" : "rgba(59,130,246,0.10)",
+      accentFg: "#ffffff",
+      fontFamily: fontFamilyMonospace,
+      baseFontStyle: "12px",
+      headerFontStyle: "10px",
+      cellHorizontalPadding: 10,
+      cellVerticalPadding: 4,
       headerIconSize: 12,
     };
-  }, [colorScheme, colors, fontFamily]);
+  }, [colorScheme, colors, fontFamilyMonospace]);
 }
 
 function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackDefinitionNode[] }) {

@@ -1,5 +1,9 @@
 .appChrome {
   --mantine-line-height-sm: 1;
+  height: 48px;
+  background: var(--raga-surface-1);
+  border-bottom: 1px solid var(--raga-border);
+  font-family: var(--mantine-font-family);
 }
 
 .appChromeDraggable {
@@ -10,4 +14,85 @@
 .appChromeGroup {
   height: 100%;
   -webkit-app-region: no-drag;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag;
+}
+
+.logoMark {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: var(--raga-accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mantine-font-family-monospace);
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.45);
+}
+
+.modeControl {
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+}
+
+.commandTrigger {
+  -webkit-app-region: no-drag;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  background: var(--raga-surface-2);
+  border: 1px solid var(--raga-border);
+  border-radius: 4px;
+  color: var(--raga-text-muted);
+  font-family: var(--mantine-font-family);
+  font-size: 12px;
+  cursor: text;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+
+  &:hover {
+    border-color: var(--raga-border-strong);
+    color: var(--raga-text-bright);
+  }
+}
+
+.commandTriggerIcon {
+  flex-shrink: 0;
+  color: var(--raga-text-dim);
+}
+
+.commandTriggerText {
+  flex: 1 1 auto;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.commandTriggerHint {
+  flex-shrink: 0;
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--raga-border);
+  color: var(--raga-text-muted);
+}
+
+[data-mantine-color-scheme="light"] .commandTriggerHint {
+  background: rgba(0, 0, 0, 0.04);
 }

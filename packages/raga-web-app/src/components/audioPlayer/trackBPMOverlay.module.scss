@@ -11,17 +11,22 @@
   right: 0;
   top: 0;
   z-index: 2; // just above the waveform
+  font-family: var(--mantine-font-family-monospace);
 
   :global([data-mantine-color-scheme="dark"]) & {
-    --mantine-color-body: color-mix(in srgb, var(--mantine-color-dark-9) 80%, transparent);
+    --mantine-color-body: color-mix(in srgb, #0a0a0a 85%, transparent);
+    border: 1px solid var(--raga-border);
+    border-top: none;
+    border-right: none;
   }
 }
 
 .bpmValue {
   width: 40px;
+  font-family: var(--mantine-font-family-monospace);
 
   &.adjusted {
-    color: var(--mantine-color-primary-color-light-color);
+    color: var(--raga-accent);
   }
 }
 

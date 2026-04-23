@@ -4,6 +4,11 @@
   left: 0;
   right: 0;
   bottom: 0;
+  background: var(--mantine-color-body);
+
+  :global([data-mantine-color-scheme="dark"]) & {
+    --mantine-color-body: #0a0a0a;
+  }
 }
 
 .fontWeightLight {

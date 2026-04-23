@@ -1,26 +1,122 @@
-.librarySidebar {
-  position: relative; // creates a stacking context for playlist table layout
-
-  .librarySidebarFooter {
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    right: 0;
-  }
-}
-
-.sidebarFooterItem {
-  padding: 5px 7px;
-}
-
 .library {
   width: 100%;
   height: 100%;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  background: var(--raga-surface-1);
+  display: flex;
+  overflow: hidden;
 }
 
 .libraryStack {
   width: 100%;
+  height: 100%;
+}
+
+.sidebarPanel {
+  background: var(--raga-surface-1);
+  border-right: 1px solid var(--raga-border);
+}
+
+.sidebarLayout {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+}
+
+.iconRail {
+  width: 56px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 8px;
+  border-right: 1px solid var(--raga-border);
+}
+
+.railSection {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 2px;
+}
+
+.railSpacer {
+  flex: 1 1 auto;
+}
+
+.railItem {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--raga-text-dim);
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    background 120ms ease;
+
+  &:hover {
+    color: var(--raga-text-bright);
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+[data-mantine-color-scheme="light"] .railItem:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.railItemActive {
+  color: var(--raga-accent);
+  background: var(--raga-accent-soft);
+
+  &:hover {
+    background: var(--raga-accent-soft);
+    color: var(--raga-accent);
+  }
+}
+
+.railAccent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--raga-accent);
+}
+
+.playlistPanel {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.playlistPanelHeader {
+  padding: 10px 12px 8px 12px;
+}
+
+.playerBar {
+  background: var(--raga-surface-1);
+  height: 44px;
+}
+
+.playerNowPlaying {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tableContainer {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.emptyState {
   height: 100%;
 }

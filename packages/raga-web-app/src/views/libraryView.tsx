@@ -1,6 +1,16 @@
-import { Box, Divider, Group, Paper, Stack, Text } from "@mantine/core";
-import { useCallback } from "react";
-import { IoList } from "react-icons/io5";
+import { Divider, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { spotlight } from "@mantine/spotlight";
+import classNames from "classnames";
+import { run } from "effection";
+import { useCallback, useState } from "react";
+import {
+  IoAnalyticsOutline,
+  IoFolderOpenOutline,
+  IoHelpCircleOutline,
+  IoLibraryOutline,
+  IoList,
+  IoSettingsOutline,
+} from "react-icons/io5";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
 import { formatStatNumber } from "../common/format";
@@ -9,19 +19,25 @@ import { AudioPlayerControls } from "../components/audioPlayer/audioPlayerContro
 import { AudioPlayerNowPlaying } from "../components/audioPlayer/audioPlayerNowPlaying";
 import { ResizeHandle } from "../components/common";
 import EmptyState from "../components/common/emptyState";
-import AudioAnalyzerStatus from "../components/library/audioAnalyzerStatus";
-import AudioFilesServerControls from "../components/library/audioFilesServerControls";
+import StatusBar from "../components/library/statusBar";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
 import { useMasterPlaylist } from "../hooks";
 import { appStore } from "../store/appStore";
 import styles from "./libraryView.module.scss";
 
+type RailItemKey = "all-tracks" | "playlists" | "analyzer" | "settings" | "help";
+
 export default function LibraryView() {
   const selectedPlaylistId = appStore.use.selectedPlaylistId();
   const getSelectedTrackDef = appStore.use.getSelectedTrackDef();
   const selectedTrack = getSelectedTrackDef();
   const setSelectedPlaylistId = appStore.use.setSelectedPlaylistId();
+  const masterPlaylist = useMasterPlaylist();
+
+  const [activeRailItem, setActiveRailItem] = useState<RailItemKey>("all-tracks");
+  const [isPlaylistPanelOpen, setIsPlaylistPanelOpen] = useState(false);
+  const analyzePlaylist = appStore.use.analyzePlaylist();
 
   const handlePlaylistSelect = useCallback(
     (playlistIds: string[]) => {
@@ -34,72 +50,202 @@ export default function LibraryView() {
     [setSelectedPlaylistId],
   );
 
+  const masterPlaylistId = masterPlaylist?.["Playlist Persistent ID"];
+
+  const handleRailClick = useCallback(
+    (key: RailItemKey) => {
+      setActiveRailItem(key);
+      if (key === "all-tracks") {
+        setIsPlaylistPanelOpen(false);
+        if (masterPlaylistId !== undefined) {
+          setSelectedPlaylistId(masterPlaylistId);
+        }
+      } else if (key === "playlists") {
+        setIsPlaylistPanelOpen(true);
+      } else if (key === "analyzer") {
+        if (selectedPlaylistId !== undefined) {
+          void run(() => analyzePlaylist(selectedPlaylistId));
+        }
+      } else if (key === "settings") {
+        const trigger = document.querySelector<HTMLButtonElement>(
+          "[data-raga-settings-trigger]",
+        );
+        trigger?.click();
+      } else if (key === "help") {
+        spotlight.open();
+      }
+    },
+    [masterPlaylistId, setSelectedPlaylistId, selectedPlaylistId, analyzePlaylist],
+  );
+
   return (
-    <Paper shadow="sm" withBorder={true} radius="sm" className={styles.library}>
+    <div className={styles.library}>
       <Stack gap={0} className={styles.libraryStack}>
-        <Group justify="space-between" p={5}>
-          {selectedTrack === undefined ? null : (
-            <AudioPlayerNowPlaying selectedTrack={selectedTrack} />
-          )}
-          <AudioPlayerControls />
-        </Group>
-        <Divider orientation="horizontal" />
-        <AudioPlayer />
-        <Divider orientation="horizontal" />
         <PanelGroup direction="horizontal">
-          <Panel className={styles.librarySidebar} defaultSize={20} minSize={20} maxSize={40}>
-            <PlaylistTable selectionMode="single" onSelect={handlePlaylistSelect} pb={87} />
-            <LibrarySidebarFooter />
-          </Panel>
-          <ResizeHandle />
-          <Panel minSize={30}>
-            {selectedPlaylistId === undefined ? (
-              <EmptyState
-                className={styles.emptyState}
-                title="Playlist tracks"
-                description="Select a playlist to view tracks"
-                icon={<IoList size={48} />}
+          <Panel
+            id="sidebar"
+            order={1}
+            defaultSize={isPlaylistPanelOpen ? 22 : 4}
+            minSize={isPlaylistPanelOpen ? 18 : 4}
+            maxSize={isPlaylistPanelOpen ? 40 : 4}
+            className={styles.sidebarPanel}
+          >
+            <div className={styles.sidebarLayout}>
+              <IconRail
+                activeItem={activeRailItem}
+                onItemClick={handleRailClick}
+                isPlaylistPanelOpen={isPlaylistPanelOpen}
               />
-            ) : (
-              <TrackTable playlistId={selectedPlaylistId} />
-            )}
+              {isPlaylistPanelOpen && (
+                <div className={styles.playlistPanel}>
+                  <div className={styles.playlistPanelHeader}>
+                    <Text size="xs" c="dimmed" tt="uppercase" lts={0.5} fw={600}>
+                      Playlists
+                    </Text>
+                  </div>
+                  <Divider />
+                  <PlaylistTable
+                    selectionMode="single"
+                    onSelect={handlePlaylistSelect}
+                    showHeader={false}
+                  />
+                </div>
+              )}
+            </div>
+          </Panel>
+          {isPlaylistPanelOpen && <ResizeHandle />}
+          <Panel id="main" order={2} minSize={30}>
+            <Stack gap={0} h="100%">
+              <Group justify="space-between" px="sm" py={6} className={styles.playerBar} wrap="nowrap">
+                <div className={styles.playerNowPlaying}>
+                  {selectedTrack === undefined ? (
+                    <Text size="xs" c="dimmed" ff="monospace" tt="uppercase" lts={1}>
+                      Now playing — none
+                    </Text>
+                  ) : (
+                    <AudioPlayerNowPlaying selectedTrack={selectedTrack} />
+                  )}
+                </div>
+                <AudioPlayerControls />
+              </Group>
+              <Divider />
+              <AudioPlayer />
+              <Divider />
+              <div className={styles.tableContainer}>
+                {selectedPlaylistId === undefined ? (
+                  <EmptyState
+                    className={styles.emptyState}
+                    title="Playlist tracks"
+                    description="Select a playlist to view tracks"
+                    icon={<IoList size={48} />}
+                  />
+                ) : (
+                  <TrackTable playlistId={selectedPlaylistId} />
+                )}
+              </div>
+            </Stack>
           </Panel>
         </PanelGroup>
+        <StatusBar
+          totalTracks={
+            masterPlaylist === undefined
+              ? undefined
+              : formatStatNumber(masterPlaylist["Playlist Items"].length)
+          }
+        />
       </Stack>
-    </Paper>
+    </div>
   );
 }
 LibraryView.displayName = "LibraryView";
 
-function LibrarySidebarFooter() {
-  const masterPlaylist = useMasterPlaylist();
+interface IconRailProps {
+  activeItem: RailItemKey;
+  isPlaylistPanelOpen: boolean;
+  onItemClick: (key: RailItemKey) => void;
+}
 
-  if (masterPlaylist === undefined) {
-    return undefined;
-  }
+interface RailItem {
+  key: RailItemKey;
+  icon: React.ReactNode;
+  label: string;
+  hint: string;
+  group: "primary" | "secondary";
+}
+
+const RAIL_ITEMS: RailItem[] = [
+  {
+    key: "all-tracks",
+    icon: <IoLibraryOutline size={18} />,
+    label: "All Tracks",
+    hint: "1",
+    group: "primary",
+  },
+  {
+    key: "playlists",
+    icon: <IoFolderOpenOutline size={18} />,
+    label: "Playlists",
+    hint: "2",
+    group: "primary",
+  },
+  {
+    key: "analyzer",
+    icon: <IoAnalyticsOutline size={18} />,
+    label: "Analyzer",
+    hint: "4",
+    group: "primary",
+  },
+  {
+    key: "settings",
+    icon: <IoSettingsOutline size={18} />,
+    label: "Settings",
+    hint: ",",
+    group: "secondary",
+  },
+  {
+    key: "help",
+    icon: <IoHelpCircleOutline size={18} />,
+    label: "Help",
+    hint: "?",
+    group: "secondary",
+  },
+];
+
+function IconRail({ activeItem, isPlaylistPanelOpen, onItemClick }: IconRailProps) {
+  const renderItem = (item: RailItem) => {
+    const isActive =
+      activeItem === item.key && (!isPlaylistPanelOpen || item.key === "playlists");
+    return (
+      <Tooltip
+        key={item.key}
+        label={item.label}
+        position="right"
+        offset={6}
+        withArrow={false}
+      >
+        <button
+          type="button"
+          className={classNames(styles.railItem, { [styles.railItemActive]: isActive })}
+          onClick={() => {
+            onItemClick(item.key);
+          }}
+        >
+          {isActive && <span className={styles.railAccent} />}
+          {item.icon}
+        </button>
+      </Tooltip>
+    );
+  };
 
   return (
-    <Box className={styles.librarySidebarFooter}>
-      <Divider orientation="horizontal" />
-      <Box className={styles.sidebarFooterItem}>
-        <AudioFilesServerControls />
-      </Box>
-      <Divider orientation="horizontal" />
-      <Box className={styles.sidebarFooterItem}>
-        <AudioAnalyzerStatus />
-      </Box>
-      <Divider orientation="horizontal" />
-      <Box className={styles.sidebarFooterItem}>
-        <Group align="center" justify="space-between">
-          <Text component="span" truncate={true} size="sm" c="dimmed">
-            Total # tracks
-          </Text>
-          <Text component="span" truncate={true} size="sm">
-            {formatStatNumber(masterPlaylist["Playlist Items"].length)}
-          </Text>
-        </Group>
-      </Box>
-    </Box>
+    <div className={styles.iconRail}>
+      <div className={styles.railSection}>
+        {RAIL_ITEMS.filter((i) => i.group === "primary").map(renderItem)}
+      </div>
+      <div className={styles.railSpacer} />
+      <div className={styles.railSection}>
+        {RAIL_ITEMS.filter((i) => i.group === "secondary").map(renderItem)}
+      </div>
+    </div>
   );
 }
-LibrarySidebarFooter.displayName = "LibrarySidebarFooter";

@@ -1,5 +1,7 @@
-import { Divider, Group } from "@mantine/core";
+import { Group } from "@mantine/core";
+import { spotlight } from "@mantine/spotlight";
 import classNames from "classnames";
+import { IoSearchOutline } from "react-icons/io5";
 
 import { appStore } from "../../store/appStore";
 import UserSettingsDropdown from "../settings/userSettingsDropdown";
@@ -12,9 +14,9 @@ export default function AppChrome() {
   const isMacOS = window.api.platform === "darwin";
   const isWindows = window.api.platform === "win32";
   // use left padding on macOS to account for window traffic light buttons
-  const leftPadding = isMacOS ? 75 : undefined;
+  const leftPadding = isMacOS ? 75 : 12;
   // use right padding on Windows to account for window buttons
-  const rightPadding = isWindows ? 100 : undefined;
+  const rightPadding = isWindows ? 100 : 12;
 
   return (
     <Group
@@ -22,25 +24,36 @@ export default function AppChrome() {
       pr={rightPadding}
       justify="space-between"
       wrap="nowrap"
+      gap="md"
       className={classNames(styles.appChromeDraggable, styles.appChrome)}
     >
-      <Group
-        h={30}
-        p={5}
-        wrap="nowrap"
-        preventGrowOverflow={true}
-        gap="sm"
-        className={styles.appChromeGroup}
+      <div className={styles.brand}>
+        <div className={styles.logoMark}>R</div>
+      </div>
+
+      {isLibraryLoaded && (
+        <div className={styles.modeControl}>
+          <WorkspaceModeControl />
+        </div>
+      )}
+
+      <button
+        type="button"
+        className={styles.commandTrigger}
+        onClick={() => {
+          spotlight.open();
+        }}
+        aria-label="Open command palette"
       >
-        {isLibraryLoaded && (
-          <>
-            <WorkspaceModeControl />
-          </>
-        )}
-      </Group>
-      <Group className={styles.appChromeGroup} p={5} gap="xs">
-        <LibraryControls />
-        <Divider orientation="vertical" />
+        <IoSearchOutline size={14} className={styles.commandTriggerIcon} />
+        <span className={styles.commandTriggerText}>
+          Search playlists, tracks, or run a command…
+        </span>
+        <span className={styles.commandTriggerHint}>⌘K</span>
+      </button>
+
+      <Group className={styles.appChromeGroup} gap="xs" wrap="nowrap">
+        {isLibraryLoaded && <LibraryControls />}
         <UserSettingsDropdown />
       </Group>
     </Group>
