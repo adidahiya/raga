@@ -23,7 +23,7 @@ import {
   Check,
 } from "lucide-react";
 
-const TOKENS = {
+export const TOKENS = {
   surface: {
     0: "#101114",
     1: "#16171a",
