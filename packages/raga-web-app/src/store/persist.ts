@@ -16,7 +16,14 @@ const OMIT_FROM_PERSISTENCE: (keyof AppState)[] = [
   "audioIsPlaying",
   "audioPlaybackRate",
   "analyzerStatus",
+  "analyzerJobs",
+  "analyzerProgress",
+  "analyzerCancelRequested",
   "audioFilesServerStatus",
+  "audioFeatureCache",
+  "atlasLayout",
+  "atlasFilters",
+  "atlasHoveredAlbumId",
   "libraryLoadingState",
   "libraryWriteState",
   "library",
@@ -27,7 +34,11 @@ const MAP_PROPERTIES: (keyof AppState)[] = [
   // none for now
 ];
 
-const SET_PROPERTIES: (keyof AppState)[] = ["previouslyUsedLibraries"];
+const SET_PROPERTIES: (keyof AppState)[] = [
+  "previouslyUsedLibraries",
+  "selectedTrackIds",
+  "atlasSelectedAlbumIds",
+];
 
 /**
  * Instrument logging for store rehydration.

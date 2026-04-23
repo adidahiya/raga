@@ -1,4 +1,5 @@
 import type {
+  AlbumDefinition,
   LoadedSwinsianLibraryEventPayload,
   LoadSwinsianLibraryOptions,
   PlaylistDefinition,
@@ -9,13 +10,18 @@ import { ClientEventChannel, ServerEventChannel } from "@adahiya/raga-types";
 import { call, type Operation } from "effection";
 import { Roarr as log } from "roarr";
 
+import { getFeatureCacheClient } from "../../audio/featureCache";
 import {
   DEBUG,
   LOAD_SWINSIAN_LIBRARY_TIMEOUT,
   WRITE_MODIFIED_LIBRARY_TIMEOUT,
 } from "../../common/constants";
 import { ClientErrors } from "../../common/errorMessages";
-import { generateMockLibrary } from "../../common/mockData";
+import {
+  generateMockAtlasLibrary,
+  generateMockAudioFeatureCache,
+} from "../../common/mockData";
+import { aggregateAlbums } from "../../library/albums";
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
 export type LibraryLoadingState = "none" | "loading" | "loaded" | "error";
@@ -52,6 +58,12 @@ export interface LibraryActions {
   getTrackDef: (id: number) => SwinsianTrackDefinition | undefined;
   getSelectedTrackDef: () => SwinsianTrackDefinition | undefined;
   getLibraryTrackHasNoDiscogsGenres: (trackId: number) => boolean;
+  /**
+   * Aggregate the loaded library into albums (track rollup keyed by Album Persistent ID).
+   * Returns `undefined` when no library is loaded. Recomputed on each call; consumers should
+   * memoize via Zustand selectors if needed.
+   */
+  getAlbums: () => AlbumDefinition[] | undefined;
 
   // actions - simple setters
   setActiveTrackId: (activeTrackId: number | undefined) => void;
@@ -94,6 +106,11 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
   },
   getLibraryTrackHasNoDiscogsGenres: (trackId: number) => {
     return get().libraryTrackIdsWithoutDiscogsGenres.includes(trackId);
+  },
+  getAlbums: () => {
+    const { library, audioFeatureCache } = get();
+    if (library === undefined) return undefined;
+    return aggregateAlbums(library, { audioFeatures: audioFeatureCache.tracks });
   },
 
   // simple setters
@@ -165,8 +182,9 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
       let data: LoadedSwinsianLibraryEventPayload;
 
       if (get().useMockData) {
-        // In web mode with mock data enabled, generate mock library
-        const mockLibrary = generateMockLibrary();
+        // In web mode with mock data enabled, generate a richer atlas-sized library so the
+        // atlas slice + layout engine have meaningful data to work with.
+        const mockLibrary = generateMockAtlasLibrary();
 
         // Ensure the library playlists are properly set up
         const libraryPlaylists = getLibraryPlaylists(mockLibrary);
@@ -186,6 +204,8 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
           filepath: "/mock/library.xml",
         };
 
+        const audioFeatureCache = generateMockAudioFeatureCache(mockLibrary);
+
         // Set the library state with mock data
         set((state) => {
           state.libraryLoadingState = "loaded";
@@ -193,6 +213,7 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
           state.libraryPlaylists = libraryPlaylists;
           state.libraryPlaylistsContainingTrack = libraryPlaylistsContainingTrack;
           state.selectedPlaylistId = firstPlaylistId;
+          state.audioFeatureCache = audioFeatureCache;
         });
 
         return;
@@ -239,6 +260,18 @@ export const createLibrarySlice: AppStoreSliceCreator<LibraryState & LibraryActi
         state.libraryPlaylists = getLibraryPlaylists(data.library);
         state.libraryPlaylistsContainingTrack = getLibraryPlaylistsContainingTrack(data.library);
       });
+
+      // Hydrate the persisted audio feature cache (sidecar JSON) so that previously analyzed
+      // tracks are skipped on subsequent runs. Failure here is non-fatal: we just continue with
+      // an empty in-memory cache.
+      try {
+        const cache = yield* getFeatureCacheClient().load({});
+        get().setAudioFeatureCache(cache);
+      } catch (err) {
+        log.warn(
+          `[client] failed to load audio feature cache: ${(err as Error).message}`,
+        );
+      }
     } catch (e) {
       set({ libraryLoadingState: "error" });
       log.error(ClientErrors.libraryFailedToLoad(e as Error));

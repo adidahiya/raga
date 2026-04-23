@@ -23,10 +23,15 @@ import { serializeError } from "serialize-error";
 
 import { type AudioFilesServer, startAudioFilesServer } from "./audioFilesServer";
 import { log } from "./common/serverLogger";
+import {
+  handleLoadAudioFeatureCache,
+  handleWriteAudioFeatureCacheEntries,
+} from "./handlers/audioFeatureCacheHandler";
 import { computeLibraryMetadata } from "./libraryMeta/computeLibraryMetadata";
 import { writeAudioFileTag } from "./writeAudioFileTag";
 
 let library: SwinsianLibraryPlist | undefined;
+let lastLibraryFilepath: string | undefined;
 
 export function initAppServer() {
   // N.B. this event handler must be a regular function, not an Operation, to ensure that it is run
@@ -58,6 +63,18 @@ export function initAppServer() {
       case ClientEventChannel.WRITE_MODIFIED_LIBRARY:
         handleWriteModifiedLibrary(event.data as ClientEventPayloadMap[typeof event.channel]);
         break;
+      case ClientEventChannel.LOAD_AUDIO_FEATURE_CACHE:
+        handleLoadAudioFeatureCache(
+          event.data as ClientEventPayloadMap[typeof event.channel],
+          { libraryFilepath: lastLibraryFilepath },
+        );
+        break;
+      case ClientEventChannel.WRITE_AUDIO_FEATURE_CACHE_ENTRIES:
+        handleWriteAudioFeatureCacheEntries(
+          event.data as ClientEventPayloadMap[typeof event.channel],
+          { libraryFilepath: lastLibraryFilepath },
+        );
+        break;
       default:
         break;
     }
@@ -74,6 +91,7 @@ function handleLoadSwinsianLibrary({ filepath, reloadFromDisk }: LoadSwinsianLib
       return;
     }
   }
+  lastLibraryFilepath = filepath;
 
   process.parentPort.postMessage({
     channel: ServerEventChannel.LOADED_SWINSIAN_LIBRARY,

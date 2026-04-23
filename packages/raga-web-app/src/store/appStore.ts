@@ -5,6 +5,11 @@ import { immer } from "zustand/middleware/immer";
 import { LOCAL_STORAGE_KEY } from "../common/constants";
 import { onRehydrateStorage, partialize, storage } from "./persist";
 import {
+  type AtlasActions,
+  type AtlasState,
+  createAtlasSlice,
+} from "./slices/atlasSlice";
+import {
   type AudioAnalyzerActions,
   type AudioAnalyzerState,
   createAudioAnalyzerSlice,
@@ -53,7 +58,8 @@ export type AppState = AudioFilesServerState &
   UserSettingsState &
   ExporterState &
   WorkspaceState &
-  WebAppState;
+  WebAppState &
+  AtlasState;
 export type AppActions = AudioFilesServerActions &
   LibraryActions &
   AudioAnalyzerActions &
@@ -63,7 +69,8 @@ export type AppActions = AudioFilesServerActions &
   UserSettingsActions &
   ExporterActions &
   WorkspaceActions &
-  WebAppActions;
+  WebAppActions &
+  AtlasActions;
 export type AppStore = AppState & AppActions;
 
 export const useAppStore = create<AppStore>()(
@@ -81,6 +88,7 @@ export const useAppStore = create<AppStore>()(
       ...createExporterSlice(...args),
       ...createWorkspaceSlice(...args),
       ...createWebAppSlice(...args),
+      ...createAtlasSlice(...args),
     })),
     {
       name: `${LOCAL_STORAGE_KEY}-appStore`,

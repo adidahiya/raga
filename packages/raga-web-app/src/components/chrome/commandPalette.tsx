@@ -2,9 +2,9 @@ import { Kbd } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
   Spotlight,
+  spotlight,
   type SpotlightActionData,
   type SpotlightActionGroupData,
-  spotlight,
 } from "@mantine/spotlight";
 import { run } from "effection";
 import { useMemo } from "react";
@@ -44,7 +44,7 @@ export default function CommandPalette() {
   const masterPlaylist = useMasterPlaylist();
   const masterPlaylistId = masterPlaylist?.["Playlist Persistent ID"];
 
-  useHotkeys([["mod+K", () => spotlight.open()]]);
+  useHotkeys([["mod+K", () => { spotlight.open(); }]]);
 
   const focusSelectedTrackInTable = () => {
     requestAnimationFrame(() => {
@@ -62,7 +62,7 @@ export default function CommandPalette() {
         description: "Browse playlists and the track table",
         leftSection: <IoSwapHorizontalOutline size={16} />,
         keywords: ["mode", "tracks"],
-        onClick: () => setWorkspaceMode("tracks"),
+        onClick: () => { setWorkspaceMode("tracks"); },
       },
       {
         id: "switch-export",
@@ -70,7 +70,7 @@ export default function CommandPalette() {
         description: "Configure library export to other apps",
         leftSection: <IoSwapHorizontalOutline size={16} />,
         keywords: ["mode", "export", "rekordbox"],
-        onClick: () => setWorkspaceMode("export"),
+        onClick: () => { setWorkspaceMode("export"); },
       },
       {
         id: "reload-library",
@@ -219,7 +219,7 @@ export default function CommandPalette() {
       (query: string, actions: SpotlightActions[]): SpotlightActions[] => {
         const q = query.trim().toLowerCase();
         const isGroup = (entry: SpotlightActions): entry is SpotlightActionGroupData =>
-          "actions" in entry && Array.isArray((entry as SpotlightActionGroupData).actions);
+          "actions" in entry && Array.isArray((entry).actions);
         const filteredBase: SpotlightActions[] = [];
         for (const entry of actions) {
           if (!isGroup(entry)) {

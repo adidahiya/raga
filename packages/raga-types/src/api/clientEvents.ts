@@ -1,3 +1,4 @@
+import type { AudioFeatureCache, TrackAudioFeatures } from "../models/audioFeatures.js";
 import type { SwinsianLibraryPlist } from "../models/library.js";
 
 // raga-lib should not have electron as a dependency, so we define a minimal MessageEvent type here
@@ -12,8 +13,10 @@ export const ClientEventChannel = {
   APP_SERVER_PING: "appServerPing" as const,
   AUDIO_FILES_SERVER_START: "audioFilesServerStart" as const,
   AUDIO_FILES_SERVER_STOP: "audioFilesServerStop" as const,
+  LOAD_AUDIO_FEATURE_CACHE: "loadAudioFeatureCache" as const,
   LOAD_SWINSIAN_LIBRARY: "loadSwinsianLibrary" as const,
   OPEN_FILE_LOCATION: "openFileLocation" as const,
+  WRITE_AUDIO_FEATURE_CACHE_ENTRIES: "writeAudioFeatureCacheEntries" as const,
   WRITE_AUDIO_FILE_TAG: "writeAudioFileTag" as const,
   WRITE_MODIFIED_LIBRARY: "writeModifiedLibrary" as const,
 };
@@ -37,12 +40,31 @@ export interface ClientMessageEvent<
 export interface ClientEventPayloadMap {
   [ClientEventChannel.APP_SERVER_PING]: never;
   [ClientEventChannel.AUDIO_FILES_SERVER_START]: AudioFilesServerStartOptions;
+  [ClientEventChannel.LOAD_AUDIO_FEATURE_CACHE]: LoadAudioFeatureCacheOptions;
   [ClientEventChannel.LOAD_SWINSIAN_LIBRARY]: LoadSwinsianLibraryOptions;
   [ClientEventChannel.OPEN_FILE_LOCATION]: OpenFileLocationOptions;
+  [ClientEventChannel.WRITE_AUDIO_FEATURE_CACHE_ENTRIES]: WriteAudioFeatureCacheEntriesOptions;
   [ClientEventChannel.WRITE_AUDIO_FILE_TAG]: WriteAudioFileTagOptions;
   [ClientEventChannel.WRITE_MODIFIED_LIBRARY]: WriteModifiedLibraryOptions;
   [ClientEventChannel.AUDIO_FILES_SERVER_STOP]: never;
 }
+
+export interface LoadAudioFeatureCacheOptions {
+  /** Path to the sidecar JSON file. Pass undefined to derive from the library path. */
+  cachePath?: string;
+  /** Persistent ID of the library that owns the cache. */
+  libraryPersistentId?: string;
+}
+
+export interface WriteAudioFeatureCacheEntriesOptions {
+  cachePath?: string;
+  libraryPersistentId?: string;
+  /** Map of track Persistent ID -> features to write. */
+  entries: Record<string, TrackAudioFeatures>;
+}
+
+/** Re-export here so consumers don't have to thread the type. */
+export type { AudioFeatureCache, TrackAudioFeatures };
 
 export interface LoadSwinsianLibraryOptions {
   filepath: string;

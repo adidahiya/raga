@@ -23,7 +23,7 @@ import { Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/c
 import classNames from "classnames";
 import { run } from "effection";
 import { unique } from "radash";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Roarr as log } from "roarr";
 import { useResizeObserver } from "usehooks-ts";
 import { useShallow } from "zustand/shallow";
@@ -848,6 +848,8 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
   const setTrackTableSort = appStore.use.setTrackTableSort();
   const analyzeBPMPerTrack = appStore.use.analyzeBPMPerTrack();
   const analyzeTrack = appStore.use.analyzeTrack();
+  const selectedTrackIdsFromStore = appStore.use.selectedTrackIds();
+  const setSelectedTrackIds = appStore.use.setSelectedTrackIds();
 
   // Multi-row selection state
   const [selectionState, setSelectionState] = useState<SelectionState>({
@@ -990,6 +992,49 @@ function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackD
       },
     };
   }, [selectionState]);
+
+  // Bidirectional bridge between the table's row-based selection and the global
+  // `selectedTrackIds` set. Other features (atlas selection, future hotkeys) read/write the set
+  // directly, so this hook keeps both representations in sync without re-entrancy loops.
+  const syncingFromStore = useRef(false);
+  const lastPushedSignature = useRef<string>("");
+  const computeSignature = useCallback((ids: Iterable<number>): string => {
+    return Array.from(ids).sort((a, b) => a - b).join(",");
+  }, []);
+
+  // Push local selection -> store.
+  useEffect(() => {
+    if (syncingFromStore.current) {
+      syncingFromStore.current = false;
+      return;
+    }
+    const ids: number[] = [];
+    for (const row of selectionState.selectedRows) {
+      const t = sortedTrackDefs[row];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (t !== undefined) ids.push(t["Track ID"]);
+    }
+    const sig = computeSignature(ids);
+    if (sig === lastPushedSignature.current) return;
+    lastPushedSignature.current = sig;
+    setSelectedTrackIds(ids);
+  }, [selectionState.selectedRows, sortedTrackDefs, setSelectedTrackIds, computeSignature]);
+
+  // Pull store -> local selection (e.g. when the atlas updates the selected tracks).
+  useEffect(() => {
+    const incomingSig = computeSignature(selectedTrackIdsFromStore);
+    if (incomingSig === lastPushedSignature.current) return;
+    lastPushedSignature.current = incomingSig;
+    syncingFromStore.current = true;
+    const trackIdToRow = new Map<number, number>();
+    sortedTrackDefs.forEach((t, idx) => trackIdToRow.set(t["Track ID"], idx));
+    const newRows = new Set<number>();
+    for (const id of selectedTrackIdsFromStore) {
+      const row = trackIdToRow.get(id);
+      if (row !== undefined) newRows.add(row);
+    }
+    setSelectionState((prev) => ({ ...prev, selectedRows: newRows }));
+  }, [selectedTrackIdsFromStore, sortedTrackDefs, computeSignature]);
 
   return useMemo(
     () => ({ sortedTrackDefs, selection, handleHeaderClick, handleCellClicked, clearSelection }),
