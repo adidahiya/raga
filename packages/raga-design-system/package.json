@@ -13,12 +13,13 @@
   },
   "scripts": {
     "gen:tokens": "tsx scripts/generate-tokens-css.ts",
+    "check:tokens": "tsx scripts/generate-tokens-css.ts --check",
     "predev": "tsx scripts/generate-tokens-css.ts",
     "prebuild": "tsx scripts/generate-tokens-css.ts",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check-lint": "eslint .",
+    "check-lint": "tsx scripts/generate-tokens-css.ts --check && eslint .",
     "check-types": "tsc --noEmit",
     "lint-fix": "eslint --fix .",
     "clean": "rm -rf dist .vite"

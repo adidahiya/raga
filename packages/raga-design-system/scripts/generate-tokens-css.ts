@@ -1,11 +1,12 @@
-import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { TOKENS } from "../src/tokens/tokens.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(here, "../src/styles/tokens.css");
+const PACKAGE_ROOT = resolve(here, "..");
 
 interface Line {
   name: string;
@@ -123,8 +124,34 @@ export function writeTokensCss(): string {
   return OUT;
 }
 
+export function checkTokensCss(): { ok: boolean; path: string; expected: string; actual: string } {
+  const expected = generate();
+  let actual = "";
+  try {
+    actual = readFileSync(OUT, "utf8");
+  } catch {
+    actual = "";
+  }
+  return { ok: actual === expected, path: OUT, expected, actual };
+}
+
 const entry = process.argv[1];
 if (entry && fileURLToPath(import.meta.url) === resolve(entry)) {
-  const out = writeTokensCss();
-  console.log(`[design-system] wrote ${out}`);
+  const isCheck = process.argv.slice(2).includes("--check");
+  if (isCheck) {
+    const { ok, path: outPath } = checkTokensCss();
+    const rel = relative(PACKAGE_ROOT, outPath);
+    if (ok) {
+      console.log(`[design-system] ${rel} is up to date`);
+    } else {
+      console.error(
+        `[design-system] ${rel} is out of date with src/tokens/tokens.ts.\n` +
+          `  Run \`yarn workspace @adahiya/raga-design-system run gen:tokens\` and commit the result.`,
+      );
+      process.exit(1);
+    }
+  } else {
+    const out = writeTokensCss();
+    console.log(`[design-system] wrote ${out}`);
+  }
 }

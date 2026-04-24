@@ -36,6 +36,10 @@
     "gen:tokens": {
       "executor": "nx:run-script",
       "options": { "script": "gen:tokens" }
+    },
+    "check:tokens": {
+      "executor": "nx:run-script",
+      "options": { "script": "check:tokens" }
     }
   }
 }
