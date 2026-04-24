@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { TOKENS } from "../src/tokens/tokens.ts";
+import { THEMES,type Tokens } from "../src/tokens/tokens.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(here, "../src/styles/tokens.css");
@@ -33,9 +33,9 @@ const emitNumeric = (prefix: string, obj: Record<string, number>): Line[] =>
 const emitStrings = (prefix: string, obj: Record<string, string>): Line[] =>
   Object.entries(obj).map(([k, v]) => ({ name: `--${prefix}-${kebab(k)}`, value: v }));
 
-function emitTypography(): Line[] {
+function emitTypographyFor(theme: Tokens): Line[] {
   const out: Line[] = [];
-  for (const [name, spec] of Object.entries(TOKENS.type)) {
+  for (const [name, spec] of Object.entries(theme.type)) {
     const k = kebab(name);
     out.push({ name: `--type-${k}-size`, value: px(spec.size) });
     out.push({ name: `--type-${k}-leading`, value: String(spec.leading) });
@@ -49,21 +49,21 @@ function emitTypography(): Line[] {
   return out;
 }
 
-function generate(): string {
-  const surface = emitColors("surface", TOKENS.surface);
-  const text = emitColors("text", TOKENS.text);
-  const border = emitColors("border", TOKENS.border);
-  const accent = Object.entries(TOKENS.accent).map(([k, v]) => ({
+function sectionsFor(theme: Tokens): string {
+  const surface = emitColors("surface", theme.surface);
+  const text = emitColors("text", theme.text);
+  const border = emitColors("border", theme.border);
+  const accent = Object.entries(theme.accent).map(([k, v]) => ({
     name: `--accent-${k}`,
     value: v,
   }));
-  const accent2 = Object.entries(TOKENS.accent2).map(([k, v]) => ({
+  const accent2 = Object.entries(theme.accent2).map(([k, v]) => ({
     name: `--accent2-${k}`,
     value: v,
   }));
-  const semantic = emitColors("semantic", TOKENS.semantic);
-  const fg = emitColors("fg", TOKENS.fg);
-  const overlay: Line[] = Object.entries(TOKENS.overlay).map(([k, v]) => {
+  const semantic = emitColors("semantic", theme.semantic);
+  const fg = emitColors("fg", theme.fg);
+  const overlay: Line[] = Object.entries(theme.overlay).map(([k, v]) => {
     const name =
       "--overlay-" +
       k
@@ -73,18 +73,18 @@ function generate(): string {
     return { name, value: v };
   });
 
-  const radius = emitNumeric("radius", TOKENS.radius);
-  const spacing: Line[] = Object.entries(TOKENS.spacing).map(([k, v]) => ({
+  const radius = emitNumeric("radius", theme.radius);
+  const spacing: Line[] = Object.entries(theme.spacing).map(([k, v]) => ({
     name: `--spacing-${k}`,
-    value: px(v as number),
+    value: px(v),
   }));
-  const size = emitNumeric("size", TOKENS.size);
-  const shadow = emitStrings("shadow", TOKENS.shadow);
-  const font = emitStrings("font", TOKENS.font);
-  const tracking = emitStrings("tracking", TOKENS.tracking);
-  const type = emitTypography();
+  const size = emitNumeric("size", theme.size);
+  const shadow = emitStrings("shadow", theme.shadow);
+  const font = emitStrings("font", theme.font);
+  const tracking = emitStrings("tracking", theme.tracking);
+  const type = emitTypographyFor(theme);
 
-  const sections = [
+  return [
     block("surfaces", surface),
     block("text", text),
     block("borders", border),
@@ -100,8 +100,10 @@ function generate(): string {
     block("font families", font),
     block("letter-spacing", tracking),
     block("typography scale", type),
-  ];
+  ].join("\n\n");
+}
 
+function generate(): string {
   return [
     "/*",
     " * AUTO-GENERATED — DO NOT EDIT BY HAND.",
@@ -111,7 +113,11 @@ function generate(): string {
     "",
     `:root,`,
     `:root[data-theme="dark"] {`,
-    sections.join("\n\n"),
+    sectionsFor(THEMES.dark),
+    "}",
+    "",
+    `:root[data-theme="light"] {`,
+    sectionsFor(THEMES.light),
     "}",
     "",
   ].join("\n");

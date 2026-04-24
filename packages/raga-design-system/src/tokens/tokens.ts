@@ -180,8 +180,97 @@ export const TOKENS = {
   },
 } as const;
 
-export type Tokens = typeof TOKENS;
+/**
+ * Light-theme overrides. Same shape as TOKENS for the colour-bearing
+ * categories (surface / text / border / semantic / fg / overlay); every
+ * other category is theme-independent and inherited from TOKENS via the
+ * THEMES map below. Accent ramps are intentionally shared so brand colour
+ * stays stable across themes.
+ *
+ * Note on overlay naming: the `overlay-white-*` tokens represent the
+ * "subtle interactive overlay" used for hover/active fills on raised
+ * surfaces. In dark mode they're white-with-alpha (lighten); in light
+ * mode they flip to black-with-alpha (darken). The `overlay-black-scrim-*`
+ * tokens stay black, but at lower alpha so shadows feel softer over the
+ * brighter background.
+ */
+const LIGHT_OVERRIDES = {
+  surface: {
+    0: "#ffffff",
+    1: "#f7f7f9",
+    2: "#eef0f3",
+    3: "#e3e6ec",
+    4: "#d6dae2",
+  },
+  text: {
+    primary: "#0e1014",
+    secondary: "#2c2f37",
+    muted: "#5d6170",
+    disabled: "#9ea1ab",
+  },
+  border: {
+    subtle: "rgba(0,0,0,0.05)",
+    default: "rgba(0,0,0,0.10)",
+    strong: "rgba(0,0,0,0.18)",
+  },
+  semantic: {
+    success: "#16a34a",
+    warning: "#b45309",
+    danger: "#dc2626",
+    dangerHover: "#ef4444",
+    info: "#2563eb",
+    idle: "#9ea1ab",
+  },
+  fg: {
+    onAccent: "#ffffff",
+    onWarm: "#2a0e05",
+    onDanger: "#1a0606",
+  },
+  overlay: {
+    whiteSubtle: "rgba(0,0,0,0.04)",
+    whiteSoft: "rgba(0,0,0,0.06)",
+    whiteFill: "rgba(0,0,0,0.08)",
+    blackScrim25: "rgba(0,0,0,0.10)",
+    blackScrim30: "rgba(0,0,0,0.12)",
+    blackScrim40: "rgba(0,0,0,0.16)",
+    blackScrim50: "rgba(0,0,0,0.22)",
+  },
+} as const;
+
+type DarkTokens = typeof TOKENS;
+
+/**
+ * Public tokens shape — widened from the dark-theme literal types so that
+ * sibling theme maps (light, future high-contrast, etc.) can satisfy the
+ * same contract without TypeScript narrowing them away.
+ */
+export type Tokens = {
+  -readonly [K in keyof DarkTokens]: {
+    -readonly [P in keyof DarkTokens[K]]: DarkTokens[K][P] extends number
+      ? number
+      : DarkTokens[K][P] extends string
+        ? string
+        : DarkTokens[K][P];
+  };
+};
+
+export const LIGHT_TOKENS: Tokens = {
+  ...TOKENS,
+  ...LIGHT_OVERRIDES,
+};
+
+export type ThemeName = "dark" | "light";
+
+export const THEMES: Record<ThemeName, Tokens> = {
+  dark: TOKENS,
+  light: LIGHT_TOKENS,
+};
+
 export type TypeKey = keyof typeof TOKENS.type;
 export type TypeSpec = (typeof TOKENS.type)[TypeKey];
 
 export const SURFACE_REF = TOKENS.surface[1];
+
+export function surfaceRefFor(theme: ThemeName): string {
+  return THEMES[theme].surface[1];
+}

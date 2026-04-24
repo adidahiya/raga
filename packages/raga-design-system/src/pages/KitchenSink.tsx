@@ -40,7 +40,14 @@ import {
   Switch,
   Textarea,
 } from "../primitives";
-import { SURFACE_REF, TOKENS, type TypeKey, type TypeSpec } from "../tokens/tokens";
+import {
+  surfaceRefFor,
+  type ThemeName,
+  THEMES,
+  type Tokens,
+  type TypeKey,
+  type TypeSpec,
+} from "../tokens/tokens";
 
 function getWebAppUrl(): string {
   const { host, protocol } = window.location;
@@ -50,7 +57,22 @@ function getWebAppUrl(): string {
   return "http://localhost:5000";
 }
 
-const T = TOKENS;
+interface ThemeContextValue {
+  theme: ThemeName;
+  setTheme: (next: ThemeName) => void;
+  tokens: Tokens;
+  surfaceRef: string;
+}
+
+const ThemeContext = React.createContext<ThemeContextValue | null>(null);
+
+function useThemeCtx(): ThemeContextValue {
+  const ctx = React.useContext(ThemeContext);
+  if (!ctx) {
+    throw new Error("ThemeContext missing — wrap KitchenSink content in <ThemeProvider>.");
+  }
+  return ctx;
+}
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "warm" | "danger";
 type ButtonState = "default" | "hover" | "active" | "disabled" | "focus";
@@ -87,12 +109,13 @@ function Section({
 }
 
 function Swatch({ name, hex, textHex }: { name: string; hex: string; textHex?: string }) {
-  const ratio = contrastRatio(hex, SURFACE_REF);
+  const { surfaceRef, tokens } = useThemeCtx();
+  const ratio = contrastRatio(hex, surfaceRef);
   return (
     <div className="flex flex-col">
       <div
         className="flex w-full items-end rounded-sm border border-border-subtle p-2"
-        style={{ height: T.size.swatchH, background: hex }}
+        style={{ height: tokens.size.swatchH, background: hex }}
       >
         {textHex ? (
           <span className="font-mono text-micro" style={{ color: textHex }}>
@@ -112,7 +135,8 @@ function Swatch({ name, hex, textHex }: { name: string; hex: string; textHex?: s
 }
 
 function RampSwatch({ hex, k }: { hex: string; k: number }) {
-  const ratio = contrastRatio(hex, SURFACE_REF);
+  const { surfaceRef } = useThemeCtx();
+  const ratio = contrastRatio(hex, surfaceRef);
   return (
     <div className="flex flex-1 flex-col items-start">
       <div
@@ -150,10 +174,11 @@ function ColorRow({
 }
 
 function TextSampleRow({ name, hex }: { name: string; hex: string }) {
-  const ratio = contrastRatio(hex, SURFACE_REF);
+  const { surfaceRef, tokens } = useThemeCtx();
+  const ratio = contrastRatio(hex, surfaceRef);
   return (
     <div className="flex items-baseline justify-between border-b border-dashed border-border-subtle py-2">
-      <span style={{ color: hex, fontSize: T.type.body.size }}>{name}</span>
+      <span style={{ color: hex, fontSize: tokens.type.body.size }}>{name}</span>
       <span className="font-mono text-micro text-text-disabled">
         {hex} · {fmtRatio(ratio)} · {ratingFor(ratio)}
       </span>
@@ -162,10 +187,11 @@ function TextSampleRow({ name, hex }: { name: string; hex: string }) {
 }
 
 function BorderSampleRow({ name, rgba }: { name: string; rgba: string }) {
+  const { tokens } = useThemeCtx();
   return (
     <div
       className="flex items-baseline justify-between py-2"
-      style={{ borderBottom: `${String(T.size.separatorThickness)}px solid ${rgba}` }}
+      style={{ borderBottom: `${String(tokens.size.separatorThickness)}px solid ${rgba}` }}
     >
       <span className="text-body-sm text-text-secondary">{name}</span>
       <span className="font-mono text-micro text-text-disabled">{rgba}</span>
@@ -174,15 +200,16 @@ function BorderSampleRow({ name, rgba }: { name: string; rgba: string }) {
 }
 
 function SemanticSwatch({ name, hex }: { name: string; hex: string }) {
-  const ratio = contrastRatio(hex, SURFACE_REF);
+  const { surfaceRef, tokens } = useThemeCtx();
+  const ratio = contrastRatio(hex, surfaceRef);
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">
         <span
           className="inline-block rounded-pill"
           style={{
-            width: T.size.indicatorDot * 1.5,
-            height: T.size.indicatorDot * 1.5,
+            width: tokens.size.indicatorDot * 1.5,
+            height: tokens.size.indicatorDot * 1.5,
             background: hex,
           }}
         />
@@ -196,9 +223,12 @@ function SemanticSwatch({ name, hex }: { name: string; hex: string }) {
   );
 }
 
-const fontFamilyOf = (k: "sans" | "mono") => (k === "mono" ? T.font.mono : T.font.sans);
+function fontFamilyOf(tokens: Tokens, k: "sans" | "mono"): string {
+  return k === "mono" ? tokens.font.mono : tokens.font.sans;
+}
 
 function TypeRow({ name, spec, sample }: { name: TypeKey; spec: TypeSpec; sample: string }) {
+  const { tokens } = useThemeCtx();
   return (
     <div className="flex items-baseline gap-6 border-b border-dashed border-border-subtle py-2">
       <div className="w-spec-label-w shrink-0">
@@ -211,7 +241,7 @@ function TypeRow({ name, spec, sample }: { name: TypeKey; spec: TypeSpec; sample
       <div
         className="flex-1 truncate text-text-primary"
         style={{
-          fontFamily: fontFamilyOf(spec.family),
+          fontFamily: fontFamilyOf(tokens, spec.family),
           fontSize: spec.size,
           fontWeight: spec.weight,
           lineHeight: spec.leading,
@@ -351,7 +381,69 @@ const ICON_GRID: { I: typeof Library; label: string; accent?: boolean }[] = [
   { I: Settings, label: "settings" },
 ];
 
+function readInitialTheme(): ThemeName {
+  if (typeof document === "undefined") return "dark";
+  const fromAttr = document.documentElement.dataset.theme;
+  if (fromAttr === "light" || fromAttr === "dark") return fromAttr;
+  if (typeof window !== "undefined") {
+    return window.matchMedia("(prefers-color-scheme: light)").matches
+      ? "light"
+      : "dark";
+  }
+  return "dark";
+}
+
+function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = React.useState<ThemeName>(readInitialTheme);
+
+  React.useLayoutEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
+  const value = React.useMemo<ThemeContextValue>(
+    () => ({
+      theme,
+      setTheme,
+      tokens: THEMES[theme],
+      surfaceRef: surfaceRefFor(theme),
+    }),
+    [theme],
+  );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
+function ThemeToggle() {
+  const { theme, setTheme } = useThemeCtx();
+  const next: ThemeName = theme === "dark" ? "light" : "dark";
+  return (
+    <Button
+      size="sm"
+      variant="secondary"
+      onClick={() => {
+        setTheme(next);
+      }}
+      aria-label={`Switch to ${next} theme`}
+      title={`Switch to ${next} theme`}
+    >
+      {theme === "dark" ? "🌙" : "☀️"}
+      <span className="font-mono text-caption uppercase tracking-label">
+        {theme}
+      </span>
+    </Button>
+  );
+}
+
 export function KitchenSink() {
+  return (
+    <ThemeProvider>
+      <KitchenSinkContent />
+    </ThemeProvider>
+  );
+}
+
+function KitchenSinkContent() {
+  const { tokens: T, theme } = useThemeCtx();
   const webAppUrl = getWebAppUrl();
   return (
     <div className="min-h-screen w-full overflow-auto bg-surface-1 text-text-secondary font-sans">
@@ -404,7 +496,8 @@ export function KitchenSink() {
           <div className="ml-auto flex items-center gap-2">
             <Badge>tokens · {Object.keys(T.accent).length * 2 + 12}</Badge>
             <Badge>primitives · 15</Badge>
-            <Badge variant="accent">dark · v0.1</Badge>
+            <Badge variant="accent">{theme} · v0.1</Badge>
+            <ThemeToggle />
           </div>
         </div>
       </header>

@@ -8,9 +8,12 @@ Raga is a music library management application. This is the web app variant of t
 - `packages/raga-web-app/` - Main web application (Vite + React)
 - `packages/raga-design-system/` - `@adahiya/raga-design-system`: tokens, primitives,
   and a kitchen-sink spec sheet (Vite + React, Tailwind CSS v4, Radix Primitives,
-  CVA, lucide-react). Dark theme only. Single TOKENS source of truth in
-  `src/tokens/tokens.ts`, mirrored to CSS variables in `src/styles/tokens.css`
-  and registered with Tailwind via `@theme` in `src/styles/global.css`.
+  CVA, lucide-react). Ships dark + light themes; the dark map is the source of
+  truth in `src/tokens/tokens.ts`, with `LIGHT_TOKENS` providing the colour-bearing
+  overrides. Both themes are emitted as `:root[data-theme="dark"|"light"]` blocks
+  in `src/styles/tokens.css` (auto-generated) and registered with Tailwind via
+  `@theme` in `src/styles/global.css`. The kitchen-sink page exposes a theme
+  toggle that flips `document.documentElement.dataset.theme`.
 - `packages/raga-types/` - Shared TypeScript types
 - `packages/raga-lib/` - Shared library code
 - `packages/raga-app/` - Electron desktop app
