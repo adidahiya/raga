@@ -6,6 +6,8 @@
  * [0, 1] for renderer-agnostic consumption.
  */
 
+import { UMAP } from "umap-js";
+
 export type LayoutAlgo = "axis" | "pca" | "umap";
 
 export interface LayoutParams {
@@ -44,10 +46,93 @@ export function layout(input: LayoutInput): LayoutResult {
     case "pca":
       return layoutByPCA(input);
     case "umap":
-      // UMAP is gated behind a feature flag; until we wire in a real implementation, fall
-      // back to PCA so consumers still receive valid output.
-      return { ...layoutByPCA(input), algo: "umap" };
+      return layoutByUMAP(input);
   }
+}
+
+/**
+ * UMAP layout backed by `umap-js`. Runs synchronously inside the worker. Determinism is
+ * achieved by seeding the library's random source with a value derived from the input rows
+ * and ids, so identical inputs always produce identical embeddings.
+ *
+ * For very small input sets (where UMAP is undefined or numerically unstable) we fall back
+ * to PCA so the caller still receives a sensible 2D projection.
+ */
+function layoutByUMAP(input: LayoutInput): LayoutResult {
+  const { matrix, ids, params } = input;
+  const n = matrix.length;
+  if (n === 0) return { algo: "umap", points: [] };
+  // UMAP needs enough points to construct a meaningful neighbour graph; below this we
+  // reuse PCA, which behaves well at small N.
+  if (n < 4) {
+    return { ...layoutByPCA(input), algo: "umap" };
+  }
+
+  const seed = seedFromInput(matrix, ids);
+  const random = mulberry32(seed);
+
+  // Clamp nNeighbors to a valid range. umap-js requires nNeighbors < N.
+  const requestedNeighbors = params?.nNeighbors ?? 15;
+  const nNeighbors = Math.max(2, Math.min(requestedNeighbors, n - 1));
+  const minDist = params?.minDist ?? 0.1;
+
+  let embedding: number[][];
+  try {
+    const umap = new UMAP({
+      nComponents: 2,
+      nNeighbors,
+      minDist,
+      random,
+    });
+    embedding = umap.fit(matrix);
+  } catch (err) {
+    // Defensive: if umap-js throws (e.g. due to degenerate input), fall back to PCA so the
+    // atlas still renders something useful instead of surfacing an opaque worker error.
+    // Surface a warning so silent degradation is at least visible in the worker console.
+    // eslint-disable-next-line no-console
+    console.warn("[layout] UMAP fit failed, falling back to PCA:", err);
+    return { ...layoutByPCA(input), algo: "umap" };
+  }
+
+  const xs = embedding.map((row) => row[0]);
+  const ys = embedding.map((row) => row[1]);
+  const xn = normalize(xs);
+  const yn = normalize(ys);
+  return {
+    algo: "umap",
+    points: ids.map((id, i) => ({ id, x: xn[i], y: yn[i] })),
+  };
+}
+
+/**
+ * Derive a 32-bit seed from the matrix + ids by mixing a small amount of content into an
+ * FNV-1a-style accumulator. Cheap, stable, and good enough to disambiguate distinct inputs.
+ */
+function seedFromInput(matrix: number[][], ids: string[]): number {
+  let h = 0x811c9dc5;
+  const mix = (x: number) => {
+    h ^= x | 0;
+    h = Math.imul(h, 0x01000193) >>> 0;
+  };
+  for (const id of ids) {
+    for (let i = 0; i < id.length; i++) mix(id.charCodeAt(i));
+  }
+  for (const row of matrix) {
+    for (const v of row) mix(Math.floor(v * 1e6));
+  }
+  return h >>> 0;
+}
+
+/** Mulberry32 PRNG: tiny, fast, and produces a deterministic [0, 1) stream from a seed. */
+function mulberry32(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
 function layoutByAxes(input: LayoutInput): LayoutResult {

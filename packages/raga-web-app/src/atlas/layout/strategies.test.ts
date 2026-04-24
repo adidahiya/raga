@@ -40,6 +40,59 @@ describe("layout strategies", () => {
     expect(result.points).toEqual(second.points);
   });
 
+  it("umap produces deterministic 2D coordinates in [0, 1] that differ from PCA", () => {
+    const ids = Array.from({ length: 60 }, (_, i) => `id${i.toString()}`);
+    // Two well-separated Gaussian-ish clusters in 5D so PCA and UMAP both have signal,
+    // but UMAP's non-linear projection should land somewhere visibly different.
+    const matrix = ids.map((_, i) => {
+      const cluster = i % 2 === 0 ? 0 : 1;
+      const base = cluster === 0 ? 0 : 5;
+      return [
+        base + Math.cos(i),
+        base + Math.sin(i),
+        base + (i % 7) / 7,
+        base + (i % 5) / 5,
+        base + (i % 3) / 3,
+      ];
+    });
+
+    const umap = layout({ algo: "umap", ids, matrix, params: { nNeighbors: 8 } });
+    expect(umap.algo).toBe("umap");
+    expect(umap.points).toHaveLength(60);
+    for (const p of umap.points) {
+      expect(p.x).toBeGreaterThanOrEqual(0);
+      expect(p.x).toBeLessThanOrEqual(1);
+      expect(p.y).toBeGreaterThanOrEqual(0);
+      expect(p.y).toBeLessThanOrEqual(1);
+    }
+
+    // Determinism: identical input -> identical output.
+    const umapAgain = layout({ algo: "umap", ids, matrix, params: { nNeighbors: 8 } });
+    expect(umap.points).toEqual(umapAgain.points);
+
+    // Differs from PCA: at least some points should land in different positions.
+    const pca = layout({ algo: "pca", ids, matrix });
+    const differences = umap.points.reduce((acc, p, i) => {
+      const dx = p.x - pca.points[i].x;
+      const dy = p.y - pca.points[i].y;
+      return acc + Math.sqrt(dx * dx + dy * dy);
+    }, 0);
+    expect(differences).toBeGreaterThan(1);
+  });
+
+  it("umap falls back gracefully for tiny inputs", () => {
+    const result = layout({
+      algo: "umap",
+      ids: ["a", "b"],
+      matrix: [
+        [0, 0, 0],
+        [1, 1, 1],
+      ],
+    });
+    expect(result.algo).toBe("umap");
+    expect(result.points).toHaveLength(2);
+  });
+
   it("hashes change when the matrix changes", () => {
     const a = hashFeatureSet({ algo: "pca", ids: ["a"], matrix: [[1, 2]] });
     const b = hashFeatureSet({ algo: "pca", ids: ["a"], matrix: [[1, 3]] });

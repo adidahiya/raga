@@ -199,6 +199,7 @@ __metadata:
     sass: "npm:^1.97.1"
     serialize-error: "npm:^12.0.0"
     typescript: "npm:^5.9.3"
+    umap-js: "npm:^1.4.0"
     use-immer: "npm:^0.11.0"
     usehooks-ts: "npm:3.1.1"
     vite: "npm:^7.3.0"
@@ -9467,6 +9468,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-any-array@npm:^0.1.0":
+  version: 0.1.1
+  resolution: "is-any-array@npm:0.1.1"
+  checksum: 10/5ba34418135b1311ff3c5c7b14d3cb43876b18ef8a0ee94fa870b15840eeec0e5128114731f57d52db8b04c4e0c79eefd76e8f3ea5aa89d6b3ff27f6f580475c
+  languageName: node
+  linkType: hard
+
+"is-any-array@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "is-any-array@npm:3.0.0"
+  checksum: 10/65ca37329ef9b0aa58bde2e5ec8992fdabe91c5ef5fa93125905b627fe7fda6b9d197e74fd3bd5cb330f7b9c927c675878dc2d2bdf62b9d37e4d451ab7d443ca
+  languageName: node
+  linkType: hard
+
 "is-array-buffer@npm:^3.0.4, is-array-buffer@npm:^3.0.5":
   version: 3.0.5
   resolution: "is-array-buffer@npm:3.0.5"
@@ -10953,6 +10968,55 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 10/d71b8dcd4b5af2fe13ecf3bd24070263489404fe216488c5ba7e38ece1f54daf219e72a833a3a2dc404331e870e9f44963a33399589490956bff003a3404d3b2
+  languageName: node
+  linkType: hard
+
+"ml-array-max@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "ml-array-max@npm:2.0.0"
+  dependencies:
+    is-any-array: "npm:^3.0.0"
+  checksum: 10/4e7c1c90311960cc9cec6f8ac3e5e92a3bf1f7e04f2c6c46d3db8cebabbb91c2044270cf91d0e045e6b2f416d617becfa020f337d575117001c177f3d3f947e6
+  languageName: node
+  linkType: hard
+
+"ml-array-min@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "ml-array-min@npm:2.0.0"
+  dependencies:
+    is-any-array: "npm:^3.0.0"
+  checksum: 10/0c3bb058cf07f4328eaadc5d61447c30a4c091a981a56710ba7b0675b9a7df82ed480f66d82a8799fcc504f31218218ddc566f8baec85e025fdda91ed5f33aca
+  languageName: node
+  linkType: hard
+
+"ml-array-rescale@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "ml-array-rescale@npm:2.0.0"
+  dependencies:
+    is-any-array: "npm:^3.0.0"
+    ml-array-max: "npm:^2.0.0"
+    ml-array-min: "npm:^2.0.0"
+  checksum: 10/5a0910e3e5d03cd83a615d87f5850264b169f3f1744d563d8c81cc798bf46f5a1a4579d9dc984e28d2148a96a98e9f2993e7880092f2294ba1389eb8cded167b
+  languageName: node
+  linkType: hard
+
+"ml-levenberg-marquardt@npm:^2.0.0":
+  version: 2.1.1
+  resolution: "ml-levenberg-marquardt@npm:2.1.1"
+  dependencies:
+    is-any-array: "npm:^0.1.0"
+    ml-matrix: "npm:^6.4.1"
+  checksum: 10/feaae811a7a8ac523952d872a80e575f8abbcbff8411cdba7d4e6b6c166bb7afe3cea217e9fefb0b0ca80c5a7f9e4807df88bb1bfc36924a42dafeb760dd95f2
+  languageName: node
+  linkType: hard
+
+"ml-matrix@npm:^6.4.1":
+  version: 6.12.2
+  resolution: "ml-matrix@npm:6.12.2"
+  dependencies:
+    is-any-array: "npm:^3.0.0"
+    ml-array-rescale: "npm:^2.0.0"
+  checksum: 10/1250dc1e4b0575b3b2df1ae7e85de23f2aebf4961f7d495e98c1787d42f7dc6ae4c8925e4779c0069bbb727687cd1b6f0521abc6d3fc9c045776e9e52891b386
   languageName: node
   linkType: hard
 
@@ -14500,6 +14564,15 @@ __metadata:
   bin:
     uglifyjs: bin/uglifyjs
   checksum: 10/4c0b800e0ff192079d2c3ce8414fd3b656a570028c7c79af5c29c53d5c532b68bbcae4ad47307f89c2ee124d11826fff7a136b59d5c5bb18422bcdf5568afe1e
+  languageName: node
+  linkType: hard
+
+"umap-js@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "umap-js@npm:1.4.0"
+  dependencies:
+    ml-levenberg-marquardt: "npm:^2.0.0"
+  checksum: 10/00c9b2126d2a374f1bbe3aa7626b4a5be2bc10e818bae100028755ab8a759601174bbf12e2a350f342cfee719a7260ba0233e75ccaecf816b1cab0bbc1b4fe85
   languageName: node
   linkType: hard
 
