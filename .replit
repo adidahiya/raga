@@ -65,3 +65,7 @@ externalPort = 3000
 deploymentTarget = "static"
 build = ["yarn", "build:web"]
 publicDir = "packages/raga-web-app/dist"
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 180000
