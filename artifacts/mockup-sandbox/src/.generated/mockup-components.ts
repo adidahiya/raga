@@ -2,6 +2,8 @@
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/raga-app/Atlas.tsx": () => import("../components/mockups/raga-app/Atlas.tsx"),
+  "./components/mockups/raga-app/AtlasPro.tsx": () => import("../components/mockups/raga-app/AtlasPro.tsx"),
+  "./components/mockups/raga-app/AtlasRefined.tsx": () => import("../components/mockups/raga-app/AtlasRefined.tsx"),
   "./components/mockups/raga-app/CommandBar.tsx": () => import("../components/mockups/raga-app/CommandBar.tsx"),
   "./components/mockups/raga-app/CommandBarDocked.tsx": () => import("../components/mockups/raga-app/CommandBarDocked.tsx"),
   "./components/mockups/raga-app/CommandBarFloating.tsx": () => import("../components/mockups/raga-app/CommandBarFloating.tsx"),
