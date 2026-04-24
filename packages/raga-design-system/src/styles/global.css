@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/*
+ * Register design tokens with Tailwind v4. Every key here is sourced from a
+ * `var(--*)` defined in `./tokens.css`, which is generated from `tokens.ts`.
+ */
+@theme inline {
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-800: var(--accent-800);
+  --color-accent-900: var(--accent-900);
+
+  --color-accent2-50: var(--accent2-50);
+  --color-accent2-100: var(--accent2-100);
+  --color-accent2-200: var(--accent2-200);
+  --color-accent2-300: var(--accent2-300);
+  --color-accent2-400: var(--accent2-400);
+  --color-accent2-500: var(--accent2-500);
+  --color-accent2-600: var(--accent2-600);
+  --color-accent2-700: var(--accent2-700);
+  --color-accent2-800: var(--accent2-800);
+  --color-accent2-900: var(--accent2-900);
+
+  --color-success: var(--semantic-success);
+  --color-warning: var(--semantic-warning);
+  --color-danger: var(--semantic-danger);
+  --color-danger-hover: var(--semantic-danger-hover);
+  --color-info: var(--semantic-info);
+  --color-idle: var(--semantic-idle);
+
+  --color-fg-on-accent: var(--fg-on-accent);
+  --color-fg-on-warm: var(--fg-on-warm);
+  --color-fg-on-danger: var(--fg-on-danger);
+
+  --color-overlay-white-subtle: var(--overlay-white-subtle);
+  --color-overlay-white-soft: var(--overlay-white-soft);
+  --color-overlay-white-fill: var(--overlay-white-fill);
+  --color-overlay-black-25: var(--overlay-black-scrim-25);
+  --color-overlay-black-30: var(--overlay-black-scrim-30);
+  --color-overlay-black-40: var(--overlay-black-scrim-40);
+  --color-overlay-black-50: var(--overlay-black-scrim-50);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-pill: var(--radius-pill);
+
+  /* spacing scale extensions for control / chrome sizes */
+  --spacing-control-sm: var(--size-control-sm);
+  --spacing-control-md: var(--size-control-md);
+  --spacing-control-lg: var(--size-control-lg);
+  --spacing-icon-xs: var(--size-icon-xs);
+  --spacing-icon-sm: var(--size-icon-sm);
+  --spacing-icon-md: var(--size-icon-md);
+  --spacing-icon-lg: var(--size-icon-lg);
+  --spacing-mini-player-w: var(--size-mini-player-w);
+  --spacing-switch-h: var(--size-switch-h);
+  --spacing-switch-w: var(--size-switch-w);
+  --spacing-switch-thumb: var(--size-switch-thumb);
+  --spacing-knob: var(--size-knob);
+  --spacing-rail-h: var(--size-rail-h);
+  --spacing-status-dot: var(--size-status-dot);
+  --spacing-meter-row-h: var(--size-meter-row-h);
+  --spacing-meter-label-w: var(--size-meter-label-w);
+  --spacing-kbd-min-w: var(--size-kbd-min-w);
+  --spacing-avatar-md: var(--size-avatar-md);
+  --spacing-icon-pill: var(--size-icon-pill);
+  --spacing-radius-swatch-h: var(--size-radius-swatch-h);
+  --spacing-elevation-surface-h: var(--size-elevation-surface-h);
+  --spacing-checkbox: var(--size-checkbox);
+  --spacing-checkmark: var(--size-checkmark);
+  --spacing-radio: var(--size-radio);
+  --spacing-radio-dot: var(--size-radio-dot);
+  --spacing-kbd-h: var(--size-kbd-h);
+  --spacing-textarea-min-h: var(--size-textarea-min-h);
+  --spacing-spec-label-w: var(--size-spec-label-w);
+  --spacing-meter-num-w: var(--size-meter-num-w);
+  --spacing-spectrum-bar-w: var(--size-spectrum-bar-w);
+  --spacing-separator-md-h: var(--size-separator-md-h);
+  --spacing-slider-track-h: var(--size-slider-track-h);
+  --spacing-section-px: var(--size-section-px);
+  --spacing-section-py: var(--size-section-py);
+  --spacing-card-p: var(--size-card-p);
+  --spacing-pill-px: var(--size-pill-px);
+  --spacing-pill-py: var(--size-pill-py);
+  --spacing-pill-gap: var(--size-pill-gap);
+  --spacing-control-px: var(--size-control-px);
+  --spacing-control-py: var(--size-control-py);
+  --spacing-tooltip-px: var(--size-tooltip-px);
+  --spacing-tooltip-py: var(--size-tooltip-py);
+  --spacing-select-item-py: var(--size-select-item-py);
+  --spacing-select-item-pl: var(--size-select-item-pl);
+  --spacing-select-item-pr: var(--size-select-item-pr);
+  --spacing-kbd-px: var(--size-kbd-px);
+  --spacing-control-gap: var(--size-control-gap);
+  --spacing-button-px-sm: var(--size-button-px-sm);
+  --spacing-button-px-md: var(--size-button-px-md);
+  --spacing-button-px-lg: var(--size-button-px-lg);
+  --spacing-icon-nudge: var(--size-icon-nudge);
+  --spacing-popover-offset: var(--size-popover-offset);
+  --spacing-tooltip-offset: var(--size-tooltip-offset);
+  --spacing-popover-p: var(--size-popover-p);
+  --spacing-separator-thickness: var(--size-separator-thickness);
+
+  /* Tailwind v4 spacing base — derives from TOKENS.spacing[1] (4px = 0.25rem),
+     so every default numeric utility (h-4, w-8, p-3, gap-2, …) computes as
+     calc(var(--spacing) * N) and stays token-driven. */
+  --spacing: var(--spacing-1);
+
+  /* font-size scale (paired with line-height via the `--*--line-height` key) */
+  --text-display: var(--type-display-size);
+  --text-display--line-height: var(--type-display-leading);
+  --text-headline: var(--type-headline-size);
+  --text-headline--line-height: var(--type-headline-leading);
+  --text-title: var(--type-title-size);
+  --text-title--line-height: var(--type-title-leading);
+  --text-body: var(--type-body-size);
+  --text-body--line-height: var(--type-body-leading);
+  --text-body-sm: var(--type-body-sm-size);
+  --text-body-sm--line-height: var(--type-body-sm-leading);
+  --text-caption: var(--type-caption-size);
+  --text-caption--line-height: var(--type-caption-leading);
+  --text-micro: var(--type-micro-size);
+  --text-micro--line-height: var(--type-micro-leading);
+  --text-nano: var(--type-nano-size);
+  --text-nano--line-height: var(--type-nano-leading);
+  --text-h1: var(--type-h1-size);
+  --text-h1--line-height: var(--type-h1-leading);
+  --text-h2: var(--type-h2-size);
+  --text-h2--line-height: var(--type-h2-leading);
+  --text-mono-lg: var(--type-mono-lg-size);
+  --text-mono-lg--line-height: var(--type-mono-lg-leading);
+  --text-mono-md: var(--type-mono-md-size);
+  --text-mono-md--line-height: var(--type-mono-md-leading);
+  --text-mono-sm: var(--type-mono-sm-size);
+  --text-mono-sm--line-height: var(--type-mono-sm-leading);
+  --text-mono-xs: var(--type-mono-xs-size);
+  --text-mono-xs--line-height: var(--type-mono-xs-leading);
+
+  --tracking-label: var(--tracking-label);
+  --tracking-header: var(--tracking-header);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --shadow-button-primary: var(--shadow-button-primary);
+  --shadow-button-warm: var(--shadow-button-warm);
+  --shadow-button-danger: var(--shadow-button-danger);
+  --shadow-knob-glow: var(--shadow-knob-glow);
+  --shadow-switch-thumb: var(--shadow-switch-thumb);
+  --shadow-pill-success: var(--shadow-pill-success);
+  --shadow-pill-warning: var(--shadow-pill-warning);
+  --shadow-pill-danger: var(--shadow-pill-danger);
+  --shadow-pill-info: var(--shadow-pill-info);
+  --shadow-tooltip: var(--shadow-tooltip);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-card-elevated: var(--shadow-card-elevated);
+  --shadow-avatar-glow: var(--shadow-avatar-glow);
+  --shadow-icon-pill-glow: var(--shadow-icon-pill-glow);
+}
+
+/*
+ * Shared focus-ring utility. Width comes from `--size-focus-ring`; color is
+ * a translucent mix over `--accent-500`. Used as `focus-visible:focus-ring`,
+ * `focus-within:focus-ring`, etc., on every focusable primitive.
+ */
+@utility focus-ring {
+  outline: var(--size-focus-ring) solid
+    color-mix(in srgb, var(--accent-500) 25%, transparent);
+  outline-offset: 0;
+  border-color: color-mix(in srgb, var(--accent-500) 80%, transparent);
+}
+
+html,
+body {
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

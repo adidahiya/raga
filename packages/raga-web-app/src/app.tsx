@@ -13,6 +13,7 @@ import React from "react";
 import styles from "./app.module.scss";
 import AppChrome from "./components/chrome/appChrome";
 import CommandPalette from "./components/chrome/commandPalette";
+import DesignSystemLink from "./components/devTools/DesignSystemLink";
 import GlobalHotkeysDialog from "./components/globalHotkeysDialog";
 import LibraryLoader from "./components/library/libraryLoader";
 import { appStore } from "./store/appStore";
@@ -84,6 +85,7 @@ export default function App({ useMockData = false }: AppProps) {
           </LibraryLoader>
           <GlobalHotkeysDialog />
           <CommandPalette />
+          {import.meta.env.DEV && <DesignSystemLink />}
         </div>
       </ContextMenuProvider>
     </MantineProvider>

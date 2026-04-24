@@ -62,7 +62,10 @@ export default tseslint.config(
     },
   },
   {
-    files: ["packages/raga-web-app/src/**/*.{ts,tsx}"],
+    files: [
+      "packages/raga-web-app/src/**/*.{ts,tsx}",
+      "packages/raga-design-system/src/**/*.{ts,tsx}",
+    ],
     plugins: {
       react: reactPlugin,
       "react-hooks": fixupPluginRules(reactHooksPlugin),

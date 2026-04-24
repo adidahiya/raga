@@ -1,0 +1,41 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@adahiya/raga-design-system",
+  "sourceRoot": "packages/raga-design-system/src",
+  "projectType": "application",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-script",
+      "options": { "script": "dev" }
+    },
+    "build": {
+      "executor": "nx:run-script",
+      "options": { "script": "build" },
+      "dependsOn": ["gen:tokens"]
+    },
+    "preview": {
+      "executor": "nx:run-script",
+      "options": { "script": "preview" }
+    },
+    "check-types": {
+      "executor": "nx:run-script",
+      "options": { "script": "check-types" }
+    },
+    "check-lint": {
+      "executor": "nx:run-script",
+      "options": { "script": "check-lint" }
+    },
+    "lint-fix": {
+      "executor": "nx:run-script",
+      "options": { "script": "lint-fix" }
+    },
+    "clean": {
+      "executor": "nx:run-script",
+      "options": { "script": "clean" }
+    },
+    "gen:tokens": {
+      "executor": "nx:run-script",
+      "options": { "script": "gen:tokens" }
+    }
+  }
+}
