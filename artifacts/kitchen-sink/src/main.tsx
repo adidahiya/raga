@@ -2,7 +2,7 @@ import "@adahiya/raga-design-system/styles/global.css";
 
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { KitchenSink } from "@adahiya/raga-design-system/kitchen-sink";
+import { KitchenSink } from "./KitchenSink";
 
 const container = document.getElementById("root");
 if (!container) {

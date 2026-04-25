@@ -18,8 +18,8 @@ import {
 } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "../lib/cn";
-import { contrastRatio, fmtRatio, ratingFor } from "../lib/contrast";
+import { cn } from "@adahiya/raga-design-system/lib/cn";
+import { contrastRatio, fmtRatio, ratingFor } from "@adahiya/raga-design-system/lib/contrast";
 import {
   Badge,
   Button,
@@ -39,7 +39,7 @@ import {
   StatusPill,
   Switch,
   Textarea,
-} from "../primitives";
+} from "@adahiya/raga-design-system";
 import {
   surfaceRefFor,
   type ThemeName,
@@ -47,7 +47,7 @@ import {
   type Tokens,
   type TypeKey,
   type TypeSpec,
-} from "../tokens/tokens";
+} from "@adahiya/raga-design-system/tokens";
 
 function getWebAppUrl(): string {
   const { host, protocol } = window.location;
@@ -656,162 +656,100 @@ function KitchenSinkContent() {
         hint="Primary uses iris accent. Warm secondary is reserved for friendly, non-destructive emphasis."
       >
         <div className="grid grid-cols-5 gap-4">
-          {(
-            ["default", "hover", "active", "disabled", "focus"] as const
-          ).map((s) => (
-            <ButtonStateColumn key={s} state={s} />
-          ))}
-        </div>
-        <Separator className="my-6" />
-        <div className="flex items-center gap-3">
-          <span className={cn(SECTION_HEADER, "mr-2")}>sizes</span>
-          <Button size="sm" variant="primary">
-            Small
-          </Button>
-          <Button size="md" variant="primary">
-            Medium
-          </Button>
-          <Button size="lg" variant="primary">
-            Large
-          </Button>
-          <Button size="sm" variant="secondary">
-            <Filter className="h-icon-sm w-icon-sm" />
-            With icon
-          </Button>
-          <IconButton aria-label="Settings" variant="secondary">
-            <Settings className="h-icon-md w-icon-md" />
-          </IconButton>
-          <IconButton aria-label="Play" variant="primary">
-            <Play className="h-icon-md w-icon-md" fill="currentColor" />
-          </IconButton>
+          {(["default", "hover", "active", "focus", "disabled"] as ButtonState[]).map(
+            (state) => (
+              <ButtonStateColumn key={state} state={state} />
+            ),
+          )}
         </div>
       </Section>
 
       {/* 05 — FORM CONTROLS */}
-      <Section num="05" title="Form Controls">
-        <div className="grid grid-cols-2 gap-10">
+      <Section num="05" title="Form controls">
+        <div className="grid grid-cols-3 gap-8">
           <div className="flex flex-col gap-4">
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>text inputs</div>
-              <div className="flex flex-col gap-2">
-                <Input placeholder="Folder name…" />
-                <Input defaultValue="House Sets 2025" autoFocus />
-                <Input defaultValue="Read-only field" disabled />
-              </div>
-            </div>
-
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>search with shortcut</div>
-              <Input
-                leadingIcon={<Search className="h-icon-md w-icon-md" />}
-                placeholder="Search library, playlists, or commands…"
-                trailing={<Kbd>⌘ K</Kbd>}
-              />
-            </div>
-
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>select</div>
-              <div className="flex flex-col gap-2">
-                <Select defaultValue="bpm-asc">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sort by…" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bpm-asc">Sort by · BPM ascending</SelectItem>
-                    <SelectItem value="bpm-desc">Sort by · BPM descending</SelectItem>
-                    <SelectItem value="title">Sort by · Title</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select disabled>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Disabled select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="x">x</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>textarea</div>
-              <div className="flex flex-col gap-2">
-                <Textarea defaultValue="Closing set for the warehouse — keep BPM under 124, lean dubby." />
-                <Textarea
-                  disabled
-                  defaultValue="Disabled textarea — preserved formatting from the previous note."
-                />
-              </div>
-            </div>
+            <div className={SECTION_HEADER}>text inputs</div>
+            <Input placeholder="Search library…" />
+            <Input placeholder="Disabled input" disabled />
+            <Input placeholder="With value" defaultValue="Autechre" />
+            <Textarea placeholder="Notes…" rows={3} />
           </div>
-
-          <div className="flex flex-col gap-5">
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>checkbox</div>
-              <div className="flex flex-wrap items-center gap-5">
-                <label className="flex items-center gap-2 text-body text-text-primary">
-                  <Checkbox defaultChecked /> on
+          <div className="flex flex-col gap-4">
+            <div className={SECTION_HEADER}>toggles & checks</div>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <Switch id="sw1" defaultChecked />
+                <label htmlFor="sw1" className="text-body-sm text-text-secondary">
+                  Auto-analyze on import
                 </label>
-                <label className="flex items-center gap-2 text-body text-text-secondary">
-                  <Checkbox /> off
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch id="sw2" />
+                <label htmlFor="sw2" className="text-body-sm text-text-secondary">
+                  Show waveform
                 </label>
-                <label className="flex items-center gap-2 text-body text-text-muted">
-                  <Checkbox defaultChecked disabled /> disabled
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox id="cb1" defaultChecked />
+                <label htmlFor="cb1" className="text-body-sm text-text-secondary">
+                  BPM &gt; 120
+                </label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox id="cb2" />
+                <label htmlFor="cb2" className="text-body-sm text-text-secondary">
+                  Rated 4★+
                 </label>
               </div>
             </div>
-
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>radio</div>
-              <RadioGroup defaultValue="a" className="flex flex-row items-center gap-5">
-                <label className="flex items-center gap-2 text-body text-text-primary">
-                  <Radio value="a" /> option A
+            <div className={cn(SECTION_HEADER, "mt-2")}>radio group</div>
+            <RadioGroup defaultValue="energy">
+              <div className="flex items-center gap-2">
+                <Radio value="energy" id="r1" />
+                <label htmlFor="r1" className="text-body-sm text-text-secondary">
+                  Sort by energy
                 </label>
-                <label className="flex items-center gap-2 text-body text-text-secondary">
-                  <Radio value="b" /> option B
-                </label>
-                <label className="flex items-center gap-2 text-body text-text-muted">
-                  <Radio value="c" disabled /> disabled
-                </label>
-              </RadioGroup>
-            </div>
-
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>switch</div>
-              <div className="flex flex-wrap items-center gap-6">
-                <div className="flex items-center gap-2 text-body text-text-primary">
-                  <Switch defaultChecked /> on
-                </div>
-                <div className="flex items-center gap-2 text-body text-text-secondary">
-                  <Switch /> off
-                </div>
-                <div className="flex items-center gap-2 text-body text-text-muted">
-                  <Switch defaultChecked disabled /> disabled
-                </div>
               </div>
-            </div>
-
-            <div>
-              <div className={cn(SECTION_HEADER, "mb-2")}>slider</div>
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <Volume2 className="h-icon-md w-icon-md text-text-muted" />
-                  <Slider defaultValue={[62]} min={0} max={100} step={1} />
-                </div>
-                <div className="flex items-center gap-3">
-                  <Volume2 className="h-icon-md w-icon-md text-text-disabled" />
-                  <Slider defaultValue={[62]} min={0} max={100} step={1} disabled />
-                  <span className="w-meter-label-w text-right font-mono text-caption text-text-disabled">
-                    62
-                  </span>
-                </div>
+              <div className="flex items-center gap-2">
+                <Radio value="bpm" id="r2" />
+                <label htmlFor="r2" className="text-body-sm text-text-secondary">
+                  Sort by BPM
+                </label>
               </div>
+              <div className="flex items-center gap-2">
+                <Radio value="added" id="r3" />
+                <label htmlFor="r3" className="text-body-sm text-text-secondary">
+                  Sort by date added
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className={SECTION_HEADER}>select & slider</div>
+            <Select defaultValue="flac">
+              <SelectTrigger>
+                <SelectValue placeholder="Format" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="flac">FLAC</SelectItem>
+                <SelectItem value="aiff">AIFF</SelectItem>
+                <SelectItem value="mp3">MP3</SelectItem>
+                <SelectItem value="wav">WAV</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-micro text-text-muted">BPM range</span>
+              <Slider defaultValue={[90, 140]} min={60} max={200} step={1} />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-micro text-text-muted">Volume</span>
+              <Slider defaultValue={[75]} min={0} max={100} step={1} />
             </div>
           </div>
         </div>
       </Section>
 
-      {/* 06 — BADGES, CHIPS, KBD */}
+      {/* 06 — BADGES, CHIPS & SHORTCUTS */}
       <Section num="06" title="Badges, chips & shortcuts">
         <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
           <div className="flex flex-col gap-2">

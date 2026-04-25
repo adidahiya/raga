@@ -2,13 +2,14 @@
   "name": "@adahiya/raga-design-system",
   "version": "0.0.1",
   "private": true,
-  "description": "Raga design system: tokens, primitives, and the kitchen-sink spec sheet.",
+  "description": "Raga design system: tokens and primitives.",
   "type": "module",
   "main": "./src/primitives/index.ts",
   "exports": {
     ".": "./src/primitives/index.ts",
     "./tokens": "./src/tokens/tokens.ts",
-    "./kitchen-sink": "./src/pages/KitchenSink.tsx",
+    "./lib/cn": "./src/lib/cn.ts",
+    "./lib/contrast": "./src/lib/contrast.ts",
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./styles/global.css": "./src/styles/global.css"
   },
