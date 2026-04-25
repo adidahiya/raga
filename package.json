@@ -3,7 +3,8 @@
   "private": true,
   "packageManager": "yarn@4.12.0",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "artifacts/kitchen-sink"
   ],
   "scripts": {
     "build": "nx run-many -t build",

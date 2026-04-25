@@ -12,6 +12,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@adahiya/kitchen-sink@workspace:artifacts/kitchen-sink":
+  version: 0.0.0-use.local
+  resolution: "@adahiya/kitchen-sink@workspace:artifacts/kitchen-sink"
+  dependencies:
+    "@adahiya/raga-design-system": "workspace:*"
+    "@tailwindcss/vite": "npm:^4.1.14"
+    "@types/react": "npm:^19.2.7"
+    "@types/react-dom": "npm:^19.2.3"
+    "@vitejs/plugin-react": "npm:^5.1.2"
+    react: "npm:^19.2.3"
+    react-dom: "npm:^19.2.3"
+    tailwindcss: "npm:^4.1.14"
+    typescript: "npm:^5.9.3"
+    vite: "npm:^7.3.0"
+  languageName: unknown
+  linkType: soft
+
 "@adahiya/raga-app@workspace:packages/raga-app":
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
@@ -76,7 +93,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adahiya/raga-design-system@workspace:packages/raga-design-system":
+"@adahiya/raga-design-system@workspace:*, @adahiya/raga-design-system@workspace:packages/raga-design-system":
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-design-system@workspace:packages/raga-design-system"
   dependencies:

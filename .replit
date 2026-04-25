@@ -19,7 +19,7 @@ args = "Web App"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Design System"
+args = "Kitchen Sink"
 
 [[workflows.workflow]]
 name = "Web App"
@@ -34,12 +34,12 @@ waitForPort = 5000
 outputType = "webview"
 
 [[workflows.workflow]]
-name = "Design System"
+name = "Kitchen Sink"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "yarn workspace @adahiya/raga-design-system run dev"
+args = "yarn workspace @adahiya/kitchen-sink run dev"
 waitForPort = 5173
 
 [workflows.workflow.metadata]
@@ -56,10 +56,6 @@ externalPort = 3001
 [[ports]]
 localPort = 5173
 externalPort = 5173
-
-[[ports]]
-localPort = 23636
-externalPort = 3000
 
 [deployment]
 deploymentTarget = "static"
