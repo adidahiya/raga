@@ -31,8 +31,10 @@ Raga is a music library management application. This is the web app variant of t
 - Web app runs on port 5000 (workflow: "Web App", `yarn dev:web`)
 - Mockup sandbox runs on port 3000 (workflow: "artifacts/mockup-sandbox: Component
   Preview Server")
-- Design system kitchen-sink runs on port 5173 (workflow: "Design System",
-  `yarn workspace @adahiya/raga-design-system run dev`)
+- The design-system kitchen sink lives inside the web app as a dev-only route at
+  `/__kitchen-sink`. It is lazy-loaded behind `import.meta.env.DEV` so neither
+  the page nor its Tailwind CSS are emitted in production builds. The
+  `DesignSystemLink` dev tool (bottom-right pill) opens it.
 - Run `yarn build` to build all packages
 - Run `yarn build:web` to build only the web app
 

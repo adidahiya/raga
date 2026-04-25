@@ -12,23 +12,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@adahiya/kitchen-sink@workspace:artifacts/kitchen-sink":
-  version: 0.0.0-use.local
-  resolution: "@adahiya/kitchen-sink@workspace:artifacts/kitchen-sink"
-  dependencies:
-    "@adahiya/raga-design-system": "workspace:*"
-    "@tailwindcss/vite": "npm:^4.1.14"
-    "@types/react": "npm:^19.2.7"
-    "@types/react-dom": "npm:^19.2.3"
-    "@vitejs/plugin-react": "npm:^5.1.2"
-    react: "npm:^19.2.3"
-    react-dom: "npm:^19.2.3"
-    tailwindcss: "npm:^4.1.14"
-    typescript: "npm:^5.9.3"
-    vite: "npm:^7.3.0"
-  languageName: unknown
-  linkType: soft
-
 "@adahiya/raga-app@workspace:packages/raga-app":
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-app@workspace:packages/raga-app"
@@ -168,6 +151,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adahiya/raga-web-app@workspace:packages/raga-web-app"
   dependencies:
+    "@adahiya/raga-design-system": "workspace:*"
     "@adahiya/raga-types": "workspace:*"
     "@emotion/react": "npm:^11.14.0"
     "@faker-js/faker": "npm:^9.8.0"
@@ -186,6 +170,7 @@ __metadata:
     "@replit/vite-plugin-cartographer": "npm:^0.5.5"
     "@replit/vite-plugin-runtime-error-modal": "npm:^0.0.6"
     "@roarr/browser-log-writer": "npm:^1.3.0"
+    "@tailwindcss/vite": "npm:^4.1.14"
     "@types/chroma-js": "npm:^3.1.2"
     "@types/lodash": "npm:^4"
     "@types/node": "npm:^24.10.4"
@@ -220,6 +205,7 @@ __metadata:
     roarr: "npm:^7.21.2"
     sass: "npm:^1.97.1"
     serialize-error: "npm:^12.0.0"
+    tailwindcss: "npm:^4.1.14"
     typescript: "npm:^5.9.3"
     umap-js: "npm:^1.4.0"
     use-immer: "npm:^0.11.0"

@@ -16,6 +16,7 @@
     "clean": "rm -rf dist .vite"
   },
   "dependencies": {
+    "@adahiya/raga-design-system": "workspace:*",
     "@adahiya/raga-types": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@faker-js/faker": "^9.8.0",
@@ -64,6 +65,7 @@
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "^0.5.5",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.6",
+    "@tailwindcss/vite": "^4.1.14",
     "@types/chroma-js": "^3.1.2",
     "@types/lodash": "^4",
     "@types/node": "^24.10.4",
@@ -76,6 +78,7 @@
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "sass": "^1.97.1",
+    "tailwindcss": "^4.1.14",
     "typescript": "^5.9.3",
     "vite": "^7.3.0",
     "vite-plugin-html-config": "^2.0.2",

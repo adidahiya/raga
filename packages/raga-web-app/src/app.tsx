@@ -20,6 +20,18 @@ import { appStore } from "./store/appStore";
 import ExportView from "./views/export";
 import LibraryView from "./views/libraryView";
 
+const KITCHEN_SINK_PATH = "/__kitchen-sink";
+
+// Lazy-loaded, dev-only kitchen sink route. The conditional ensures the
+// dynamic import (and its Tailwind CSS) is dead code in production builds.
+const KitchenSinkRoute = import.meta.env.DEV
+  ? React.lazy(() => import("./components/devTools/kitchenSink/KitchenSinkRoute"))
+  : null;
+
+function isKitchenSinkPath(): boolean {
+  return typeof window !== "undefined" && window.location.pathname === KITCHEN_SINK_PATH;
+}
+
 const MONO_FONT_FAMILY =
   "'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace";
 
@@ -65,6 +77,17 @@ export default function App({ useMockData = false }: AppProps) {
   React.useEffect(() => {
     setUseMockData(useMockData);
   }, [useMockData, setUseMockData]);
+
+  // Dev-only kitchen sink takeover. In production builds, KitchenSinkRoute is
+  // null and this branch is dead code, so the route falls through to the
+  // normal app and the kitchen sink module is excluded from the bundle.
+  if (KitchenSinkRoute !== null && isKitchenSinkPath()) {
+    return (
+      <React.Suspense fallback={null}>
+        <KitchenSinkRoute />
+      </React.Suspense>
+    );
+  }
 
   // Default the user's effective scheme to "dark" so the docked CommandBar look applies
   const effectiveScheme = userThemePreference === "auto" ? "dark" : userThemePreference;

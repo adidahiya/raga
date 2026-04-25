@@ -1,20 +1,11 @@
 import React from "react";
 
-function getDesignSystemUrl(): string {
-  const { host, protocol } = window.location;
-  if (host.includes(".worf.replit.dev")) {
-    const withPort = host.replace(/(-\d+)?\.worf\.replit\.dev$/, "-5173.worf.replit.dev");
-    return `${protocol}//${withPort}`;
-  }
-  return "http://localhost:5173";
-}
+const KITCHEN_SINK_PATH = "/__kitchen-sink";
 
 export default function DesignSystemLink() {
-  const url = getDesignSystemUrl();
-
   return (
     <a
-      href={url}
+      href={KITCHEN_SINK_PATH}
       title="Open Design System kitchen sink"
       style={{
         position: "fixed",

@@ -1,26 +1,4 @@
 import {
-  Activity,
-  ActivitySquare,
-  Filter,
-  FolderTree,
-  HardDrive,
-  Library,
-  Music,
-  Pause,
-  Play,
-  Search,
-  Settings,
-  Star,
-  Terminal,
-  Volume2,
-  X,
-  Zap,
-} from "lucide-react";
-import * as React from "react";
-
-import { cn } from "@adahiya/raga-design-system/lib/cn";
-import { contrastRatio, fmtRatio, ratingFor } from "@adahiya/raga-design-system/lib/contrast";
-import {
   Badge,
   Button,
   Checkbox,
@@ -40,6 +18,8 @@ import {
   Switch,
   Textarea,
 } from "@adahiya/raga-design-system";
+import { cn } from "@adahiya/raga-design-system/lib/cn";
+import { contrastRatio, fmtRatio, ratingFor } from "@adahiya/raga-design-system/lib/contrast";
 import {
   surfaceRefFor,
   type ThemeName,
@@ -48,14 +28,25 @@ import {
   type TypeKey,
   type TypeSpec,
 } from "@adahiya/raga-design-system/tokens";
-
-function getWebAppUrl(): string {
-  const { host, protocol } = window.location;
-  if (host.includes(".worf.replit.dev")) {
-    return `${protocol}//${host.replace(/-5173(\.worf\.replit\.dev)$/, "$1")}`;
-  }
-  return "http://localhost:5000";
-}
+import {
+  Activity,
+  ActivitySquare,
+  Filter,
+  FolderTree,
+  HardDrive,
+  Library,
+  Music,
+  Pause,
+  Play,
+  Search,
+  Settings,
+  Star,
+  Terminal,
+  Volume2,
+  X,
+  Zap,
+} from "lucide-react";
+import * as React from "react";
 
 interface ThemeContextValue {
   theme: ThemeName;
@@ -444,12 +435,11 @@ export function KitchenSink() {
 
 function KitchenSinkContent() {
   const { tokens: T, theme } = useThemeCtx();
-  const webAppUrl = getWebAppUrl();
   return (
     <div className="min-h-screen w-full overflow-auto bg-surface-1 text-text-secondary font-sans">
       {/* floating back-to-app link */}
       <a
-        href={webAppUrl}
+        href="/"
         title="Back to Raga web app"
         style={{
           position: "fixed",
