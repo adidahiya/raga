@@ -25,7 +25,19 @@ function tokensCssGen(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [tokensCssGen(), react(), tailwindcss()],
+  plugins: [
+    tokensCssGen(),
+    react(),
+    tailwindcss(),
+    ...(process.env.NODE_ENV !== "production" &&
+    process.env.REPL_ID !== undefined
+      ? [
+          await import("@replit/vite-plugin-cartographer").then((m) =>
+            m.cartographer(),
+          ),
+        ]
+      : []),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),

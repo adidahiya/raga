@@ -9,6 +9,14 @@ export default defineConfig({
       // No electron-specific scripts for the standalone web app
     }),
     react(),
+    ...(process.env.NODE_ENV !== "production" &&
+    process.env.REPL_ID !== undefined
+      ? [
+          await import("@replit/vite-plugin-cartographer").then((m) =>
+            m.cartographer(),
+          ),
+        ]
+      : []),
   ],
   publicDir: "./src/assets",
   build: {
