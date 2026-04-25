@@ -13,6 +13,14 @@ export default defineConfig({
       headScripts: process.env.NODE_ENV === "development" ? [{ src: "http://localhost:8097" }] : [],
     }),
     react(),
+    ...(process.env.NODE_ENV !== "production" &&
+    process.env.REPL_ID !== undefined
+      ? [
+          await import("@replit/vite-plugin-runtime-error-modal").then((m) =>
+            m.default(),
+          ),
+        ]
+      : []),
   ],
   // Use the web app's assets directory
   publicDir: "../raga-web-app/src/assets",

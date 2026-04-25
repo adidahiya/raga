@@ -40,6 +40,7 @@ __metadata:
     "@electron-forge/maker-deb": "npm:^7.10.2"
     "@electron-forge/maker-zip": "npm:^7.10.2"
     "@electron-forge/plugin-vite": "npm:^7.10.2"
+    "@replit/vite-plugin-runtime-error-modal": "npm:^0.0.6"
     "@tinyhttp/app": "npm:^3.0.1"
     "@types/app-root-dir": "npm:^0.1.4"
     "@types/node": "npm:^24.10.4"

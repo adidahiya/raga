@@ -42,6 +42,7 @@
     "@electron-forge/maker-deb": "^7.10.2",
     "@electron-forge/maker-zip": "^7.10.2",
     "@electron-forge/plugin-vite": "^7.10.2",
+    "@replit/vite-plugin-runtime-error-modal": "^0.0.6",
     "@types/app-root-dir": "^0.1.4",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
