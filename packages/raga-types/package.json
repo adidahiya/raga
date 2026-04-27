@@ -13,8 +13,8 @@
     "lint-fix": "eslint --fix ."
   },
   "devDependencies": {
-    "eslint": "^9.39.2",
-    "typescript": "^5.9.3"
+    "eslint": "^10.2.1",
+    "typescript": "^6.0.3"
   },
   "engines": {
     "node": ">=24"
