@@ -5,73 +5,144 @@ import type { AnalyzerWorkerRequest, AnalyzerWorkerResponse } from "./analyzerWo
 import { analyzeBPM } from "./bpm";
 
 interface PendingJob {
+  id: number;
   resolve: (features: TrackAudioFeatures) => void;
   reject: (err: Error) => void;
 }
 
-let _worker: Worker | undefined;
-let _nextId = 1;
-const _pending = new Map<number, PendingJob>();
+interface PooledWorker {
+  worker: Worker;
+  pending?: PendingJob;
+}
 
-function getWorker(): Worker {
-  if (_worker === undefined) {
-    const worker = new Worker(new URL("./analyzerWorker.ts", import.meta.url), {
-      type: "module",
-      name: "raga-analyzer",
-    });
-    worker.onmessage = (event: MessageEvent<AnalyzerWorkerResponse>) => {
-      const data = event.data;
-      const handler = _pending.get(data.id);
-      if (handler === undefined) return;
-      _pending.delete(data.id);
-      if (data.ok) {
-        handler.resolve(data.features);
+/**
+ * Maximum number of analyzer workers to run in parallel.
+ *
+ * Sized to leave at least one core for the UI / audio decode work and capped at 4 so we don't
+ * oversubscribe modest machines. On a typical 8-thread laptop this gives 4 concurrent
+ * analyses, which empirically saturates the chromagram math without starving the main thread.
+ */
+export const ANALYZER_WORKER_POOL_SIZE = (() => {
+  const hwc =
+    typeof navigator !== "undefined" && typeof navigator.hardwareConcurrency === "number"
+      ? navigator.hardwareConcurrency
+      : 2;
+  return Math.max(1, Math.min(4, hwc - 1));
+})();
+
+let _nextId = 1;
+const _pool: PooledWorker[] = [];
+const _idle: PooledWorker[] = [];
+type WorkerWaiter = (worker: PooledWorker | null) => void;
+const _waiters: WorkerWaiter[] = [];
+
+function spawnWorker(): PooledWorker {
+  const worker = new Worker(new URL("./analyzerWorker.ts", import.meta.url), {
+    type: "module",
+    name: "raga-analyzer",
+  });
+  const pw: PooledWorker = { worker };
+  worker.onmessage = (event: MessageEvent<AnalyzerWorkerResponse>) => {
+    const data = event.data;
+    const job = pw.pending;
+    if (job === undefined || job.id !== data.id) return;
+    pw.pending = undefined;
+    if (data.ok) {
+      job.resolve(data.features);
+    } else {
+      job.reject(new Error(data.error));
+    }
+    releaseWorker(pw);
+  };
+  worker.onerror = (event) => {
+    handleWorkerFailure(pw, new Error(event.message || "analyzer worker error"));
+  };
+  worker.onmessageerror = () => {
+    handleWorkerFailure(pw, new Error("analyzer worker message could not be deserialized"));
+  };
+  return pw;
+}
+
+/** Reject the worker's in-flight job (if any) and remove it from the pool entirely. */
+function handleWorkerFailure(pw: PooledWorker, err: Error): void {
+  const job = pw.pending;
+  pw.pending = undefined;
+  if (job !== undefined) {
+    job.reject(err);
+  }
+  removeWorker(pw);
+}
+
+function removeWorker(pw: PooledWorker): void {
+  try {
+    pw.worker.terminate();
+  } catch {
+    // ignore
+  }
+  const i = _pool.indexOf(pw);
+  if (i >= 0) _pool.splice(i, 1);
+  const j = _idle.indexOf(pw);
+  if (j >= 0) _idle.splice(j, 1);
+}
+
+function acquireWorker(signal: AbortSignal): Promise<PooledWorker> {
+  if (signal.aborted) {
+    return Promise.reject(new Error("analysis aborted"));
+  }
+  const reused = _idle.pop();
+  if (reused !== undefined) {
+    return Promise.resolve(reused);
+  }
+  if (_pool.length < ANALYZER_WORKER_POOL_SIZE) {
+    const pw = spawnWorker();
+    _pool.push(pw);
+    return Promise.resolve(pw);
+  }
+  return new Promise<PooledWorker>((resolve, reject) => {
+    const waiter: WorkerWaiter = (worker) => {
+      signal.removeEventListener("abort", onAbort);
+      if (worker === null) {
+        reject(new Error("analysis aborted"));
       } else {
-        handler.reject(new Error(data.error));
+        resolve(worker);
       }
     };
-    worker.onerror = (event) => {
-      const err = new Error(event.message || "analyzer worker error");
-      for (const handler of _pending.values()) handler.reject(err);
-      _pending.clear();
+    const onAbort = () => {
+      const idx = _waiters.indexOf(waiter);
+      if (idx >= 0) _waiters.splice(idx, 1);
+      reject(new Error("analysis aborted"));
     };
-    worker.onmessageerror = () => {
-      const err = new Error("analyzer worker message could not be deserialized");
-      for (const handler of _pending.values()) handler.reject(err);
-      _pending.clear();
-    };
-    _worker = worker;
+    signal.addEventListener("abort", onAbort, { once: true });
+    _waiters.push(waiter);
+  });
+}
+
+function releaseWorker(pw: PooledWorker): void {
+  // Worker may have been removed (e.g. terminated by cancellation) between dispatch and
+  // completion. Don't try to reuse such a worker.
+  if (!_pool.includes(pw)) return;
+  const next = _waiters.shift();
+  if (next !== undefined) {
+    next(pw);
+  } else {
+    _idle.push(pw);
   }
-  return _worker;
 }
 
 /**
- * Tear down the active worker (if any) and reject every outstanding job. Called when an
- * Effection-driven analysis is aborted: terminating the worker is the only reliable way to
- * stop the in-flight chromagram / key math, since `postMessage` does not support cancellation.
- * The next call to {@link getWorker} will spin up a fresh dedicated worker.
- */
-function terminateWorker(reason: Error): void {
-  if (_worker !== undefined) {
-    try {
-      _worker.terminate();
-    } catch {
-      // ignore
-    }
-    _worker = undefined;
-  }
-  for (const handler of _pending.values()) handler.reject(reason);
-  _pending.clear();
-}
-
-/**
- * Public cancel hatch: kill any in-flight analyzer worker job immediately. Used by the
- * Analyzer panel's Cancel button so the user does not have to wait for the current track to
- * finish before the queue stops.
+ * Public cancel hatch: kill all in-flight analyzer worker jobs immediately and reject any
+ * waiters parked on the pool. Used by the Analyzer panel's Cancel button so the user does
+ * not have to wait for currently-running tracks to finish before the queue stops.
  */
 export function cancelInFlightAnalyzerJob(): void {
-  if (_pending.size === 0 && _worker === undefined) return;
-  terminateWorker(new Error("analysis cancelled by user"));
+  if (_pool.length === 0 && _waiters.length === 0) return;
+  // Snapshot waiters first because their handlers will splice the array.
+  const waiters = _waiters.splice(0);
+  for (const waiter of waiters) waiter(null);
+  // Snapshot pool because removeWorker mutates _pool during iteration.
+  for (const pw of _pool.slice()) {
+    handleWorkerFailure(pw, new Error("analysis cancelled by user"));
+  }
 }
 
 export interface ExtractFeaturesViaWorkerOptions {
@@ -88,6 +159,10 @@ export interface ExtractFeaturesViaWorkerOptions {
  * the heavy chromagram / key / energy / dynamics / feature-vector math in a dedicated worker
  * so the UI thread stays responsive.
  *
+ * Multiple calls run in parallel up to {@link ANALYZER_WORKER_POOL_SIZE} concurrent workers;
+ * any extra calls park on the pool and resume as workers free up. Workers are reused across
+ * jobs to amortize spawn cost when analyzing large libraries.
+ *
  * - Mixdown happens on the main thread because `AudioBuffer` is not structured-clone /
  *   transferable; only the resulting `Float32Array` is shipped to the worker (transferred so
  *   the underlying memory is not copied).
@@ -95,8 +170,8 @@ export interface ExtractFeaturesViaWorkerOptions {
  *   `AudioBuffer` and already runs its expensive work inside its own internal worker, so it
  *   doesn't block the UI either.
  * - The Effection `useAbortSignal` plumbing makes cancellation propagate through to the
- *   worker: when the surrounding task aborts, the worker is terminated and the promise is
- *   rejected so the caller can clean up.
+ *   worker: when the surrounding task aborts, the worker carrying this job is terminated and
+ *   the promise is rejected so the caller can clean up.
  */
 export function* extractTrackFeaturesViaWorker(
   options: ExtractFeaturesViaWorkerOptions,
@@ -118,42 +193,43 @@ export function* extractTrackFeaturesViaWorker(
   return yield* call(() => runWorkerJob(samples, sampleRate, bpm, signal));
 }
 
-function runWorkerJob(
+async function runWorkerJob(
   samples: Float32Array,
   sampleRate: number,
   bpm: number,
   signal: AbortSignal,
 ): Promise<TrackAudioFeatures> {
+  // acquireWorker already short-circuits on a pre-aborted signal and rejects parked waiters
+  // when the signal aborts mid-wait, so we don't need a separate aborted check here.
+  const pw = await acquireWorker(signal);
   if (signal.aborted) {
-    return Promise.reject(new Error("analysis aborted"));
+    // Tiny race: caller aborted between acquireWorker resolving and us getting control.
+    // Release the worker without dispatch so a sibling job can pick it up.
+    releaseWorker(pw);
+    throw new Error("analysis aborted");
   }
 
   const id = _nextId++;
-  const worker = getWorker();
-
   return new Promise<TrackAudioFeatures>((resolve, reject) => {
     const onAbort = () => {
-      terminateWorker(new Error("analysis aborted"));
+      // Terminate the worker carrying this job so its CPU work stops immediately. The
+      // Promise rejection is delivered via handleWorkerFailure → pending.reject.
+      handleWorkerFailure(pw, new Error("analysis aborted"));
     };
-    const cleanup = () => {
-      signal.removeEventListener("abort", onAbort);
-    };
-
-    _pending.set(id, {
+    pw.pending = {
+      id,
       resolve: (features) => {
-        cleanup();
+        signal.removeEventListener("abort", onAbort);
         resolve(features);
       },
       reject: (err) => {
-        cleanup();
+        signal.removeEventListener("abort", onAbort);
         reject(err);
       },
-    });
-
+    };
     signal.addEventListener("abort", onAbort, { once: true });
-
     const request: AnalyzerWorkerRequest = { id, samples, sampleRate, bpm };
-    worker.postMessage(request, [samples.buffer]);
+    pw.worker.postMessage(request, [samples.buffer]);
   });
 }
 

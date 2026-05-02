@@ -47,7 +47,10 @@ export default function AnalyzerPanel({ selectedPlaylistId }: AnalyzerPanelProps
   const clearAnalysisQueue = appStore.use.clearAnalysisQueue();
   const getTrackDef = appStore.use.getTrackDef();
 
-  const isRunning = analyzerStatus === "busy" || analyzerProgress?.currentTrackId !== undefined;
+  const isRunning =
+    analyzerStatus === "busy" ||
+    (analyzerProgress?.runningTrackIds.length ?? 0) > 0 ||
+    analyzerProgress?.currentTrackId !== undefined;
   const hasFinishedRun =
     !isRunning &&
     analyzerProgress !== undefined &&
@@ -129,6 +132,7 @@ export default function AnalyzerPanel({ selectedPlaylistId }: AnalyzerPanelProps
       ? ((analyzerProgress.completed + analyzerProgress.failed) / analyzerProgress.total) * 100
       : 0;
 
+  const runningTrackIds = analyzerProgress?.runningTrackIds;
   const currentTrackName = useMemo(() => {
     const id = analyzerProgress?.currentTrackId;
     if (id === undefined) return undefined;
@@ -136,6 +140,7 @@ export default function AnalyzerPanel({ selectedPlaylistId }: AnalyzerPanelProps
     if (def === undefined) return undefined;
     return def.Name ?? undefined;
   }, [analyzerProgress?.currentTrackId, getTrackDef]);
+  const runningCount = runningTrackIds?.length ?? 0;
 
   const failedJobs = useMemo(
     () => analyzerJobs.filter((j) => j.status === "failed"),
@@ -253,13 +258,17 @@ export default function AnalyzerPanel({ selectedPlaylistId }: AnalyzerPanelProps
               />
               <Group justify="space-between" align="center">
                 <Text size="xs" c="dimmed" className={styles.currentTrack}>
-                  {isRunning && currentTrackName !== undefined
-                    ? `Current: ${currentTrackName}`
-                    : isRunning
-                      ? "Loading next track…"
-                      : hasFinishedRun
-                        ? `${analyzerProgress.completed.toString()} analyzed`
-                        : ""}
+                  {isRunning && runningCount > 1 && currentTrackName !== undefined
+                    ? `Analyzing ${runningCount.toString()} tracks (incl. ${currentTrackName})`
+                    : isRunning && runningCount > 1
+                      ? `Analyzing ${runningCount.toString()} tracks in parallel`
+                      : isRunning && currentTrackName !== undefined
+                        ? `Current: ${currentTrackName}`
+                        : isRunning
+                          ? "Loading next track…"
+                          : hasFinishedRun
+                            ? `${analyzerProgress.completed.toString()} analyzed`
+                            : ""}
                 </Text>
                 {isRunning && analyzerProgress.etaMs !== undefined && (
                   <Text size="xs" c="dimmed">

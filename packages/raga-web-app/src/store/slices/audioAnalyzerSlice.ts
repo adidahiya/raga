@@ -4,10 +4,11 @@ import {
   createEmptyAudioFeatureCache,
   type TrackAudioFeatures,
 } from "@adahiya/raga-types";
-import { type Operation, run, useAbortSignal } from "effection";
+import { type Operation, run, spawn, type Task, useAbortSignal } from "effection";
 import { Roarr as log } from "roarr";
 
 import {
+  ANALYZER_WORKER_POOL_SIZE,
   cancelInFlightAnalyzerJob,
   extractTrackFeaturesViaWorker,
 } from "../../audio/analyzerWorkerClient";
@@ -37,8 +38,14 @@ export interface AnalyzerProgress {
   total: number;
   completed: number;
   failed: number;
-  /** Track id of the job currently running, if any. */
+  /**
+   * Track id of one of the jobs currently running, if any. With parallel execution there may
+   * be multiple running tracks; this is one representative pick (the first running job in
+   * queue order). See {@link runningTrackIds} for the full set.
+   */
   currentTrackId: number | undefined;
+  /** Track ids of all jobs currently running. Empty when nothing is in-flight. */
+  runningTrackIds: number[];
   /** Estimated time remaining in milliseconds, derived from a rolling per-track average. */
   etaMs: number | undefined;
 }
@@ -70,7 +77,10 @@ export interface AudioAnalyzerActions {
   // complex actions
   analyzeTrack: (trackId: number, options?: { force?: boolean }) => Operation<void>;
   analyzePlaylist: (playlistId: string) => Operation<void>;
-  /** Run all currently-queued jobs sequentially with progress reporting. */
+  /**
+   * Run all currently-queued jobs concurrently with progress reporting. The number of jobs
+   * processed in parallel is capped by {@link ANALYZER_WORKER_POOL_SIZE}.
+   */
   runAnalysisQueue: () => Operation<void>;
 }
 
@@ -114,6 +124,7 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
         completed,
         failed,
         currentTrackId: undefined,
+        runningTrackIds: [],
         etaMs: undefined,
       };
       state.analyzerCancelRequested = false;
@@ -122,8 +133,8 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
 
   cancelAnalysisQueue: () => {
     set({ analyzerCancelRequested: true });
-    // Kill the worker so the in-flight track stops immediately instead of running to
-    // completion. The queue loop will see analyzerCancelRequested and exit on the next tick.
+    // Kill every in-flight worker so running tracks stop immediately instead of running to
+    // completion. The queue workers see analyzerCancelRequested and exit on the next tick.
     cancelInFlightAnalyzerJob();
   },
 
@@ -166,72 +177,132 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
 
   runAnalysisQueue: function* () {
     const start = Date.now();
-    let done = 0;
-    for (;;) {
-      const job = get().analyzerJobs.find((j) => j.status === "queued");
-      if (job === undefined) break;
-      if (get().analyzerCancelRequested) {
-        set((state) => {
-          for (const j of state.analyzerJobs) {
-            if (j.status === "queued") j.status = "cancelled";
-          }
-        });
-        break;
-      }
+    const concurrency = Math.max(1, ANALYZER_WORKER_POOL_SIZE);
 
+    set({ analyzerStatus: "busy" });
+    try {
+      const tasks: Task<void>[] = [];
+      for (let i = 0; i < concurrency; i++) {
+        tasks.push(yield* spawn(() => runQueueWorker(set, get, start)));
+      }
+      for (const task of tasks) {
+        yield* task;
+      }
+    } finally {
       set((state) => {
-        const target = state.analyzerJobs.find((j) => j.trackId === job.trackId);
-        if (target !== undefined) target.status = "running";
+        state.analyzerCancelRequested = false;
         if (state.analyzerProgress !== undefined) {
-          state.analyzerProgress.currentTrackId = job.trackId;
+          state.analyzerProgress.runningTrackIds = [];
+          state.analyzerProgress.currentTrackId = undefined;
         }
       });
-
-      try {
-        const { audioConvertedFileURLs, convertTrackToMP3, getTrackDef } = get();
-        const trackDef = getTrackDef(job.trackId);
-        if (trackDef !== undefined) {
-          const ready = isTrackReadyForAnalysis(trackDef, audioConvertedFileURLs);
-          if (!ready) {
-            yield* convertTrackToMP3(trackDef);
-          }
-        }
-        yield* analyzeTrackOrThrow(set, get, { trackID: job.trackId });
-        set((state) => {
-          const target = state.analyzerJobs.find((j) => j.trackId === job.trackId);
-          if (target !== undefined) target.status = "succeeded";
-        });
-      } catch (e) {
-        const err = e as Error;
-        log.error(ClientErrors.analyzeTrackFailed(job.trackId, err));
-        set((state) => {
-          const target = state.analyzerJobs.find((j) => j.trackId === job.trackId);
-          if (target !== undefined) {
-            target.status = "failed";
-            target.error = err.message;
-          }
-        });
-      } finally {
-        done += 1;
-        set((state) => {
-          if (state.analyzerProgress === undefined) return;
-          const completed = state.analyzerJobs.filter((j) => j.status === "succeeded").length;
-          const failed = state.analyzerJobs.filter((j) => j.status === "failed").length;
-          state.analyzerProgress.completed = completed;
-          state.analyzerProgress.failed = failed;
-          const elapsed = Date.now() - start;
-          const perItem = elapsed / Math.max(1, done);
-          const remaining = state.analyzerJobs.filter((j) => j.status === "queued").length;
-          state.analyzerProgress.etaMs = remaining * perItem;
-          state.analyzerProgress.currentTrackId = undefined;
-        });
-      }
+      set({ analyzerStatus: "ready" });
     }
-    set((state) => {
-      state.analyzerCancelRequested = false;
-    });
   },
 });
+
+/**
+ * One concurrent worker in the queue runner. Repeatedly picks the next queued job, runs it,
+ * and updates progress until the queue is drained or a cancellation is requested.
+ */
+function* runQueueWorker(
+  set: AppStoreSet,
+  get: AppStoreGet,
+  start: number,
+): Operation<void> {
+  for (;;) {
+    if (get().analyzerCancelRequested) {
+      set((state) => {
+        for (const j of state.analyzerJobs) {
+          if (j.status === "queued") j.status = "cancelled";
+        }
+      });
+      return;
+    }
+
+    // Atomically pick the next queued job and flip it to running so a sibling worker
+    // doesn't grab the same one.
+    let pickedTrackId: number | undefined;
+    set((state) => {
+      const target = state.analyzerJobs.find((j) => j.status === "queued");
+      if (target !== undefined) {
+        target.status = "running";
+        pickedTrackId = target.trackId;
+      }
+    });
+
+    if (pickedTrackId === undefined) return;
+    const trackId = pickedTrackId;
+
+    updateAnalyzerProgress(set, start);
+
+    try {
+      const { audioConvertedFileURLs, convertTrackToMP3, getTrackDef } = get();
+      const trackDef = getTrackDef(trackId);
+      if (trackDef !== undefined) {
+        const ready = isTrackReadyForAnalysis(trackDef, audioConvertedFileURLs);
+        if (!ready) {
+          yield* convertTrackToMP3(trackDef);
+        }
+      }
+      yield* analyzeTrackBody(set, get, { trackID: trackId });
+      set((state) => {
+        const t = state.analyzerJobs.find((j) => j.trackId === trackId);
+        if (t !== undefined) t.status = "succeeded";
+      });
+    } catch (e) {
+      const err = e as Error;
+      // Attribute failures during cancellation as cancellations rather than padding the
+      // failure count.
+      if (get().analyzerCancelRequested) {
+        set((state) => {
+          const t = state.analyzerJobs.find((j) => j.trackId === trackId);
+          if (t !== undefined) t.status = "cancelled";
+        });
+      } else {
+        log.error(ClientErrors.analyzeTrackFailed(trackId, err));
+        set((state) => {
+          const t = state.analyzerJobs.find((j) => j.trackId === trackId);
+          if (t !== undefined) {
+            t.status = "failed";
+            t.error = err.message;
+          }
+        });
+      }
+    } finally {
+      updateAnalyzerProgress(set, start);
+    }
+  }
+}
+
+/**
+ * Refresh the aggregated progress fields from the current job statuses. ETA is throughput-
+ * based (`elapsed / done` × `remaining`), which naturally accounts for parallel execution
+ * because `elapsed / done` measures wall-time per completion, not per-track CPU time.
+ */
+function updateAnalyzerProgress(set: AppStoreSet, start: number): void {
+  set((state) => {
+    if (state.analyzerProgress === undefined) return;
+    const completed = state.analyzerJobs.filter((j) => j.status === "succeeded").length;
+    const failed = state.analyzerJobs.filter((j) => j.status === "failed").length;
+    const running = state.analyzerJobs.filter((j) => j.status === "running");
+    const queued = state.analyzerJobs.filter((j) => j.status === "queued").length;
+    const done = completed + failed;
+    const remaining = queued + running.length;
+
+    state.analyzerProgress.completed = completed;
+    state.analyzerProgress.failed = failed;
+    state.analyzerProgress.runningTrackIds = running.map((j) => j.trackId);
+    state.analyzerProgress.currentTrackId = running[0]?.trackId;
+
+    if (done > 0 && remaining > 0) {
+      const elapsed = Date.now() - start;
+      state.analyzerProgress.etaMs = (elapsed / done) * remaining;
+    } else {
+      state.analyzerProgress.etaMs = undefined;
+    }
+  });
+}
 
 interface AnalyzeTrackOptions {
   trackID: number;
@@ -244,8 +315,34 @@ interface AnalyzeTrackOptions {
   force?: boolean;
 }
 
-/** @throws */
+/**
+ * Single-track entry point. Wraps the shared body in the legacy `analyzerStatus` busy/ready
+ * toggle so callers outside the queue (the per-track Analyze button) keep their existing
+ * status semantics.
+ *
+ * @throws
+ */
 function* analyzeTrackOrThrow(
+  set: AppStoreSet,
+  get: AppStoreGet,
+  options: AnalyzeTrackOptions,
+) {
+  set({ analyzerStatus: "busy" });
+  try {
+    yield* analyzeTrackBody(set, get, options);
+  } finally {
+    set({ analyzerStatus: "ready" });
+  }
+}
+
+/**
+ * The actual analysis pipeline shared by single-track and queue-driven callers. Does NOT
+ * mutate `analyzerStatus` — the queue runner manages that across the whole batch (so a job
+ * finishing while siblings are still busy doesn't prematurely flip the status to "ready").
+ *
+ * @throws
+ */
+function* analyzeTrackBody(
   set: AppStoreSet,
   get: AppStoreGet,
   { force = false, trackID }: AnalyzeTrackOptions,
@@ -280,35 +377,29 @@ function* analyzeTrackOrThrow(
   };
   let features: TrackAudioFeatures;
   try {
-    set({ analyzerStatus: "busy" });
     features = yield* loadAudioBufferAndExtractFeatures(loadAudioBufferOptions, trackID, {
       knownBpm: trackDef.BPM,
     });
   } catch (e) {
-    set({ analyzerStatus: "ready" });
     throw new Error(ClientErrors.analyzeTrackFailed(trackID, e as Error));
   }
 
   // BPM continues to be persisted to the file's ID3 tag for backwards compat.
+  if (trackDef.BPM !== features.bpm) {
+    yield* writeAudioFileTag(trackDef, "BPM", features.bpm);
+  }
+  set((state) => {
+    state.audioFeatureCache.tracks[persistentId] = features;
+  });
   try {
-    if (trackDef.BPM !== features.bpm) {
-      yield* writeAudioFileTag(trackDef, "BPM", features.bpm);
-    }
-    set((state) => {
-      state.audioFeatureCache.tracks[persistentId] = features;
+    yield* getFeatureCacheClient().write({
+      entries: { [persistentId]: features },
+      libraryPersistentId: get().audioFeatureCache.libraryPersistentId,
     });
-    try {
-      yield* getFeatureCacheClient().write({
-        entries: { [persistentId]: features },
-        libraryPersistentId: get().audioFeatureCache.libraryPersistentId,
-      });
-    } catch (err) {
-      log.warn(
-        `[client] failed to persist audio feature cache entry for ${persistentId}: ${(err as Error).message}`,
-      );
-    }
-  } finally {
-    set({ analyzerStatus: "ready" });
+  } catch (err) {
+    log.warn(
+      `[client] failed to persist audio feature cache entry for ${persistentId}: ${(err as Error).message}`,
+    );
   }
 }
 
