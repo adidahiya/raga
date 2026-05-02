@@ -18,14 +18,6 @@ import {
   type ProvideEditorCallback,
   type Theme as GridTheme,
 } from "@glideapps/glide-data-grid";
-// Mantine theme + color-scheme hooks are retained ONLY to feed the
-// glide-data-grid canvas renderer, which paints custom rating stars and badge
-// pills directly to a 2D context and therefore needs concrete color values
-// outside of CSS. The visual chrome around the grid (filter bar, empty state,
-// container) uses the design system + Tailwind utilities like the rest of
-// the app.
-import type { MantineColorScheme, MantineTheme } from "@mantine/core";
-import { useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import classNames from "classnames";
 import { run } from "effection";
 import { unique } from "radash";
@@ -74,6 +66,135 @@ interface BadgeCellData {
 }
 
 type BadgeCell = CustomCell<BadgeCellData>;
+
+// DESIGN TOKEN PALETTE
+// -------------------------------------------------------------------------------------------------
+//
+// glide-data-grid paints to a 2D canvas and therefore needs concrete color
+// values rather than CSS variables. We read the design-system tokens off
+// `<html>` (which `App.tsx` keeps in lockstep with `data-theme`) so the
+// canvas chrome stays aligned with the rest of the app. The set is small
+// and colocated with the renderers that consume it.
+
+const TOKEN_NAMES = {
+  surface0: "--surface-0",
+  surface1: "--surface-1",
+  surface2: "--surface-2",
+  textPrimary: "--text-primary",
+  textSecondary: "--text-secondary",
+  textMuted: "--text-muted",
+  textDisabled: "--text-disabled",
+  borderSubtle: "--border-subtle",
+  borderDefault: "--border-default",
+  borderStrong: "--border-strong",
+  accent200: "--accent-200",
+  accent500: "--accent-500",
+  semanticInfo: "--semantic-info",
+  semanticSuccess: "--semantic-success",
+  semanticWarning: "--semantic-warning",
+  semanticDanger: "--semantic-danger",
+  fgOnAccent: "--fg-on-accent",
+  fontMono: "--font-mono",
+} as const;
+
+type CanvasTokenKey = keyof typeof TOKEN_NAMES;
+type CanvasTokens = Record<CanvasTokenKey, string>;
+
+const FALLBACK_TOKENS: CanvasTokens = {
+  surface0: "#101114",
+  surface1: "#16171a",
+  surface2: "#1c1d22",
+  textPrimary: "#f5f5f7",
+  textSecondary: "#c9cad0",
+  textMuted: "#8b8d96",
+  textDisabled: "#5a5c64",
+  borderSubtle: "rgba(255,255,255,0.05)",
+  borderDefault: "rgba(255,255,255,0.09)",
+  borderStrong: "rgba(255,255,255,0.16)",
+  accent200: "#b8c0ff",
+  accent500: "#5b6cff",
+  semanticInfo: "#60a5fa",
+  semanticSuccess: "#4ade80",
+  semanticWarning: "#fbbf24",
+  semanticDanger: "#f87171",
+  fgOnAccent: "#ffffff",
+  fontMono: '"JetBrains Mono", "IBM Plex Mono", "SF Mono", Menlo, monospace',
+};
+
+function readCanvasTokens(): CanvasTokens {
+  if (typeof window === "undefined") return FALLBACK_TOKENS;
+  const cs = getComputedStyle(document.documentElement);
+  const out = {} as CanvasTokens;
+  for (const key of Object.keys(TOKEN_NAMES) as CanvasTokenKey[]) {
+    const v = cs.getPropertyValue(TOKEN_NAMES[key]).trim();
+    out[key] = v !== "" ? v : FALLBACK_TOKENS[key];
+  }
+  return out;
+}
+
+/**
+ * Reactive canvas-token snapshot. Re-reads whenever `<html data-theme>` flips
+ * (via `App.tsx`'s preference effect), which is the same signal the rest of
+ * the design system listens to.
+ */
+function useCanvasTokens(): CanvasTokens {
+  const [tokens, setTokens] = useState<CanvasTokens>(readCanvasTokens);
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    const refresh = () => {
+      setTokens(readCanvasTokens());
+    };
+    const observer = new MutationObserver(refresh);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    // Catch the case where the data-theme attribute was set before this hook
+    // mounted (initial paint).
+    refresh();
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+  return tokens;
+}
+
+/**
+ * Append an 8-bit alpha channel (0-255) to a 7-char `#rrggbb` color. Returns
+ * the input unchanged when it isn't a hex literal (e.g. an `rgba(...)` token).
+ */
+function withHexAlpha(color: string, alpha: number): string {
+  if (!color.startsWith("#") || color.length !== 7) {
+    return color;
+  }
+  const a = Math.max(0, Math.min(255, Math.round(alpha)));
+  return color + a.toString(16).padStart(2, "0");
+}
+
+const BADGE_PALETTE_KEYS = {
+  blue: true,
+  green: true,
+  red: true,
+  gold: true,
+  gray: true,
+} as const;
+
+type BadgeColorKey = keyof typeof BADGE_PALETTE_KEYS;
+
+interface BadgeStyle {
+  base: string;
+  text: string;
+}
+
+function getBadgeStyles(tokens: CanvasTokens): Record<BadgeColorKey, BadgeStyle> {
+  return {
+    blue: { base: tokens.semanticInfo, text: tokens.semanticInfo },
+    green: { base: tokens.semanticSuccess, text: tokens.semanticSuccess },
+    red: { base: tokens.semanticDanger, text: tokens.semanticDanger },
+    gold: { base: tokens.semanticWarning, text: tokens.semanticWarning },
+    gray: { base: tokens.textMuted, text: tokens.textMuted },
+  };
+}
 
 // CONFIGURATION
 // -------------------------------------------------------------------------------------------------
@@ -140,10 +261,7 @@ function isRatingCell(cell: CustomCell): cell is RatingCell {
   );
 }
 
-const getRatingCellRenderer = (
-  mantineTheme: MantineTheme,
-  colorScheme: MantineColorScheme,
-): CustomRenderer<RatingCell> => ({
+const getRatingCellRenderer = (tokens: CanvasTokens): CustomRenderer<RatingCell> => ({
   kind: GridCellKind.Custom,
   isMatch: isRatingCell,
   draw: (args, cell) => {
@@ -184,17 +302,17 @@ const getRatingCellRenderer = (
       const isFilled = starIndex <= rating;
 
       if (isHoverPreview) {
-        // Hover preview takes precedence - show dimmed gold
-        ctx.fillStyle = mantineTheme.colors.yellow[7];
+        // Hover preview takes precedence - show dimmed warning/gold
+        ctx.fillStyle = tokens.semanticWarning;
         ctx.globalAlpha = 0.5;
       } else if (isFilled) {
-        // Filled star uses full gold color
-        ctx.fillStyle = mantineTheme.colors.yellow[7];
+        // Filled star uses the design-system warning token (warm gold)
+        ctx.fillStyle = tokens.semanticWarning;
         ctx.globalAlpha = 1.0;
       } else {
-        // Empty star uses dim gray color
-        ctx.fillStyle =
-          colorScheme === "dark" ? mantineTheme.colors.gray[8] : mantineTheme.colors.gray[2];
+        // Empty star uses the design-system "strong" border token, which is
+        // a translucent neutral that adapts automatically to light/dark.
+        ctx.fillStyle = tokens.borderStrong;
         ctx.globalAlpha = 1.0;
       }
 
@@ -259,57 +377,32 @@ function isBadgeCell(cell: CustomCell): cell is BadgeCell {
   );
 }
 
-const getBadgeCellRenderer = (
-  mantineTheme: MantineTheme,
-  colorScheme: MantineColorScheme,
-): CustomRenderer<BadgeCell> => ({
+const getBadgeCellRenderer = (tokens: CanvasTokens): CustomRenderer<BadgeCell> => ({
   kind: GridCellKind.Custom,
   isMatch: isBadgeCell,
   draw: (args, cell) => {
     const { ctx, rect, theme, hoverAmount, overrideCursor } = args;
     const { value, colorKey, interactive } = cell.data;
-    const { colors } = mantineTheme;
 
     // Set pointer cursor for interactive badges
     if (interactive) {
       overrideCursor?.("pointer");
     }
 
-    // Determine colors based on colorKey
-    const isDark = colorScheme === "dark";
-    let bgColor: string;
-    let textColor: string;
+    // Resolve the badge style from the colocated palette. The semantic tokens
+    // already adapt to light/dark via `<html data-theme>`, so we no longer
+    // need to fork on `colorScheme` for visual contrast.
+    const badgeKey = (colorKey as BadgeColorKey) in BADGE_PALETTE_KEYS ? colorKey : "gray";
+    const style = getBadgeStyles(tokens)[badgeKey as BadgeColorKey];
 
-    // For interactive badges, brighten colors on hover (convert alpha 0-255 to hex)
-    const baseAlpha = 128; // 0x80
+    // Background uses the base color at ~25% alpha; interactive badges
+    // brighten on hover (alpha ramps from ~25% to ~55%).
+    const baseAlpha = 64; // 0x40
     const hoverAlpha = interactive
       ? Math.min(255, baseAlpha + Math.round(hoverAmount * 80))
       : baseAlpha;
-    const alphaHex = hoverAlpha.toString(16).padStart(2, "0");
-
-    switch (colorKey) {
-      case "blue":
-        bgColor = isDark ? colors.blue[9] + "40" : colors.blue[1] + "80";
-        textColor = isDark ? colors.blue[7] : colors.blue[4];
-        break;
-      case "gold":
-        bgColor = isDark ? colors.yellow[9] + "40" : colors.yellow[1] + "90";
-        textColor = isDark ? colors.yellow[9] : colors.yellow[6];
-        break;
-      case "green":
-        bgColor = isDark ? colors.green[9] + "40" : colors.green[1] + "90";
-        textColor = isDark ? colors.green[8] : colors.green[5];
-        break;
-      case "red":
-        bgColor = isDark ? colors.red[9] + "40" : colors.red[1] + "80";
-        textColor = isDark ? colors.red[9] : colors.red[5];
-        break;
-      case "gray":
-      default:
-        bgColor = isDark ? colors.gray[8] + alphaHex : colors.gray[2] + alphaHex;
-        textColor = isDark ? colors.gray[6] : colors.gray[6];
-        break;
-    }
+    const bgColor = withHexAlpha(style.base, hoverAlpha);
+    const textColor = style.text;
 
     // Measure text to calculate pill dimensions
     ctx.font = `${theme.baseFontStyle} ${theme.fontFamily}`;
@@ -547,9 +640,8 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   }, []);
 
   // Theme
-  const theme = useGridTheme();
-  const colorScheme = useComputedColorScheme();
-  const { colors } = useMantineTheme();
+  const tokens = useCanvasTokens();
+  const theme = useGridTheme(tokens);
 
   // Handle row highlighting for active track and hover
   const activeTrackId = appStore.use.activeTrackId();
@@ -559,12 +651,11 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
       const isSelected = selection.rows.hasIndex(row);
       const isPrevSelected = row > 0 && selection.rows.hasIndex(row - 1);
       const themeOverride: Partial<GridTheme> = {};
-      const isDark = colorScheme === "dark";
 
       // Highlight first row of selection range OR row immediately after selection range
       const isSelectionEdge = (isSelected && !isPrevSelected) || (!isSelected && isPrevSelected);
       if (isSelectionEdge) {
-        themeOverride.horizontalBorderColor = isDark ? colors.blue[8] : colors.blue[2];
+        themeOverride.horizontalBorderColor = tokens.accent500;
       }
 
       // Apply active track background
@@ -586,8 +677,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
       theme.bgHeaderHovered,
       hoveredRow,
       selection,
-      colorScheme,
-      colors,
+      tokens.accent500,
     ],
   );
 
@@ -602,14 +692,8 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
     }
   }, []);
 
-  const mantineTheme = useMantineTheme();
-  const ratingCellRenderer = useMemo(() => {
-    return getRatingCellRenderer(mantineTheme, colorScheme);
-  }, [mantineTheme, colorScheme]);
-
-  const badgeCellRenderer = useMemo(() => {
-    return getBadgeCellRenderer(mantineTheme, colorScheme);
-  }, [mantineTheme, colorScheme]);
+  const ratingCellRenderer = useMemo(() => getRatingCellRenderer(tokens), [tokens]);
+  const badgeCellRenderer = useMemo(() => getBadgeCellRenderer(tokens), [tokens]);
 
   const table = (
     <div
@@ -804,43 +888,39 @@ function useColumns(numTracksInPlaylist: number): GridColumn[] {
   );
 }
 
-/** Configures grid theme */
-function useGridTheme(): Partial<GridTheme> {
-  const colorScheme = useComputedColorScheme("light");
-  const { colors, fontFamilyMonospace } = useMantineTheme();
-
-  return useMemo(() => {
-    const isDark = colorScheme === "dark";
-    const surface = isDark ? "#0a0a0a" : "#ffffff";
-    const surfaceAlt = isDark ? "#0f0f0f" : "#fafafa";
-    const headerBorder = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)";
-    return {
-      bgCell: surface,
-      bgCellMedium: isDark ? "rgba(59,130,246,0.06)" : colors.blue[0],
-      bgHeader: surface,
-      bgHeaderHasFocus: surfaceAlt,
-      bgHeaderHovered: surfaceAlt,
-      borderColor: headerBorder,
-      horizontalBorderColor: headerBorder,
-      headerBottomBorderColor: headerBorder,
-      textDark: isDark ? "#e5e5e5" : "#0a0a0a",
-      textHeader: isDark ? "#737373" : "#525252",
-      textMedium: isDark ? "#a3a3a3" : "#525252",
-      textLight: isDark ? "#525252" : "#a3a3a3",
-      textBubble: isDark ? colors.gray[0] : colors.dark[9],
-      bgBubble: isDark ? "rgba(255,255,255,0.05)" : colors.gray[2],
-      bgBubbleSelected: isDark ? colors.blue[8] : colors.blue[1],
-      accentColor: "#3b82f6",
-      accentLight: isDark ? "rgba(59,130,246,0.10)" : "rgba(59,130,246,0.10)",
-      accentFg: "#ffffff",
-      fontFamily: fontFamilyMonospace,
+/** Configures grid theme using design-system tokens. */
+function useGridTheme(tokens: CanvasTokens): Partial<GridTheme> {
+  return useMemo<Partial<GridTheme>>(
+    () => ({
+      bgCell: tokens.surface0,
+      // Subtle accent tint for the active row (~10% opacity over the base
+      // accent). Reads as a soft blue/purple wash in either theme.
+      bgCellMedium: withHexAlpha(tokens.accent500, 26),
+      bgHeader: tokens.surface0,
+      bgHeaderHasFocus: tokens.surface1,
+      bgHeaderHovered: tokens.surface1,
+      borderColor: tokens.borderSubtle,
+      horizontalBorderColor: tokens.borderSubtle,
+      headerBottomBorderColor: tokens.borderSubtle,
+      textDark: tokens.textPrimary,
+      textHeader: tokens.textMuted,
+      textMedium: tokens.textSecondary,
+      textLight: tokens.textDisabled,
+      textBubble: tokens.textPrimary,
+      bgBubble: tokens.surface2,
+      bgBubbleSelected: tokens.accent200,
+      accentColor: tokens.accent500,
+      accentLight: withHexAlpha(tokens.accent500, 26),
+      accentFg: tokens.fgOnAccent,
+      fontFamily: tokens.fontMono,
       baseFontStyle: "12px",
       headerFontStyle: "10px",
       cellHorizontalPadding: 10,
       cellVerticalPadding: 4,
       headerIconSize: 12,
-    };
-  }, [colorScheme, colors, fontFamilyMonospace]);
+    }),
+    [tokens],
+  );
 }
 
 function useTableInteractions(playlistId: string, trackDefNodes: { nodes: TrackDefinitionNode[] }) {
