@@ -12,7 +12,7 @@ const wrapper = cva(
         warning: "bg-warning/10 border-warning/20 text-warning",
         danger: "bg-danger/10 border-danger/20 text-danger",
         info: "bg-info/10 border-info/20 text-info",
-        idle: "bg-idle/15 border-idle/25 text-text-muted",
+        idle: "bg-idle/15 border-idle/25 text-idle",
       },
     },
     defaultVariants: { tone: "info" },

@@ -2,6 +2,18 @@
 @import "./tokens.css";
 
 /*
+ * Tailwind v4 auto-detects source files relative to the project that runs the
+ * build, which means consumers that import this stylesheet from another
+ * package (e.g. `raga-web-app`) won't have the design-system primitives in
+ * their content scan and would silently drop utilities like `bg-accent2-500`,
+ * `bg-danger`, `h-control-md`, etc. The explicit @source directives below
+ * make sure every consumer sees the full set of utilities used by the
+ * primitives we ship.
+ */
+@source "../primitives/**/*.{ts,tsx}";
+@source "../lib/**/*.{ts,tsx}";
+
+/*
  * Register design tokens with Tailwind v4. Every key here is sourced from a
  * `var(--*)` defined in `./tokens.css`, which is generated from `tokens.ts`.
  */

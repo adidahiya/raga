@@ -38,6 +38,7 @@ import {
   Music,
   Pause,
   Play,
+  RefreshCw,
   Search,
   Settings,
   Star,
@@ -66,11 +67,14 @@ function useThemeCtx(): ThemeContextValue {
 }
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "warm" | "danger";
-type ButtonState = "default" | "hover" | "active" | "disabled" | "focus";
+type ButtonState = "default" | "hover" | "active" | "disabled" | "loading";
 type StatusTone = React.ComponentProps<typeof StatusPill>["tone"];
 
-const SECTION_HEADER =
-  "text-micro font-mono uppercase tracking-label text-text-disabled";
+// Inner sub-label style used inside every section. Mixed-case mono at the
+// mockup's small size, no forced uppercase or wide tracking — the numbered
+// top-level section headers (in Section) keep their uppercase + tracking.
+const SUBLABEL =
+  "text-mono-sm font-mono text-text-muted leading-none whitespace-nowrap";
 
 function Section({
   num,
@@ -84,7 +88,10 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="px-section-px py-section-py border-t border-border-subtle">
+    <section
+      id={`s-${num}`}
+      className="px-section-px py-section-py border-t border-border-subtle"
+    >
       <div className="mb-6 flex items-baseline gap-3">
         <span className="font-mono text-caption tracking-label text-text-disabled">
           {num}
@@ -245,24 +252,23 @@ function TypeRow({ name, spec, sample }: { name: TypeKey; spec: TypeSpec; sample
   );
 }
 
-// Per-variant override classes that visually simulate :hover / :active
-// on the *next sibling* selector — since we can't actually trigger hover
-// from markup, we use these `!`-modified utilities to flip the bg/text.
+// Per-variant override classes that visually simulate :hover / :active —
+// since we can't actually trigger hover from markup, we use these
+// `!`-modified utilities to flip the bg/text.
 const HOVER_STATE_CLASSES: Record<ButtonVariant, string> = {
   primary: "!bg-accent-400",
   secondary: "!bg-overlay-white-fill",
-  ghost: "!bg-overlay-white-subtle !text-text-primary",
+  ghost: "!bg-overlay-white-subtle !text-text-primary !border-border-default",
   warm: "!bg-accent2-300",
   danger: "!bg-danger-hover",
 };
 const ACTIVE_STATE_CLASSES: Record<ButtonVariant, string> = {
   primary: "!bg-accent-600",
   secondary: "!bg-overlay-white-subtle",
-  ghost: "!bg-overlay-white-soft !text-text-primary",
+  ghost: "!bg-overlay-white-soft !text-text-primary !border-border-default",
   warm: "!bg-accent2-600",
   danger: "!bg-danger !brightness-90",
 };
-const FOCUS_STATE_CLASSES = "focus-ring";
 
 function stateClassesFor(state: ButtonState, variant: ButtonVariant): string {
   switch (state) {
@@ -270,8 +276,6 @@ function stateClassesFor(state: ButtonState, variant: ButtonVariant): string {
       return HOVER_STATE_CLASSES[variant];
     case "active":
       return ACTIVE_STATE_CLASSES[variant];
-    case "focus":
-      return FOCUS_STATE_CLASSES;
     default:
       return "";
   }
@@ -279,6 +283,7 @@ function stateClassesFor(state: ButtonState, variant: ButtonVariant): string {
 
 function ButtonStateColumn({ state }: { state: ButtonState }) {
   const isDisabled = state === "disabled";
+  const isLoading = state === "loading";
   const variants: { variant: ButtonVariant; label: string; icon?: React.ReactNode }[] = [
     { variant: "primary", label: "Play set", icon: <Play className="h-icon-sm w-icon-sm" /> },
     { variant: "secondary", label: "Open folder" },
@@ -294,8 +299,8 @@ function ButtonStateColumn({ state }: { state: ButtonState }) {
     { variant: "warm", node: <Zap className="h-icon-md w-icon-md" /> },
   ];
   return (
-    <div className="flex flex-col gap-3">
-      <div className={SECTION_HEADER}>{state}</div>
+    <div className="flex flex-col items-start gap-3">
+      <div className={SUBLABEL}>{state}</div>
       {variants.map((v) => (
         <Button
           key={v.variant}
@@ -303,7 +308,11 @@ function ButtonStateColumn({ state }: { state: ButtonState }) {
           disabled={isDisabled}
           className={cn(stateClassesFor(state, v.variant))}
         >
-          {v.icon}
+          {isLoading ? (
+            <RefreshCw className="h-icon-sm w-icon-sm animate-spin" />
+          ) : (
+            v.icon
+          )}
           {v.label}
         </Button>
       ))}
@@ -315,7 +324,11 @@ function ButtonStateColumn({ state }: { state: ButtonState }) {
           aria-label={`${b.variant} icon`}
           className={stateClassesFor(state, b.variant)}
         >
-          {b.node}
+          {isLoading ? (
+            <RefreshCw className="h-icon-md w-icon-md animate-spin" />
+          ) : (
+            b.node
+          )}
         </IconButton>
       ))}
     </div>
@@ -373,14 +386,12 @@ const ICON_GRID: { I: typeof Library; label: string; accent?: boolean }[] = [
 ];
 
 function readInitialTheme(): ThemeName {
+  // Kitchen sink mirrors the dark-mode design-system mockup, so we default to
+  // dark and only honour an explicit `data-theme` attribute on <html>. The
+  // user can still flip themes at runtime via the toggle in the page header.
   if (typeof document === "undefined") return "dark";
   const fromAttr = document.documentElement.dataset.theme;
   if (fromAttr === "light" || fromAttr === "dark") return fromAttr;
-  if (typeof window !== "undefined") {
-    return window.matchMedia("(prefers-color-scheme: light)").matches
-      ? "light"
-      : "dark";
-  }
   return "dark";
 }
 
@@ -435,6 +446,12 @@ export function KitchenSink() {
 
 function KitchenSinkContent() {
   const { tokens: T, theme } = useThemeCtx();
+  React.useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ block: "start" });
+  }, []);
   return (
     <div className="min-h-screen w-full overflow-auto bg-surface-1 text-text-secondary font-sans">
       {/* floating back-to-app link */}
@@ -500,7 +517,7 @@ function KitchenSinkContent() {
       >
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-7">
-            <div className={cn(SECTION_HEADER, "mb-3")}>Surface scale</div>
+            <div className={cn(SUBLABEL, "mb-3")}>Surface scale</div>
             <div className="grid grid-cols-5 gap-3">
               <Swatch name="surface-0" hex={T.surface[0]} textHex={T.text.muted} />
               <Swatch name="surface-1" hex={T.surface[1]} textHex={T.text.muted} />
@@ -508,7 +525,7 @@ function KitchenSinkContent() {
               <Swatch name="surface-3" hex={T.surface[3]} textHex={T.text.secondary} />
               <Swatch name="surface-4" hex={T.surface[4]} textHex={T.text.primary} />
             </div>
-            <div className={cn(SECTION_HEADER, "mt-6 mb-3")}>Text & border on surface-1</div>
+            <div className={cn(SUBLABEL, "mt-6 mb-3")}>Text & border on surface-1</div>
             <div className="grid grid-cols-2 gap-3 rounded-md border border-border-default bg-surface-1 p-4">
               <div>
                 <TextSampleRow name="text-primary" hex={T.text.primary} />
@@ -535,7 +552,7 @@ function KitchenSinkContent() {
               keys={[50, 100, 200, 300, 400, 500, 600, 700, 800, 900]}
             />
             <div>
-              <div className={cn(SECTION_HEADER, "mb-3")}>
+              <div className={cn(SUBLABEL, "mb-3")}>
                 Semantic — token · hex · contrast vs surface-1
               </div>
               <div className="grid grid-cols-3 gap-x-4 gap-y-3">
@@ -564,7 +581,7 @@ function KitchenSinkContent() {
       >
         <div className="grid grid-cols-2 gap-10">
           <div>
-            <div className={cn(SECTION_HEADER, "mb-2")}>Sans · Inter</div>
+            <div className={cn(SUBLABEL, "mb-2")}>Sans · Inter</div>
             <TypeRow name="display" spec={T.type.display} sample="House Sets 2025" />
             <TypeRow
               name="headline"
@@ -590,7 +607,7 @@ function KitchenSinkContent() {
             <TypeRow name="micro" spec={T.type.micro} sample="OVERLINE · LABEL · TINY" />
           </div>
           <div>
-            <div className={cn(SECTION_HEADER, "mb-2")}>Mono · JetBrains Mono</div>
+            <div className={cn(SUBLABEL, "mb-2")}>Mono · JetBrains Mono</div>
             <TypeRow name="monoLg" spec={T.type.monoLg} sample="BPM 124.5" />
             <TypeRow name="monoMd" spec={T.type.monoMd} sample="Autechre — VLetrmx" />
             <TypeRow name="monoSm" spec={T.type.monoSm} sample="00:03:42 · FLAC" />
@@ -603,7 +620,7 @@ function KitchenSinkContent() {
       <Section num="03" title="Spacing & radius">
         <div className="grid grid-cols-2 gap-10">
           <div>
-            <div className={cn(SECTION_HEADER, "mb-3")}>Spacing scale (px)</div>
+            <div className={cn(SUBLABEL, "mb-3")}>Spacing scale (px)</div>
             <div className="flex flex-col gap-control-gap">
               {Object.entries(T.spacing).map(([k, v]) => (
                 <div key={k} className="flex items-center gap-3">
@@ -620,7 +637,7 @@ function KitchenSinkContent() {
             </div>
           </div>
           <div>
-            <div className={cn(SECTION_HEADER, "mb-3")}>Radius scale (px)</div>
+            <div className={cn(SUBLABEL, "mb-3")}>Radius scale (px)</div>
             <div className="flex items-end gap-4">
               {Object.entries(T.radius).map(([k, v]) => (
                 <div key={k} className="flex flex-col items-center gap-2">
@@ -646,94 +663,211 @@ function KitchenSinkContent() {
         hint="Primary uses iris accent. Warm secondary is reserved for friendly, non-destructive emphasis."
       >
         <div className="grid grid-cols-5 gap-4">
-          {(["default", "hover", "active", "focus", "disabled"] as ButtonState[]).map(
+          {(["default", "hover", "active", "disabled", "loading"] as ButtonState[]).map(
             (state) => (
               <ButtonStateColumn key={state} state={state} />
             ),
           )}
         </div>
+        <div className="mt-8 flex items-center gap-3 border-t border-border-subtle pt-6">
+          <span className={cn(SUBLABEL, "mr-2")}>sizes</span>
+          <Button size="sm" variant="primary">
+            Small
+          </Button>
+          <Button size="md" variant="primary">
+            Medium
+          </Button>
+          <Button size="sm" variant="secondary">
+            <Filter className="h-icon-xs w-icon-xs" />
+            With icon
+          </Button>
+          <IconButton size="sm" variant="secondary" aria-label="Settings">
+            <Settings className="h-icon-sm w-icon-sm" />
+          </IconButton>
+          <IconButton size="sm" variant="primary" aria-label="Play">
+            <Play className="h-icon-sm w-icon-sm" fill="currentColor" />
+          </IconButton>
+        </div>
       </Section>
 
       {/* 05 — FORM CONTROLS */}
       <Section num="05" title="Form controls">
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 gap-10">
+          {/* Left column: text inputs, search w/ shortcut, select, textarea */}
           <div className="flex flex-col gap-4">
-            <div className={SECTION_HEADER}>text inputs</div>
-            <Input placeholder="Search library…" />
-            <Input placeholder="Disabled input" disabled />
-            <Input placeholder="With value" defaultValue="Autechre" />
-            <Textarea placeholder="Notes…" rows={3} />
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>text inputs</div>
+              <div className="flex flex-col gap-2">
+                <Input placeholder="Folder name…" />
+                <Input className="focus-ring" defaultValue="House Sets 2025" />
+                <Input defaultValue="Read-only field" disabled />
+              </div>
+            </div>
+
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>search with shortcut</div>
+              <Input
+                leadingIcon={<Search className="h-icon-sm w-icon-sm" />}
+                placeholder="Search library, playlists, or commands…"
+                trailing={<Kbd>⌘ K</Kbd>}
+              />
+            </div>
+
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>
+                select · default / focused / disabled
+              </div>
+              <div className="flex flex-col gap-2">
+                <Select defaultValue="bpm">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bpm">Sort by · BPM ascending</SelectItem>
+                    <SelectItem value="title">Sort by · Title</SelectItem>
+                    <SelectItem value="added">Sort by · Date added</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select defaultValue="bpm">
+                  <SelectTrigger className="focus-ring">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bpm">Sort by · BPM ascending</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select defaultValue="bpm" disabled>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bpm">Sort by · BPM ascending</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>
+                textarea · default / focused / disabled
+              </div>
+              <div className="flex flex-col gap-2">
+                <Textarea
+                  rows={2}
+                  defaultValue="Closing set for the warehouse — keep BPM under 124, lean dubby."
+                />
+                <Textarea
+                  className="focus-ring"
+                  rows={2}
+                  defaultValue="Closing set for the warehouse — keep BPM under 124, lean dubby."
+                />
+                <Textarea
+                  rows={2}
+                  disabled
+                  defaultValue="Closing set for the warehouse — keep BPM under 124, lean dubby."
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col gap-4">
-            <div className={SECTION_HEADER}>toggles & checks</div>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <Switch id="sw1" defaultChecked />
-                <label htmlFor="sw1" className="text-body-sm text-text-secondary">
-                  Auto-analyze on import
-                </label>
+
+          {/* Right column: checkbox, radio, switch, slider — each as a triplet */}
+          <div className="flex flex-col gap-5">
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>
+                checkbox · default / focused / disabled
               </div>
-              <div className="flex items-center gap-2">
-                <Switch id="sw2" />
-                <label htmlFor="sw2" className="text-body-sm text-text-secondary">
-                  Show waveform
+              <div className="flex flex-wrap items-center gap-5">
+                <label className="flex items-center gap-2 text-body-sm text-text-primary">
+                  <Checkbox defaultChecked /> on
                 </label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox id="cb1" defaultChecked />
-                <label htmlFor="cb1" className="text-body-sm text-text-secondary">
-                  BPM &gt; 120
+                <label className="flex items-center gap-2 text-body-sm text-text-secondary">
+                  <Checkbox /> off
                 </label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox id="cb2" />
-                <label htmlFor="cb2" className="text-body-sm text-text-secondary">
-                  Rated 4★+
+                <label className="flex items-center gap-2 text-body-sm text-text-primary">
+                  <Checkbox defaultChecked className="focus-ring" /> focused
+                </label>
+                <label className="flex items-center gap-2 text-body-sm text-text-muted">
+                  <Checkbox defaultChecked disabled /> disabled
                 </label>
               </div>
             </div>
-            <div className={cn(SECTION_HEADER, "mt-2")}>radio group</div>
-            <RadioGroup defaultValue="energy">
-              <div className="flex items-center gap-2">
-                <Radio value="energy" id="r1" />
-                <label htmlFor="r1" className="text-body-sm text-text-secondary">
-                  Sort by energy
-                </label>
+
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>
+                radio · default / focused / disabled
               </div>
-              <div className="flex items-center gap-2">
-                <Radio value="bpm" id="r2" />
-                <label htmlFor="r2" className="text-body-sm text-text-secondary">
-                  Sort by BPM
+              <RadioGroup
+                defaultValue="on"
+                className="flex flex-row flex-wrap items-center gap-5"
+              >
+                <label className="flex items-center gap-2 text-body-sm text-text-primary">
+                  <Radio value="on" /> on
                 </label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Radio value="added" id="r3" />
-                <label htmlFor="r3" className="text-body-sm text-text-secondary">
-                  Sort by date added
+                <label className="flex items-center gap-2 text-body-sm text-text-secondary">
+                  <Radio value="off" /> off
                 </label>
-              </div>
-            </RadioGroup>
-          </div>
-          <div className="flex flex-col gap-4">
-            <div className={SECTION_HEADER}>select & slider</div>
-            <Select defaultValue="flac">
-              <SelectTrigger>
-                <SelectValue placeholder="Format" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="flac">FLAC</SelectItem>
-                <SelectItem value="aiff">AIFF</SelectItem>
-                <SelectItem value="mp3">MP3</SelectItem>
-                <SelectItem value="wav">WAV</SelectItem>
-              </SelectContent>
-            </Select>
-            <div className="flex flex-col gap-2">
-              <span className="font-mono text-micro text-text-muted">BPM range</span>
-              <Slider defaultValue={[90, 140]} min={60} max={200} step={1} />
+                <label className="flex items-center gap-2 text-body-sm text-text-primary">
+                  <Radio value="focused" className="focus-ring" /> focused
+                </label>
+                <label className="flex items-center gap-2 text-body-sm text-text-muted">
+                  <Radio value="disabled" disabled /> disabled
+                </label>
+              </RadioGroup>
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="font-mono text-micro text-text-muted">Volume</span>
-              <Slider defaultValue={[75]} min={0} max={100} step={1} />
+
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>
+                switch · default / focused / disabled
+              </div>
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="flex items-center gap-2 text-body-sm text-text-primary">
+                  <Switch defaultChecked /> on
+                </div>
+                <div className="flex items-center gap-2 text-body-sm text-text-secondary">
+                  <Switch /> off
+                </div>
+                <div className="flex items-center gap-2 text-body-sm text-text-primary">
+                  <Switch defaultChecked className="focus-ring" /> focused
+                </div>
+                <div className="flex items-center gap-2 text-body-sm text-text-muted">
+                  <Switch defaultChecked disabled /> disabled
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className={cn(SUBLABEL, "mb-2")}>
+                slider · default / focused / disabled
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <Volume2 className="h-icon-md w-icon-md text-text-muted" />
+                  <div className="flex-1">
+                    <Slider defaultValue={[62]} min={0} max={100} step={1} />
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Volume2 className="h-icon-md w-icon-md text-accent-300" />
+                  <div className="flex-1">
+                    <Slider
+                      defaultValue={[62]}
+                      min={0}
+                      max={100}
+                      step={1}
+                      className="[&_.bg-overlay-white-soft]:shadow-knob-glow"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Volume2 className="h-icon-md w-icon-md text-text-disabled" />
+                  <div className="flex-1">
+                    <Slider defaultValue={[62]} min={0} max={100} step={1} disabled />
+                  </div>
+                  <span className="w-8 text-right font-mono text-mono-sm text-text-disabled">
+                    62
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -743,7 +877,7 @@ function KitchenSinkContent() {
       <Section num="06" title="Badges, chips & shortcuts">
         <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
           <div className="flex flex-col gap-2">
-            <span className={SECTION_HEADER}>filter chip</span>
+            <span className={SUBLABEL}>filter chip</span>
             <div className="flex items-center gap-2">
               <Badge variant="accent">
                 <Filter className="h-icon-xs w-icon-xs" />
@@ -757,7 +891,7 @@ function KitchenSinkContent() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className={SECTION_HEADER}>tag chip</span>
+            <span className={SUBLABEL}>tag chip</span>
             <div className="flex items-center gap-2">
               <Badge>
                 House
@@ -771,7 +905,7 @@ function KitchenSinkContent() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className={SECTION_HEADER}>status pill</span>
+            <span className={SUBLABEL}>status pill</span>
             <div className="flex items-center gap-2">
               <StatusPill tone="success" label="library ready" />
               <StatusPill tone="warning" label="analyzing 12" />
@@ -780,7 +914,7 @@ function KitchenSinkContent() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className={SECTION_HEADER}>keyboard</span>
+            <span className={SUBLABEL}>keyboard</span>
             <div className="flex items-center gap-control-gap">
               <Kbd>⌘</Kbd>
               <Kbd>K</Kbd>
@@ -833,7 +967,7 @@ function KitchenSinkContent() {
       <Section num="08" title="App chrome · mini-player & status bar">
         <div className="flex flex-col gap-6">
           <div>
-            <div className={cn(SECTION_HEADER, "mb-2")}>mini-player</div>
+            <div className={cn(SUBLABEL, "mb-2")}>mini-player</div>
             <div className="inline-flex items-center gap-4 rounded-pill border border-border-default bg-surface-2 py-1 pl-1 pr-4 shadow-card-elevated">
               <button
                 type="button"
@@ -870,7 +1004,7 @@ function KitchenSinkContent() {
           </div>
 
           <div>
-            <div className={cn(SECTION_HEADER, "mb-2")}>status bar</div>
+            <div className={cn(SUBLABEL, "mb-2")}>status bar</div>
             <div className="flex h-control-sm items-center justify-between rounded-sm border border-border-default bg-surface-0 px-4 font-mono text-micro text-text-muted">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-control-gap">
