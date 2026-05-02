@@ -52,7 +52,7 @@ export default function LoadLibraryForm() {
   });
 
   return (
-    <div className="flex flex-col gap-2" ref={ref}>
+    <div className="flex flex-col gap-2.5" ref={ref}>
       <FileInput
         className={styles.fileInput}
         placeholder="Select XML file"
@@ -120,7 +120,7 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
               </span>
             </Button>
           ))}
-          <div className="mt-2">
+          <div className="mt-2.5">
             <Button
               size="sm"
               variant="danger"
@@ -146,7 +146,7 @@ export function LoadMockLibraryForm() {
   }, [setLibraryInputFilepath]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       <Button onClick={handleClick}>Load Mock Library</Button>
     </div>
   );

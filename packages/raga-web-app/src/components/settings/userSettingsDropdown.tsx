@@ -29,19 +29,19 @@ export default function UserSettingsDropdown() {
       </Menu.Target>
       <Menu.Dropdown>
         <div className="flex flex-col gap-0">
-          <div className="p-2">
+          <div className="p-2.5">
             <UserEmailFormGroup />
           </div>
           <Separator orientation="horizontal" />
-          <div className="p-2">
+          <div className="p-2.5">
             <UIFontFormGroup />
           </div>
           <Separator orientation="horizontal" />
-          <div className="p-2">
+          <div className="p-2.5">
             <ThemeFormGroup />
           </div>
           <Separator orientation="horizontal" />
-          <div className="p-2">
+          <div className="p-2.5">
             <AnalyzerSettings />
           </div>
         </div>
@@ -124,7 +124,7 @@ function UIFontFormGroup() {
   );
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-4">
       <span>UI font</span>
       <SegmentedControl
         onChange={handleValueChange}
@@ -165,7 +165,7 @@ function ThemeFormGroup() {
   );
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-4">
       <span>Theme</span>
       <SegmentedControl
         onChange={handleValueChange}

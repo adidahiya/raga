@@ -119,7 +119,7 @@ export default function LibraryView() {
           <Panel id="main" order={2} minSize={30}>
             <div className="flex h-full flex-col gap-0">
               <div
-                className={`${styles.playerBar} flex items-center justify-between flex-nowrap gap-3 px-3 py-1.5`}
+                className={`${styles.playerBar} flex items-center justify-between flex-nowrap gap-4 px-3 py-1.5`}
               >
                 <div className={styles.playerNowPlaying}>
                   {selectedTrack === undefined ? (

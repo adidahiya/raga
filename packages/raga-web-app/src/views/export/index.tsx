@@ -16,7 +16,7 @@ export default function ExportView() {
     <div className="flex h-full min-h-0 flex-col gap-0">
       <div
         className={classNames(
-          "flex w-full min-h-0 flex-1 items-start justify-start flex-nowrap gap-1",
+          "flex w-full min-h-0 flex-1 items-start justify-start flex-nowrap gap-1.5",
           styles.export,
         )}
       >
@@ -52,7 +52,7 @@ interface ExportColumnProps {
 function ExportColumn({ children, title }: ExportColumnProps) {
   return (
     <Card className={classNames("p-card-p shadow-card-elevated", styles.exportColumn)}>
-      <div className="flex h-full flex-col gap-3">
+      <div className="flex h-full flex-col gap-4">
         {title !== undefined && <span>{title}</span>}
         {children}
       </div>
