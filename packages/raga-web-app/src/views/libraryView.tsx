@@ -1,7 +1,6 @@
 import { Separator } from "@adahiya/raga-design-system";
 import { spotlight } from "@mantine/spotlight";
 import classNames from "classnames";
-import { run } from "effection";
 import { useCallback, useState } from "react";
 import {
   IoAnalyticsOutline,
@@ -20,6 +19,7 @@ import { AudioPlayerNowPlaying } from "../components/audioPlayer/audioPlayerNowP
 import { ResizeHandle } from "../components/common";
 import EmptyState from "../components/common/emptyState";
 import SimpleTooltip from "../components/common/SimpleTooltip";
+import AnalyzerPanel from "../components/library/analyzerPanel";
 import StatusBar from "../components/library/statusBar";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
@@ -38,7 +38,6 @@ export default function LibraryView() {
 
   const [activeRailItem, setActiveRailItem] = useState<RailItemKey>("all-tracks");
   const [isPlaylistPanelOpen, setIsPlaylistPanelOpen] = useState(false);
-  const analyzePlaylist = appStore.use.analyzePlaylist();
 
   const handlePlaylistSelect = useCallback(
     (playlistIds: string[]) => {
@@ -64,9 +63,8 @@ export default function LibraryView() {
       } else if (key === "playlists") {
         setIsPlaylistPanelOpen(true);
       } else if (key === "analyzer") {
-        if (selectedPlaylistId !== undefined) {
-          void run(() => analyzePlaylist(selectedPlaylistId));
-        }
+        // The Analyzer rail item opens a control panel; analysis must be started explicitly.
+        setIsPlaylistPanelOpen(false);
       } else if (key === "settings") {
         const trigger = document.querySelector<HTMLButtonElement>(
           "[data-raga-settings-trigger]",
@@ -77,7 +75,7 @@ export default function LibraryView() {
         spotlight.open();
       }
     },
-    [masterPlaylistId, setSelectedPlaylistId, selectedPlaylistId, analyzePlaylist],
+    [masterPlaylistId, setSelectedPlaylistId],
   );
 
   return (
@@ -136,7 +134,9 @@ export default function LibraryView() {
               <AudioPlayer />
               <Separator />
               <div className={styles.tableContainer}>
-                {selectedPlaylistId === undefined ? (
+                {activeRailItem === "analyzer" ? (
+                  <AnalyzerPanel selectedPlaylistId={selectedPlaylistId} />
+                ) : selectedPlaylistId === undefined ? (
                   <EmptyState
                     className={styles.emptyState}
                     title="Playlist tracks"

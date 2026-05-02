@@ -9,7 +9,9 @@ export const AUDIO_FILES_SERVER_PING_TIMEOUT = 1_000;
 export const LOAD_SWINSIAN_LIBRARY_TIMEOUT = 10_000;
 export const WRITE_AUDIO_FILE_TAG_TIMEOUT = 2_000;
 export const WRITE_MODIFIED_LIBRARY_TIMEOUT = 20_000;
-export const ANALYZE_AUDIO_FILE_TIMEOUT = 4_000;
+// Per-track analysis can take several seconds even with the worker (chromagram + BPM on long
+// tracks). Generous bound to avoid spurious failures; cancellation is the user's lever.
+export const ANALYZE_AUDIO_FILE_TIMEOUT = 60_000;
 
 // UI settings
 // TODO: make track table row height configurable

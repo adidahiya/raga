@@ -7,10 +7,12 @@ import {
 import { type Operation, run, useAbortSignal } from "effection";
 import { Roarr as log } from "roarr";
 
-import { analyzeBPM } from "../../audio/bpm";
+import {
+  cancelInFlightAnalyzerJob,
+  extractTrackFeaturesViaWorker,
+} from "../../audio/analyzerWorkerClient";
 import { loadAudioBuffer, type LoadAudioBufferOptions } from "../../audio/buffer";
 import { getFeatureCacheClient } from "../../audio/featureCache";
-import { extractTrackFeatures } from "../../audio/features";
 import { withTimeout } from "../../common/asyncUtils";
 import {
   ANALYZE_AUDIO_FILE_TIMEOUT,
@@ -120,6 +122,9 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
 
   cancelAnalysisQueue: () => {
     set({ analyzerCancelRequested: true });
+    // Kill the worker so the in-flight track stops immediately instead of running to
+    // completion. The queue loop will see analyzerCancelRequested and exit on the next tick.
+    cancelInFlightAnalyzerJob();
   },
 
   clearAnalysisQueue: () => {
@@ -315,21 +320,13 @@ function loadAudioBufferAndExtractFeatures(
   return withTimeout(
     run(function* () {
       const trackAudio = yield* loadAudioBuffer(options);
-      // Run the extended pipeline. If knownBpm is provided we skip BPM analysis to reuse the
-      // existing tag value.
-      let features: TrackAudioFeatures;
-      if (extractOptions.knownBpm === undefined) {
-        features = yield* extractTrackFeatures(trackAudio);
-        // round BPM consistently with the previous behaviour
-        features = { ...features, bpm: Math.round(features.bpm) };
-        // ensure BPM was actually computed
-        if (features.bpm === 0) {
-          features = { ...features, bpm: Math.round(yield* analyzeBPM(trackAudio)) };
-        }
-      } else {
-        features = yield* extractTrackFeatures(trackAudio, { knownBpm: extractOptions.knownBpm });
-      }
-      return features;
+      // Heavy chromagram / key / energy / dynamics math runs in a dedicated worker so the UI
+      // stays responsive between (and during) tracks. BPM analysis still happens on the main
+      // thread but uses web-audio-beat-detector, which already runs in its own worker.
+      return yield* extractTrackFeaturesViaWorker({
+        audioBuffer: trackAudio,
+        knownBpm: extractOptions.knownBpm,
+      });
     }),
     ANALYZE_AUDIO_FILE_TIMEOUT,
     ClientErrors.analyzeTrackTimedOut(trackID),

@@ -1,0 +1,49 @@
+.panel {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--raga-surface-1);
+}
+
+.inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 28px 32px;
+}
+
+.stat {
+  min-width: 140px;
+  padding: 12px 14px;
+  border: 1px solid var(--raga-border);
+  border-radius: 6px;
+  background: var(--raga-surface-2, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &[data-accent="ok"] {
+    border-color: var(--mantine-color-green-6, #2f9e44);
+  }
+
+  &[data-accent="info"] {
+    border-color: var(--raga-accent, var(--mantine-color-blue-6, #228be6));
+  }
+}
+
+.statValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.progressBlock {
+  padding: 12px 14px;
+  border: 1px solid var(--raga-border);
+  border-radius: 6px;
+  background: var(--raga-surface-2, transparent);
+}
+
+.currentTrack {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60%;
+}
