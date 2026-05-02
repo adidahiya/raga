@@ -10,6 +10,7 @@ export const modules: ModuleMap = {
   "./components/mockups/raga-app/Curator.tsx": () => import("../components/mockups/raga-app/Curator.tsx"),
   "./components/mockups/raga-app/DesignSystem.tsx": () => import("../components/mockups/raga-app/DesignSystem.tsx"),
   "./components/mockups/raga-app/Harmonics.tsx": () => import("../components/mockups/raga-app/Harmonics.tsx"),
+  "./components/mockups/raga-app/MobileFrames.tsx": () => import("../components/mockups/raga-app/MobileFrames.tsx"),
   "./components/mockups/raga-app/Studio.tsx": () => import("../components/mockups/raga-app/Studio.tsx"),
   "./components/mockups/raga-app/Triage.tsx": () => import("../components/mockups/raga-app/Triage.tsx")
 };
