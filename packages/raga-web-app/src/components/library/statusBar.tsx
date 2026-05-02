@@ -1,4 +1,5 @@
 import { appStore } from "../../store/appStore";
+import AnalyzerProgressIndicator from "./analyzerProgressIndicator";
 import AudioFilesServerControls from "./audioFilesServerControls";
 import styles from "./statusBar.module.scss";
 
@@ -26,6 +27,7 @@ export default function StatusBar({ totalTracks }: StatusBarProps) {
             Analyzer: {analyzerStatus === "busy" ? "busy" : "idle"}
           </span>
         </span>
+        <AnalyzerProgressIndicator />
         <span className={styles.divider} />
         <div className={styles.serverControls}>
           <AudioFilesServerControls />

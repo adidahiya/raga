@@ -89,6 +89,30 @@
   background: var(--accent-500);
 }
 
+.railBadge {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--semantic-warning);
+  box-shadow: 0 0 0 2px var(--surface-1);
+  animation: railBadgePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes railBadgePulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
 .playlistPanel {
   flex: 1 1 auto;
   display: flex;

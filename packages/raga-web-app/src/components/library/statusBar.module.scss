@@ -99,3 +99,90 @@
   background: color-mix(in srgb, var(--accent-500) 10%, transparent);
   border-color: color-mix(in srgb, var(--accent-500) 30%, transparent);
 }
+
+.analyzerProgress {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-default);
+  background: color-mix(in srgb, var(--accent-500) 6%, transparent);
+
+  &[data-state="warn"] {
+    border-color: color-mix(in srgb, var(--semantic-warning) 40%, transparent);
+    background: color-mix(in srgb, var(--semantic-warning) 8%, transparent);
+  }
+
+  &[data-state="done"] {
+    border-color: color-mix(in srgb, var(--accent-500) 30%, transparent);
+  }
+}
+
+.analyzerBar {
+  position: relative;
+  width: 56px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--overlay-white-subtle, rgba(255, 255, 255, 0.08));
+  overflow: hidden;
+
+  .analyzerProgress[data-state="running"] & {
+    animation: analyzerPulse 1.6s ease-in-out infinite;
+  }
+}
+
+.analyzerBarFill {
+  display: block;
+  height: 100%;
+  background: var(--accent-500);
+  transition: width 200ms ease;
+
+  .analyzerProgress[data-state="warn"] & {
+    background: var(--semantic-warning);
+  }
+}
+
+.analyzerCount {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.analyzerAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    background 120ms ease;
+
+  &:hover:not(:disabled) {
+    color: var(--text-primary);
+    background: var(--overlay-white-subtle, rgba(255, 255, 255, 0.1));
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes analyzerPulse {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}

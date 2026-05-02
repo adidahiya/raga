@@ -216,11 +216,23 @@ const RAIL_ITEMS: RailItem[] = [
 ];
 
 function IconRail({ activeItem, isPlaylistPanelOpen, onItemClick }: IconRailProps) {
+  const analyzerStatus = appStore.use.analyzerStatus();
+  const analyzerProgress = appStore.use.analyzerProgress();
+  const isAnalyzerRunActive =
+    analyzerStatus === "busy" || analyzerProgress?.currentTrackId !== undefined;
+
   const renderItem = (item: RailItem) => {
     const isActive =
       activeItem === item.key && (!isPlaylistPanelOpen || item.key === "playlists");
+    const showAnalyzerBadge = item.key === "analyzer" && isAnalyzerRunActive;
+    const tooltipLabel =
+      showAnalyzerBadge && analyzerProgress !== undefined
+        ? `${item.label} — analyzing ${(
+            analyzerProgress.completed + analyzerProgress.failed
+          ).toString()}/${analyzerProgress.total.toString()}`
+        : item.label;
     return (
-      <SimpleTooltip key={item.key} label={item.label} side="right" sideOffset={6}>
+      <SimpleTooltip key={item.key} label={tooltipLabel} side="right" sideOffset={6}>
         <button
           type="button"
           className={classNames(styles.railItem, { [styles.railItemActive]: isActive })}
@@ -230,6 +242,9 @@ function IconRail({ activeItem, isPlaylistPanelOpen, onItemClick }: IconRailProp
         >
           {isActive && <span className={styles.railAccent} />}
           {item.icon}
+          {showAnalyzerBadge && (
+            <span className={styles.railBadge} aria-hidden="true" />
+          )}
         </button>
       </SimpleTooltip>
     );

@@ -189,8 +189,11 @@ export const createAudioAnalyzerSlice: AppStoreSliceCreator<
         yield* task;
       }
     } finally {
+      // Intentionally leave `analyzerCancelRequested` as-is so the UI can render a terminal
+      // "Cancelled" state after the loop exits. It is reset by `enqueueAnalysis` (when the
+      // user starts another run) and by `clearAnalysisQueue` (when the user dismisses the
+      // result), both of which fire before any subsequent run begins.
       set((state) => {
-        state.analyzerCancelRequested = false;
         if (state.analyzerProgress !== undefined) {
           state.analyzerProgress.runningTrackIds = [];
           state.analyzerProgress.currentTrackId = undefined;
