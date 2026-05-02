@@ -22,11 +22,7 @@ $overflow: ($grabbable-width - $visible-width) * 0.5;
 
 .inner {
   width: 1px;
-  background-color: var(--mantine-color-gray-4);
+  background-color: var(--border-strong);
   transition: opacity 0.1s linear;
   opacity: 0.6;
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    background-color: var(--mantine-color-gray-7);
-  }
 }

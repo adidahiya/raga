@@ -1,5 +1,4 @@
 import type { MusicLibraryPlist } from "@adahiya/raga-types";
-import { Text } from "@mantine/core";
 import { format, parseISO } from "date-fns";
 import { isString } from "radash";
 
@@ -10,10 +9,10 @@ export default function LibraryLastModifiedText() {
   const dateModified = getDateModified(library);
 
   if (library == null) {
-    return <Text>No library loaded</Text>;
+    return <span>No library loaded</span>;
   }
 
-  return <Text>Last modified: {format(dateModified, "Pp")}</Text>;
+  return <span>Last modified: {format(dateModified, "Pp")}</span>;
 }
 
 function getDateModified(library: MusicLibraryPlist | undefined) {

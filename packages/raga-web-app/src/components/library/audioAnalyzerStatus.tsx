@@ -1,26 +1,16 @@
-import { Badge, Group, Text } from "@mantine/core";
-import { IoCheckmark, IoReload } from "react-icons/io5";
+import { StatusPill } from "@adahiya/raga-design-system";
 
 import { appStore } from "../../store/appStore";
 
 export default function AudioAnalyzerStatus() {
   const status = appStore.use.analyzerStatus();
+  const isBusy = status === "busy";
 
   return (
-    <Group gap="xs" align="center" justify="space-between">
-      <Text component="span" c="dimmed" size="sm">
-        Analyzer
-      </Text>
-      <Badge
-        size="sm"
-        variant="light"
-        color={status === "busy" ? "blue" : "green"}
-        leftSection={status === "busy" ? <IoReload /> : <IoCheckmark />}
-        radius="sm"
-      >
-        {status === "busy" ? "Busy…" : "Ready"}
-      </Badge>
-    </Group>
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-body-sm text-text-muted">Analyzer</span>
+      <StatusPill tone={isBusy ? "info" : "success"} label={isBusy ? "Busy…" : "Ready"} />
+    </div>
   );
 }
 AudioAnalyzerStatus.displayName = "AudioAnalyzerStatus";

@@ -1,21 +1,10 @@
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Divider,
-  Group,
-  type MantineColorScheme,
-  Menu,
-  SegmentedControl,
-  Stack,
-  Text,
-  TextInput,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { Button, IconButton, Input, Separator } from "@adahiya/raga-design-system";
+import { Menu, SegmentedControl } from "@mantine/core";
 import { type ChangeEvent, useCallback, useState } from "react";
 import { IoCheckmark, IoChevronDown, IoClose, IoSettingsOutline } from "react-icons/io5";
 
 import { appStore } from "../../store/appStore";
+import type { UserThemePreference } from "../../store/slices/userSettingsSlice";
 import { AnalyzerSettings } from "./analyzerSettings";
 
 const EMAIL_VALIDATION_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -30,35 +19,32 @@ export default function UserSettingsDropdown() {
       offset={{ mainAxis: 10 }}
     >
       <Menu.Target>
-        <Button
-          data-raga-settings-trigger
-          size="compact-sm"
-          color="gray"
-          variant="subtle"
-          leftSection={<IoSettingsOutline size={14} />}
-          rightSection={<IoChevronDown size={14} />}
-        >
-          Settings
+        <Button data-raga-settings-trigger variant="ghost" size="sm">
+          <span className="inline-flex items-center gap-2">
+            <IoSettingsOutline size={14} />
+            Settings
+            <IoChevronDown size={14} />
+          </span>
         </Button>
       </Menu.Target>
       <Menu.Dropdown>
-        <Stack gap={0}>
-          <Box p="xs">
+        <div className="flex flex-col gap-0">
+          <div className="p-2">
             <UserEmailFormGroup />
-          </Box>
-          <Divider orientation="horizontal" />
-          <Box p="xs">
+          </div>
+          <Separator orientation="horizontal" />
+          <div className="p-2">
             <UIFontFormGroup />
-          </Box>
-          <Divider orientation="horizontal" />
-          <Box p="xs">
+          </div>
+          <Separator orientation="horizontal" />
+          <div className="p-2">
             <ThemeFormGroup />
-          </Box>
-          <Divider orientation="horizontal" />
-          <Box p="xs">
+          </div>
+          <Separator orientation="horizontal" />
+          <div className="p-2">
             <AnalyzerSettings />
-          </Box>
-        </Stack>
+          </div>
+        </div>
       </Menu.Dropdown>
     </Menu>
   );
@@ -87,27 +73,32 @@ function UserEmailFormGroup() {
     [setUserEmail],
   );
 
+  const trailingButton =
+    emailInputValue === "" ? undefined : (
+      <IconButton
+        variant="ghost"
+        size="sm"
+        aria-label={isEmailValid ? "Clear email" : "Clear invalid email"}
+        onClick={clearEmail}
+      >
+        {isEmailValid ? <IoCheckmark /> : <IoClose />}
+      </IconButton>
+    );
+
   return (
-    <TextInput
-      label="User email"
-      description="Used to write the 'Rating' tag on audio files"
-      autoFocus={true}
-      type="email"
-      value={emailInputValue}
-      onChange={handleEmailChange}
-      color={emailInputValue === "" ? "gray" : isEmailValid ? "green" : "red"}
-      rightSection={
-        emailInputValue === "" ? undefined : isEmailValid ? (
-          <ActionIcon variant="subtle" onClick={clearEmail}>
-            <IoCheckmark />
-          </ActionIcon>
-        ) : (
-          <ActionIcon variant="subtle" onClick={clearEmail}>
-            <IoClose />
-          </ActionIcon>
-        )
-      }
-    />
+    <div className="flex flex-col gap-1">
+      <span className="text-body-sm font-medium text-text-primary">User email</span>
+      <span className="text-caption text-text-muted">
+        Used to write the &apos;Rating&apos; tag on audio files
+      </span>
+      <Input
+        autoFocus={true}
+        type="email"
+        value={emailInputValue}
+        onChange={handleEmailChange}
+        trailing={trailingButton}
+      />
+    </div>
   );
 }
 
@@ -133,18 +124,18 @@ function UIFontFormGroup() {
   );
 
   return (
-    <Group>
-      <Text>UI font</Text>
+    <div className="flex items-center gap-3">
+      <span>UI font</span>
       <SegmentedControl
         onChange={handleValueChange}
         data={FONT_WEIGHT_OPTIONS}
         value={fontWeight}
       />
-    </Group>
+    </div>
   );
 }
 
-const THEME_OPTIONS: { label: string; value: MantineColorScheme }[] = [
+const THEME_OPTIONS: { label: string; value: UserThemePreference }[] = [
   {
     label: "System",
     value: "auto",
@@ -160,26 +151,28 @@ const THEME_OPTIONS: { label: string; value: MantineColorScheme }[] = [
 ];
 
 function ThemeFormGroup() {
-  const { setColorScheme } = useMantineColorScheme();
   const userThemePreference = appStore.use.userThemePreference();
   const setUserThemePreference = appStore.use.setUserThemePreference();
   const handleValueChange = useCallback(
     (value: string) => {
-      setUserThemePreference(value as MantineColorScheme);
-      setColorScheme(value as MantineColorScheme);
+      // App.tsx is the single source of truth: it resolves the preference
+      // against `prefers-color-scheme` and pushes the result to both
+      // `<html data-theme>` (design system) and `forceColorScheme` on
+      // MantineProvider (held-over Mantine surfaces) in lockstep.
+      setUserThemePreference(value as UserThemePreference);
     },
-    [setUserThemePreference, setColorScheme],
+    [setUserThemePreference],
   );
 
   return (
-    <Group>
-      <Text>Theme</Text>
+    <div className="flex items-center gap-3">
+      <span>Theme</span>
       <SegmentedControl
         onChange={handleValueChange}
         data={THEME_OPTIONS}
         value={userThemePreference}
       />
-    </Group>
+    </div>
   );
 }
 

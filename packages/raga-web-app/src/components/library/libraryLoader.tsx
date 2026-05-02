@@ -1,4 +1,4 @@
-import { Progress, Stack } from "@mantine/core";
+import { Progress } from "@mantine/core";
 import { IoMusicalNotes, IoWarning } from "react-icons/io5";
 
 import { useTaskEffect } from "../../hooks";
@@ -23,7 +23,7 @@ export default function LibraryLoader(props: { children: React.ReactNode }) {
   );
 
   return (
-    <Stack className={styles.container} gap={0} px={5}>
+    <div className={`${styles.container} flex flex-col gap-0 px-1.5`}>
       {libraryState === "none" ? (
         <EmptyState
           className={styles.emptyState}
@@ -49,6 +49,6 @@ export default function LibraryLoader(props: { children: React.ReactNode }) {
       ) : (
         <div className={styles.libraryLoaded}>{props.children}</div>
       )}
-    </Stack>
+    </div>
   );
 }

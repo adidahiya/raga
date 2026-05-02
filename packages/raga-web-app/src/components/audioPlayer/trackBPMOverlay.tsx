@@ -1,5 +1,5 @@
+import { Card, IconButton, Slider } from "@adahiya/raga-design-system";
 import type { TrackDefinition } from "@adahiya/raga-types";
-import { ActionIcon, Paper, Slider, Text, Tooltip } from "@mantine/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "motion/react";
 import { debounce } from "radash";
@@ -8,6 +8,7 @@ import { IoChevronBack } from "react-icons/io5";
 import { useBoolean } from "usehooks-ts";
 
 import { appStore } from "../../store/appStore";
+import SimpleTooltip from "../common/SimpleTooltip";
 import AnalyzeSingleTrackButton from "../trackTable/analyzeSingleTrackButton";
 import styles from "./trackBPMOverlay.module.scss";
 
@@ -24,7 +25,7 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
   }, [setPlaybackRate]);
 
   return (
-    <Paper className={styles.bpmOverlay} radius={0}>
+    <Card className={`${styles.bpmOverlay} rounded-none`}>
       <motion.div
         className={classNames(styles.tempoSliderContainer, {
           [styles.open]: isTempoSliderOpen,
@@ -49,15 +50,15 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
           )}
         </AnimatePresence>
       </motion.div>
-      <Tooltip
+      <SimpleTooltip
         label={isTempoSliderOpen ? "Hide BPM slider" : "Show BPM adjustment slider"}
-        position="bottom"
+        side="bottom"
       >
-        <ActionIcon
+        <IconButton
           className={styles.tempoSliderToggleButton}
-          variant="light"
-          color="gray"
+          variant="ghost"
           size="sm"
+          aria-label={isTempoSliderOpen ? "Hide BPM slider" : "Show BPM slider"}
           onClick={toggleTempoSlider}
         >
           <motion.div
@@ -66,11 +67,9 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
           >
             <IoChevronBack size={16} />
           </motion.div>
-        </ActionIcon>
-      </Tooltip>
-      <Text component="span" c="dimmed">
-        BPM:{" "}
-      </Text>
+        </IconButton>
+      </SimpleTooltip>
+      <span className="text-text-muted">BPM: </span>
       {trackDef.BPM !== undefined ? (
         <span
           className={classNames(styles.bpmValue, {
@@ -82,10 +81,16 @@ export function TrackBPMOverlay({ trackDef }: { trackDef: TrackDefinition }) {
       ) : (
         <AnalyzeSingleTrackButton trackDef={trackDef} />
       )}
-    </Paper>
+    </Card>
   );
 }
 TrackBPMOverlay.displayName = "TrackBPMOverlay";
+
+const TEMPO_MARKS = [
+  { value: -10, label: "-10%" },
+  { value: 0, label: "0%" },
+  { value: 10, label: "10%" },
+];
 
 function TrackTempoSlider() {
   const playbackRate = appStore.use.audioPlaybackRate();
@@ -93,8 +98,8 @@ function TrackTempoSlider() {
 
   const tempoSliderValue = roundToNearestTenth(playbackRate * 100 - 100);
   const handleTempoSliderChange = useCallback(
-    (value: number) => {
-      const roundedValue = roundToNearestTenth(value);
+    (values: number[]) => {
+      const roundedValue = roundToNearestTenth(values[0]);
       const playbackRate = (roundedValue + 100) / 100;
       setPlaybackRate(playbackRate);
     },
@@ -102,21 +107,23 @@ function TrackTempoSlider() {
   );
 
   return (
-    <Slider
-      classNames={{ root: styles.tempoSlider }}
-      min={-10}
-      max={10}
-      step={0.1}
-      label={renderTempoSliderLabel}
-      marks={[
-        { value: -10, label: "-10%" },
-        { value: 0, label: "0%" },
-        { value: 10, label: "10%" },
-      ]}
-      value={tempoSliderValue}
-      onChange={handleTempoSliderChange}
-      color="gray"
-    />
+    <div className={styles.tempoSliderWrapper}>
+      <Slider
+        className={styles.tempoSlider}
+        min={-10}
+        max={10}
+        step={0.1}
+        value={[tempoSliderValue]}
+        onValueChange={handleTempoSliderChange}
+      />
+      {/* DS Slider does not ship a marks API, so we render the tick labels
+          manually beneath the track. */}
+      <div className="mt-1 flex justify-between text-micro text-text-muted">
+        {TEMPO_MARKS.map((mark) => (
+          <span key={mark.value}>{mark.label}</span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -127,10 +134,6 @@ const bpmFormatter = Intl.NumberFormat(undefined, {
 
 function formatAdjustedBPM(bpm: number, playbackRate: number) {
   return bpmFormatter.format(roundToNearestTenth(bpm * playbackRate));
-}
-
-function renderTempoSliderLabel(value: number) {
-  return `${value > 0 ? "+" : ""}${value.toString()}%`;
 }
 
 function roundToNearestTenth(value: number) {

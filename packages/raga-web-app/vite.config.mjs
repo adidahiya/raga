@@ -1,3 +1,4 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import htmlPlugin from "vite-plugin-html-config";
@@ -11,11 +12,10 @@ export default defineConfig({
       // No electron-specific scripts for the standalone web app
     }),
     react(),
-    // Tailwind v4 powers the dev-only `/__kitchen-sink` route. We only register
-    // the plugin in development so production builds don't ship Tailwind CSS.
-    ...(isDev
-      ? [await import("@tailwindcss/vite").then((m) => m.default())]
-      : []),
+    // Tailwind v4 powers both the design-system primitives (consumed across the
+    // app via @adahiya/raga-design-system) and the dev-only `/__kitchen-sink`
+    // route, so it's always-on.
+    tailwindcss(),
     ...(isDev && process.env.REPL_ID !== undefined
       ? [
           await import("@replit/vite-plugin-runtime-error-modal").then((m) =>

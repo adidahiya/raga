@@ -1,9 +1,10 @@
+import { Button } from "@adahiya/raga-design-system";
 import type { TrackDefinition } from "@adahiya/raga-types";
-import { Button, Tooltip } from "@mantine/core";
 
 import { useOperationCallback } from "../../hooks";
 import { useIsTrackReadyForAnalysis } from "../../hooks/useIsTrackReadyForAnalysis";
 import { appStore } from "../../store/appStore";
+import SimpleTooltip from "../common/SimpleTooltip";
 import styles from "./trackTable.module.scss";
 
 export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: TrackDefinition }) {
@@ -33,22 +34,20 @@ export default function AnalyzeSingleTrackButton({ trackDef }: { trackDef: Track
     ? "Disconnected from audio files server"
     : isConvertingThisFile
       ? "Converting to compatible audio format for analysis..."
-      : undefined;
+      : "";
 
   return (
-    <Tooltip label={tooltipText} disabled={!buttonDisabled} position="top">
+    <SimpleTooltip label={tooltipText} side="top">
       <Button
         className={styles.smallOutlinedButton}
+        variant="ghost"
+        size="sm"
         disabled={buttonDisabled}
-        variant="light"
-        color="gray"
-        size="compact-sm"
-        fullWidth={true}
         onClick={handleAnalyzeBPM}
       >
         Analyze
       </Button>
-    </Tooltip>
+    </SimpleTooltip>
   );
 }
 AnalyzeSingleTrackButton.displayName = "AnalyzeSingleTrackButton";

@@ -1,4 +1,4 @@
-import { Button, type MantineColor, Stack, Text } from "@mantine/core";
+import { Button, type ButtonProps } from "@adahiya/raga-design-system";
 import * as React from "react";
 
 interface NotificationMessageProps {
@@ -7,22 +7,24 @@ interface NotificationMessageProps {
     icon: React.JSX.Element;
     text: string;
     onClick: () => void;
-    color?: MantineColor;
+    variant?: ButtonProps["variant"];
   };
 }
 
 export default function NotificationMessage({ message, action }: NotificationMessageProps) {
   return (
-    <Stack gap={5}>
-      <Text>{message}</Text>
+    <div className="flex flex-col gap-1">
+      <span>{message}</span>
       <Button
-        size="compact-sm"
-        leftSection={action.icon}
+        size="sm"
+        variant={action.variant ?? "secondary"}
         onClick={action.onClick}
-        color={action.color}
       >
-        {action.text}
+        <span className="inline-flex items-center gap-1">
+          {action.icon}
+          {action.text}
+        </span>
       </Button>
-    </Stack>
+    </div>
   );
 }

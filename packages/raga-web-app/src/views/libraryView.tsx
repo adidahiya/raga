@@ -1,4 +1,4 @@
-import { Divider, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Separator } from "@adahiya/raga-design-system";
 import { spotlight } from "@mantine/spotlight";
 import classNames from "classnames";
 import { run } from "effection";
@@ -19,6 +19,7 @@ import { AudioPlayerControls } from "../components/audioPlayer/audioPlayerContro
 import { AudioPlayerNowPlaying } from "../components/audioPlayer/audioPlayerNowPlaying";
 import { ResizeHandle } from "../components/common";
 import EmptyState from "../components/common/emptyState";
+import SimpleTooltip from "../components/common/SimpleTooltip";
 import StatusBar from "../components/library/statusBar";
 import PlaylistTable from "../components/playlistTable/playlistTable";
 import TrackTable from "../components/trackTable/trackTable";
@@ -71,7 +72,8 @@ export default function LibraryView() {
           "[data-raga-settings-trigger]",
         );
         trigger?.click();
-      } else if (key === "help") {
+      } else {
+        // key === "help"
         spotlight.open();
       }
     },
@@ -80,7 +82,7 @@ export default function LibraryView() {
 
   return (
     <div className={styles.library}>
-      <Stack gap={0} className={styles.libraryStack}>
+      <div className={`${styles.libraryStack} flex flex-col gap-0`}>
         <PanelGroup direction="horizontal">
           <Panel
             id="sidebar"
@@ -99,11 +101,11 @@ export default function LibraryView() {
               {isPlaylistPanelOpen && (
                 <div className={styles.playlistPanel}>
                   <div className={styles.playlistPanelHeader}>
-                    <Text size="xs" c="dimmed" tt="uppercase" lts={0.5} fw={600}>
+                    <span className="text-caption font-semibold uppercase tracking-label text-text-muted">
                       Playlists
-                    </Text>
+                    </span>
                   </div>
-                  <Divider />
+                  <Separator />
                   <PlaylistTable
                     selectionMode="single"
                     onSelect={handlePlaylistSelect}
@@ -115,22 +117,24 @@ export default function LibraryView() {
           </Panel>
           {isPlaylistPanelOpen && <ResizeHandle />}
           <Panel id="main" order={2} minSize={30}>
-            <Stack gap={0} h="100%">
-              <Group justify="space-between" px="sm" py={6} className={styles.playerBar} wrap="nowrap">
+            <div className="flex h-full flex-col gap-0">
+              <div
+                className={`${styles.playerBar} flex items-center justify-between flex-nowrap gap-3 px-3 py-1.5`}
+              >
                 <div className={styles.playerNowPlaying}>
                   {selectedTrack === undefined ? (
-                    <Text size="xs" c="dimmed" ff="monospace" tt="uppercase" lts={1}>
+                    <span className="text-caption font-mono uppercase tracking-header text-text-muted">
                       Now playing — none
-                    </Text>
+                    </span>
                   ) : (
                     <AudioPlayerNowPlaying selectedTrack={selectedTrack} />
                   )}
                 </div>
                 <AudioPlayerControls />
-              </Group>
-              <Divider />
+              </div>
+              <Separator />
               <AudioPlayer />
-              <Divider />
+              <Separator />
               <div className={styles.tableContainer}>
                 {selectedPlaylistId === undefined ? (
                   <EmptyState
@@ -143,7 +147,7 @@ export default function LibraryView() {
                   <TrackTable playlistId={selectedPlaylistId} />
                 )}
               </div>
-            </Stack>
+            </div>
           </Panel>
         </PanelGroup>
         <StatusBar
@@ -153,7 +157,7 @@ export default function LibraryView() {
               : formatStatNumber(masterPlaylist["Playlist Items"].length)
           }
         />
-      </Stack>
+      </div>
     </div>
   );
 }
@@ -216,13 +220,7 @@ function IconRail({ activeItem, isPlaylistPanelOpen, onItemClick }: IconRailProp
     const isActive =
       activeItem === item.key && (!isPlaylistPanelOpen || item.key === "playlists");
     return (
-      <Tooltip
-        key={item.key}
-        label={item.label}
-        position="right"
-        offset={6}
-        withArrow={false}
-      >
+      <SimpleTooltip key={item.key} label={item.label} side="right" sideOffset={6}>
         <button
           type="button"
           className={classNames(styles.railItem, { [styles.railItemActive]: isActive })}
@@ -233,7 +231,7 @@ function IconRail({ activeItem, isPlaylistPanelOpen, onItemClick }: IconRailProp
           {isActive && <span className={styles.railAccent} />}
           {item.icon}
         </button>
-      </Tooltip>
+      </SimpleTooltip>
     );
   };
 

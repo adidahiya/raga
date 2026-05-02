@@ -154,7 +154,7 @@ export const TOKENS = {
     monoXs: { size: 10, leading: 1.3, weight: 600, family: "mono", tracking: "0.12em" },
   },
   font: {
-    sans: '"Inter", -apple-system, system-ui, sans-serif',
+    sans: 'Archivo, Inter, sans-serif',
     mono: '"JetBrains Mono", "IBM Plex Mono", "SF Mono", Menlo, monospace',
   },
   tracking: {

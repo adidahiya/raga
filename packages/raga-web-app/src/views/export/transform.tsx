@@ -1,4 +1,3 @@
-import { Text } from "@mantine/core";
 import pluralize from "pluralize";
 
 import PlaylistTable from "../../components/playlistTable/playlistTable";
@@ -13,12 +12,12 @@ export function Transform() {
   return (
     <>
       {hasSelectedAnyPlaylists ? (
-        <Text>
+        <span>
           {selectedPlaylistIdsForExport.length}{" "}
           {pluralize("playlist", selectedPlaylistIdsForExport.length)} selected for export
-        </Text>
+        </span>
       ) : (
-        <Text>All playlists will be exported</Text>
+        <span>All playlists will be exported</span>
       )}
       <PlaylistTable
         showHeader={false}

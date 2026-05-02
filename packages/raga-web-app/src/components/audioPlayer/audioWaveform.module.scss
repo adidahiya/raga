@@ -1,18 +1,23 @@
 .container {
-  height: 80px;
   position: relative;
-  background: var(--raga-surface-1);
-}
-
-.progressBar {
-  width: 90%;
+  width: 100%;
+  height: 110px;
+  background: var(--surface-1);
 }
 
 .waveform {
-  height: 80px;
+  width: 100%;
+  height: 100%;
 }
 
 .loadingOverlay {
-  top: 0;
-  z-index: 2; // just above waveform element
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progressBar {
+  width: 220px;
 }

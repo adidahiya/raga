@@ -1,4 +1,5 @@
-import { Box, Button, Divider, Fieldset, FileInput, Stack } from "@mantine/core";
+import { Button, Card, Separator } from "@adahiya/raga-design-system";
+import { FileInput } from "@mantine/core";
 import classNames from "classnames";
 import { useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
@@ -51,24 +52,34 @@ export default function LoadLibraryForm() {
   });
 
   return (
-    <Stack gap="xs" ref={ref}>
+    <div className="flex flex-col gap-2" ref={ref}>
       <FileInput
         className={styles.fileInput}
         placeholder="Select XML file"
         fileInputProps={{ ...XML_INPUT_PROPS, onChange: handleInputChange }}
-        rightSection={<Button size="compact-sm">Browse</Button>}
+        rightSection={<Button size="sm">Browse</Button>}
         rightSectionWidth={70}
       />
-      <Divider orientation="horizontal" label="or" />
-      <Box
+      <DividerWithLabel label="or" />
+      <div
         className={classNames(styles.dropzone, { [styles.active]: isDragActive })}
         {...getRootProps()}
       >
         <input {...getInputProps()} />
         {isDragActive ? <span>Drop XML file here...</span> : <span>Drag and drop XML file</span>}
-      </Box>
+      </div>
       <MaybeRecentlyUsedLibrariesSection formWidth={width} />
-    </Stack>
+    </div>
+  );
+}
+
+function DividerWithLabel({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 text-text-muted">
+      <Separator className="flex-1" />
+      <span className="text-caption">{label}</span>
+      <Separator className="flex-1" />
+    </div>
   );
 }
 
@@ -85,35 +96,44 @@ function MaybeRecentlyUsedLibrariesSection({ formWidth }: { formWidth: number })
 
   return (
     <>
-      <Divider orientation="horizontal" label="or" />
-      <Fieldset className={styles.recentLibrariesForm} legend="Use a recent library">
-        <Stack gap={0} align="center">
+      <DividerWithLabel label="or" />
+      <Card className={`${styles.recentLibrariesForm} p-card-p`}>
+        <div className="flex flex-col gap-1 mb-2">
+          <span className="text-caption font-medium text-text-muted uppercase tracking-label">
+            Use a recent library
+          </span>
+        </div>
+        <div className="flex flex-col items-center gap-0">
           {Array.from(previouslyUsedLibaries).map(({ filePath }) => (
             <Button
               key={filePath}
-              variant="subtle"
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setLibraryInputFilepath(filePath);
               }}
-              leftSection={<IoDocument size={14} />}
               title={filePath}
             >
-              {truncateFilePath(filePath, maxFilePathLength)}
+              <span className="inline-flex items-center gap-2">
+                <IoDocument size={14} />
+                {truncateFilePath(filePath, maxFilePathLength)}
+              </span>
             </Button>
           ))}
-          <Box mt="xs">
+          <div className="mt-2">
             <Button
-              size="compact-sm"
-              color="red"
-              variant="subtle"
+              size="sm"
+              variant="danger"
               onClick={clearPreviouslyUsedLibraries}
-              rightSection={<IoClose size={14} />}
             >
-              Clear all recent libraries
+              <span className="inline-flex items-center gap-2">
+                Clear all recent libraries
+                <IoClose size={14} />
+              </span>
             </Button>
-          </Box>
-        </Stack>
-      </Fieldset>
+          </div>
+        </div>
+      </Card>
     </>
   );
 }
@@ -126,8 +146,8 @@ export function LoadMockLibraryForm() {
   }, [setLibraryInputFilepath]);
 
   return (
-    <Stack gap="xs">
+    <div className="flex flex-col gap-2">
       <Button onClick={handleClick}>Load Mock Library</Button>
-    </Stack>
+    </div>
   );
 }

@@ -1,11 +1,6 @@
 .trackTableContainer {
-  --divider-color: var(--mantine-color-gray-3);
-  --row-hover-color: var(--mantine-color-gray-2);
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    --divider-color: var(--mantine-color-gray-7);
-    --row-hover-color: var(--mantine-color-dark-5);
-  }
+  --divider-color: var(--border-default);
+  --row-hover-color: var(--surface-2);
 }
 
 .trackTable {

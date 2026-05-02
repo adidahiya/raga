@@ -1,7 +1,8 @@
-import { Button, Tooltip } from "@mantine/core";
+import { Button } from "@adahiya/raga-design-system";
 
 import { useOperationCallback } from "../../hooks";
 import { appStore } from "../../store/appStore";
+import SimpleTooltip from "../common/SimpleTooltip";
 import styles from "./trackTable.module.scss";
 
 export interface AnalyzeAllPlaylistTracksButtonProps {
@@ -21,24 +22,22 @@ export default function AnalyzeAllPlaylistTracksButton({
     [analyzePlaylist, playlistId],
   );
   const buttonDisabled = audioFilesServerStatus !== "started";
+  const isAnalyzing = analyzerStatus === "busy";
 
   return (
-    <Tooltip
-      label={buttonDisabled ? "Disconnected from audio files server" : undefined}
-      disabled={!buttonDisabled}
-      position="top"
+    <SimpleTooltip
+      label={buttonDisabled ? "Disconnected from audio files server" : ""}
+      side="top"
     >
       <Button
         className={styles.analyzeAllButton}
-        disabled={buttonDisabled}
-        variant="subtle"
-        size="compact-sm"
-        fullWidth={true}
-        loading={analyzerStatus === "busy"}
+        variant="ghost"
+        size="sm"
+        disabled={buttonDisabled || isAnalyzing}
         onClick={handleAnalyzeClick}
       >
-        Analyze all
+        {isAnalyzing ? "Analyzing…" : "Analyze all"}
       </Button>
-    </Tooltip>
+    </SimpleTooltip>
   );
 }

@@ -2,11 +2,11 @@ $width-standard: 300px;
 $width-wide: 500px;
 
 .dropzone {
-  --outline-color: var(--mantine-color-gray-5);
-  --background-color: var(--mantine-color-gray-0);
+  --outline-color: var(--border-default);
+  --background-color: var(--surface-2);
 
   align-items: center;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--radius-md);
   border: dashed 1px var(--outline-color);
   display: flex;
   justify-content: center;
@@ -14,15 +14,7 @@ $width-wide: 500px;
   background-color: var(--background-color);
 
   &.active {
-    --background-color: var(--mantine-primary-color-light-hover);
-  }
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    --outline-color: var(--mantine-color-gray-7);
-    --background-color: var(--mantine-color-gray-8);
-
-    &.active {
-      --background-color: var(--mantine-primary-color-light-hover);
-    }
+    --background-color: color-mix(in srgb, var(--accent-500) 10%, transparent);
+    --outline-color: var(--accent-500);
   }
 }

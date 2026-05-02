@@ -1,4 +1,4 @@
-import { Progress, useMantineTheme } from "@mantine/core";
+import { Progress } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import WaveSurfer from "wavesurfer.js";
@@ -10,6 +10,17 @@ import styles from "./audioWaveform.module.scss";
 
 export interface AudioWaveformProps {
   mediaURL: string | undefined;
+}
+
+const ACCENT_TOKEN = "--accent-500";
+const FALLBACK_WAVE_COLOR = "#5b6cff";
+
+function readAccentColor(): string {
+  if (typeof window === "undefined") return FALLBACK_WAVE_COLOR;
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(ACCENT_TOKEN)
+    .trim();
+  return value !== "" ? value : FALLBACK_WAVE_COLOR;
 }
 
 /** It's recommended to lazy-load this component to defer loading the wavesurfer.js library. */
@@ -26,8 +37,6 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
     setFalse: resetWaveformReady,
   } = useBoolean(false);
 
-  const theme = useMantineTheme();
-
   // initialize a new WaveSurfer instance when the selected track or audio server status changes
   useEffect(() => {
     if (isAudioFilesServerReady && waveformElement.current != null && mediaURL != undefined) {
@@ -36,7 +45,7 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
         container: waveformElement.current,
         height,
         url: mediaURL,
-        waveColor: theme.colors.blue[5],
+        waveColor: readAccentColor(),
       });
       setWaveSurfer(inst);
 
@@ -56,7 +65,6 @@ export default function AudioWaveform({ mediaURL }: AudioWaveformProps) {
     resetWaveformReady,
     setWaveSurfer,
     waveformElement,
-    theme,
   ]);
 
   const showLoadingOverlay = audioFilesConverterIsBusy || !isWaveformReady;

@@ -1,4 +1,4 @@
-import { Center, Stack, Text, Title } from "@mantine/core";
+import classNames from "classnames";
 
 interface EmptyStateProps {
   className?: string;
@@ -16,13 +16,22 @@ export default function EmptyState({
   children,
 }: EmptyStateProps) {
   return (
-    <Center className={className} w="100%" h="100%">
-      <Stack gap={16} align="center" py={8}>
+    <div
+      className={classNames(
+        "flex h-full w-full items-center justify-center",
+        className,
+      )}
+    >
+      <div className="flex flex-col items-center gap-4 py-2">
         {icon}
-        {title && <Title order={4}>{title}</Title>}
-        {description && <Text>{description}</Text>}
+        {title !== undefined && (
+          <h4 className="m-0 text-h2 font-medium text-text-primary">{title}</h4>
+        )}
+        {description !== undefined && (
+          <span className="text-text-secondary">{description}</span>
+        )}
         {children}
-      </Stack>
-    </Center>
+      </div>
+    </div>
   );
 }

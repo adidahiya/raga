@@ -1,4 +1,5 @@
-import { Button, Group, Menu, MenuDivider, Text } from "@mantine/core";
+import { Button } from "@adahiya/raga-design-system";
+import { Menu, MenuDivider } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useCallback, useRef } from "react";
 import {
@@ -60,7 +61,7 @@ export default function LibraryControls() {
               icon: <IoCheckmark size={16} />,
               text: "Confirm reload",
               onClick: confirmedLoadFromDisk,
-              color: "yellow",
+              variant: "warm",
             }}
           />
         ),
@@ -87,7 +88,7 @@ export default function LibraryControls() {
               icon: <IoCheckmark size={16} />,
               text: "Confirm unload",
               onClick: unloadSwinsianLibrary,
-              color: "yellow",
+              variant: "warm",
             }}
           />
         ),
@@ -101,40 +102,36 @@ export default function LibraryControls() {
   }, [libraryWriteState, unloadSwinsianLibrary]);
 
   return (
-    <Group gap="xs">
-      <Text size="sm">Library</Text>
-      <Group gap="sm">
-        <Menu position="bottom" withArrow={true} arrowSize={12} offset={{ mainAxis: 10 }}>
-          <Menu.Target>
-            <Button
-              variant="subtle"
-              size="compact-sm"
-              leftSection={isLibraryLoaded ? <IoCheckmark size={14} /> : <IoWarning size={14} />}
-              rightSection={<IoChevronDown size={14} />}
-              color={isLibraryLoaded ? "green" : "blue"}
-            >
+    <div className="flex items-center gap-2">
+      <span className="text-body-sm">Library</span>
+      <Menu position="bottom" withArrow={true} arrowSize={12} offset={{ mainAxis: 10 }}>
+        <Menu.Target>
+          <Button variant="ghost" size="sm">
+            <span className="inline-flex items-center gap-2">
+              {isLibraryLoaded ? <IoCheckmark size={14} /> : <IoWarning size={14} />}
               {isLibraryLoaded ? "Loaded" : "Not loaded"}
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu>
-              <Menu.Label>
-                <LibraryLastModifiedText />
-              </Menu.Label>
-              <MenuDivider />
-              <Menu.Item leftSection={<IoArrowRedo size={14} />} onClick={handleLoad}>
-                {`${isLibraryLoaded ? "Reload" : "Load"} library`}
-              </Menu.Item>
-              <Menu.Item leftSection={<IoSave size={14} />} onClick={handleLoadFromDisk}>
-                Reload from disk
-              </Menu.Item>
-              <Menu.Item leftSection={<IoFolder size={14} />} onClick={handleSelectNewLibrary}>
-                Select new library…
-              </Menu.Item>
-            </Menu>
-          </Menu.Dropdown>
-        </Menu>
-      </Group>
-    </Group>
+              <IoChevronDown size={14} />
+            </span>
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu>
+            <Menu.Label>
+              <LibraryLastModifiedText />
+            </Menu.Label>
+            <MenuDivider />
+            <Menu.Item leftSection={<IoArrowRedo size={14} />} onClick={handleLoad}>
+              {`${isLibraryLoaded ? "Reload" : "Load"} library`}
+            </Menu.Item>
+            <Menu.Item leftSection={<IoSave size={14} />} onClick={handleLoadFromDisk}>
+              Reload from disk
+            </Menu.Item>
+            <Menu.Item leftSection={<IoFolder size={14} />} onClick={handleSelectNewLibrary}>
+              Select new library…
+            </Menu.Item>
+          </Menu>
+        </Menu.Dropdown>
+      </Menu>
+    </div>
   );
 }

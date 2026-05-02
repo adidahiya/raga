@@ -1,5 +1,5 @@
+import { Separator } from "@adahiya/raga-design-system";
 import type { PlaylistDefinition } from "@adahiya/raga-types";
-import { Box, Divider, type MantineStyleProps, Text } from "@mantine/core";
 import { memo, useCallback, useMemo } from "react";
 import { Roarr as log } from "roarr";
 
@@ -12,7 +12,7 @@ import styles from "./playlistTable.module.scss";
 // COMPONENTS
 // -------------------------------------------------------------------------------------------------
 
-interface PlaylistTableProps extends MantineStyleProps {
+interface PlaylistTableProps {
   /** @default true */
   showHeader?: boolean;
 
@@ -21,13 +21,15 @@ interface PlaylistTableProps extends MantineStyleProps {
 
   /** Callback invoked when a playlist is selected or deselected. */
   onSelect?: (playlistIds: string[]) => void;
+
+  className?: string;
 }
 
 function PlaylistTable({
   showHeader = true,
   selectionMode = "none",
   onSelect,
-  ...props
+  className,
 }: PlaylistTableProps) {
   const numTotalPlaylists = Object.keys(appStore.use.libraryPlaylists() ?? {}).length;
   const playlistDefNodes = usePlaylistTreeNodes();
@@ -58,20 +60,20 @@ function PlaylistTable({
   );
 
   return (
-    <Box className={styles.playlistTableContainer} {...props}>
+    <div className={`${styles.playlistTableContainer}${className ? ` ${className}` : ""}`}>
       {showHeader && (
         <>
           <div className={styles.header}>
             <div className={styles.headerContent}>
               <span>
                 Playlists{" "}
-                <Text component="span" c="dimmed" size="sm">
+                <span className="text-text-muted text-body-sm">
                   ({formatStatNumber(numTotalPlaylists)})
-                </Text>
+                </span>
               </span>
             </div>
           </div>
-          <Divider orientation="horizontal" />
+          <Separator />
         </>
       )}
       <div className={styles.body}>
@@ -82,7 +84,7 @@ function PlaylistTable({
           onSelect={handleSelect}
         />
       </div>
-    </Box>
+    </div>
   );
 }
 

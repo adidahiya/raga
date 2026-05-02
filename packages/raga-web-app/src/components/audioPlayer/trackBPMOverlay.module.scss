@@ -1,7 +1,6 @@
 .bpmOverlay {
-  --mantine-color-body: color-mix(in srgb, var(--mantine-color-white) 80%, transparent);
-
   align-items: center;
+  background: color-mix(in srgb, var(--surface-1) 85%, transparent);
   border-bottom-left-radius: 3px;
   display: inline-flex;
   gap: 5px;
@@ -11,22 +10,18 @@
   right: 0;
   top: 0;
   z-index: 2; // just above the waveform
-  font-family: var(--mantine-font-family-monospace);
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    --mantine-color-body: color-mix(in srgb, #0a0a0a 85%, transparent);
-    border: 1px solid var(--raga-border);
-    border-top: none;
-    border-right: none;
-  }
+  font-family: var(--font-mono);
+  border: 1px solid var(--border-default);
+  border-top: none;
+  border-right: none;
 }
 
 .bpmValue {
   width: 40px;
-  font-family: var(--mantine-font-family-monospace);
+  font-family: var(--font-mono);
 
   &.adjusted {
-    color: var(--raga-accent);
+    color: var(--accent-500);
   }
 }
 

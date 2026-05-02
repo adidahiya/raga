@@ -1,5 +1,4 @@
 import type { TrackDefinition } from "@adahiya/raga-types";
-import { Group, Text } from "@mantine/core";
 import NumberFlow from "@number-flow/react";
 import { useMemo } from "react";
 
@@ -17,26 +16,23 @@ export function AudioPlayerNowPlaying({ selectedTrack }: { selectedTrack: TrackD
   const formattedDuration = useMemo(() => formatAudioDuration(duration), [duration]);
 
   return (
-    <Group gap={20} align="center">
-      <Text component="span" className={styles.nowPlaying} title={selectedTrack.Artist}>
+    <div className="flex items-center gap-5">
+      <span className={styles.nowPlaying} title={selectedTrack.Artist}>
         <strong>{selectedTrack.Artist}</strong>
-        <Text component="span" c="dimmed">
-          {" "}
-          &ndash;{" "}
-        </Text>
+        <span className="text-text-muted"> &ndash; </span>
         <strong>{selectedTrack.Name}</strong>
-      </Text>
+      </span>
       <div>
         <TrackRatingStars trackID={selectedTrack["Track ID"]} rating={selectedTrack.Rating} />
       </div>
-      <Text c="dimmed" className={styles.timeProgress}>
+      <span className={`${styles.timeProgress} text-text-muted`}>
         <NumberFlow value={minutes} format={{ minimumIntegerDigits: 1 }} locales="en-US" />
         {":"}
         <NumberFlow value={seconds} format={{ minimumIntegerDigits: 2 }} locales="en-US" />
         {" / "}
         {formattedDuration}
-      </Text>
-    </Group>
+      </span>
+    </div>
   );
 }
 AudioPlayerNowPlaying.displayName = "AudioPlayerNowPlaying";

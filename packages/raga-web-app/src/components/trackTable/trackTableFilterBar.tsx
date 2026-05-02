@@ -1,4 +1,5 @@
-import { ActionIcon, Collapse, Divider, Group, Text, TextInput } from "@mantine/core";
+import { IconButton, Input, Separator } from "@adahiya/raga-design-system";
+import { Collapse } from "@mantine/core";
 import { memo, useCallback, useEffect, useRef } from "react";
 import { IoChevronUp } from "react-icons/io5";
 
@@ -38,24 +39,26 @@ export const TrackTableFilterBar = memo(
 
     return (
       <Collapse in={isVisible}>
-        <Group gap={8} justify="flex-end" py={4} px={8}>
-          <Text size="sm">Filter table</Text>
-          <TextInput
-            className={styles.filterInput}
-            w={300}
-            size="compact-sm"
-            radius="xl"
+        <div className="flex items-center justify-end gap-2 px-2 py-1">
+          <span className="text-body-sm">Filter table</span>
+          <Input
+            className={`${styles.filterInput} w-[300px] rounded-pill`}
             ref={inputElement}
             type="search"
             placeholder="Search track names, artists, albums..."
             value={query}
             onChange={handleInputChange}
           />
-          <ActionIcon onClick={hideTableFilterBar} size="compact-sm" color="gray" variant="subtle">
+          <IconButton
+            variant="ghost"
+            size="sm"
+            aria-label="Hide filter bar"
+            onClick={hideTableFilterBar}
+          >
             <IoChevronUp />
-          </ActionIcon>
-        </Group>
-        <Divider orientation="horizontal" />
+          </IconButton>
+        </div>
+        <Separator />
       </Collapse>
     );
   },

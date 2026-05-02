@@ -18,8 +18,14 @@ import {
   type ProvideEditorCallback,
   type Theme as GridTheme,
 } from "@glideapps/glide-data-grid";
+// Mantine theme + color-scheme hooks are retained ONLY to feed the
+// glide-data-grid canvas renderer, which paints custom rating stars and badge
+// pills directly to a 2D context and therefore needs concrete color values
+// outside of CSS. The visual chrome around the grid (filter bar, empty state,
+// container) uses the design system + Tailwind utilities like the rest of
+// the app.
 import type { MantineColorScheme, MantineTheme } from "@mantine/core";
-import { Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
+import { useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import classNames from "classnames";
 import { run } from "effection";
 import { unique } from "radash";
@@ -649,13 +655,9 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
   );
 
   return (
-    <Stack
-      w="100%"
-      h="100%"
-      gap={0}
-      className={styles.trackTableContainer}
+    <div
+      className={`${styles.trackTableContainer} flex h-full w-full flex-col gap-0`}
       ref={containerElement}
-      // onContextMenu={handleContextMenu}
     >
       <TrackTableFilterBar
         query={filterQuery}
@@ -663,7 +665,7 @@ const TrackTable = memo(({ playlistId }: TrackTableProps) => {
         onQueryChange={setFilterQuery}
       />
       {numTracksInPlaylist > 0 ? table : <TrackTableEmpty playlistId={playlistId} />}
-    </Stack>
+    </div>
   );
 });
 TrackTable.displayName = "TrackTable";
@@ -683,12 +685,12 @@ const TrackTableEmpty = memo(({ playlistId }: TrackTableProps) => {
         <EmptyState title="No playlist selected" />
       ) : (
         <EmptyState title={`No tracks found in playlist "${playlistDef.Name}"`}>
-          <Text>
+          <span>
             <em>
               Raga does not currently support playlist editing. You may add tracks to this playlist
               in Swinsian and re-import your library.
             </em>
-          </Text>
+          </span>
         </EmptyState>
       )}
     </div>

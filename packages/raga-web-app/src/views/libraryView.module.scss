@@ -1,7 +1,7 @@
 .library {
   width: 100%;
   height: 100%;
-  background: var(--raga-surface-1);
+  background: var(--surface-1);
   display: flex;
   overflow: hidden;
 }
@@ -12,8 +12,8 @@
 }
 
 .sidebarPanel {
-  background: var(--raga-surface-1);
-  border-right: 1px solid var(--raga-border);
+  background: var(--surface-1);
+  border-right: 1px solid var(--border-default);
 }
 
 .sidebarLayout {
@@ -31,7 +31,7 @@
   align-items: center;
   padding: 12px 0;
   gap: 8px;
-  border-right: 1px solid var(--raga-border);
+  border-right: 1px solid var(--border-default);
 }
 
 .railSection {
@@ -54,29 +54,29 @@
   justify-content: center;
   background: transparent;
   border: none;
-  color: var(--raga-text-dim);
+  color: var(--text-disabled);
   cursor: pointer;
   transition:
     color 120ms ease,
     background 120ms ease;
 
   &:hover {
-    color: var(--raga-text-bright);
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+    background: var(--overlay-white-subtle);
   }
 }
 
-[data-mantine-color-scheme="light"] .railItem:hover {
-  background: rgba(0, 0, 0, 0.04);
+[data-theme="light"] .railItem:hover {
+  background: var(--surface-3);
 }
 
 .railItemActive {
-  color: var(--raga-accent);
-  background: var(--raga-accent-soft);
+  color: var(--accent-500);
+  background: color-mix(in srgb, var(--accent-500) 10%, transparent);
 
   &:hover {
-    background: var(--raga-accent-soft);
-    color: var(--raga-accent);
+    background: color-mix(in srgb, var(--accent-500) 10%, transparent);
+    color: var(--accent-500);
   }
 }
 
@@ -86,7 +86,7 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background: var(--raga-accent);
+  background: var(--accent-500);
 }
 
 .playlistPanel {
@@ -102,7 +102,7 @@
 }
 
 .playerBar {
-  background: var(--raga-surface-1);
+  background: var(--surface-1);
   height: 44px;
 }
 

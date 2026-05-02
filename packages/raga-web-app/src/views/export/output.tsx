@@ -1,4 +1,5 @@
-import { Button, FileInput } from "@mantine/core";
+import { Button } from "@adahiya/raga-design-system";
+import { FileInput } from "@mantine/core";
 import React, { useCallback, useRef, useState } from "react";
 import { IoCheckmark, IoSave } from "react-icons/io5";
 
@@ -42,6 +43,7 @@ export function Output() {
     },
     [writeModifiedLibrary],
   );
+  const isWriting = libraryWriteState === "busy";
 
   return (
     <>
@@ -49,21 +51,23 @@ export function Output() {
         label="Location of the Music.app/Rekordbox compatible XML file"
         placeholder={libraryOutputFilepath}
         fileInputProps={{ onChange: handleOutputFilepathInputChange }}
-        rightSection={<Button size="compact-sm">Browse</Button>}
+        rightSection={<Button size="sm">Browse</Button>}
         rightSectionWidth={70}
       />
 
       {isExportComplete ? (
-        <Button leftSection={<IoCheckmark size={16} />} color="green" disabled={true}>
-          Export complete
+        <Button variant="secondary" disabled={true}>
+          <span className="inline-flex items-center gap-2">
+            <IoCheckmark size={16} />
+            Export complete
+          </span>
         </Button>
       ) : (
-        <Button
-          leftSection={<IoSave size={16} />}
-          onClick={handleWriteModifiedLibrary}
-          loading={libraryWriteState === "busy"}
-        >
-          Export library for Rekordbox
+        <Button onClick={handleWriteModifiedLibrary} disabled={isWriting}>
+          <span className="inline-flex items-center gap-2">
+            <IoSave size={16} />
+            {isWriting ? "Exporting…" : "Export library for Rekordbox"}
+          </span>
         </Button>
       )}
     </>

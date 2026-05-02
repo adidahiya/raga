@@ -1,5 +1,3 @@
-import { Group, Text } from "@mantine/core";
-
 import { appStore } from "../../store/appStore";
 import AudioFilesServerControls from "./audioFilesServerControls";
 import styles from "./statusBar.module.scss";
@@ -13,12 +11,10 @@ export default function StatusBar({ totalTracks }: StatusBarProps) {
 
   return (
     <footer className={styles.statusBar}>
-      <Group gap="md" wrap="nowrap" className={styles.statusGroup}>
+      <div className={`flex items-center gap-4 flex-nowrap ${styles.statusGroup}`}>
         <span className={styles.statusItem}>
           <span className={styles.dot} data-state="info" />
-          <Text component="span" className={styles.statusText}>
-            Library: {totalTracks ?? "—"}
-          </Text>
+          <span className={styles.statusText}>Library: {totalTracks ?? "—"}</span>
         </span>
         <span className={styles.divider} />
         <span className={styles.statusItem}>
@@ -26,29 +22,29 @@ export default function StatusBar({ totalTracks }: StatusBarProps) {
             className={styles.dot}
             data-state={analyzerStatus === "busy" ? "busy" : "ok"}
           />
-          <Text component="span" className={styles.statusText}>
+          <span className={styles.statusText}>
             Analyzer: {analyzerStatus === "busy" ? "busy" : "idle"}
-          </Text>
+          </span>
         </span>
         <span className={styles.divider} />
         <div className={styles.serverControls}>
           <AudioFilesServerControls />
         </div>
-      </Group>
+      </div>
 
       {/* Shortcut chips reflect actually-registered hotkeys:
           - mod+f / mod+l from useTrackTableHotkeys
           - Space + arrows from useAudioPlayerHotkeys
           - mod+i opens the global hotkeys dialog
           - mod+k opens this command palette */}
-      <Group gap="md" wrap="nowrap" className={styles.statusGroupRight}>
+      <div className={`flex items-center gap-4 flex-nowrap ${styles.statusGroupRight}`}>
         <Hotkey label="play" keys={["Space"]} />
         <Hotkey label="seek" keys={["←", "→"]} />
         <Hotkey label="filter" keys={["⌘F"]} />
         <Hotkey label="locate" keys={["⌘L"]} />
         <Hotkey label="help" keys={["⌘I"]} />
         <Hotkey label="palette" keys={["⌘K"]} accent />
-      </Group>
+      </div>
     </footer>
   );
 }

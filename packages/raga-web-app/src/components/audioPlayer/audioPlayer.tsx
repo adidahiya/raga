@@ -1,4 +1,4 @@
-import { Box, Button, Center, Skeleton } from "@mantine/core";
+import { Button } from "@adahiya/raga-design-system";
 import { lazy, Suspense } from "react";
 import { IoPlay } from "react-icons/io5";
 
@@ -20,29 +20,31 @@ export function AudioPlayer() {
 
   if (!isAudioFilesServerReady) {
     return (
-      <Center bd={{ base: 1, dark: 0 }} h={90}>
+      <div className="flex h-[90px] items-center justify-center">
         <EmptyState description="Audio files server is not running">
           <StartAudioFilesServerButton />
         </EmptyState>
-      </Center>
+      </div>
     );
   }
 
   if (!hasSelectedTrack) {
     return (
-      <Center bd={{ base: 1, dark: 0 }} h={110}>
+      <div className="flex h-[110px] items-center justify-center">
         <EmptyState description="No track selected" />
-      </Center>
+      </div>
     );
   }
 
   return (
-    <Box className={styles.root}>
-      <Suspense fallback={<Skeleton width="100%" height="100%" />}>
+    <div className={styles.root}>
+      <Suspense
+        fallback={<div className="h-full w-full animate-pulse bg-surface-3" />}
+      >
         <AudioWaveform mediaURL={selectedFileURL} />
       </Suspense>
       <TrackBPMOverlay trackDef={selectedTrack} />
-    </Box>
+    </div>
   );
 }
 AudioPlayer.displayName = "AudioPlayer";
@@ -52,8 +54,11 @@ function StartAudioFilesServerButton() {
   const startAudioFilesServer = appStore.use.startAudioFilesServer();
 
   return (
-    <Button variant="outline" leftSection={<IoPlay />} onClick={startAudioFilesServer}>
-      Start serving files from {audioFilesRootFolder}
+    <Button variant="secondary" onClick={startAudioFilesServer}>
+      <span className="inline-flex items-center gap-2">
+        <IoPlay />
+        Start serving files from {audioFilesRootFolder}
+      </span>
     </Button>
   );
 }

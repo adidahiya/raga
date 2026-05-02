@@ -2,9 +2,11 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/spotlight/styles.css";
 import "mantine-contextmenu/styles.layer.css";
+import "@adahiya/raga-design-system/styles/global.css";
 import "./common/mantine-overrides.scss";
 
-import { createTheme, MantineProvider, Switch } from "@mantine/core";
+import { TooltipProvider } from "@adahiya/raga-design-system";
+import { createTheme, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import classNames from "classnames";
 import { ContextMenuProvider } from "mantine-contextmenu";
@@ -32,39 +34,29 @@ function isKitchenSinkPath(): boolean {
   return typeof window !== "undefined" && window.location.pathname === KITCHEN_SINK_PATH;
 }
 
-const MONO_FONT_FAMILY =
-  "'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace";
-
+// Minimal Mantine theme: focus ring is the only knob the held-over Mantine
+// surfaces (Modal, Menu, Spotlight, Notifications, mantine-contextmenu,
+// FileInput, Rating, Progress, Loader, SegmentedControl, Collapse) care
+// about — every other visual is themed via design-system tokens (see
+// `./common/mantine-overrides.scss` and the DS `data-theme` attribute on
+// <html>). We do not duplicate fontFamily / radius / fontSizes here; the DS
+// tokens own those.
 const theme = createTheme({
-  fontFamily: "Archivo, Inter, sans-serif",
-  fontFamilyMonospace: MONO_FONT_FAMILY,
-  defaultRadius: "sm",
   focusRing: "never",
-  primaryColor: "blue",
-  fontSizes: {
-    xs: "10px",
-    sm: "12px",
-    md: "13px",
-    lg: "15px",
-  },
-  radius: {
-    xs: "1px",
-    sm: "2px",
-    md: "3px",
-    lg: "6px",
-  },
-  primaryShade: { light: 6, dark: 5 },
-  components: {
-    Switch: Switch.extend({
-      defaultProps: {
-        withThumbIndicator: false,
-      },
-    }),
-  },
 });
 
 interface AppProps {
   useMockData?: boolean;
+}
+
+function resolveColorScheme(preference: "auto" | "light" | "dark"): "light" | "dark" {
+  if (preference !== "auto") {
+    return preference;
+  }
+  if (typeof window === "undefined") {
+    return "dark";
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export default function App({ useMockData = false }: AppProps) {
@@ -73,10 +65,39 @@ export default function App({ useMockData = false }: AppProps) {
   const workspaceMode = appStore.use.workspaceMode();
   const setUseMockData = appStore.use.setUseMockData();
 
+  const [resolvedScheme, setResolvedScheme] = React.useState<"light" | "dark">(() =>
+    resolveColorScheme(userThemePreference),
+  );
+
   // Set mock data configuration on mount
   React.useEffect(() => {
     setUseMockData(useMockData);
   }, [useMockData, setUseMockData]);
+
+  // Single source of truth for the resolved color scheme. Both the design
+  // system (`<html data-theme>`) and Mantine (`forceColorScheme` below) read
+  // from the same value so DS-styled chrome and held-over Mantine surfaces
+  // can never disagree about which theme is active. Resolves "auto" against
+  // `prefers-color-scheme` and listens for system changes.
+  React.useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const apply = () => {
+      const next = resolveColorScheme(userThemePreference);
+      setResolvedScheme(next);
+      document.documentElement.dataset.theme = next;
+    };
+
+    apply();
+
+    if (userThemePreference === "auto") {
+      mq.addEventListener("change", apply);
+      return () => {
+        mq.removeEventListener("change", apply);
+      };
+    }
+    return undefined;
+  }, [userThemePreference]);
 
   // Dev-only kitchen sink takeover. In production builds, KitchenSinkRoute is
   // null and this branch is dead code, so the route falls through to the
@@ -89,28 +110,27 @@ export default function App({ useMockData = false }: AppProps) {
     );
   }
 
-  // Default the user's effective scheme to "dark" so the docked CommandBar look applies
-  const effectiveScheme = userThemePreference === "auto" ? "dark" : userThemePreference;
-
   return (
-    <MantineProvider theme={theme} defaultColorScheme={effectiveScheme}>
-      <Notifications />
-      <ContextMenuProvider>
-        <div
-          className={classNames(styles.app, {
-            [styles.fontWeightLight]: fontWeight === "light",
-            [styles.fontWeightRegular]: fontWeight === "regular",
-          })}
-        >
-          <AppChrome />
-          <LibraryLoader>
-            {workspaceMode === "tracks" ? <LibraryView /> : <ExportView />}
-          </LibraryLoader>
-          <GlobalHotkeysDialog />
-          <CommandPalette />
-          {import.meta.env.DEV && <DesignSystemLink />}
-        </div>
-      </ContextMenuProvider>
+    <MantineProvider theme={theme} forceColorScheme={resolvedScheme}>
+      <TooltipProvider delayDuration={300}>
+        <Notifications />
+        <ContextMenuProvider>
+          <div
+            className={classNames(styles.app, {
+              [styles.fontWeightLight]: fontWeight === "light",
+              [styles.fontWeightRegular]: fontWeight === "regular",
+            })}
+          >
+            <AppChrome />
+            <LibraryLoader>
+              {workspaceMode === "tracks" ? <LibraryView /> : <ExportView />}
+            </LibraryLoader>
+            <GlobalHotkeysDialog />
+            <CommandPalette />
+            {import.meta.env.DEV && <DesignSystemLink />}
+          </div>
+        </ContextMenuProvider>
+      </TooltipProvider>
     </MantineProvider>
   );
 }

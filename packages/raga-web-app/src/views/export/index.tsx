@@ -1,4 +1,5 @@
-import { Group, Paper, type PaperProps, Stack, Text } from "@mantine/core";
+import { Card } from "@adahiya/raga-design-system";
+import classNames from "classnames";
 import React from "react";
 
 import { formatStatNumber } from "../../common/format";
@@ -12,15 +13,12 @@ import { Transform } from "./transform";
 export default function ExportView() {
   const masterPlaylist = useMasterPlaylist();
   return (
-    <Stack gap={0} h="100%">
-      <Group
-        w="100%"
-        gap={5}
-        align="start"
-        justify="flex-start"
-        className={styles.export}
-        wrap="nowrap"
-        style={{ flex: "1 1 auto", minHeight: 0 }}
+    <div className="flex h-full min-h-0 flex-col gap-0">
+      <div
+        className={classNames(
+          "flex w-full min-h-0 flex-1 items-start justify-start flex-nowrap gap-1",
+          styles.export,
+        )}
       >
         <ExportColumn title="Input library">
           <Input />
@@ -33,7 +31,7 @@ export default function ExportView() {
         <ExportColumn title="Export target">
           <Output />
         </ExportColumn>
-      </Group>
+      </div>
       <StatusBar
         totalTracks={
           masterPlaylist === undefined
@@ -41,23 +39,23 @@ export default function ExportView() {
             : formatStatNumber(masterPlaylist["Playlist Items"].length)
         }
       />
-    </Stack>
+    </div>
   );
 }
 ExportView.displayName = "ExportView";
 
-interface ExportColumnProps extends PaperProps {
+interface ExportColumnProps {
   children: React.ReactNode;
   title?: React.ReactNode;
 }
 
-function ExportColumn({ children, title, ...props }: ExportColumnProps) {
+function ExportColumn({ children, title }: ExportColumnProps) {
   return (
-    <Paper shadow="sm" withBorder radius="sm" className={styles.exportColumn} {...props}>
-      <Stack h="100%">
-        {title && <Text>{title}</Text>}
+    <Card className={classNames("p-card-p shadow-card-elevated", styles.exportColumn)}>
+      <div className="flex h-full flex-col gap-3">
+        {title !== undefined && <span>{title}</span>}
         {children}
-      </Stack>
-    </Paper>
+      </div>
+    </Card>
   );
 }

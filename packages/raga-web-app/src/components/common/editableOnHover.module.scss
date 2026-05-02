@@ -5,7 +5,7 @@
 .editInput {
   display: none;
   --input-height-compact-sm: 24px;
-  --mantine-font-size-sm: 14px;
+  font-size: var(--type-body-sm-size);
 }
 
 .editButtonContainer {
@@ -24,15 +24,10 @@
   right: 0;
   position: absolute;
 
-  --gradient-start: color-mix(in srgb, var(--mantine-color-white) 0%, transparent);
-  --gradient-end: var(--mantine-color-white);
+  --gradient-start: color-mix(in srgb, var(--surface-1) 0%, transparent);
+  --gradient-end: var(--surface-1);
 
   background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 80%);
-
-  :global([data-mantine-color-scheme="dark"]) & {
-    --gradient-start: color-mix(in srgb, var(--mantine-color-dark-8) 0%, transparent);
-    --gradient-end: color-mix(in srgb, var(--mantine-color-dark-8) 100%, transparent);
-  }
 }
 
 .editButton {

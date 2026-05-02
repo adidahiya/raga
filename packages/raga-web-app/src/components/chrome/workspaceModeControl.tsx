@@ -1,4 +1,4 @@
-import { Group, SegmentedControl } from "@mantine/core";
+import { SegmentedControl } from "@mantine/core";
 
 import { appStore } from "../../store/appStore";
 
@@ -12,7 +12,7 @@ export default function WorkspaceModeControl() {
   const setWorkspaceMode = appStore.use.setWorkspaceMode();
 
   return (
-    <Group gap="xs" align="center">
+    <div className="flex items-center gap-2">
       <SegmentedControl
         size="xs"
         value={workspaceMode}
@@ -24,7 +24,7 @@ export default function WorkspaceModeControl() {
           { value: "export", label: "Export" },
         ]}
       />
-    </Group>
+    </div>
   );
 }
 WorkspaceModeControl.displayName = "WorkspaceModeControl";

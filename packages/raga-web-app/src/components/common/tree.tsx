@@ -1,10 +1,7 @@
+import { Checkbox, IconButton } from "@adahiya/raga-design-system";
 import {
-  ActionIcon,
-  Checkbox,
   getTreeExpandedState,
-  Group,
   type RenderTreeNodePayload,
-  Text,
   Tree,
   type TreeNodeData,
   useTree,
@@ -121,12 +118,12 @@ function ControlledTree<T extends object>({
   }, [checkedState, nodes, onSelect, selectionMode]);
 
   // Memoized event handlers to prevent re-renders
-  const handleCheckboxClick = useCallback(
-    (nodeValue: string, checked: boolean) => {
-      if (checked) {
-        tree.uncheckNode(nodeValue);
-      } else {
+  const handleCheckboxChange = useCallback(
+    (nodeValue: string, nextChecked: boolean) => {
+      if (nextChecked) {
         tree.checkNode(nodeValue);
+      } else {
+        tree.uncheckNode(nodeValue);
       }
     },
     [tree],
@@ -163,12 +160,12 @@ function ControlledTree<T extends object>({
     [selectionMode, tree, nodes, onSelect],
   );
 
-  const handleSelectAllClick = useCallback(
-    (allChecked: boolean) => {
-      if (allChecked) {
-        tree.uncheckAllNodes();
-      } else {
+  const handleSelectAllChange = useCallback(
+    (nextChecked: boolean) => {
+      if (nextChecked) {
         tree.checkAllNodes();
+      } else {
+        tree.uncheckAllNodes();
       }
     },
     [tree],
@@ -193,28 +190,35 @@ function ControlledTree<T extends object>({
           }}
         >
           {selectionMode === "multiple" && (
-            <Checkbox.Indicator
-              className={classNames(styles.checkbox, { [styles.filled]: checked || indeterminate })}
-              checked={checked}
-              indeterminate={indeterminate}
-              onClick={() => {
-                handleCheckboxClick(node.value, checked);
+            <Checkbox
+              className={classNames(styles.checkbox, {
+                [styles.filled]: checked || indeterminate,
+              })}
+              checked={indeterminate ? "indeterminate" : checked}
+              onCheckedChange={(next) => {
+                // Radix CheckedState is boolean | "indeterminate"; the tree
+                // treats "indeterminate" as still-checked so coerce to bool.
+                handleCheckboxChange(node.value, next === true);
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
               }}
             />
           )}
 
           {hasChildren && (
-            <ActionIcon
-              size="compact-sm"
-              ml={2}
-              color="gray"
-              variant="subtle"
-              onClick={() => {
+            <IconButton
+              variant="ghost"
+              size="sm"
+              aria-label={expanded ? "Collapse" : "Expand"}
+              className="ml-0.5"
+              onClick={(event) => {
+                event.stopPropagation();
                 handleExpandClick(node.value, expanded);
               }}
             >
               {expanded ? <IoChevronDown /> : <IoChevronForward />}
-            </ActionIcon>
+            </IconButton>
           )}
 
           <div className={styles.labelContainer}>
@@ -223,7 +227,7 @@ function ControlledTree<T extends object>({
         </div>
       );
     },
-    [selectionMode, tree, handleCheckboxClick, handleExpandClick, handleSingleSelection],
+    [selectionMode, tree, handleCheckboxChange, handleExpandClick, handleSingleSelection],
   );
 
   // Update tree state controlled selection changes
@@ -241,19 +245,20 @@ function ControlledTree<T extends object>({
   return (
     <>
       {selectionMode === "multiple" && (
-        <Group gap={5} className={classNames(styles.node)}>
-          <Checkbox.Indicator
+        <div className={classNames("flex items-center gap-1.5", styles.node)}>
+          <Checkbox
             className={classNames(styles.checkbox, { [styles.filled]: someNodesChecked })}
-            checked={allNodesChecked}
-            indeterminate={!allNodesChecked && someNodesChecked}
-            onClick={() => {
-              handleSelectAllClick(allNodesChecked);
+            checked={
+              !allNodesChecked && someNodesChecked
+                ? "indeterminate"
+                : allNodesChecked
+            }
+            onCheckedChange={(next) => {
+              handleSelectAllChange(next === true);
             }}
           />
-          <Text pl={5} fw={600}>
-            Select all
-          </Text>
-        </Group>
+          <span className="pl-1.5 font-semibold">Select all</span>
+        </div>
       )}
       <Tree
         data={mantineNodes}

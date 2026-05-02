@@ -1,4 +1,4 @@
-import { ActionIcon, ButtonGroup, Group, Slider } from "@mantine/core";
+import { IconButton, Slider } from "@adahiya/raga-design-system";
 import { useCallback, useState } from "react";
 import { IoPause, IoPlay, IoVolumeHigh, IoVolumeLow } from "react-icons/io5";
 
@@ -16,7 +16,8 @@ export function AudioPlayerControls() {
   const handlePlay = useOperationCallback(play, [play]);
   const handlePause = pause;
   const handleVolumeChange = useCallback(
-    (value: number) => {
+    (values: number[]) => {
+      const value = values[0];
       setVolume(value);
       setVolumeSliderValue(value);
     },
@@ -32,35 +33,42 @@ export function AudioPlayerControls() {
   }, [setVolume, setVolumeSliderValue]);
 
   return (
-    <Group gap={5} align="center">
-      <ButtonGroup>
-        {isPlaying ? (
-          <ActionIcon variant="subtle" color="gray" onClick={handlePause}>
-            <IoPause size={16} />
-          </ActionIcon>
-        ) : (
-          <ActionIcon variant="subtle" color="gray" onClick={handlePlay}>
-            <IoPlay size={16} />
-          </ActionIcon>
-        )}
-      </ButtonGroup>
-      <ActionIcon variant="subtle" color="gray" onClick={handleVolumeOff}>
+    <div className="flex items-center gap-1.5">
+      {isPlaying ? (
+        <IconButton variant="ghost" size="sm" aria-label="Pause" onClick={handlePause}>
+          <IoPause size={16} />
+        </IconButton>
+      ) : (
+        <IconButton variant="ghost" size="sm" aria-label="Play" onClick={handlePlay}>
+          <IoPlay size={16} />
+        </IconButton>
+      )}
+      <IconButton
+        variant="ghost"
+        size="sm"
+        aria-label="Mute"
+        onClick={handleVolumeOff}
+      >
         <IoVolumeLow size={16} />
-      </ActionIcon>
+      </IconButton>
       <div className={styles.volumeSlider}>
         <Slider
-          value={volumeSliderValue}
-          onChange={handleVolumeChange}
+          value={[volumeSliderValue]}
+          onValueChange={handleVolumeChange}
           min={0}
           max={1}
           step={0.01}
-          label={null}
         />
       </div>
-      <ActionIcon variant="subtle" color="gray" onClick={handleVolumeFull}>
+      <IconButton
+        variant="ghost"
+        size="sm"
+        aria-label="Full volume"
+        onClick={handleVolumeFull}
+      >
         <IoVolumeHigh size={16} />
-      </ActionIcon>
-    </Group>
+      </IconButton>
+    </div>
   );
 }
 AudioPlayerControls.displayName = "AudioPlayerControls";

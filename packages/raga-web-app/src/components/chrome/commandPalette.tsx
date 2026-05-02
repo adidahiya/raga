@@ -1,4 +1,4 @@
-import { Kbd } from "@mantine/core";
+import { Kbd } from "@adahiya/raga-design-system";
 import { useHotkeys } from "@mantine/hooks";
 import {
   Spotlight,
@@ -188,7 +188,6 @@ export default function CommandPalette() {
         for (const idStr of Object.keys(library.Tracks)) {
           const trackId = Number(idStr);
           const def = library.Tracks[trackId];
-          if (def === undefined) continue;
           const name = def.Name ?? "Untitled";
           const artist = def.Artist ?? "Unknown";
           const haystack = `${artist} ${name}`.toLowerCase();
@@ -237,7 +236,7 @@ export default function CommandPalette() {
             const kwArr = a.keywords;
             const kw = Array.isArray(kwArr)
               ? kwArr.join(" ").toLowerCase()
-              : (kwArr ?? "").toString().toLowerCase();
+              : (kwArr ?? "").toLowerCase();
             return label.includes(q) || desc.includes(q) || kw.includes(q);
           });
           if (matches.length > 0) {

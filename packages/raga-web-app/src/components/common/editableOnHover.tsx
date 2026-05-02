@@ -1,5 +1,5 @@
-import { Button, Loader, TextInput } from "@mantine/core";
-import { Text } from "@mantine/core";
+import { Button, Input } from "@adahiya/raga-design-system";
+import { Loader } from "@mantine/core";
 import classNames from "classnames";
 import type { Operation } from "effection";
 import { useCallback, useRef, useState } from "react";
@@ -78,14 +78,12 @@ export default function EditableOnHover<T extends string | number>({
 
   const valueAndEditableContent = (
     <>
-      <Text component="div" c={value == null ? "dimmed" : undefined} className={styles.value}>
+      <div className={`${styles.value} ${value == null ? "text-text-muted" : ""}`}>
         {value ?? placeholder}
-      </Text>
+      </div>
 
       <div className={styles.editInput}>
-        <TextInput
-          size="compact-sm"
-          radius="sm"
+        <Input
           defaultValue={value === undefined ? "" : value.toString()}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
@@ -97,9 +95,8 @@ export default function EditableOnHover<T extends string | number>({
         {showGradient && <div className={styles.editButtonGradient} />}
         <Button
           className={styles.editButton}
-          size="compact-sm"
-          color="gray"
-          variant="subtle"
+          size="sm"
+          variant="ghost"
           onClick={handleEditClick}
         >
           Edit

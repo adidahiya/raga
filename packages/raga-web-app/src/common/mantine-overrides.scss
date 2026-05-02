@@ -1,48 +1,48 @@
+// Mantine surface tweaks. The design system owns all theme tokens via
+// `[data-theme="light|dark"]` on <html> (see packages/raga-design-system/src/styles/tokens.css);
+// these rules only re-skin the Mantine surfaces we still ship (Modal, Menu,
+// Spotlight, mantine-contextmenu) so they read from the same tokens as the
+// rest of the app.
+
 .mantine-Menu-dropdown {
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
-}
-
-[data-mantine-color-scheme="dark"] {
-  --mantine-color-body: #0a0a0a;
-  --raga-surface-1: #0a0a0a;
-  --raga-surface-2: #111111;
-  --raga-border: rgba(255, 255, 255, 0.06);
-  --raga-border-strong: rgba(255, 255, 255, 0.12);
-  --raga-text-dim: #525252;
-  --raga-text-muted: #a3a3a3;
-  --raga-text-bright: #fafafa;
-  --raga-accent: #3b82f6;
-  --raga-accent-soft: rgba(59, 130, 246, 0.1);
-}
-
-[data-mantine-color-scheme="light"] {
-  --raga-surface-1: #ffffff;
-  --raga-surface-2: #f5f5f5;
-  --raga-border: rgba(0, 0, 0, 0.07);
-  --raga-border-strong: rgba(0, 0, 0, 0.14);
-  --raga-text-dim: #a3a3a3;
-  --raga-text-muted: #525252;
-  --raga-text-bright: #0a0a0a;
-  --raga-accent: #2563eb;
-  --raga-accent-soft: rgba(37, 99, 235, 0.08);
+  background: var(--surface-1);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-popover);
+  color: var(--text-primary);
 }
 
 // Spotlight palette tweaks to match the docked CommandBar aesthetic
 .mantine-Spotlight-content {
-  border: 1px solid var(--raga-border-strong);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-popover);
+  color: var(--text-primary);
 }
 
 .mantine-Spotlight-search {
-  font-family: var(--mantine-font-family-monospace);
+  font-family: var(--font-mono);
   font-size: 13px;
+  color: var(--text-primary);
+  background: var(--surface-1);
 }
 
 .mantine-Spotlight-actionLabel {
   font-size: 13px;
+  color: var(--text-primary);
 }
 
 .mantine-Spotlight-actionDescription {
-  font-family: var(--mantine-font-family-monospace);
+  font-family: var(--font-mono);
   font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mantine-Modal-content,
+.mantine-Modal-header {
+  background: var(--surface-1);
+  color: var(--text-primary);
+}
+
+.mantine-Modal-overlay {
+  background: var(--overlay-black-scrim-50);
 }

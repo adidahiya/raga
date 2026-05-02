@@ -1,4 +1,3 @@
-import { Group } from "@mantine/core";
 import { spotlight } from "@mantine/spotlight";
 import classNames from "classnames";
 import { IoSearchOutline } from "react-icons/io5";
@@ -19,13 +18,13 @@ export default function AppChrome() {
   const rightPadding = isWindows ? 100 : 12;
 
   return (
-    <Group
-      pl={leftPadding}
-      pr={rightPadding}
-      justify="space-between"
-      wrap="nowrap"
-      gap="md"
-      className={classNames(styles.appChromeDraggable, styles.appChrome)}
+    <div
+      className={classNames(
+        "flex items-center justify-between flex-nowrap gap-4",
+        styles.appChromeDraggable,
+        styles.appChrome,
+      )}
+      style={{ paddingLeft: leftPadding, paddingRight: rightPadding }}
     >
       <div className={styles.brand}>
         <div className={styles.logoMark}>R</div>
@@ -52,10 +51,15 @@ export default function AppChrome() {
         <span className={styles.commandTriggerHint}>⌘K</span>
       </button>
 
-      <Group className={styles.appChromeGroup} gap="xs" wrap="nowrap">
+      <div
+        className={classNames(
+          "flex items-center gap-2 flex-nowrap",
+          styles.appChromeGroup,
+        )}
+      >
         {isLibraryLoaded && <LibraryControls />}
         <UserSettingsDropdown />
-      </Group>
-    </Group>
+      </div>
+    </div>
   );
 }

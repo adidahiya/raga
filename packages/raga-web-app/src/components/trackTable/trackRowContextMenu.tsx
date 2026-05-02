@@ -1,5 +1,5 @@
+import { Button, Separator } from "@adahiya/raga-design-system";
 import { ClientEventChannel, type TrackDefinition } from "@adahiya/raga-types";
-import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 import { useCallback } from "react";
 import { IoFolderOpen } from "react-icons/io5";
 import { Roarr as log } from "roarr";
@@ -30,13 +30,6 @@ export default function TrackRowContextMenu({
     close();
   };
 
-  // TODO: check if autofocus still works with Mantine context menu
-  // we manually implement autoFocus here ContextMenuPopover does not support the `autoFocus` prop
-  // const containerElement = useRef<HTMLUListElement>(null);
-  // useEffect(() => {
-  //   containerElement.current?.focus();
-  // });
-
   if (track === undefined || libraryPlaylists === undefined) {
     return undefined;
   }
@@ -46,12 +39,10 @@ export default function TrackRowContextMenu({
     playlistsContainingThisTrack === undefined ||
     playlistsContainingThisTrack.size === 0 ? undefined : (
       <>
-        <Divider orientation="horizontal" />
-        <Text component="span" className={styles.trackName} truncate={true}>
-          Show in playlist
-        </Text>
-        <Group className={styles.playlistLinksMenuSection}>
-          <Stack component="ul" gap={0} className={styles.playlistLinksList}>
+        <Separator />
+        <span className={`${styles.trackName} truncate`}>Show in playlist</span>
+        <div className={`${styles.playlistLinksMenuSection} flex items-center`}>
+          <ul className={`${styles.playlistLinksList} flex flex-col gap-0`}>
             {/* TODO: nest playlists according to depth */}
             {[...playlistsContainingThisTrack]
               .filter((playlistID) => playlistID !== selectedPlaylistId)
@@ -62,33 +53,32 @@ export default function TrackRowContextMenu({
                   close={close}
                 />
               ))}
-          </Stack>
-        </Group>
+          </ul>
+        </div>
       </>
     );
 
   return (
-    <Stack tabIndex={0} gap={0}>
-      <Text component="span" className={styles.trackName} truncate={true}>
+    <div tabIndex={0} className="flex flex-col gap-0">
+      <span className={`${styles.trackName} truncate`}>
         <em>{track.Artist}</em>
         {"  "}&ndash;{"  "}
         <em>{track.Name}</em>
-      </Text>
-      <Divider orientation="horizontal" />
+      </span>
+      <Separator />
       <Button
-        size="compact-sm"
-        variant="subtle"
-        justify="flex-start"
-        color="gray"
-        m={5}
-        leftSection={<IoFolderOpen />}
+        size="sm"
+        variant="ghost"
+        className={`${styles.contextMenuButton} m-1.5 justify-start`}
         onClick={handleOpenFile}
-        classNames={{ label: styles.buttonLabel }}
       >
-        Reveal in Finder
+        <span className="inline-flex items-center gap-2">
+          <IoFolderOpen />
+          Reveal in Finder
+        </span>
       </Button>
       {showInPlaylistItems}
-    </Stack>
+    </div>
   );
 }
 

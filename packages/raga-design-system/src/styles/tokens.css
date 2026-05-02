@@ -169,7 +169,7 @@
   --shadow-icon-pill-glow: 0 0 12px color-mix(in srgb, var(--accent-500) 40%, transparent);
 
   /* font families */
-  --font-sans: "Inter", -apple-system, system-ui, sans-serif;
+  --font-sans: Archivo, Inter, sans-serif;
   --font-mono: "JetBrains Mono", "IBM Plex Mono", "SF Mono", Menlo, monospace;
 
   /* letter-spacing */
@@ -413,7 +413,7 @@
   --shadow-icon-pill-glow: 0 0 12px color-mix(in srgb, var(--accent-500) 40%, transparent);
 
   /* font families */
-  --font-sans: "Inter", -apple-system, system-ui, sans-serif;
+  --font-sans: Archivo, Inter, sans-serif;
   --font-mono: "JetBrains Mono", "IBM Plex Mono", "SF Mono", Menlo, monospace;
 
   /* letter-spacing */

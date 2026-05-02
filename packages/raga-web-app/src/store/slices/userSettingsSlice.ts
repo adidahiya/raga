@@ -1,8 +1,8 @@
-import type { MantineColorScheme } from "@mantine/core";
-
 import type { AppStoreSliceCreator } from "../zustandUtils";
 
 const MAX_PREVIOUSLY_USED_LIBRARIES = 3;
+
+export type UserThemePreference = "light" | "dark" | "auto";
 
 export interface PreviouslyUsedLibrary {
   filePath: string;
@@ -11,14 +11,14 @@ export interface PreviouslyUsedLibrary {
 
 export interface UserSettingsState {
   fontWeight: "light" | "regular";
-  userThemePreference: MantineColorScheme;
+  userThemePreference: UserThemePreference;
   previouslyUsedLibraries: Set<PreviouslyUsedLibrary>;
   userEmail: string | undefined;
 }
 
 export interface UserSettingsActions {
   setFontWeight: (fontWeight: "light" | "regular") => void;
-  setUserThemePreference: (pref: MantineColorScheme) => void;
+  setUserThemePreference: (pref: UserThemePreference) => void;
   setUserEmail: (userEmail: string | undefined) => void;
   saveCurrentLibraryPath: (filePath: string) => void;
   clearPreviouslyUsedLibraries: () => void;

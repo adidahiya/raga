@@ -89,7 +89,6 @@ function layoutByUMAP(input: LayoutInput): LayoutResult {
     // Defensive: if umap-js throws (e.g. due to degenerate input), fall back to PCA so the
     // atlas still renders something useful instead of surfacing an opaque worker error.
     // Surface a warning so silent degradation is at least visible in the worker console.
-    // eslint-disable-next-line no-console
     console.warn("[layout] UMAP fit failed, falling back to PCA:", err);
     return { ...layoutByPCA(input), algo: "umap" };
   }

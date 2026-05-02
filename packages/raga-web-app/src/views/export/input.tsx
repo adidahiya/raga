@@ -1,5 +1,4 @@
-import { Badge, Button, Text } from "@mantine/core";
-import { IoCheckmark } from "react-icons/io5";
+import { Button, StatusPill } from "@adahiya/raga-design-system";
 import { useBoolean } from "usehooks-ts";
 
 import LoadLibraryForm from "../../components/library/loadLibraryForm";
@@ -15,10 +14,8 @@ export function Input() {
 
   return (
     <>
-      <Badge leftSection={<IoCheckmark />} color="green" variant="light" radius="sm">
-        Loaded
-      </Badge>
-      <Text>{libraryInputFilepath}</Text>
+      <StatusPill tone="success" label="Loaded" />
+      <span>{libraryInputFilepath}</span>
       <Button onClick={setIsSelectingNewLibrary}>Select new library</Button>
     </>
   );

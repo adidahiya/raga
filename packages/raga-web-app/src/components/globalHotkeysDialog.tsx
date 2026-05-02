@@ -1,4 +1,5 @@
-import { Group, Kbd, Modal, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Kbd } from "@adahiya/raga-design-system";
+import { Modal } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 
 /**
@@ -15,49 +16,46 @@ export default function GlobalHotkeysDialog() {
 
   return (
     <Modal opened={opened} onClose={close} centered={true} title="Global hotkeys">
-      <Stack>
-        <SimpleGrid cols={2}>
-          <Group gap="xs" justify="flex-end">
-            <Kbd>⌘</Kbd> + <Kbd>i</Kbd>
-          </Group>
-          <Text>Keyboard shortcuts</Text>
+      <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 items-center">
+          <ShortcutKeys keys={["⌘", "i"]} />
+          <span>Keyboard shortcuts</span>
 
-          <Group gap="xs" justify="flex-end">
-            <Kbd>⌘</Kbd> + <Kbd>f</Kbd>
-          </Group>
-          <Text>Find in track table</Text>
+          <ShortcutKeys keys={["⌘", "f"]} />
+          <span>Find in track table</span>
 
-          <Group gap="xs" justify="flex-end">
-            <Kbd>⌘</Kbd> + <Kbd>l</Kbd>
-          </Group>
-          <Text>Scroll to selected track</Text>
+          <ShortcutKeys keys={["⌘", "l"]} />
+          <span>Scroll to selected track</span>
 
-          <Group gap="xs" justify="flex-end">
-            <Kbd>Space</Kbd>
-          </Group>
-          <Text>Play/pause</Text>
+          <ShortcutKeys keys={["Space"]} />
+          <span>Play/pause</span>
 
-          <Group gap="xs" justify="flex-end">
-            <Kbd>←</Kbd>
-          </Group>
-          <Text>Seek backward 10 seconds</Text>
+          <ShortcutKeys keys={["←"]} />
+          <span>Seek backward 10 seconds</span>
 
-          <Group gap="xs" justify="flex-end">
-            <Kbd>⌘</Kbd> + <Kbd>←</Kbd>
-          </Group>
-          <Text>Seek backward 30 seconds</Text>
+          <ShortcutKeys keys={["⌘", "←"]} />
+          <span>Seek backward 30 seconds</span>
 
-          <Group gap="xs" justify="flex-end">
-            <Kbd>→</Kbd>
-          </Group>
-          <Text>Seek forward 10 seconds</Text>
+          <ShortcutKeys keys={["→"]} />
+          <span>Seek forward 10 seconds</span>
 
-          <Group gap="xs" justify="flex-end">
-            <Kbd>⌘</Kbd> + <Kbd>→</Kbd>
-          </Group>
-          <Text>Seek forward 30 seconds</Text>
-        </SimpleGrid>
-      </Stack>
+          <ShortcutKeys keys={["⌘", "→"]} />
+          <span>Seek forward 30 seconds</span>
+        </div>
+      </div>
     </Modal>
+  );
+}
+
+function ShortcutKeys({ keys }: { keys: string[] }) {
+  return (
+    <div className="flex items-center justify-end gap-2">
+      {keys.map((k, idx) => (
+        <span key={`${k}-${idx.toString()}`} className="inline-flex items-center gap-1">
+          {idx > 0 && <span className="text-text-muted">+</span>}
+          <Kbd>{k}</Kbd>
+        </span>
+      ))}
+    </div>
   );
 }

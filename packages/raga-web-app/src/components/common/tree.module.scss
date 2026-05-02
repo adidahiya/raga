@@ -10,13 +10,13 @@
     cursor: pointer;
 
     &.selectedPath {
-      background-color: var(--mantine-primary-color-light);
-      border: solid 1px var(--mantine-primary-color-filled);
+      background-color: color-mix(in srgb, var(--accent-500) 15%, transparent);
+      border: solid 1px var(--accent-500);
     }
 
     &:hover {
-      background-color: var(--mantine-primary-color-light-hover);
-      border-color: var(--mantine-primary-color-9);
+      background-color: color-mix(in srgb, var(--accent-500) 10%, transparent);
+      border-color: var(--accent-700);
     }
   }
 }
@@ -25,9 +25,9 @@
   padding-left: 5px;
 }
 
-:global([data-mantine-color-scheme="dark"]) .node {
+[data-theme="dark"] .node {
   &.selectOnClick:hover {
-    border-color: var(--mantine-primary-color-1);
+    border-color: var(--accent-300);
   }
 }
 
@@ -35,6 +35,6 @@
   cursor: pointer;
 
   &:not(.filled):hover {
-    background-color: var(--mantine-primary-color-light-hover);
+    background-color: color-mix(in srgb, var(--accent-500) 10%, transparent);
   }
 }
