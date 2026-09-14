@@ -207,6 +207,24 @@
   border-color: color-mix(in srgb, var(--accent-500) 80%, transparent);
 }
 
+@keyframes progress-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 24px 0;
+  }
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
 html,
 body {
   background: var(--surface-1);

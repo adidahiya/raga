@@ -2,11 +2,41 @@ import {
   Badge,
   Button,
   Checkbox,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+  CommandGroup,
+  CommandItem,
+  CommandPalette,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+  FileInput,
   IconButton,
   Input,
   Kbd,
+  Progress,
   Radio,
   RadioGroup,
+  Rating,
+  SegmentedControl,
   Select,
   SelectContent,
   SelectItem,
@@ -14,10 +44,19 @@ import {
   SelectValue,
   Separator,
   Slider,
+  Spinner,
   StatusPill,
   Switch,
   Textarea,
+  toast,
+  Toaster,
+  ToggleGroup,
+  ToggleGroupItem,
+  Tree,
+  type TreeNodeData,
+  useTree,
 } from "@adahiya/raga-design-system";
+import { useDisclosure, useHotkeys } from "@adahiya/raga-design-system/hooks";
 import { cn } from "@adahiya/raga-design-system/lib/cn";
 import { contrastRatio, fmtRatio, ratingFor } from "@adahiya/raga-design-system/lib/contrast";
 import {
@@ -1059,6 +1098,14 @@ function KitchenSinkContent() {
         </div>
       </Section>
 
+      <Section
+        num="10"
+        title="Overlays · menus · feedback"
+        hint="New DS primitives: Dialog, Dropdown/Context menus, Command palette, Toaster, Toggle group, Collapsible, Progress, Spinner, Rating, FileInput, Tree."
+      >
+        <NewPrimitivesShowcase />
+      </Section>
+
       {/* FOOTER */}
       <footer className="mt-4 flex items-center justify-between border-t border-border-subtle bg-surface-0 px-section-px py-6 font-mono text-micro text-text-disabled">
         <div>raga · design system spec sheet · all values from a single TOKENS object</div>
@@ -1071,6 +1118,378 @@ function KitchenSinkContent() {
           </span>
         </div>
       </footer>
+      <Toaster />
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Section 10 — new DS primitives showcase
+// ---------------------------------------------------------------------------
+
+const TREE_DATA: TreeNodeData[] = [
+  {
+    value: "library",
+    label: "Library",
+    children: [
+      {
+        value: "house",
+        label: "House",
+        children: [
+          { value: "deep", label: "Deep house" },
+          { value: "tech", label: "Tech house" },
+        ],
+      },
+      {
+        value: "techno",
+        label: "Techno",
+        children: [
+          { value: "melodic", label: "Melodic" },
+          { value: "industrial", label: "Industrial" },
+        ],
+      },
+    ],
+  },
+];
+
+const PALETTE_ACTIONS = [
+  { id: "play", label: "Play / pause", group: "Playback" },
+  { id: "next", label: "Next track", group: "Playback" },
+  { id: "prev", label: "Previous track", group: "Playback" },
+  { id: "search", label: "Find in library", group: "Library" },
+  { id: "scroll", label: "Scroll to selected track", group: "Library" },
+  { id: "refresh", label: "Refresh metadata", group: "Library" },
+  { id: "toggle-theme", label: "Toggle theme", group: "View" },
+];
+
+function NewPrimitivesShowcase() {
+  const [paletteOpen, { open: openPalette, close: closePalette, toggle: togglePalette }] =
+    useDisclosure(false);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [progress, setProgress] = React.useState(42);
+  const [rating, setRating] = React.useState(3);
+  const [segment, setSegment] = React.useState<"sets" | "tracks" | "tags">("tracks");
+  const [bold, setBold] = React.useState(true);
+  const [italic, setItalic] = React.useState(false);
+  const [underline, setUnderline] = React.useState(false);
+  const [showLogs, setShowLogs] = React.useState(false);
+  const [filterEnabled, setFilterEnabled] = React.useState(true);
+  const tree = useTree({
+    initialExpandedState: { library: true, house: true },
+    initialSelectedState: ["deep"],
+  });
+
+  useHotkeys([["mod+k", togglePalette]]);
+
+  React.useEffect(() => {
+    const id = window.setInterval(() => {
+      setProgress((p) => (p >= 100 ? 0 : p + 6));
+    }, 800);
+    return () => {
+      window.clearInterval(id);
+    };
+  }, []);
+
+  return (
+    <div className="grid grid-cols-2 gap-10">
+      <div className="flex flex-col gap-6">
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>dialog · drop-in modal</div>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="secondary">
+                <Settings className="h-icon-sm w-icon-sm" />
+                Open dialog
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Rebuild library cache?</DialogTitle>
+                <DialogDescription>
+                  This will re-scan every track and may take a few minutes.
+                </DialogDescription>
+              </DialogHeader>
+              <p className="text-body text-text-secondary">
+                You can keep working while the rebuild happens in the background.
+              </p>
+              <DialogFooter>
+                <Button variant="ghost" onClick={() => { setDialogOpen(false); }}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setDialogOpen(false);
+                    toast.success("Library rebuild started");
+                  }}
+                >
+                  Rebuild
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>dropdown menu · checkbox & shortcuts</div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary">
+                Library actions
+                <RefreshCw className="h-icon-sm w-icon-sm" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuLabel>Library</DropdownMenuLabel>
+              <DropdownMenuItem>
+                Reload<DropdownMenuShortcut>⌘R</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Rebuild<DropdownMenuShortcut>⌥⌘R</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuCheckboxItem
+                checked={filterEnabled}
+                onCheckedChange={setFilterEnabled}
+              >
+                Show filter bar
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem checked={showLogs} onCheckedChange={setShowLogs}>
+                Show logs panel
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>context menu · right-click target</div>
+          <ContextMenu>
+            <ContextMenuTrigger asChild>
+              <div className="flex h-control-lg items-center justify-center rounded-md border border-dashed border-border-default bg-surface-2 text-body-sm text-text-muted">
+                Right-click me
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem>Play</ContextMenuItem>
+              <ContextMenuItem>Add to playlist…</ContextMenuItem>
+              <ContextMenuSeparator />
+              <ContextMenuItem className="text-danger data-[highlighted]:text-danger">
+                Remove from library
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>command palette · ⌘K to open</div>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={openPalette}>
+              <Search className="h-icon-sm w-icon-sm" />
+              Open palette
+            </Button>
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </div>
+          <CommandPalette
+            open={paletteOpen}
+            onOpenChange={(next) => {
+              if (next) openPalette();
+              else closePalette();
+            }}
+            placeholder="Type a command or search tracks…"
+            renderResults={(query) => {
+              const q = query.trim().toLowerCase();
+              const matches = PALETTE_ACTIONS.filter(
+                (a) => q.length === 0 || a.label.toLowerCase().includes(q),
+              );
+              const groups = new Map<string, typeof matches>();
+              for (const m of matches) {
+                const list = groups.get(m.group) ?? [];
+                list.push(m);
+                groups.set(m.group, list);
+              }
+              return Array.from(groups.entries()).map(([group, items]) => (
+                <CommandPaletteGroup
+                  key={group}
+                  heading={group}
+                  items={items}
+                  onSelect={(action) => {
+                    closePalette();
+                    toast(`Action: ${action.label}`);
+                  }}
+                />
+              ));
+            }}
+          />
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>toaster · sonner</div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                toast("Track added to queue");
+              }}
+            >
+              Default
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                toast.success("Library reload complete");
+              }}
+            >
+              Success
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                toast.error("Failed to read file");
+              }}
+            >
+              Error
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6">
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>segmented control</div>
+          <SegmentedControl
+            data={[
+              { value: "sets", label: "Sets" },
+              { value: "tracks", label: "Tracks" },
+              { value: "tags", label: "Tags" },
+            ]}
+            value={segment}
+            onChange={setSegment}
+          />
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>toggle group · multi-select</div>
+          <ToggleGroup
+            type="multiple"
+            value={[
+              ...(bold ? ["bold"] : []),
+              ...(italic ? ["italic"] : []),
+              ...(underline ? ["underline"] : []),
+            ]}
+            onValueChange={(next) => {
+              setBold(next.includes("bold"));
+              setItalic(next.includes("italic"));
+              setUnderline(next.includes("underline"));
+            }}
+          >
+            <ToggleGroupItem value="bold" aria-label="Bold">
+              <span className="font-bold">B</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="italic" aria-label="Italic">
+              <span className="italic">I</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="underline" aria-label="Underline">
+              <span className="underline">U</span>
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>collapsible · expand/collapse</div>
+          <Collapsible className="flex flex-col gap-2">
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost">
+                <Filter className="h-icon-sm w-icon-sm" />
+                Toggle filter panel
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="rounded-md border border-border-default bg-surface-2 p-3 text-body text-text-secondary">
+                Hidden filter controls live here. The Collapsible primitive
+                shows/hides via Radix data-state attributes.
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>progress · determinate / indeterminate</div>
+          <div className="flex flex-col gap-3">
+            <Progress value={progress} />
+            <Progress value={progress} color="warm" striped />
+            <Progress value={null} animated color="info" />
+          </div>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>spinner · sizes & colors</div>
+          <div className="flex items-center gap-3">
+            <Spinner size="sm" />
+            <Spinner size="md" />
+            <Spinner size="lg" color="success" />
+            <Spinner size="xl" color="muted" />
+          </div>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>rating · star control</div>
+          <div className="flex items-center gap-3">
+            <Rating value={rating} onChange={setRating} count={5} />
+            <span className="font-mono text-mono-sm text-text-muted">{rating}/5</span>
+            <Separator orientation="vertical" className="h-control-md" />
+            <Rating value={4.5} fractions={2} readOnly />
+          </div>
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>file input</div>
+          <FileInput
+            label="Library XML"
+            accept=".xml"
+            placeholder="Pick a Rekordbox export…"
+            fullWidth
+          />
+        </div>
+
+        <div>
+          <div className={cn(SUBLABEL, "mb-2")}>tree</div>
+          <div className="rounded-md border border-border-default bg-surface-2 p-2 max-h-72 overflow-auto">
+            <Tree data={TREE_DATA} tree={tree} selectOnClick />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface PaletteAction {
+  id: string;
+  label: string;
+  group: string;
+}
+
+function CommandPaletteGroup({
+  heading,
+  items,
+  onSelect,
+}: {
+  heading: string;
+  items: PaletteAction[];
+  onSelect: (item: PaletteAction) => void;
+}) {
+  if (items.length === 0) return null;
+  return (
+    <CommandGroup heading={heading}>
+      {items.map((item) => (
+        <CommandItem
+          key={item.id}
+          value={item.label}
+          onSelect={() => { onSelect(item); }}
+        >
+          {item.label}
+        </CommandItem>
+      ))}
+    </CommandGroup>
   );
 }
